@@ -75,6 +75,11 @@ or formally deferred to v2 (with ADR) before the next phase gate.
 Include this section only when RAG Profile = ON in docs/ARCHITECTURE.md.
 If RAG Profile = OFF, set the first field accordingly and leave all others as "n/a".
 Updated by the orchestrator at every phase boundary where retrieval-related work occurred.
+
+Retrieval-related next tasks: tasks that happen to involve retrieval (scheduled work).
+Retrieval-driven tasks: tasks created as a direct result of open retrieval findings
+  (from docs/retrieval_eval.md §Open Retrieval Findings). These exist because retrieval
+  quality is insufficient, not because of a feature requirement.
 -->
 
 - RAG Profile: OFF
@@ -84,6 +89,7 @@ Updated by the orchestrator at every phase boundary where retrieval-related work
 - Index schema version: n/a
 - Pending reindex actions: none
 - Retrieval-related next tasks: none
+- Retrieval-driven tasks: none
 
 ---
 

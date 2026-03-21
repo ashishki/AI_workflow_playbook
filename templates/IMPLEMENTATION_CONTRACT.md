@@ -149,6 +149,25 @@ _Applies only when `docs/ARCHITECTURE.md` declares `RAG Profile: ON`._
 
 For retrieval-critical findings (corpus isolation, `insufficient_evidence` path, schema drift), the standard P2 Age Cap of 3 cycles is reduced to **1 cycle**. A retrieval P2 that is not resolved after 1 review cycle is automatically escalated to P1.
 
+### Retrieval Evaluation Gate
+
+A retrieval-related task (tagged `Type: rag:ingestion` or `Type: rag:query`, or touching chunking, embedding, ranking, evidence assembly, or `insufficient_evidence` behavior) is **not complete** unless all three of the following are true:
+
+1. `docs/retrieval_eval.md` is updated with current metrics for the affected pipeline stage.
+2. Current metrics are explicitly compared to the baseline row in the Evaluation History table.
+3. Any metric regressions are documented in the Regression Notes section with a justification.
+
+Submitting a task as `IMPLEMENTATION_RESULT: DONE` without fulfilling these conditions is a P1 finding. The code passing tests does not imply the retrieval is correct.
+
+### Retrieval Regression Policy
+
+A retrieval regression (any metric decline vs. the current baseline) is a **P1 finding** unless:
+- the regression is documented in `docs/retrieval_eval.md §Regression Notes`
+- a trade-off justification is provided (e.g., latency increased because reranking was added and quality improved)
+- the human reviewer explicitly accepts it before the phase gate passes
+
+"Tests are green" does not close a retrieval regression.
+
 ---
 
 ## Mandatory Pre-Task Protocol
