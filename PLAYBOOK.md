@@ -148,6 +148,79 @@ Every subsequent session starts by running `pytest` and comparing against this b
 
 ---
 
+## 2b. Session Start Ritual — The Loop Mechanism
+
+This is the mechanism that makes the workflow run autonomously without manual step-by-step prompting.
+
+### The Problem It Solves
+
+Without a structured session start, the developer acts as the orchestrator — manually triggering each step (implement, review, archive, doc update, phase report). Each pause is a gap where context is lost and steps get skipped.
+
+With the ritual, the orchestrator drives the entire cycle from a single paste. The developer's only job is approving phase gates and resolving blockers.
+
+### How It Works
+
+Every session begins with a single action:
+
+```
+Paste the entire contents of docs/prompts/ORCHESTRATOR.md into Claude Code.
+```
+
+The orchestrator then:
+1. Reads `docs/CODEX_PROMPT.md` and `docs/tasks.md` to determine current state
+2. Prints an `=== ORCHESTRATOR STATE ===` block showing what it sees
+3. Drives the full loop: Fix Queue → Strategy → Implement → Light Review → (if phase boundary) Deep Review → Archive → Doc Update → Phase Report → checkpoint → next task
+
+No manual prompting is needed between steps. The orchestrator stops only when:
+- A task is blocked `[!]` and needs human input
+- A P0 finding cannot be resolved after 2 attempts
+- All tasks are complete
+- An API rate limit is hit (sends notification with resume time)
+
+### What ORCHESTRATOR.md Must Contain
+
+Every project's `docs/prompts/ORCHESTRATOR.md` must have all 7 steps filled in with project-specific values:
+
+| Placeholder | What to replace with |
+|---|---|
+| Project name | Used in all agent system prompts |
+| Project root | Absolute path on disk |
+| Implementation agent command | `codex exec` or `Agent tool (general-purpose)` — whichever is available |
+| Test command | `pytest tests/ -q` or `python3 -m unittest discover tests/ -q` |
+| Lint command | `ruff check` or skip if not enforced |
+| Notification channel | Telegram bot, Slack, desktop notify, or remove if not needed |
+
+The template is in `prompts/ORCHESTRATOR.md` in this playbook. Copy it, fill the placeholders, commit it as `docs/prompts/ORCHESTRATOR.md` in your project.
+
+### Required Audit Prompt Files
+
+The deep review pipeline (Steps 4.0–4.3) references four prompt files that must exist in `docs/audit/`:
+
+| File | Purpose |
+|---|---|
+| `PROMPT_0_META.md` | Snapshot current state, define review scope |
+| `PROMPT_1_ARCH.md` | Check architectural drift vs spec + contracts |
+| `PROMPT_2_CODE.md` | Security and quality checklist per file |
+| `PROMPT_3_CONSOLIDATED.md` | Produce REVIEW_REPORT.md + patches for tasks.md and CODEX_PROMPT.md |
+| `AUDIT_INDEX.md` | Running log of all review cycles and archive entries |
+
+Templates for all five are in the `prompts/audit/` directory of this playbook.
+
+### Retrofit for Existing Projects
+
+If a project already has code but lacks the workflow scaffolding:
+
+1. Create `docs/CODEX_PROMPT.md` with current baseline and open findings
+2. Create `docs/IMPLEMENTATION_CONTRACT.md` with project-specific rules
+3. Add `.github/workflows/ci.yml`
+4. Copy and fill `docs/prompts/ORCHESTRATOR.md`
+5. Copy audit prompt templates to `docs/audit/`
+6. Create `docs/audit/AUDIT_INDEX.md` (start at Cycle 1)
+
+After retrofit, paste ORCHESTRATOR.md and the loop runs identically to a greenfield project.
+
+---
+
 ## 3. Phase Structure
 
 ### What a Phase Is
