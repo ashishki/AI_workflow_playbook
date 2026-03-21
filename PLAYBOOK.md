@@ -36,6 +36,80 @@ Every layer has a defined input, a defined output, and a defined boundary with t
 
 ---
 
+## 1b. System Architecture — Layer Map
+
+The workflow has seven layers. Each layer has a defined purpose, defined outputs, and a hard boundary with adjacent layers. Layers never cross into each other's responsibility.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  LAYER 1: PLANNING                                               │
+│  Strategist agent reads project description → produces all       │
+│  Phase 1 artifacts before any code is written.                   │
+│  Outputs: ARCHITECTURE.md, spec.md, tasks.md, CODEX_PROMPT.md,  │
+│           IMPLEMENTATION_CONTRACT.md, CI workflow                │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────────┐
+│  LAYER 2: ORCHESTRATION                                          │
+│  Orchestrator reads state from files → decides action →          │
+│  spawns agents → updates state → loops.                          │
+│  Stateless across sessions. All state lives in files.            │
+│  Output: Loop control, subagent invocations, state transitions   │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────────┐
+│  LAYER 3: IMPLEMENTATION (Codex)                                 │
+│  One task at a time. Reads exact file list. Writes code + tests. │
+│  Never self-reviews. Never touches adjacent tasks.               │
+│  Output: Code changes + tests + CODEX_PROMPT.md patch + commit   │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────────┐
+│  LAYER 4: REVIEW (Two-Tier)                                      │
+│  Tier 1 — Light: 1 agent, 6 security/contract checks per task    │
+│  Tier 2 — Deep:  META → ARCH → CODE → CONSOLIDATED per phase     │
+│  Output: Findings (P0/P1/P2/P3), REVIEW_REPORT.md, Fix Queue    │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────────┐
+│  LAYER 5: QUALITY LOOP                                           │
+│  Baseline tracking (tests must not decrease).                    │
+│  P2 Age Cap (3-cycle limit → escalate, close, or defer to v2).  │
+│  Append-only audit trail in docs/audit/.                         │
+│  Output: Quality trend signal, finding lifecycle enforcement     │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────────┐
+│  LAYER 6: AUDIT / TRACEABILITY                                   │
+│  CODEX_PROMPT.md: immutable session state across interruptions.  │
+│  IMPLEMENTATION_CONTRACT.md: immutable rules (ADR required).     │
+│  ADRs: append-only architectural decisions.                      │
+│  docs/audit/CYCLE{N}_REVIEW.md: append-only findings trail.     │
+│  Typed commits: one logical change, one commit, traceable.       │
+│  Output: Full reconstruct of any session from files alone        │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────────┐
+│  LAYER 7: RUNTIME / CI                                           │
+│  GitHub Actions CI: lint + format + tests on every commit.       │
+│  Environment contract in ARCHITECTURE.md §Runtime Contract.      │
+│  Services (PostgreSQL, Redis, etc.) declared in ci.yml.          │
+│  Output: Green/red signal per commit, baseline verification      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Layer Boundaries — Hard Rules
+
+| Rule | Why |
+|------|-----|
+| Implementation never reviews its own output | The Codex agent that writes the code never runs the review agents |
+| Review never writes code | Review agents produce findings; Codex fixes them |
+| Orchestrator never writes application code | It reads, decides, and spawns — no direct file edits in app/ |
+| Planning precedes implementation | Phase 1 (Layer 1) must be complete before Layer 3 begins |
+| CI gate is a layer boundary | No PR crosses from Layer 3 to Layer 4 if CI is red |
+
+---
+
 ## 2. Project Initialization (Phase 1)
 
 Phase 1 is not optional and is not abbreviated. Every project — regardless of size, scope, or timeline — begins here.
@@ -427,3 +501,109 @@ Depends-On: T{XX}, T{YY}
 ```
 
 Vague acceptance criteria produce vague implementations. "The endpoint works" is not an acceptance criterion. "GET /items returns 200 with `{"items": [...]}` when the tenant has items, 200 with `{"items": []}` when empty, and 404 when the tenant does not exist" is an acceptance criterion.
+
+---
+
+## 11. Known Gaps — v2 Roadmap
+
+This section documents what the workflow does **not yet solve**. These are real limitations, not theoretical ones. They are documented here so future contributors know what is missing and why, rather than discovering it mid-project.
+
+Each gap includes: what is missing, what impact it has, and the minimum viable addition that would close it.
+
+---
+
+### GAP-1: Single-Model Dependency (Claude only)
+
+**What is missing:** The orchestrator has no model selection logic. All agents use Claude via the Anthropic API. There is no fallback model, no cost optimization by routing tasks to cheaper models, and no way to verify results by comparing outputs from two different models.
+
+**Impact:** Medium. Switching providers or using GPT-4 for specific tasks (e.g., cost-sensitive code generation) requires rewriting orchestrator prompts. An Anthropic outage stops all agents.
+
+**v2 addition:**
+- Model selection policy in ORCHESTRATOR.md (e.g., "use Haiku for light review, Opus for deep review")
+- Fallback routing: if primary model returns error, retry with fallback
+- Cost tracking per model per task (see GAP-2)
+
+---
+
+### GAP-2: No Token / Cost Tracking
+
+**What is missing:** The workflow tracks test baselines and finding severity, but not token consumption per task, cost per phase, or cost trends over time. There is no budget signal.
+
+**Impact:** Low-Medium. Without cost tracking, a project with many phases cannot detect cost drift until the invoice arrives.
+
+**v2 addition:**
+- Log `input_tokens`, `output_tokens`, `cost_usd` in CODEX_PROMPT.md per task
+- Phase cost summary in CONSOLIDATED review output
+- Optional budget gate in phase gate criteria (e.g., "if phase cost > $X, human reviews before proceeding")
+
+---
+
+### GAP-3: Security Review Not Formalized as a Separate Layer
+
+**What is missing:** Security checks are embedded in the CODE review agent (Tier 2) and the Light review checklist (Tier 1). There is no dedicated security review agent, no formal threat model document, and no security-specific audit index.
+
+**Impact:** High for production systems. Security findings are mixed with quality findings in REVIEW_REPORT.md. A reviewer optimizing for code quality may miss a subtle auth bypass.
+
+**v2 addition:**
+- `docs/THREAT_MODEL.md` — formal threat model (assets, threat actors, attack vectors, mitigations)
+- PROMPT_SECURITY agent in the deep review pipeline: focused exclusively on auth, injection, data leakage, privilege escalation, and secrets
+- Security audit index: `docs/audit/SECURITY_AUDIT.md` — one row per security finding per cycle
+- Security gate in phase gate criteria: all P1 security findings resolved before gate passes
+
+---
+
+### GAP-4: No Performance / Load Testing Integration
+
+**What is missing:** The workflow requires functional tests (pytest) and lint (ruff). It has no performance gate — no load test suite, no latency SLA verification, no memory/CPU regression detection.
+
+**Impact:** Low in Phases 1–3 (correctness matters more than performance). High in Phase 6+ when the system handles real traffic.
+
+**v2 addition:**
+- Load test suite (Locust or k6) in `load_tests/`
+- Baseline performance metrics stored in CODEX_PROMPT.md (e.g., `p95_latency_ms: 180`)
+- Performance gate in phase gate criteria (Phase 6+): p95 latency must not regress by more than 20% vs. baseline
+- Performance findings in REVIEW_REPORT.md if regression detected
+
+---
+
+### GAP-5: No Production Incident Integration
+
+**What is missing:** The workflow is entirely development-focused. There is no formal path for a production incident to enter the development loop. There is no hot-fix process, no post-deployment health check, and no incident-to-task conversion.
+
+**Impact:** High for live systems. When production breaks, the team needs a fast path that bypasses the normal phase gate process without abandoning quality controls.
+
+**v2 addition:**
+- Hot-fix task type in tasks.md: `Type: hotfix`, bypasses strategy review and deep review, triggers light review only
+- Incident template: `docs/incidents/INC-{NNN}.md` — what broke, what was the impact, root cause, task created
+- Post-deploy smoke test in CI: a minimal health check run after deploy, result logged to CODEX_PROMPT.md
+- Incident-to-task conversion: each incident produces exactly one task entry in tasks.md
+
+---
+
+### GAP-6: Advanced Quality Metrics (Coverage, Complexity)
+
+**What is missing:** The workflow tracks test count and finding severity. It does not track test coverage percentage, code complexity (cyclomatic, cognitive), or documentation coverage.
+
+**Impact:** Low. Test count is a reasonable proxy for quality in early phases. In later phases, a project can have 200 passing tests with 40% coverage — the tests are not representative.
+
+**v2 addition:**
+- Coverage gate in CI: `pytest --cov=app --cov-fail-under=80`
+- Coverage trend in CODEX_PROMPT.md: `Coverage: 73% (+2% vs. last phase)`
+- Complexity budget in ARCH review: "no function with cyclomatic complexity > 15 without documented justification"
+
+---
+
+### Summary Table
+
+| Gap | Severity | Effort to Close | Priority |
+|-----|----------|-----------------|----------|
+| GAP-1: Single-model dependency | Medium | High (orchestrator redesign) | v2 |
+| GAP-2: No cost tracking | Low-Medium | Low (add fields to CODEX_PROMPT) | v2 |
+| GAP-3: Security not formalized | High | Medium (new agent + threat model) | v2 priority |
+| GAP-4: No performance testing | Low→High | Medium (load test suite + gate) | Phase 6+ |
+| GAP-5: No production integration | High | Medium (incident template + hotfix path) | pre-launch |
+| GAP-6: No coverage/complexity metrics | Low | Low (pytest-cov + CI flag) | v2 |
+
+**v2 priority order:** GAP-3 (security formalization) → GAP-5 (production integration) → GAP-2 (cost tracking) → GAP-6 (coverage) → GAP-4 (performance testing) → GAP-1 (multi-model)
+
+_This section is updated at each major version of the playbook. Gaps that are closed move to the changelog._
