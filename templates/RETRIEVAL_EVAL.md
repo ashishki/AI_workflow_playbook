@@ -6,6 +6,23 @@ Update this file whenever retrieval logic changes (chunking, embedding, ranking,
 Retrieval quality is evaluated separately from code quality — a green test suite does not imply good retrieval.
 -->
 
+## Retrieval Quality vs. Answer Quality
+
+These are not the same thing and must be evaluated independently.
+
+A strong language model can produce fluent, confident answers even when the retrieved evidence
+is wrong, incomplete, or off-topic. Conversely, correct retrieval does not guarantee a correct
+answer. Evaluating only the final answer masks retrieval failures.
+
+**Retrieval evaluation measures what was retrieved, not what was said.**
+
+- Retrieval quality: did the system surface the right evidence? (this file)
+- Answer quality: did the system reason correctly over that evidence? (separate concern)
+
+A passing answer-quality check with declining retrieval metrics is a warning sign, not a green light.
+
+---
+
 Version: {{N}}
 Last updated: {{DATE}}
 Changed by: {{TASK_ID}} — {{TASK_TITLE}}
@@ -101,6 +118,23 @@ For a sample of successful queries, verify that the assembled evidence matches t
 |----------|-------------------|-----------------|-------|
 | Q01 | | | |
 | Q02 | | | |
+
+---
+
+## Experiments
+
+Use this section to track deliberate retrieval changes and their outcomes.
+Test one variable at a time. Record results before deciding.
+
+| ID | Hypothesis | Change | Metric(s) targeted | Result vs. baseline | Decision |
+|----|-----------|--------|--------------------|---------------------|----------|
+| EXP-01 | {{e.g., smaller chunks improve MRR on short queries}} | {{chunking: 512→256 tokens}} | {{MRR, hit@3}} | {{+0.04 MRR, −0.01 hit@3}} | {{adopted / rejected / pending}} |
+
+Rules:
+- One variable per experiment.
+- Record result before deciding. Decision comes after data, not before.
+- If adopted: update Baseline Metrics to reflect the new state.
+- If rejected: keep the row as a record that this path was tried.
 
 ---
 
