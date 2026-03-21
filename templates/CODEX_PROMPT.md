@@ -69,6 +69,24 @@ or formally deferred to v2 (with ADR) before the next phase gate.
 
 ---
 
+## RAG State
+
+<!--
+Include this section only when RAG Profile = ON in docs/ARCHITECTURE.md.
+If RAG Profile = OFF, set the first field accordingly and leave all others as "n/a".
+Updated by the orchestrator at every phase boundary where retrieval-related work occurred.
+-->
+
+- RAG Profile: OFF
+- Active corpora: n/a
+- Retrieval baseline: n/a
+- Open retrieval findings: none
+- Index schema version: n/a
+- Pending reindex actions: none
+- Retrieval-related next tasks: none
+
+---
+
 ## Completed Tasks
 
 none

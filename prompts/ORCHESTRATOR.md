@@ -63,6 +63,8 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 **Deep review also triggers if:**
 - Last task touched security-critical code: auth, middleware, RLS, tenant isolation, secrets
 - 5+ P2 findings have been open for 3+ cycles (architectural drift)
+- Task is tagged `Type: rag:ingestion` or `Type: rag:query` in tasks.md
+- Task changed any of: retrieval policy, chunking logic, index/metadata schema, evidence/citation format, corpus isolation, reindex/delete/lifecycle logic, or `insufficient_evidence` behavior
 
 **Skip all review for:** doc-only patches, test-only changes, dependency bumps.
 
@@ -94,6 +96,8 @@ Read in full:
 1. `docs/CODEX_PROMPT.md` — baseline, Fix Queue, open findings, next task
 2. `docs/tasks.md` — full task graph with phases
 
+Check `docs/ARCHITECTURE.md` for `RAG Profile: ON | OFF`. Record this — it affects review tier and state update requirements below.
+
 Determine:
 
 **A. Fix Queue** — non-empty? List each FIX-N item with file + change + test.
@@ -121,11 +125,14 @@ Print status block:
 Baseline: [N passed, N skipped]
 Fix Queue: [empty | N items: FIX-A, FIX-B...]
 Next task: [T## — Title]
+RAG Profile: [ON | OFF]
 Phase boundary: [yes | no]
 Review tier: [light | deep] — [reason]
 Action: [what happens next]
 =========================
 ```
+
+If RAG Profile = ON and the next task is tagged `Type: rag:ingestion` or `Type: rag:query`, note it in the Action line. Deep review is mandatory for these tasks regardless of phase boundary.
 
 ---
 
@@ -501,6 +508,7 @@ Rules:
 - Change only what is factually wrong or missing. No rewrites.
 - Every change must be traceable to something in REVIEW_REPORT.md or the implementer completion report.
 - Do not update docs/tasks.md — that was already patched by Consolidation Agent.
+- If RAG Profile = ON: also update the `## RAG State` block in docs/CODEX_PROMPT.md — refresh retrieval baseline, open retrieval findings, index schema version, and pending reindex actions. If retrieval behavior changed this phase, note whether docs/retrieval_eval.md was updated.
 
 Return:
 DOC_UPDATE_RESULT: DONE

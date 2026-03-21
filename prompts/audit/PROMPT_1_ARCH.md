@@ -34,6 +34,16 @@ Output: docs/audit/ARCH_REPORT.md (overwrite).
 - Reflected in ARCHITECTURE.md? If not → doc patch needed.
 - Aligned with spec.md? If not → finding.
 
+**Retrieval architecture** — run ONLY if `docs/ARCHITECTURE.md` declares `RAG Profile: ON`:
+- Are ingestion and query-time retrieval defined as separate responsibilities (separate modules/services)?
+- Is the `insufficient_evidence` path defined in both ARCHITECTURE.md and spec.md?
+- Are corpus isolation and security boundaries explicit at the retrieval layer (not only application layer)?
+- Is the evidence/citation contract defined (format, fields, traceability to source)?
+- Is a freshness / max-index-age policy documented? Is it enforced at the health endpoint?
+- Is index schema versioning documented (ADR required before schema change; full re-index on change)?
+- Are retrieval observability expectations defined (latency, recall, evidence quality signals)?
+- Verdict per check: PASS | DRIFT | VIOLATION | N/A
+
 ## Output format: docs/audit/ARCH_REPORT.md
 
 ---
@@ -59,6 +69,18 @@ Evidence: `file:line`
 Root cause: ...
 Impact: ...
 Fix: ...
+
+## Retrieval Architecture Checks
+_Omit this section entirely if RAG Profile = OFF._
+| Check | Verdict | Note |
+|-------|---------|------|
+| Ingestion / query-time separation | | |
+| insufficient_evidence path defined | | |
+| Corpus isolation explicit | | |
+| Evidence/citation contract defined | | |
+| Freshness / max-index-age policy | | |
+| Index schema versioning | | |
+| Retrieval observability expectations | | |
 
 ## Doc Patches Needed
 | File | Section | Change |
