@@ -12,6 +12,81 @@ Status: Draft
 
 ---
 
+## RAG Profile
+
+<!--
+REQUIRED: Declare RAG Profile ON or OFF. This is a Phase 1 architectural decision.
+See PLAYBOOK.md §2c for decision criteria.
+-->
+
+**RAG Profile: {{ON | OFF}}**
+
+Justification: {{ONE_PARAGRAPH — why retrieval is or is not needed for this project}}
+
+<!--
+If RAG Profile = OFF, delete everything below in this section and continue to Component Table.
+
+If RAG Profile = ON, fill in the following sub-sections.
+-->
+
+### RAG Architecture
+
+**Ingestion pipeline** (offline / scheduled):
+```
+extract → normalize → chunk → embed → index
+```
+
+| Stage | Description | Technology |
+|-------|-------------|------------|
+| Extract | {{Where documents come from and how they're fetched}} | {{e.g., S3 sync, API poll, webhook}} |
+| Normalize | {{Format normalization — PDF to text, markdown cleaning, etc.}} | {{e.g., pdfplumber, markdownify}} |
+| Chunk | {{Chunking strategy — fixed size, semantic, by section}} | {{e.g., LangChain text splitter, custom}} |
+| Embed | {{Embedding model and rationale}} | {{e.g., OpenAI text-embedding-3-small}} |
+| Index | {{Vector store and index schema version}} | {{e.g., pgvector, Qdrant, Pinecone}} |
+
+**Query-time pipeline** (online / per-request):
+```
+query analyze → retrieve → rerank/filter → assemble evidence → answer | insufficient_evidence
+```
+
+| Stage | Description | Technology |
+|-------|-------------|------------|
+| Query analyze | {{Query reformulation, intent detection, or HyDE if applicable}} | {{e.g., LLM rewrite, none}} |
+| Retrieve | {{Similarity search — top-K, threshold, hybrid if applicable}} | {{e.g., pgvector cosine, BM25 hybrid}} |
+| Rerank/filter | {{Reranking model or filter rules}} | {{e.g., cross-encoder, none}} |
+| Assemble evidence | {{How retrieved chunks are formatted into context}} | {{e.g., XML-tagged blocks, numbered references}} |
+| Answer / insufficient_evidence | {{Decision rule for when to answer vs. return insufficient_evidence}} | {{e.g., confidence threshold, minimum chunk count}} |
+
+The `insufficient_evidence` path is **not optional**. When retrieved evidence does not support an answer, the system must return `insufficient_evidence` rather than fabricating a response.
+
+### Corpus Description
+
+| Property | Value |
+|----------|-------|
+| Source documents | {{What documents are indexed}} |
+| Update frequency | {{How often the corpus changes}} |
+| Estimated size | {{Number of documents / chunks / tokens at index time}} |
+| Access control | {{Who/what can query which corpus segments}} |
+
+### Index Strategy
+
+- **Embedding model:** {{Model name and version}} — rationale: {{why this model}}
+- **Chunking:** {{Strategy and chunk size}} — rationale: {{why this chunking approach}}
+- **Index schema version:** v1 — changes require ADR; re-indexing required on schema change
+- **Max index age:** {{e.g., "24 hours"}} — staleness beyond this threshold must trigger an alert
+
+### Risks (RAG-specific)
+
+| Risk | Mitigation |
+|------|------------|
+| Hallucination on weak evidence | Confidence threshold at retrieval; `insufficient_evidence` path required |
+| Schema drift (embedding model / chunk format change) | Version index schema; ADR required before model change; full re-index on change |
+| Stale index | Max age policy ({{MAX_AGE}}); staleness check on health endpoint |
+| Corpus isolation failure | {{Corpus-level ACL strategy — e.g., namespace per tenant, filter at retrieval layer}} |
+| Retrieval latency regression | Latency acceptance criteria per RAG task; tracked in baseline |
+
+---
+
 ## Component Table
 
 | Component | File / Directory | Responsibility |

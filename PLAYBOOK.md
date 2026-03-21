@@ -148,6 +148,107 @@ Every subsequent session starts by running `pytest` and comparing against this b
 
 ---
 
+## 2c. RAG Decision Gate (Optional Architectural Track)
+
+RAG (Retrieval-Augmented Generation) is **not a default requirement**. It is an optional architectural mode that the Strategist must explicitly enable or disable during Phase 1.
+
+### RAG Profile: ON | OFF
+
+The Strategist declares one of two states in `docs/ARCHITECTURE.md`:
+
+```
+RAG Profile: ON   — project uses retrieval-backed architecture
+RAG Profile: OFF  — project does not use retrieval; standard prompting only
+```
+
+This decision is made once, in Phase 1, and treated as an architectural constraint for all subsequent phases. Changing it requires an ADR.
+
+### When to Turn RAG ON
+
+Turn RAG Profile ON when one or more of the following is true:
+
+| Signal | Example |
+|--------|---------|
+| Large document/corpus context that does not fit in a prompt | Policy manuals, legal documents, multi-volume runbooks |
+| Knowledge that changes faster than the code deploy cycle | Frequently updated FAQs, live regulations, evolving product catalogs |
+| Citations or evidence are required in the output | Answers must reference source documents with traceability |
+| Document-heavy sources | PDFs, markdown corpora, internal wikis, technical manuals |
+| Retrieval needed not just for end-user chat but also for agent or tool context | An agent that must look up current pricing or policy before acting |
+
+When none of these signals are present, RAG Profile is OFF. Do not add retrieval infrastructure speculatively.
+
+### Additional Artifacts When RAG Profile = ON
+
+If the Strategist declares RAG Profile ON, the following additional artifacts must be produced in Phase 1:
+
+| Artifact | Path | Purpose |
+|----------|------|---------|
+| RAG Architecture section | `docs/ARCHITECTURE.md §RAG Architecture` | Ingestion pipeline, query-time pipeline, corpus description, index strategy |
+| Retrieval spec section | `docs/spec.md §Retrieval` | What sources are indexed, update frequency, expected query types, citation requirements |
+| RAG tasks | `docs/tasks.md` | Separate tasks for ingestion pipeline and query-time retrieval (never merged into a single task) |
+| Retrieval acceptance criteria | `docs/tasks.md` (per task) | Retrieval-specific criteria: recall targets, latency bounds, insufficient-evidence path |
+| RAG contract rules | `docs/IMPLEMENTATION_CONTRACT.md §RAG Rules` | Corpus isolation, schema versioning, stale-index handling policy |
+
+### RAG Workflow Shape
+
+When RAG Profile = ON, the retrieval system has two distinct pipelines. These are separate responsibilities and must never be merged into a single task or service.
+
+**Ingestion pipeline** (offline, scheduled, or event-driven):
+```
+extract → normalize → chunk → embed → index
+```
+
+**Query-time pipeline** (online, per-request):
+```
+query analyze → retrieve → rerank/filter → assemble evidence → answer | insufficient_evidence
+```
+
+The `insufficient_evidence` path is not optional. If the retrieved evidence does not support an answer, the system must return `insufficient_evidence` rather than hallucinating a response. This path must have an explicit acceptance criterion and a test.
+
+### Retrieval Quality is Evaluated Separately from Code Quality
+
+Retrieval correctness cannot be verified by code review alone. When RAG Profile = ON, the review cycle must include retrieval-specific checks:
+
+- **Recall audit**: Does the system retrieve the right documents for representative queries?
+- **Evidence assembly**: Is the assembled context coherent and relevant to the query?
+- **Insufficient-evidence path**: Is the fallback path exercised in tests with queries that should not be answerable?
+- **Index staleness**: Is there a defined maximum age for indexed documents? Is it enforced?
+- **Corpus isolation**: If multi-tenant, are corpus boundaries enforced at the retrieval layer?
+
+These checks are added to `PROMPT_2_CODE.md` (code review) and `PROMPT_1_ARCH.md` (architecture review) when RAG Profile = ON.
+
+### RAG-Specific Risks
+
+The following risks apply only to RAG-profile projects and must be documented in `docs/ARCHITECTURE.md §Risks` when RAG Profile = ON:
+
+| Risk | Description | Mitigation |
+|------|-------------|------------|
+| Hallucination on weak evidence | Model answers confidently despite low-quality retrieval | Require confidence threshold; implement `insufficient_evidence` path |
+| Schema drift | Embedding model or chunk format changes invalidate the index | Version the index schema; re-index on model change; enforce via ADR |
+| Stale index | Indexed documents fall out of date silently | Define max index age; add staleness check to health endpoint |
+| Corpus isolation failure | Retrieval crosses tenant or classification boundaries | Enforce corpus-level ACLs at the retrieval layer, not just application layer |
+| Retrieval latency regression | Adding reranking or larger corpora degrades p95 latency | Set latency acceptance criteria per retrieval task; track in baseline |
+
+### Orchestrator Handling of RAG Work
+
+When RAG Profile = ON, the Orchestrator applies a **stricter review path** to retrieval-related tasks:
+
+- All tasks tagged `rag:ingestion` or `rag:query` trigger a **deep review**, not just a light review, regardless of phase boundary.
+- The ARCH review must explicitly verify corpus isolation and pipeline separation.
+- The CODE review must verify the `insufficient_evidence` path is tested.
+- P2 findings on retrieval components escalate to P1 at the next cycle (the Age Cap is reduced from 3 cycles to 1 cycle for retrieval-critical findings).
+
+Tag retrieval tasks in `tasks.md` with a `Type:` field:
+
+```markdown
+Type: rag:ingestion   # ingestion pipeline tasks
+Type: rag:query       # query-time retrieval tasks
+```
+
+The Orchestrator reads this tag to apply the stricter review path.
+
+---
+
 ## 2b. Session Start Ritual — The Loop Mechanism
 
 This is the mechanism that makes the workflow run autonomously without manual step-by-step prompting.

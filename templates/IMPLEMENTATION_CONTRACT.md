@@ -105,6 +105,52 @@ Examples of project-specific rules:
 
 ---
 
+## RAG Rules
+
+<!--
+This section applies ONLY when RAG Profile = ON in docs/ARCHITECTURE.md.
+If RAG Profile = OFF, delete this entire section.
+-->
+
+_Applies only when `docs/ARCHITECTURE.md` declares `RAG Profile: ON`._
+
+### Corpus Isolation
+
+- Every retrieval query must be scoped to the corpus the caller is authorized to access.
+- Cross-corpus retrieval (e.g., querying another tenant's documents) is treated as a data leak — automatic P1.
+- Corpus boundaries are enforced at the retrieval layer (namespace filter, metadata filter, or separate index), not only at the application layer.
+
+### insufficient_evidence Path
+
+- Every query-time handler must implement the `insufficient_evidence` path.
+- When retrieved evidence does not meet the minimum confidence or coverage threshold, the system must return `insufficient_evidence` — not a hallucinated answer.
+- This path must have at least one explicit test in the integration test suite.
+- Omitting this path is an automatic P1.
+
+### Index Schema Versioning
+
+- The index schema (embedding model, chunking strategy, metadata fields) is versioned.
+- Changing any schema parameter requires an ADR. After the ADR is filed, the corpus must be fully re-indexed before the new schema goes to production.
+- A partial index (some documents using old schema, some using new) is forbidden.
+
+### Max Index Age
+
+- The maximum allowed age for indexed documents is: `{{MAX_INDEX_AGE, e.g., "24 hours"}}`.
+- The health endpoint must expose index freshness. A stale index beyond this threshold must produce a non-200 response or an explicit staleness warning.
+- Violation: P2 (escalates to P1 if index age exceeds 2× the max threshold).
+
+### Retrieval-Generation Separation
+
+- Ingestion pipeline code and query-time retrieval code live in separate modules.
+- A single function or class must not mix ingestion logic (extract, chunk, embed, index) with query-time logic (retrieve, rerank, assemble).
+- Violation: P2.
+
+### RAG P2 Age Cap Override
+
+For retrieval-critical findings (corpus isolation, `insufficient_evidence` path, schema drift), the standard P2 Age Cap of 3 cycles is reduced to **1 cycle**. A retrieval P2 that is not resolved after 1 review cycle is automatically escalated to P1.
+
+---
+
 ## Mandatory Pre-Task Protocol
 
 Every Codex agent must execute these steps before writing any implementation code. No exceptions.

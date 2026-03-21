@@ -245,3 +245,85 @@ Ask these if the project description does not answer them:
 7. What is the deployment target — container on a managed platform, bare VMs, serverless?
 
 Ask all questions at once, not one at a time. Wait for answers before producing the architecture package.
+
+---
+
+## RAG Profile Decision (Phase 1 Gate)
+
+Before producing any output, you must decide whether this project requires a retrieval-backed architecture. This is a **mandatory decision** — you cannot skip it, defer it, or leave it implicit.
+
+### Declare one of two states
+
+```
+RAG Profile: ON   — project uses retrieval-backed architecture
+RAG Profile: OFF  — project does not use retrieval; standard prompting only
+```
+
+Include this declaration at the top of `docs/ARCHITECTURE.md`, immediately after the System Overview.
+
+### Decision criteria
+
+Turn RAG Profile **ON** if one or more of the following applies:
+
+- The knowledge corpus is too large to fit in a prompt (policy documents, legal corpora, large wikis)
+- The knowledge changes faster than the code deploy cycle (live catalogs, regulations, evolving FAQs)
+- The output must include citations or evidence traceable to source documents
+- Sources are document-heavy (PDFs, markdown corpora, internal wikis, technical manuals)
+- Retrieval is needed not just for end-user chat but also for agent or tool context (an agent that looks up current state before acting)
+
+Turn RAG Profile **OFF** if none of these apply. Do not enable retrieval speculatively.
+
+### Justify your decision
+
+After the RAG Profile declaration, include a one-paragraph justification:
+
+```markdown
+## RAG Profile
+
+**RAG Profile: ON**
+
+Justification: The system must answer questions grounded in a corpus of 10,000+ policy
+documents that are updated weekly. Prompt-stuffing is not viable at this scale, and answers
+must include document citations for compliance. Retrieval quality is a first-class requirement.
+```
+
+or:
+
+```markdown
+## RAG Profile
+
+**RAG Profile: OFF**
+
+Justification: The system operates on structured data from a database with a well-defined
+schema. The knowledge required to answer queries fits within a single prompt. No document
+corpus, no citation requirement. Standard prompting with database lookups is sufficient.
+```
+
+### Additional output when RAG Profile = ON
+
+If you declare RAG Profile ON, you must produce these **additional sections and artifacts** beyond the standard package:
+
+**In `docs/ARCHITECTURE.md`:**
+- `§ RAG Architecture` — describe both pipelines:
+  - Ingestion: extract → normalize → chunk → embed → index
+  - Query-time: query analyze → retrieve → rerank/filter → assemble evidence → answer | insufficient_evidence
+- `§ Corpus Description` — what documents are indexed, update frequency, expected size
+- `§ Index Strategy` — embedding model choice (with rationale), chunking strategy, index schema version policy
+- `§ Risks` — fill in all five RAG-specific risks from the playbook (hallucination, schema drift, stale index, corpus isolation, latency regression)
+
+**In `docs/spec.md`:**
+- `§ Retrieval` — what sources are indexed, query types supported, citation format, `insufficient_evidence` behavior
+
+**In `docs/tasks.md`:**
+- Add separate tasks for ingestion pipeline and query-time retrieval (never merged into one task)
+- Tag each with `Type: rag:ingestion` or `Type: rag:query`
+- Include retrieval-specific acceptance criteria: recall targets, latency bounds, `insufficient_evidence` path test
+
+**In `docs/IMPLEMENTATION_CONTRACT.md`:**
+- Add `§ RAG Rules` with: corpus isolation enforcement, schema versioning policy, max index age policy, `insufficient_evidence` path requirement
+
+**Additional clarifying questions when RAG is plausible:**
+
+8. Does the system need to answer questions grounded in a document corpus? If yes: what are the sources (PDFs, markdown, APIs), how often does the corpus change, and are citations required in the output?
+9. Is the knowledge required to answer queries too large to fit in a single prompt, or does it change faster than the code deploy cycle?
+10. Is retrieval needed only for end-user responses, or also for agent/tool context during task execution?
