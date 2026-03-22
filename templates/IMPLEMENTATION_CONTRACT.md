@@ -105,14 +105,14 @@ Examples of project-specific rules:
 
 ---
 
-## RAG Rules
+## Profile Rules: RAG
 
 <!--
-This section applies ONLY when RAG Profile = ON in docs/ARCHITECTURE.md.
-If RAG Profile = OFF, delete this entire section.
+This section applies ONLY when RAG Status = ON in the ## Capability Profiles table
+in docs/ARCHITECTURE.md. If RAG Status = OFF, delete this entire section.
 -->
 
-_Applies only when `docs/ARCHITECTURE.md` declares `RAG Profile: ON`._
+_Applies only when `docs/ARCHITECTURE.md` declares RAG Status = ON in the Capability Profiles table._
 
 ### Corpus Isolation
 
