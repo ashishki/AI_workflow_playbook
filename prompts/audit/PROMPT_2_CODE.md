@@ -30,7 +30,7 @@ QUAL-1 Error handling — no bare except without logging; external API errors ha
 QUAL-2 Test coverage — every new function/method has ≥1 test; every AC has a test case
 CF     Carry-forward — for each open finding in META_ANALYSIS: still present? worsened?
 
-<!-- Run the following checks ONLY if docs/ARCHITECTURE.md declares RAG Profile: ON -->
+<!-- Run the following checks ONLY if RAG Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 RET-1  insufficient_evidence path — retrieval-backed handlers return `insufficient_evidence` when evidence is inadequate; no hallucinated fallback
 RET-2  Evidence/citation path — assembled context matches the contract in ARCHITECTURE.md §RAG Architecture (format, fields, source traceability)
 RET-3  Metadata/schema discipline — retrieval changes preserve index schema version; no silent schema mutation
