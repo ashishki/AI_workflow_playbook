@@ -80,6 +80,8 @@ AI_workflow_playbook/
 
 **reference/GDEV_AGENT.md** explains which parts of gdev-agent to study when you need a concrete implementation example.
 
+**Capability Profiles** (`PLAYBOOK.md §2c`) — optional architectural modes activated in Phase 1 (e.g. RAG). When a profile is ON, it extends the workflow with profile-specific artifacts, review checks, state tracking, and an evaluation artifact. Each profile must satisfy the 9-property invariant defined in §2c before activation. RAG is the reference implementation.
+
 ---
 
 ## How to Start a New Project
