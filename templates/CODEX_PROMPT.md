@@ -69,11 +69,12 @@ or formally deferred to v2 (with ADR) before the next phase gate.
 
 ---
 
-## RAG State
+## Profile State: RAG
 
 <!--
-Include this section only when RAG Profile = ON in docs/ARCHITECTURE.md.
-If RAG Profile = OFF, set the first field accordingly and leave all others as "n/a".
+Include this section only when RAG Status = ON in the ## Capability Profiles table
+in docs/ARCHITECTURE.md. If RAG Status = OFF, set the first field accordingly and
+leave all others as "n/a".
 Updated by the orchestrator at every phase boundary where retrieval-related work occurred.
 
 Retrieval-related next tasks: tasks that happen to involve retrieval (scheduled work).
@@ -82,7 +83,7 @@ Retrieval-driven tasks: tasks created as a direct result of open retrieval findi
   quality is insufficient, not because of a feature requirement.
 -->
 
-- RAG Profile: OFF
+- RAG Status: OFF
 - Active corpora: n/a
 - Retrieval baseline: n/a
 - Open retrieval findings: none
