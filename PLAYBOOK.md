@@ -150,27 +150,9 @@ Every subsequent session starts by running `pytest` and comparing against this b
 
 ## 2c. Capability Profiles
 
-A Capability Profile is an optional architectural mode that can be activated during Phase 1. Each profile extends the base workflow with profile-specific artifacts, rules, review checks, state tracking, and evaluation criteria.
+A Capability Profile is an optional architectural mode that can be activated during Phase 1. Each profile extends the base workflow with profile-specific artifacts, rules, review checks, state tracking, and evaluation criteria. Profiles are declared in the `## Capability Profiles` table in `docs/ARCHITECTURE.md`.
 
-### The 9-Property Profile Invariant
-
-Every Capability Profile must define all nine of the following properties. A profile that omits any property is incomplete and must not be activated.
-
-| # | Property | What it covers |
-|---|----------|----------------|
-| 1 | **Decision Gate** | Explicit ON/OFF criteria in Phase 1 (Strategist decision) |
-| 2 | **Architecture Sections** | Additional sections in `docs/ARCHITECTURE.md` when ON |
-| 3a | **Spec Sections** | Additional sections in `docs/spec.md` when ON |
-| 3b | **Task Type Namespace** | Profile-scoped task tags (e.g. `rag:ingestion`, `rag:query`) |
-| 4 | **Implementation Contract Rules** | `## Profile Rules: {name}` section in `IMPLEMENTATION_CONTRACT.md` |
-| 5 | **Orchestrator Behavior** | How the orchestrator detects and reacts to active profile and profile task tags |
-| 6 | **Profile State Block** | `## Profile State: {name}` block in `CODEX_PROMPT.md` |
-| 7 | **Audit Extensions** | Conditional check blocks in `PROMPT_1_ARCH.md` and `PROMPT_2_CODE.md` |
-| 8 | **Evaluation Artifact** | A dedicated evaluation document with its own lifecycle (e.g. `docs/retrieval_eval.md`) |
-
-Profiles are declared in the `## Capability Profiles` table in `docs/ARCHITECTURE.md`. The table is machine-readable by the orchestrator and extensible — adding a profile means adding a row, not editing a flat field.
-
-**RAG is the reference implementation of this pattern.** The RAG-specific sections below show what each property looks like in practice.
+**RAG is the only current profile and serves as the reference implementation.**
 
 ---
 
@@ -274,6 +256,28 @@ Type: rag:query       # query-time retrieval tasks
 ```
 
 The Orchestrator reads this tag to apply the stricter review path.
+
+---
+
+### For profile authors — The 9-Property Invariant
+
+_Skip this section unless you are designing a new Capability Profile._
+
+Every Capability Profile must define all nine of the following properties before it is activated. RAG demonstrates all nine — use it as the template.
+
+| # | Property | What it covers |
+|---|----------|----------------|
+| 1 | **Decision Gate** | Explicit ON/OFF criteria in Phase 1 (Strategist decision) |
+| 2 | **Architecture Sections** | Additional sections in `docs/ARCHITECTURE.md` when ON |
+| 3a | **Spec Sections** | Additional sections in `docs/spec.md` when ON |
+| 3b | **Task Type Namespace** | Profile-scoped task tags (e.g. `rag:ingestion`, `rag:query`) |
+| 4 | **Implementation Contract Rules** | `## Profile Rules: {name}` section in `IMPLEMENTATION_CONTRACT.md` |
+| 5 | **Orchestrator Behavior** | How the orchestrator detects and reacts to active profile and profile task tags |
+| 6 | **Profile State Block** | `## Profile State: {name}` block in `CODEX_PROMPT.md` |
+| 7 | **Audit Extensions** | Conditional check blocks in `PROMPT_1_ARCH.md` and `PROMPT_2_CODE.md` |
+| 8 | **Evaluation Artifact** | A dedicated evaluation document with its own lifecycle (e.g. `docs/retrieval_eval.md`) |
+
+A profile that omits any property is incomplete and must not be activated.
 
 ---
 
