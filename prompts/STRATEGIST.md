@@ -248,22 +248,29 @@ Ask all questions at once, not one at a time. Wait for answers before producing 
 
 ---
 
-## RAG Profile Decision (Phase 1 Gate)
+## Capability Profiles Decision (Phase 1 Gate)
 
-Before producing any output, you must decide whether this project requires a retrieval-backed architecture. This is a **mandatory decision** — you cannot skip it, defer it, or leave it implicit.
+Before producing any output, you must evaluate which capability profiles this project requires. This is a **mandatory decision** — you cannot skip it, defer it, or leave it implicit.
 
-### Declare one of two states
+Each profile is optional and defaults to OFF. The current supported profiles are listed in PLAYBOOK.md §2c. For each profile, decide ON or OFF and justify the decision.
 
+### Declare profile statuses in the Capability Profiles table
+
+Add the `## Capability Profiles` table to `docs/ARCHITECTURE.md`, immediately after the System Overview:
+
+```markdown
+## Capability Profiles
+
+| Profile | Status        | Evaluation Artifact       | Justification |
+|---------|---------------|---------------------------|---------------|
+| RAG     | {{ON \| OFF}} | `docs/retrieval_eval.md` | {{one paragraph justification}} |
 ```
-RAG Profile: ON   — project uses retrieval-backed architecture
-RAG Profile: OFF  — project does not use retrieval; standard prompting only
-```
 
-Include this declaration at the top of `docs/ARCHITECTURE.md`, immediately after the System Overview.
+Each profile's status is set once in Phase 1 and treated as an architectural constraint. Changing status requires an ADR.
 
-### Decision criteria
+### Profile: RAG — Decision criteria
 
-Turn RAG Profile **ON** if one or more of the following applies:
+Turn RAG Status **ON** if one or more of the following applies:
 
 - The knowledge corpus is too large to fit in a prompt (policy documents, legal corpora, large wikis)
 - The knowledge changes faster than the code deploy cycle (live catalogs, regulations, evolving FAQs)
@@ -271,56 +278,44 @@ Turn RAG Profile **ON** if one or more of the following applies:
 - Sources are document-heavy (PDFs, markdown corpora, internal wikis, technical manuals)
 - Retrieval is needed not just for end-user chat but also for agent or tool context (an agent that looks up current state before acting)
 
-Turn RAG Profile **OFF** if none of these apply. Do not enable retrieval speculatively.
+Turn RAG Status **OFF** if none of these apply. Do not enable retrieval speculatively.
 
-### Justify your decision
+### Justify the RAG decision
 
-After the RAG Profile declaration, include a one-paragraph justification:
+The Justification column in the Capability Profiles table must be a one-paragraph justification. Examples:
 
-```markdown
-## RAG Profile
+**RAG ON:** "The system must answer questions grounded in a corpus of 10,000+ policy documents that are updated weekly. Prompt-stuffing is not viable at this scale, and answers must include document citations for compliance. Retrieval quality is a first-class requirement."
 
-**RAG Profile: ON**
+**RAG OFF:** "The system operates on structured data from a database with a well-defined schema. The knowledge required to answer queries fits within a single prompt. No document corpus, no citation requirement. Standard prompting with database lookups is sufficient."
 
-Justification: The system must answer questions grounded in a corpus of 10,000+ policy
-documents that are updated weekly. Prompt-stuffing is not viable at this scale, and answers
-must include document citations for compliance. Retrieval quality is a first-class requirement.
-```
+### Additional output when RAG Status = ON
 
-or:
+If you declare RAG Status ON, you must produce these **additional sections and artifacts** beyond the standard package. These correspond to the 9-property profile invariant documented in PLAYBOOK.md §2c:
 
-```markdown
-## RAG Profile
-
-**RAG Profile: OFF**
-
-Justification: The system operates on structured data from a database with a well-defined
-schema. The knowledge required to answer queries fits within a single prompt. No document
-corpus, no citation requirement. Standard prompting with database lookups is sufficient.
-```
-
-### Additional output when RAG Profile = ON
-
-If you declare RAG Profile ON, you must produce these **additional sections and artifacts** beyond the standard package:
-
-**In `docs/ARCHITECTURE.md`:**
-- `§ RAG Architecture` — describe both pipelines:
+**In `docs/ARCHITECTURE.md` — under `### Profile: RAG`:**
+- `#### RAG Architecture` — describe both pipelines:
   - Ingestion: extract → normalize → chunk → embed → index
   - Query-time: query analyze → retrieve → rerank/filter → assemble evidence → answer | insufficient_evidence
-- `§ Corpus Description` — what documents are indexed, update frequency, expected size
-- `§ Index Strategy` — embedding model choice (with rationale), chunking strategy, index schema version policy
-- `§ Risks` — fill in all five RAG-specific risks from the playbook (hallucination, schema drift, stale index, corpus isolation, latency regression)
+- `#### Corpus Description` — what documents are indexed, update frequency, expected size
+- `#### Index Strategy` — embedding model choice (with rationale), chunking strategy, index schema version policy
+- `#### Risks (RAG-specific)` — fill in all five RAG-specific risks from the playbook (hallucination, schema drift, stale index, corpus isolation, latency regression)
 
 **In `docs/spec.md`:**
 - `§ Retrieval` — what sources are indexed, query types supported, citation format, `insufficient_evidence` behavior
 
 **In `docs/tasks.md`:**
 - Add separate tasks for ingestion pipeline and query-time retrieval (never merged into one task)
-- Tag each with `Type: rag:ingestion` or `Type: rag:query`
+- Tag each with `Type: rag:ingestion` or `Type: rag:query` (profile task type namespace)
 - Include retrieval-specific acceptance criteria: recall targets, latency bounds, `insufficient_evidence` path test
 
 **In `docs/IMPLEMENTATION_CONTRACT.md`:**
-- Add `§ RAG Rules` with: corpus isolation enforcement, schema versioning policy, max index age policy, `insufficient_evidence` path requirement
+- Add `## Profile Rules: RAG` with: corpus isolation enforcement, schema versioning policy, max index age policy, `insufficient_evidence` path requirement
+
+**In `docs/CODEX_PROMPT.md`:**
+- Add `## Profile State: RAG` block: retrieval baseline, open retrieval findings, index schema version, pending reindex actions
+
+**Evaluation artifact:**
+- `docs/retrieval_eval.md` — copy from `templates/RETRIEVAL_EVAL.md`. This file has its own lifecycle: it is updated whenever retrieval logic changes, independent of code quality reviews.
 
 **Additional clarifying questions when RAG is plausible:**
 
