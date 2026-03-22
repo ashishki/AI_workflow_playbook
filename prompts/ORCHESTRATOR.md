@@ -97,6 +97,7 @@ Read in full:
 2. `docs/tasks.md` — full task graph with phases
 
 Read the `## Capability Profiles` table in `docs/ARCHITECTURE.md`. Record all profiles with Status = ON — this affects review tier and state update requirements below.
+If the table is not present (legacy format), fall back to reading the `RAG Profile: ON | OFF` field — treat `RAG Profile: ON` as equivalent to RAG Status = ON in all steps below.
 
 Determine:
 
