@@ -20,13 +20,25 @@ Each profile defaults to OFF. Decide once in Phase 1; changing status requires a
 See PLAYBOOK.md §2c for decision criteria and the 9-property profile invariant.
 -->
 
-| Profile | Status        | Evaluation Artifact       | Justification |
-|---------|---------------|---------------------------|---------------|
-| RAG     | {{ON \| OFF}} | `docs/retrieval_eval.md` | {{one paragraph — why retrieval is or is not needed for this project}} |
+| Profile  | Status        | Evaluation Artifact       | Justification |
+|----------|---------------|---------------------------|---------------|
+| RAG      | {{ON \| OFF}} | `docs/retrieval_eval.md` | {{one paragraph — why retrieval is or is not needed}} |
+| Tool-Use | {{ON \| OFF}} | `docs/tool_eval.md`      | {{one paragraph — why LLM-directed tool calls are or are not needed}} |
+| Agentic  | {{ON \| OFF}} | `docs/agent_eval.md`     | {{one paragraph — why a multi-step decision loop is or is not needed}} |
+| Planning | {{ON \| OFF}} | `docs/plan_eval.md`      | {{one paragraph — why structured plan output is or is not needed}} |
 
 <!--
 For each profile with Status = ON, fill in its sub-sections below.
 For each profile with Status = OFF, delete its sub-sections.
+
+Compatibility notes:
+- Agentic ⊄ Tool-Use: an agentic system may call tools, but Tool-Use profile governs the
+  tool-specific design contracts (side effects, idempotency, unsafe-action gates). If the
+  system has both an agent loop and LLM-directed tool calls, both profiles must be ON.
+- Retrieval semantics are owned by RAG: if an agentic system performs retrieval, RAG profile
+  (not Agentic) governs ingestion, indexing, corpus isolation, and insufficient_evidence.
+- The Orchestrator dispatches deep review on task type tags — keep tags in tasks.md accurate:
+  rag:ingestion, rag:query, tool:schema, tool:unsafe, agent:loop, agent:handoff, plan:schema.
 -->
 
 ### Profile: RAG
@@ -91,6 +103,124 @@ The `insufficient_evidence` path is **not optional**. When retrieved evidence do
 | Stale index | Max age policy ({{MAX_AGE}}); staleness check on health endpoint |
 | Corpus isolation failure | {{Corpus-level ACL strategy — e.g., namespace per tenant, filter at retrieval layer}} |
 | Retrieval latency regression | Latency acceptance criteria per RAG task; tracked in baseline |
+
+### Profile: Tool-Use
+
+<!--
+Include this sub-section only when Tool-Use Status = ON. Delete if OFF.
+-->
+
+#### Tool Catalog
+
+| Tool | Function signature | Side effects | Idempotency | Permission required | Retry policy |
+|------|--------------------|-------------|-------------|---------------------|--------------|
+| {{TOOL_1}} | `{{signature}}` | {{read / write / destructive}} | {{yes / no}} | {{permission}} | {{strategy}} |
+
+#### Unsafe-Action Policy
+
+_Destructive or irreversible tool calls (delete, send, charge, publish):_
+
+| Tool | Why unsafe | Confirmation mechanism | Rollback path |
+|------|-----------|----------------------|---------------|
+| {{TOOL_N}} | {{reason}} | {{confirmation step}} | {{rollback or "none — irreversible, require explicit approval"}} |
+
+#### Risks (Tool-Use-specific)
+
+| Risk | Mitigation |
+|------|------------|
+| Side effect on partial failure | Idempotency keys; retry only idempotent calls |
+| Unsafe action without confirmation | Mandatory confirmation step before destructive calls |
+| Tool schema drift | Schema versioning; generation-time validation test per schema version |
+| Permission escalation via tool chaining | Permission check at each tool boundary, not only at the entry point |
+
+---
+
+### Profile: Agentic
+
+<!--
+Include this sub-section only when Agentic Status = ON. Delete if OFF.
+-->
+
+#### Agent Roles
+
+| Role | Authority scope | Inputs | Outputs | Termination conditions |
+|------|----------------|--------|---------|----------------------|
+| {{ROLE_1}} | {{what it may decide and act on}} | {{inputs}} | {{outputs}} | {{how it terminates}} |
+
+#### Loop Termination Contract
+
+- **Maximum iterations:** {{N}}
+- **Normal termination:** {{condition — e.g., goal achieved, all tasks complete}}
+- **Forced termination:** {{trigger — e.g., timeout, max steps reached, human interrupt}}
+- **Non-termination behavior:** {{fallback or error — e.g., return partial result, raise alert}}
+
+#### Agent Handoff Protocol
+
+_How state transfers between agent roles or across loop iterations:_
+
+{{Describe the mechanism — shared state file, message payload, direct structured return, etc.
+Specify what the receiving role must validate before proceeding.}}
+
+#### Risks (Agentic-specific)
+
+| Risk | Mitigation |
+|------|------------|
+| Infinite loop | Hard iteration cap in termination contract; enforced, not advisory |
+| Authority boundary violation | Permission check at each role boundary; not delegatable |
+| State corruption across iterations | Explicit state schema; validated before each iteration |
+| Handoff failure | Handoff integrity test required per agentic task |
+
+---
+
+### Profile: Planning
+
+<!--
+Include this sub-section only when Planning Status = ON. Delete if OFF.
+-->
+
+#### Plan Schema
+
+_A valid plan produced by this system has the following structure:_
+
+```json
+{
+  "schema_version": "{{VERSION}}",
+  "goal": "string",
+  "steps": [
+    {
+      "id": "string",
+      "action": "string",
+      "depends_on": ["step_id"],
+      "approval_required": false,
+      "{{ADDITIONAL_FIELDS}}": "..."
+    }
+  ]
+}
+```
+
+Schema version is immutable once published. Changes require an ADR.
+
+#### Plan Validation
+
+- **Validation mechanism:** {{how plans are validated at generation time — e.g., JSON Schema, Pydantic model}}
+- **Invalid plan behavior:** {{reject with error / request replan / escalate to human}}
+- **Replan trigger conditions:** {{when replanning is allowed — e.g., context hash mismatch, step failure}}
+
+#### Plan-to-Execution Contract
+
+_How a generated plan is consumed downstream:_
+
+{{Describe the interface — API endpoint, file handoff, human review gate, execution engine. Specify
+what the consumer must validate before executing any step.}}
+
+#### Risks (Planning-specific)
+
+| Risk | Mitigation |
+|------|------------|
+| Invalid plan accepted without validation | Schema validation gate before plan leaves the system |
+| Stale plan on changed context | Context hash in plan; replan trigger on mismatch |
+| Unapproved high-risk step executed | Approval gates declared in schema; enforced at execution |
+| Plan schema drift between producer and consumer | Schema versioning; consumers reject unknown versions |
 
 ---
 
