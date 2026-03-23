@@ -44,6 +44,8 @@ The orchestrator reads all state from `docs/CODEX_PROMPT.md` and `docs/tasks.md`
      The command must accept a prompt string as its final argument, be able to read/write
      files under {{PROJECT_ROOT}}, and execute shell commands (test runner, linter).
      Replace this placeholder with the exact invocation for your environment. -->
+<!-- See reference/CODEX_CLI.md for Codex CLI invocation patterns, known sandbox
+     limitations (async test hangs, heavy deps), and prompt engineering guidelines. -->
 
 **Implementer invocation — always via variable, never stdin:**
 ```bash
