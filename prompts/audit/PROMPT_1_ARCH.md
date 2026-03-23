@@ -44,6 +44,30 @@ Output: docs/audit/ARCH_REPORT.md (overwrite).
 - Are retrieval observability expectations defined (latency, recall, evidence quality signals)?
 - Verdict per check: PASS | DRIFT | VIOLATION | N/A
 
+**Tool-Use architecture** — run ONLY if Tool-Use Status = ON:
+- Is every LLM-callable tool listed in ARCHITECTURE.md §Tool Catalog with side-effect class, idempotency, and permission?
+- Are destructive/irreversible tools identified and covered by the Unsafe-Action Policy?
+- Are confirmation steps implemented as distinct code paths (not flags or comments)?
+- Are tool schemas versioned and validated at generation time?
+- Is permission checked at each tool boundary, not only at the entry point?
+- Verdict per check: PASS | DRIFT | VIOLATION | N/A
+
+**Agentic architecture** — run ONLY if Agentic Status = ON:
+- Is every agent role defined in ARCHITECTURE.md §Agent Roles with authority scope and termination conditions?
+- Is the loop termination contract (max iterations, forced-termination behavior) explicit and enforced?
+- Are authority boundaries enforced in code — not only documented?
+- Is cross-iteration state managed via a declared schema (not ad-hoc)?
+- Is the agent handoff protocol defined and tested?
+- Verdict per check: PASS | DRIFT | VIOLATION | N/A
+
+**Planning architecture** — run ONLY if Planning Status = ON:
+- Is the plan schema defined in ARCHITECTURE.md §Plan Schema and versioned?
+- Is there a validation gate before plans leave the system boundary?
+- Is invalid plan behavior specified (reject / replan / escalate)?
+- Is the plan-to-execution contract defined and consumed as specified?
+- Are replan trigger conditions bounded (not open-ended)?
+- Verdict per check: PASS | DRIFT | VIOLATION | N/A
+
 ## Output format: docs/audit/ARCH_REPORT.md
 
 ---
@@ -81,6 +105,36 @@ _Omit this section entirely if RAG Status = OFF._
 | Freshness / max-index-age policy | | |
 | Index schema versioning | | |
 | Retrieval observability expectations | | |
+
+## Tool-Use Architecture Checks
+_Omit this section entirely if Tool-Use Status = OFF._
+| Check | Verdict | Note |
+|-------|---------|------|
+| Tool Catalog complete (side effects, idempotency, permissions) | | |
+| Unsafe-Action Policy covers all destructive tools | | |
+| Confirmation steps are distinct code paths | | |
+| Tool schemas versioned and validated at generation time | | |
+| Permission checked at each tool boundary | | |
+
+## Agentic Architecture Checks
+_Omit this section entirely if Agentic Status = OFF._
+| Check | Verdict | Note |
+|-------|---------|------|
+| All agent roles defined with authority scope | | |
+| Loop termination contract explicit and enforced | | |
+| Authority boundaries enforced in code | | |
+| Cross-iteration state uses declared schema | | |
+| Handoff protocol defined and tested | | |
+
+## Planning Architecture Checks
+_Omit this section entirely if Planning Status = OFF._
+| Check | Verdict | Note |
+|-------|---------|------|
+| Plan schema defined and versioned | | |
+| Validation gate before system boundary | | |
+| Invalid plan behavior specified | | |
+| Plan-to-execution contract defined | | |
+| Replan triggers bounded | | |
 
 ## Doc Patches Needed
 | File | Section | Change |
