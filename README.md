@@ -81,7 +81,15 @@ AI_workflow_playbook/
 ├── PLAYBOOK.md                 — master workflow document (read this first)
 ├── prompts/
 │   ├── STRATEGIST.md           — system prompt for the architecture-generation agent
-│   └── ORCHESTRATOR.md         — system prompt for the development orchestrator session
+│   ├── ORCHESTRATOR.md         — system prompt for the development orchestrator session
+│   ├── PHASE1_VALIDATOR.md     — Phase 1 completeness validator prompt
+│   ├── PROMPT_S_STRATEGY.md    — phase-boundary strategy reviewer prompt (template)
+│   └── audit/
+│       ├── PROMPT_0_META.md    — review pipeline: meta-analysis (template)
+│       ├── PROMPT_1_ARCH.md    — review pipeline: architecture drift (template)
+│       ├── PROMPT_2_CODE.md    — review pipeline: code & security (template)
+│       ├── PROMPT_3_CONSOLIDATED.md — review pipeline: consolidated report (template)
+│       └── AUDIT_INDEX.md      — audit index template
 ├── templates/
 │   ├── ARCHITECTURE.md         — template for system architecture document
 │   ├── CODEX_PROMPT.md         — template for session handoff document
@@ -100,6 +108,10 @@ AI_workflow_playbook/
 **prompts/STRATEGIST.md** is the system prompt you give to a Claude session when starting a new project. The agent reads your project description and produces all the starter documents.
 
 **prompts/ORCHESTRATOR.md** is the system prompt for the Claude Code session that runs the development loop — spawning Codex agents, running reviews, and enforcing phase gates.
+
+**prompts/PROMPT_S_STRATEGY.md** is the phase-boundary strategy reviewer prompt. At every phase gate, the Orchestrator spawns a Strategy Reviewer agent with this prompt. It reads ARCHITECTURE.md, open findings, ADRs, and the upcoming phase tasks, then issues a Proceed or Pause recommendation before implementation begins.
+
+**prompts/audit/** contains the four deep-review prompt templates (META → ARCH → CODE → CONSOLIDATED) and the AUDIT_INDEX template. The Strategist copies these into your project's `docs/audit/` at project creation, filling in the project name. The Orchestrator's review agents read them from there at runtime.
 
 **templates/** contains starting-point documents with `{{PLACEHOLDER}}` markers. The Strategist agent fills these in for your specific project.
 
@@ -120,8 +132,15 @@ AI_workflow_playbook/
    - The contents of `PLAYBOOK.md`
    - The contents of `prompts/STRATEGIST.md` as the system prompt
 3. Describe your project: domain, stack preferences, expected scale, team size, key constraints.
-4. The Strategist agent will produce all starter documents. Save them into your new repo.
-5. Open a Claude Code session in your new repo with `prompts/ORCHESTRATOR.md` as the system prompt.
+4. The Strategist produces **13 files** — save them all into your new repo:
+   - `docs/ARCHITECTURE.md`, `docs/spec.md`, `docs/tasks.md`
+   - `docs/CODEX_PROMPT.md`, `docs/IMPLEMENTATION_CONTRACT.md`
+   - `.github/workflows/ci.yml`
+   - `docs/prompts/ORCHESTRATOR.md` (stub — copy full `prompts/ORCHESTRATOR.md` from this playbook and fill `{{PROJECT_ROOT}}` and `{{CODEX_COMMAND}}`)
+   - `docs/prompts/PROMPT_S_STRATEGY.md`
+   - `docs/audit/PROMPT_0_META.md` through `PROMPT_3_CONSOLIDATED.md`
+   - `docs/audit/AUDIT_INDEX.md`
+5. Open a Claude Code session in your new repo with `docs/prompts/ORCHESTRATOR.md` as the system prompt.
 6. Say: "Start Phase 1." The orchestrator reads `docs/CODEX_PROMPT.md` and begins.
 
 That's the entire startup sequence. From there, the loop runs itself with you approving phase gates.

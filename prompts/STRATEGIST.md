@@ -212,7 +212,114 @@ A GitHub Actions CI workflow appropriate for the project's stack. Include:
 
 Add comments explaining each section — the CI file is read by agents who need to understand what it does.
 
-### 7. Phase Plan
+### 7. Operational Files
+
+These files are required by the Orchestrator at runtime. Output all seven, in order, after
+the six core documents above.
+
+**Rules for this section:**
+- Replace every `{{PROJECT_NAME}}` occurrence with the actual project name.
+- Leave `{{PROJECT_ROOT}}` and `{{CODEX_COMMAND}}` as literal placeholders — they are
+  environment-specific and must be filled by the developer before starting the Orchestrator.
+- Output each file verbatim inside a fenced code block labelled with its path.
+- Do NOT summarise or paraphrase — agents read these files exactly as written.
+
+---
+
+#### 7a. `docs/prompts/ORCHESTRATOR.md`
+
+Output only the following stub. The developer must copy the full
+`prompts/ORCHESTRATOR.md` from the AI Workflow Playbook into this file and then
+replace the two placeholders shown.
+
+```markdown
+# {{PROJECT_NAME}} — Workflow Orchestrator
+
+<!-- This file is the Orchestrator system prompt for {{PROJECT_NAME}}.
+     Source: prompts/ORCHESTRATOR.md from the AI Workflow Playbook.
+
+     Before first use, replace:
+       {{PROJECT_NAME}}  → the project name (e.g. my-api-service)
+       {{PROJECT_ROOT}}  → absolute path on disk (e.g. /home/alice/my-api-service)
+       {{CODEX_COMMAND}} → your implementation agent invocation
+                           (e.g. codex exec -s workspace-write)
+
+     See reference/CODEX_CLI.md for CODEX_COMMAND options and sandbox notes. -->
+```
+
+---
+
+#### 7b. `docs/prompts/PROMPT_S_STRATEGY.md`
+
+Copy the full contents of `prompts/PROMPT_S_STRATEGY.md` from the AI Workflow Playbook,
+replacing `{{PROJECT_NAME}}` with the actual project name. Output the complete file
+including the outer fenced code block and the role/check/output-format sections.
+
+---
+
+#### 7c. `docs/audit/PROMPT_0_META.md`
+
+Copy the full contents of `prompts/audit/PROMPT_0_META.md` from the AI Workflow Playbook,
+replacing `{{PROJECT_NAME}}` with the actual project name. Output the complete file.
+
+---
+
+#### 7d. `docs/audit/PROMPT_1_ARCH.md`
+
+Copy the full contents of `prompts/audit/PROMPT_1_ARCH.md` from the AI Workflow Playbook,
+replacing `{{PROJECT_NAME}}` with the actual project name. Output the complete file.
+
+---
+
+#### 7e. `docs/audit/PROMPT_2_CODE.md`
+
+Copy the full contents of `prompts/audit/PROMPT_2_CODE.md` from the AI Workflow Playbook,
+replacing `{{PROJECT_NAME}}` with the actual project name. Output the complete file.
+Adapt the Checklist section if the project's security requirements differ from the defaults
+(e.g. add tenant isolation checks for multi-tenant systems, add RET-* checks if RAG = ON).
+
+---
+
+#### 7f. `docs/audit/PROMPT_3_CONSOLIDATED.md`
+
+Copy the full contents of `prompts/audit/PROMPT_3_CONSOLIDATED.md` from the AI Workflow
+Playbook, replacing `{{PROJECT_NAME}}` with the actual project name. Output the complete file.
+
+---
+
+#### 7g. `docs/audit/AUDIT_INDEX.md`
+
+Output the following initialized index. Replace `{{PROJECT_NAME}}`.
+
+```markdown
+# Audit Index — {{PROJECT_NAME}}
+
+_Append-only. One row per review cycle._
+
+---
+
+## Review Schedule
+
+| Cycle | Phase | Date | Scope | Stop-Ship | P0 | P1 | P2 |
+|-------|-------|------|-------|-----------|----|----|-----|
+
+---
+
+## Archive
+
+| Cycle | File | Phase | Health |
+|-------|------|-------|--------|
+
+---
+
+## Notes
+
+- Index initialized at project start.
+```
+
+---
+
+### 8. Phase Plan
 
 A human-readable phase plan. Not a file — just a summary at the end of your output. List:
 - Phase number
