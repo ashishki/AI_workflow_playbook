@@ -94,6 +94,64 @@ Retrieval-driven tasks: tasks created as a direct result of open retrieval findi
 
 ---
 
+## Tool-Use State
+
+<!--
+Include this section only when Tool-Use Profile = ON in docs/ARCHITECTURE.md.
+If Tool-Use Profile = OFF, omit this section entirely.
+Updated by the orchestrator at every phase boundary where tool-related work occurred.
+
+Task tag that updates this block: Type: tool:schema | tool:call | tool:unsafe
+-->
+
+- Tool-Use Profile: OFF
+- Registered tool schemas: n/a
+- Unsafe-action guardrails: n/a
+- Open tool findings: none
+
+---
+
+## Agentic State
+
+<!--
+Include this section only when Agentic Profile = ON in docs/ARCHITECTURE.md.
+If Agentic Profile = OFF, omit this section entirely.
+Updated by the orchestrator at every phase boundary where agent loop work occurred.
+
+Task tags that update this block: Type: agent:loop | agent:handoff | agent:termination
+Note: Agentic and Tool-Use are independent profiles. If the system uses tools within
+an agent loop, both profiles may be ON and both state blocks must be maintained.
+-->
+
+- Agentic Profile: OFF
+- Active agent roles: n/a
+- Loop termination contract version: n/a
+- Cross-iteration state mechanism: n/a
+- Open agent findings: none
+
+---
+
+## Planning State
+
+<!--
+Include this section only when Planning Profile = ON in docs/ARCHITECTURE.md.
+If Planning Profile = OFF, omit this section entirely.
+Updated by the orchestrator at every phase boundary where plan structure work occurred.
+
+Planning Profile = ON means the application produces structured plans (task graphs,
+step-by-step procedures, decision trees) as its primary deliverable. This is not the
+same as the ORCHESTRATOR, which controls the development workflow.
+
+Task tags that update this block: Type: plan:schema | plan:validation
+-->
+
+- Planning Profile: OFF
+- Plan schema version: n/a
+- Plan validation method: n/a
+- Open plan findings: none
+
+---
+
 ## Completed Tasks
 
 none

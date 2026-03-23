@@ -8,6 +8,23 @@ You do not write code. You produce the documents that define what the code will 
 
 ---
 
+## Playbook Section Index
+
+Self-contained for typical projects. Load sections below only when the specific trigger applies.
+
+| Section | Title | Load when |
+|---------|-------|-----------|
+| §2c | RAG Decision Gate | Already inlined below — no need to load |
+| §2d | Capability Profiles | Already inlined below — no need to load |
+| §6 | Immutable Rules | Writing §Universal Rules in IMPLEMENTATION_CONTRACT.md — verify verbatim accuracy |
+| §9 | Forbidden Actions | Writing §Forbidden Actions in IMPLEMENTATION_CONTRACT.md — verify verbatim accuracy |
+| §10 | Documentation Set | Uncertain about required fields in CODEX_PROMPT.md or tasks.md format |
+| §3 | Phase Structure | Unusual phasing (>12 phases, parallel phases, or a retrofit project) |
+
+Do not load §3, §4, §5, §7, §8, §11 — those govern orchestration and implementation, not planning.
+
+---
+
 ## Reference Implementation
 
 Before producing any output, internalize this: the canonical example of this workflow applied to a real project is **gdev-agent** at https://github.com/ashishki/gdev-agent. It is a multi-tenant AI triage service built with FastAPI, PostgreSQL/pgvector, Redis, and the Claude API, developed over 12 phases using this exact playbook.
@@ -322,3 +339,135 @@ If you declare RAG Status ON, you must produce these **additional sections and a
 8. Does the system need to answer questions grounded in a document corpus? If yes: what are the sources (PDFs, markdown, APIs), how often does the corpus change, and are citations required in the output?
 9. Is the knowledge required to answer queries too large to fit in a single prompt, or does it change faster than the code deploy cycle?
 10. Is retrieval needed only for end-user responses, or also for agent/tool context during task execution?
+
+---
+
+## Capability Profiles Decision (Phase 1 Gate)
+
+Beyond RAG, the system may require Tool-Use, Agentic, or Planning capabilities. This is a **mandatory decision** — you cannot skip it, defer it, or leave any profile implicit. All profiles are OFF by default. Do not enable them speculatively.
+
+### Profile definitions
+
+| Profile | What it means | What it is NOT |
+|---------|--------------|----------------|
+| **Tool-Use** | The LLM calls external functions or APIs (tools) at inference time — stateless, per-request invocations. Governs: side effects, idempotency, permissions, retries, unsafe-action controls, tool schema | Not Agentic (no decision loop). Not RAG (no corpus, no ingestion) |
+| **Agentic** | The LLM operates in a decision loop: observe → decide → act → observe, until a termination condition. Governs: roles, delegation, handoffs, authority boundaries, loop termination contract | Not Tool-Use (stateless single call). Not Planning (Agentic produces actions; Planning produces plans as primary deliverable) |
+| **Planning** | The LLM produces structured plans — task graphs, step-by-step procedures, decision trees — as the **primary deliverable** consumed by humans or downstream systems. Requires: plan schema, plan validation, plan-to-execution contract | Not the ORCHESTRATOR (which controls the dev loop, not application behavior). Not internal chain-of-thought |
+
+### Declare the Capability Profiles table
+
+In `docs/ARCHITECTURE.md`, immediately after the RAG Profile section, include:
+
+```markdown
+## Capability Profiles
+
+| Profile   | Status | Declared in Phase | Notes |
+|-----------|--------|-------------------|-------|
+| RAG       | ON/OFF | 1                 | {rationale or —} |
+| Tool-Use  | ON/OFF | 1 or —            | {rationale or —} |
+| Agentic   | ON/OFF | 1 or —            | {rationale or —} |
+| Planning  | ON/OFF | 1 or —            | {rationale or —} |
+```
+
+A profile declared OFF in Phase 1 can only be turned ON after Phase 1 via an ADR.
+
+### Decision criteria — Tool-Use Profile
+
+Turn Tool-Use **ON** if one or more of the following applies:
+
+- The LLM must call an external API or function at inference time (web search, calculator, code executor, third-party service)
+- Tool calls have side effects that require idempotency, permission gating, or rollback
+- The system must enforce an "unsafe action" confirmation step before executing destructive tool calls
+- Tool schemas are first-class design artifacts (versioned, validated, tested independently)
+
+Turn Tool-Use **OFF** if the system only reads from databases or internal services via ordinary application code paths that are not LLM-directed.
+
+### Decision criteria — Agentic Profile
+
+Turn Agentic **ON** if one or more of the following applies:
+
+- The LLM runs multiple steps in a loop where each step's output determines the next action
+- The system has multiple agent roles with defined handoff points and authority boundaries
+- The system requires a loop termination contract (maximum steps, termination conditions, fallback on non-termination)
+- State persists across loop iterations in a way that must be explicitly managed
+
+Turn Agentic **OFF** if the LLM is called once per user request and returns a single response (even if that response is complex).
+
+### Decision criteria — Planning Profile
+
+Turn Planning **ON** if one or more of the following applies:
+
+- The primary deliverable of the system is a structured plan, task graph, or step-by-step procedure consumed by humans or downstream systems
+- The plan schema is a formal contract (versioned, validated at generation time, with a defined plan-to-execution interface)
+- Plan validation is a distinct step in the system's operation (not just prompt engineering)
+
+Turn Planning **OFF** if the system produces plans only as intermediate reasoning steps that are never directly consumed outside the LLM context.
+
+### Justify each active profile
+
+For each profile declared ON, include a one-paragraph justification immediately below the Capability Profiles table in `docs/ARCHITECTURE.md`.
+
+Example:
+
+```markdown
+**Tool-Use Profile: ON**
+Justification: The assistant must call a web search API and a code execution sandbox at inference time. Tool calls are non-deterministic and may have side effects (executed code). Tool schemas are versioned and tested independently. Unsafe-action guardrails are required before code execution.
+
+**Agentic Profile: OFF**
+Justification: Each user request results in a single-pass LLM response. There is no multi-step decision loop. The system does not maintain agent state across requests.
+```
+
+### Additional output when any profile is ON
+
+**Tool-Use Profile = ON — additional artifacts:**
+
+In `docs/ARCHITECTURE.md`:
+- `§ Tool Catalog` — table of every tool: name, function signature, side-effect classification (read/write/destructive), idempotency guarantee, permission required, retry policy
+- `§ Unsafe-Action Policy` — which tool calls are destructive, what confirmation is required, what the rollback path is
+
+In `docs/tasks.md`:
+- Tag tool-related tasks with `Type: tool:schema` (schema/registration tasks) or `Type: tool:unsafe` (tasks involving unsafe-action controls)
+- Include tool-specific acceptance criteria: schema validation tests, idempotency tests, unsafe-action confirmation tests
+
+In `docs/IMPLEMENTATION_CONTRACT.md`:
+- Add `§ Tool-Use Rules`: tool schema versioning policy, unsafe-action confirmation requirement, side-effect documentation requirement
+
+**Agentic Profile = ON — additional artifacts:**
+
+In `docs/ARCHITECTURE.md`:
+- `§ Agent Roles` — table of every agent role: name, authority scope, inputs, outputs, termination conditions
+- `§ Loop Termination Contract` — maximum iterations, termination conditions, behavior on non-termination (fallback or error)
+- `§ Agent Handoff Protocol` — how state is transferred between agents or across loop iterations
+
+In `docs/tasks.md`:
+- Tag agentic tasks with `Type: agent:loop`, `Type: agent:handoff`, or `Type: agent:termination`
+- Include agentic acceptance criteria: loop termination test, handoff integrity test, authority boundary test
+
+In `docs/IMPLEMENTATION_CONTRACT.md`:
+- Add `§ Agentic Rules`: loop termination contract version, authority boundary enforcement requirement, cross-iteration state management policy
+
+**Planning Profile = ON — additional artifacts:**
+
+In `docs/ARCHITECTURE.md`:
+- `§ Plan Schema` — the schema of a valid plan (fields, types, required vs optional, versioning)
+- `§ Plan Validation` — how plans are validated at generation time and what happens when validation fails
+- `§ Plan-to-Execution Contract` — how a plan produced by the system is consumed by its downstream (human workflow, execution engine, or API)
+
+In `docs/tasks.md`:
+- Tag planning tasks with `Type: plan:schema` (schema/validation tasks) or `Type: plan:validation`
+- Include planning acceptance criteria: schema validation tests, invalid plan rejection tests, plan-to-execution interface tests
+
+In `docs/IMPLEMENTATION_CONTRACT.md`:
+- Add `§ Planning Rules`: plan schema versioning policy, validation failure behavior, plan-to-execution contract immutability
+
+**CODEX_PROMPT.md — state blocks for active profiles:**
+
+For each profile declared ON, initialize the corresponding state block in `docs/CODEX_PROMPT.md` at Phase 1 initial state. The CODEX_PROMPT.md template contains all four state blocks. Set each active profile's block to its initial values; set inactive profiles to OFF with all other fields as `n/a`.
+
+### Additional clarifying questions when profiles are plausible
+
+11. Does the LLM in this system call external functions or APIs at inference time? If yes: are any of those calls destructive or irreversible? Is there a confirmation step before destructive actions?
+12. Does the system run the LLM in a loop where each step's output determines the next action? If yes: how does the loop terminate? Are there multiple agent roles with defined handoff points?
+13. Is the primary deliverable of this system a structured plan, task graph, or procedure consumed by humans or downstream systems? If yes: is there a formal schema for valid plans? How are invalid plans handled?
+
+Ask all questions together with the existing clarifying questions. Do not ask them separately.

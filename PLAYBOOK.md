@@ -259,6 +259,112 @@ The Orchestrator reads this tag to apply the stricter review path.
 
 ---
 
+## 2d. Capability Profiles
+
+Beyond RAG, a system may require Tool-Use, Agentic, or Planning capabilities. Each is an optional architectural mode that the Strategist must explicitly declare in Phase 1. Like RAG, all four profiles are OFF by default. Do not enable them speculatively.
+
+### Profile Definitions
+
+| Profile | Definition | NOT |
+|---------|-----------|-----|
+| **RAG** | The application retrieves from a managed corpus at query time to ground its outputs. Requires: ingestion pipeline, query-time retrieval, corpus isolation, `insufficient_evidence` path | Not a simple tool call to an external search API without a managed corpus and ingestion pipeline |
+| **Tool-Use** | The LLM calls external functions or APIs (tools) at inference time — stateless, per-request invocations. Governs: side effects, idempotency, permissions, retries, unsafe-action controls, tool schema | Not Agentic (no decision loop); not RAG (no corpus, no ingestion) |
+| **Agentic** | The LLM operates in a decision loop: observe → decide → act → observe, until a termination condition. Governs: roles, delegation, coordination, handoffs, authority boundaries, loop termination contract | Not Tool-Use (stateless single-call); not Planning (Agentic produces actions, not plans as primary deliverables) |
+| **Planning** | The LLM produces structured plans — task graphs, step-by-step procedures, decision trees — as the **primary deliverable** consumed by humans or downstream systems. Requires: plan schema, plan validation, plan-to-execution contract | Not the ORCHESTRATOR (which controls the development loop, not application behavior); not agentic chain-of-thought (internal planning is not this profile) |
+
+**Planning invariant:** Planning Profile concerns application runtime behavior. ORCHESTRATOR concerns the development workflow. These are invariantly distinct levels — never merge them.
+
+### Compatibility Matrix
+
+```
+             RAG        Tool-Use    Agentic     Planning
+RAG          —          ✅ §        ✅          ✅
+Tool-Use     ✅ §        —          ✅ +        ✅
+Agentic      ✅          ✅ +        —           ✅
+Planning     ✅          ✅          ✅           —
+```
+
+**`✅`** — compatible; both profiles declared independently.
+**`✅ §`** — compatible; semantic ownership rule applies (see below).
+**`✅ +`** — compatible; audit checklists are additive (see below).
+
+### Semantic Ownership Rule (RAG + Tool-Use)
+
+> **Semantic ownership beats implementation mechanism.**
+
+If a task changes retrieval semantics — corpus structure, chunking logic, embedding model, query policy, `insufficient_evidence` behavior, or index schema — it is **RAG-owned**, regardless of whether the implementation routes through a tool call, HTTP API, or direct SDK call.
+
+The task `Type:` tag is the source of truth. The implementation type is not.
+
+```
+# Example: adapter swap that touches retrieval semantics
+Task: "Replace vector index adapter"
+Code touches: API client (looks like tool code)
+Tag: Type: rag:ingestion
+Ownership: RAG — semantic wins; RET-N checks apply, not TOOL-N
+```
+
+### Additive Checks Rule (Agentic + Tool-Use)
+
+When Agentic and Tool-Use are both ON, their audit checklists are **additive** for tasks that touch both domains. Neither profile subsumes the other:
+
+- **Tool-Use** owns: side effects, idempotency, permissions, retries, unsafe actions, tool schema definition
+- **Agentic** owns: roles, delegation, coordination, handoffs, authority boundaries, loop termination
+
+A task tagged `tool:call` + `agent:handoff` receives TOOL-N **and** AGENT-N checklists.
+
+### Audit Check Ownership by Active Profiles
+
+| Active profiles | Check set applied |
+|-----------------|-------------------|
+| RAG only | RET-N |
+| Tool-Use only | TOOL-N |
+| Agentic only | AGENT-N |
+| Planning only | PLAN-N |
+| RAG + Tool-Use | RET-N for `rag:*` tasks; TOOL-N for other tool tasks |
+| RAG + Agentic | RET-N for `rag:*` tasks; AGENT-N for loop/agent tasks |
+| Agentic + Tool-Use | AGENT-N + TOOL-N (additive) |
+| All four active | Each profile governs its tagged tasks; semantic ownership rule applies for retrieval tasks |
+
+### Orchestrator Dispatch — Tag-Based, Not Profile-Based
+
+The Orchestrator dispatches on normalized task tags, not profile names. Each active profile registers deep review trigger tags. A deep review fires if **any** tag from any active profile matches the current task:
+
+| Profile | Deep review trigger tags |
+|---------|--------------------------|
+| RAG | `rag:ingestion`, `rag:query` |
+| Tool-Use | `tool:schema`, `tool:unsafe` |
+| Agentic | `agent:loop`, `agent:handoff`, `agent:termination` |
+| Planning | `plan:schema`, `plan:validation` |
+
+Adding a new profile means registering new tags. The Orchestrator dispatch logic itself does not change.
+
+### Declaring Profiles in ARCHITECTURE.md
+
+```markdown
+## Capability Profiles
+
+| Profile   | Status | Declared in Phase | Notes |
+|-----------|--------|-------------------|-------|
+| RAG       | ON     | 1                 | Retrieval via managed vector corpus |
+| Tool-Use  | OFF    | —                 | — |
+| Agentic   | ON     | 1                 | Single-agent loop; terminates on task completion |
+| Planning  | OFF    | —                 | — |
+```
+
+This declaration is made once in Phase 1 and treated as an architectural constraint. Changing any profile from OFF to ON (or vice versa) after Phase 1 requires an ADR.
+
+### CODEX_PROMPT.md State Blocks
+
+Each active profile gets its own state block. Blocks are independent. The task `Type:` tag determines which block is updated after each task completes.
+
+```markdown
+## RAG State        ← include only if RAG Profile = ON
+## Tool-Use State   ← include only if Tool-Use Profile = ON
+## Agentic State    ← include only if Agentic Profile = ON
+## Planning State   ← include only if Planning Profile = ON
+```
+
 ### For profile authors — The 9-Property Invariant
 
 _Skip this section unless you are designing a new Capability Profile._
