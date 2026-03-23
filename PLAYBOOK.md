@@ -148,22 +148,30 @@ Every subsequent session starts by running `pytest` and comparing against this b
 
 ---
 
-## 2c. RAG Decision Gate (Optional Architectural Track)
+## 2c. Capability Profiles
 
-RAG (Retrieval-Augmented Generation) is **not a default requirement**. It is an optional architectural mode that the Strategist must explicitly enable or disable during Phase 1.
+A Capability Profile is an optional architectural mode that can be activated during Phase 1. Each profile extends the base workflow with profile-specific artifacts, rules, review checks, state tracking, and evaluation criteria. Profiles are declared in the `## Capability Profiles` table in `docs/ARCHITECTURE.md`.
 
-### RAG Profile: ON | OFF
+**RAG is the only current profile and serves as the reference implementation.**
 
-The Strategist declares one of two states in `docs/ARCHITECTURE.md`:
+---
+
+### Profile: RAG
+
+RAG (Retrieval-Augmented Generation) is **not a default requirement**. It is an optional architectural mode that the Strategist must explicitly enable or disable during Phase 1. Its evaluation artifact is `docs/retrieval_eval.md`.
+
+#### RAG Status: ON | OFF
+
+The Strategist declares the RAG status in the `## Capability Profiles` table in `docs/ARCHITECTURE.md`:
 
 ```
-RAG Profile: ON   — project uses retrieval-backed architecture
-RAG Profile: OFF  — project does not use retrieval; standard prompting only
+| RAG | ON  | docs/retrieval_eval.md | project uses retrieval-backed architecture |
+| RAG | OFF | docs/retrieval_eval.md | project does not use retrieval; standard prompting only |
 ```
 
 This decision is made once, in Phase 1, and treated as an architectural constraint for all subsequent phases. Changing it requires an ADR.
 
-### When to Turn RAG ON
+#### When to Turn RAG ON
 
 Turn RAG Profile ON when one or more of the following is true:
 
@@ -177,21 +185,23 @@ Turn RAG Profile ON when one or more of the following is true:
 
 When none of these signals are present, RAG Profile is OFF. Do not add retrieval infrastructure speculatively.
 
-### Additional Artifacts When RAG Profile = ON
+#### Additional Artifacts When RAG Status = ON
 
-If the Strategist declares RAG Profile ON, the following additional artifacts must be produced in Phase 1:
+If the Strategist declares RAG Status ON, the following additional artifacts must be produced in Phase 1:
 
 | Artifact | Path | Purpose |
 |----------|------|---------|
-| RAG Architecture section | `docs/ARCHITECTURE.md §RAG Architecture` | Ingestion pipeline, query-time pipeline, corpus description, index strategy |
+| RAG Architecture section | `docs/ARCHITECTURE.md §Profile: RAG > §RAG Architecture` | Ingestion pipeline, query-time pipeline, corpus description, index strategy |
 | Retrieval spec section | `docs/spec.md §Retrieval` | What sources are indexed, update frequency, expected query types, citation requirements |
 | RAG tasks | `docs/tasks.md` | Separate tasks for ingestion pipeline and query-time retrieval (never merged into a single task) |
 | Retrieval acceptance criteria | `docs/tasks.md` (per task) | Retrieval-specific criteria: recall targets, latency bounds, insufficient-evidence path |
-| RAG contract rules | `docs/IMPLEMENTATION_CONTRACT.md §RAG Rules` | Corpus isolation, schema versioning, stale-index handling policy |
+| Profile contract rules | `docs/IMPLEMENTATION_CONTRACT.md §Profile Rules: RAG` | Corpus isolation, schema versioning, stale-index handling policy |
+| Profile state block | `docs/CODEX_PROMPT.md §Profile State: RAG` | Retrieval baseline, open retrieval findings, index schema version, pending reindex |
+| Evaluation artifact | `docs/retrieval_eval.md` | Retrieval quality metrics with own lifecycle (separate from code quality) |
 
-### RAG Workflow Shape
+#### RAG Workflow Shape
 
-When RAG Profile = ON, the retrieval system has two distinct pipelines. These are separate responsibilities and must never be merged into a single task or service.
+When RAG Status = ON, the retrieval system has two distinct pipelines. These are separate responsibilities and must never be merged into a single task or service.
 
 **Ingestion pipeline** (offline, scheduled, or event-driven):
 ```
@@ -205,9 +215,9 @@ query analyze → retrieve → rerank/filter → assemble evidence → answer | 
 
 The `insufficient_evidence` path is not optional. If the retrieved evidence does not support an answer, the system must return `insufficient_evidence` rather than hallucinating a response. This path must have an explicit acceptance criterion and a test.
 
-### Retrieval Quality is Evaluated Separately from Code Quality
+#### Retrieval Quality is Evaluated Separately from Code Quality
 
-Retrieval correctness cannot be verified by code review alone. When RAG Profile = ON, the review cycle must include retrieval-specific checks:
+Retrieval correctness cannot be verified by code review alone. When RAG Status = ON, the review cycle must include retrieval-specific checks:
 
 - **Recall audit**: Does the system retrieve the right documents for representative queries?
 - **Evidence assembly**: Is the assembled context coherent and relevant to the query?
@@ -215,11 +225,11 @@ Retrieval correctness cannot be verified by code review alone. When RAG Profile 
 - **Index staleness**: Is there a defined maximum age for indexed documents? Is it enforced?
 - **Corpus isolation**: If multi-tenant, are corpus boundaries enforced at the retrieval layer?
 
-These checks are added to `PROMPT_2_CODE.md` (code review) and `PROMPT_1_ARCH.md` (architecture review) when RAG Profile = ON.
+These checks are added to `PROMPT_2_CODE.md` (code review) and `PROMPT_1_ARCH.md` (architecture review) when RAG Status = ON.
 
-### RAG-Specific Risks
+#### RAG-Specific Risks
 
-The following risks apply only to RAG-profile projects and must be documented in `docs/ARCHITECTURE.md §Risks` when RAG Profile = ON:
+The following risks apply only to RAG-profile projects and must be documented in `docs/ARCHITECTURE.md §Profile: RAG > §Risks` when RAG Status = ON:
 
 | Risk | Description | Mitigation |
 |------|-------------|------------|
@@ -229,9 +239,9 @@ The following risks apply only to RAG-profile projects and must be documented in
 | Corpus isolation failure | Retrieval crosses tenant or classification boundaries | Enforce corpus-level ACLs at the retrieval layer, not just application layer |
 | Retrieval latency regression | Adding reranking or larger corpora degrades p95 latency | Set latency acceptance criteria per retrieval task; track in baseline |
 
-### Orchestrator Handling of RAG Work
+#### Orchestrator Handling of RAG Work
 
-When RAG Profile = ON, the Orchestrator applies a **stricter review path** to retrieval-related tasks:
+When RAG Status = ON, the Orchestrator applies a **stricter review path** to retrieval-related tasks:
 
 - All tasks tagged `rag:ingestion` or `rag:query` trigger a **deep review**, not just a light review, regardless of phase boundary.
 - The ARCH review must explicitly verify corpus isolation and pipeline separation.
@@ -246,6 +256,28 @@ Type: rag:query       # query-time retrieval tasks
 ```
 
 The Orchestrator reads this tag to apply the stricter review path.
+
+---
+
+### For profile authors — The 9-Property Invariant
+
+_Skip this section unless you are designing a new Capability Profile._
+
+Every Capability Profile must define all nine of the following properties before it is activated. RAG demonstrates all nine — use it as the template.
+
+| # | Property | What it covers |
+|---|----------|----------------|
+| 1 | **Decision Gate** | Explicit ON/OFF criteria in Phase 1 (Strategist decision) |
+| 2 | **Architecture Sections** | Additional sections in `docs/ARCHITECTURE.md` when ON |
+| 3a | **Spec Sections** | Additional sections in `docs/spec.md` when ON |
+| 3b | **Task Type Namespace** | Profile-scoped task tags (e.g. `rag:ingestion`, `rag:query`) |
+| 4 | **Implementation Contract Rules** | `## Profile Rules: {name}` section in `IMPLEMENTATION_CONTRACT.md` |
+| 5 | **Orchestrator Behavior** | How the orchestrator detects and reacts to active profile and profile task tags |
+| 6 | **Profile State Block** | `## Profile State: {name}` block in `CODEX_PROMPT.md` |
+| 7 | **Audit Extensions** | Conditional check blocks in `PROMPT_1_ARCH.md` and `PROMPT_2_CODE.md` |
+| 8 | **Evaluation Artifact** | A dedicated evaluation document with its own lifecycle (e.g. `docs/retrieval_eval.md`) |
+
+A profile that omits any property is incomplete and must not be activated.
 
 ---
 

@@ -12,24 +12,31 @@ Status: Draft
 
 ---
 
-## RAG Profile
+## Capability Profiles
 
 <!--
-REQUIRED: Declare RAG Profile ON or OFF. This is a Phase 1 architectural decision.
-See PLAYBOOK.md §2c for decision criteria.
+REQUIRED: Declare which capability profiles are active. This is a Phase 1 architectural decision.
+Each profile defaults to OFF. Decide once in Phase 1; changing status requires an ADR.
+See PLAYBOOK.md §2c for decision criteria and the 9-property profile invariant.
 -->
 
-**RAG Profile: {{ON | OFF}}**
-
-Justification: {{ONE_PARAGRAPH — why retrieval is or is not needed for this project}}
+| Profile | Status        | Evaluation Artifact       | Justification |
+|---------|---------------|---------------------------|---------------|
+| RAG     | {{ON \| OFF}} | `docs/retrieval_eval.md` | {{one paragraph — why retrieval is or is not needed for this project}} |
 
 <!--
-If RAG Profile = OFF, delete everything below in this section and continue to Component Table.
-
-If RAG Profile = ON, fill in the following sub-sections.
+For each profile with Status = ON, fill in its sub-sections below.
+For each profile with Status = OFF, delete its sub-sections.
 -->
 
-### RAG Architecture
+### Profile: RAG
+
+<!--
+Include this sub-section only when RAG Status = ON in the Capability Profiles table above.
+If RAG Status = OFF, delete from here through the end of this profile.
+-->
+
+#### RAG Architecture
 
 **Ingestion pipeline** (offline / scheduled):
 ```
@@ -59,7 +66,7 @@ query analyze → retrieve → rerank/filter → assemble evidence → answer | 
 
 The `insufficient_evidence` path is **not optional**. When retrieved evidence does not support an answer, the system must return `insufficient_evidence` rather than fabricating a response.
 
-### Corpus Description
+#### Corpus Description
 
 | Property | Value |
 |----------|-------|
@@ -68,14 +75,14 @@ The `insufficient_evidence` path is **not optional**. When retrieved evidence do
 | Estimated size | {{Number of documents / chunks / tokens at index time}} |
 | Access control | {{Who/what can query which corpus segments}} |
 
-### Index Strategy
+#### Index Strategy
 
 - **Embedding model:** {{Model name and version}} — rationale: {{why this model}}
 - **Chunking:** {{Strategy and chunk size}} — rationale: {{why this chunking approach}}
 - **Index schema version:** v1 — changes require ADR; re-indexing required on schema change
 - **Max index age:** {{e.g., "24 hours"}} — staleness beyond this threshold must trigger an alert
 
-### Risks (RAG-specific)
+#### Risks (RAG-specific)
 
 | Risk | Mitigation |
 |------|------------|

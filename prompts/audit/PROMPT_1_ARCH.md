@@ -34,7 +34,7 @@ Output: docs/audit/ARCH_REPORT.md (overwrite).
 - Reflected in ARCHITECTURE.md? If not → doc patch needed.
 - Aligned with spec.md? If not → finding.
 
-**Retrieval architecture** — run ONLY if `docs/ARCHITECTURE.md` declares `RAG Profile: ON`:
+**Retrieval architecture** — run ONLY if RAG Status = ON in the `## Capability Profiles` table in `docs/ARCHITECTURE.md`:
 - Are ingestion and query-time retrieval defined as separate responsibilities (separate modules/services)?
 - Is the `insufficient_evidence` path defined in both ARCHITECTURE.md and spec.md?
 - Are corpus isolation and security boundaries explicit at the retrieval layer (not only application layer)?
@@ -71,7 +71,7 @@ Impact: ...
 Fix: ...
 
 ## Retrieval Architecture Checks
-_Omit this section entirely if RAG Profile = OFF._
+_Omit this section entirely if RAG Status = OFF._
 | Check | Verdict | Note |
 |-------|---------|------|
 | Ingestion / query-time separation | | |
