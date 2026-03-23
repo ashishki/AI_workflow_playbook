@@ -22,7 +22,7 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **CI in Phase 1, not Phase 3.** CI is mandatory in Phase 1. There is never a moment in this workflow when "tests pass locally but CI is unknown."
 
-**Capability Profiles.** Optional architectural modes (e.g. RAG) that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Each profile must satisfy a 9-property invariant before activation.
+**Capability Profiles.** Optional architectural modes that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Four profiles are supported: **RAG** (document retrieval), **Tool-Use** (LLM-directed tool calls), **Agentic** (multi-step decision loops), **Planning** (structured plan output). RAG is the reference implementation with the most detailed worked example. Each active profile adds its own architecture section, contract rules, review checks, and an evaluation artifact (`retrieval_eval.md`, `tool_eval.md`, etc.) that is updated whenever the relevant logic changes.
 
 **Operational reference for the implementation agent.** `reference/CODEX_CLI.md` documents real-world Codex CLI behavior: known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns, and a pre-run checklist. This knowledge was learned through failures; it is not theoretical.
 
@@ -59,7 +59,7 @@ PLAYBOOK.md + project description
   [Review cycle] (after each phase)
   META review   → process compliance
   ARCH review   → architectural compliance
-  CODE review   → detailed code findings (P1/P2/P3)
+  CODE review   → detailed code findings (P0/P1/P2/P3)
   CONSOLIDATED  → merged report saved to docs/audit/
         |
         v
