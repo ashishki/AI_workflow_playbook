@@ -106,6 +106,30 @@ Read in full:
 
 Check `docs/ARCHITECTURE.md` for `## Capability Profiles` table (or `RAG Profile: ON | OFF` in legacy projects). Record all active profiles — they affect review tier, deep-review trigger tags, and state block update requirements below.
 
+**Phase 1 validation gate — run once only.**
+
+Check: does `docs/audit/PHASE1_AUDIT.md` exist?
+
+- **Yes** → validation already ran in a prior session. Skip to "Determine:" below.
+- **No** → check whether this is the start of Phase 1: does `docs/CODEX_PROMPT.md` show `Phase: 1`, `Next Task: T01`, and `Baseline: 0` or "pre-implementation"? If YES, run the Phase 1 Validator now.
+
+If Phase 1 validation is needed:
+
+Use **Agent tool** (`general-purpose`):
+```
+You are the Phase 1 Validator for {{PROJECT_NAME}}.
+Project root: {{PROJECT_ROOT}}
+
+Read and execute prompts/PHASE1_VALIDATOR.md exactly as written.
+Inputs: docs/ARCHITECTURE.md, docs/spec.md, docs/tasks.md, docs/CODEX_PROMPT.md, docs/IMPLEMENTATION_CONTRACT.md, .github/workflows/ci.yml
+Output: write docs/audit/PHASE1_AUDIT.md
+When done: "PHASE1_AUDIT.md written. Result: PASS | FAIL. Blockers: N."
+```
+
+Read `docs/audit/PHASE1_AUDIT.md`.
+- Result **FAIL** (any BLOCKERs) → print the full BLOCKER findings to the user, then **stop**. Do not proceed to T01. The user must instruct the Strategist to fix the issues and re-run the validator.
+- Result **PASS** → note any WARNINGs in the ORCHESTRATOR STATE block, then continue to "Determine:" below.
+
 Determine:
 
 **A. Fix Queue** — non-empty? List each FIX-N item with file + change + test.
@@ -134,6 +158,7 @@ Baseline: [N passed, N skipped]
 Fix Queue: [empty | N items: FIX-A, FIX-B...]
 Next task: [T## — Title]
 Active Profiles: [RAG:ON/OFF | Tool-Use:ON/OFF | Agentic:ON/OFF | Planning:ON/OFF]
+Phase 1 Audit: [PASS (N warnings) | FAIL (N blockers) | skipped (mid-project) | not yet run]
 Phase boundary: [yes | no]
 Review tier: [light | deep] — [reason]
 Action: [what happens next]
