@@ -4,6 +4,32 @@ A distilled AI-assisted development workflow extracted from the [gdev-agent](htt
 
 ---
 
+## Why This Playbook Is Different
+
+Most "AI coding" workflows are a single prompt → single agent → hope for the best. This one is an engineering system with hard guarantees:
+
+**Strict layer separation.** Seven layers, each with defined inputs, outputs, and hard boundaries. The Orchestrator never writes application code. The implementation agent never reviews its own output. Review agents never write code. These are not conventions — they are enforced rules with explicit rationale.
+
+**Stateless orchestration.** `docs/CODEX_PROMPT.md` is the single source of truth for all session state. Any agent, any session, any machine can resume exactly where the last one stopped by reading that file. Nothing is held in conversational memory. Sessions are fully resumable after interruption.
+
+**Immutable contract.** `IMPLEMENTATION_CONTRACT.md` is the unchanging floor of the project. Architectural decisions may evolve; the contract does not — without an explicit ADR. This prevents incremental erosion of quality standards across phases.
+
+**Two-tier review, not one pass.** Every task gets a lightweight 6-check security/contract review immediately after implementation. Every phase gets a deep four-agent review cycle: META (process compliance) → ARCH (architecture compliance) → CODE (P0–P3 findings) → CONSOLIDATED (merged report). The two tiers serve different functions and neither replaces the other.
+
+**Baseline tracking with enforcement.** After Phase 1, the passing test count is recorded. Every subsequent session must not decrease it. A session that breaks tests must not commit — this is a hard rule, not a guideline.
+
+**Finding lifecycle enforcement (P2 Age Cap).** P2 findings that survive three review cycles without resolution are escalated, closed with justification, or deferred to v2. Findings cannot accumulate indefinitely. The audit trail is append-only.
+
+**CI in Phase 1, not Phase 3.** CI is mandatory in Phase 1. There is never a moment in this workflow when "tests pass locally but CI is unknown."
+
+**Capability Profiles.** Optional architectural modes (e.g. RAG) that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Each profile must satisfy a 9-property invariant before activation.
+
+**Operational reference for the implementation agent.** `reference/CODEX_CLI.md` documents real-world Codex CLI behavior: known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns, and a pre-run checklist. This knowledge was learned through failures; it is not theoretical.
+
+**Proven on a real project.** Every rule was validated through 12 phases of building gdev-agent — a production multi-tenant AI triage service. The reference implementation exists and is public.
+
+---
+
 ## What This Playbook Is
 
 This playbook captures the exact development process used to build gdev-agent — a multi-tenant AI triage service built over 12 phases using Claude as both the implementation agent and the reviewer. The workflow is general enough to apply to any backend service; the templates and prompts are project-agnostic starting points.
@@ -63,7 +89,8 @@ AI_workflow_playbook/
 ├── ci/
 │   └── ci.yml                  — GitHub Actions CI template
 └── reference/
-    └── GDEV_AGENT.md           — how to use gdev-agent as implementation reference
+    ├── GDEV_AGENT.md           — how to use gdev-agent as implementation reference
+    └── CODEX_CLI.md            — Codex CLI invocation patterns, sandbox limitations, prompt engineering
 ```
 
 ### What each file is for
@@ -79,6 +106,8 @@ AI_workflow_playbook/
 **ci/ci.yml** is a GitHub Actions template that mirrors the pattern proven in gdev-agent.
 
 **reference/GDEV_AGENT.md** explains which parts of gdev-agent to study when you need a concrete implementation example.
+
+**reference/CODEX_CLI.md** documents hard-won operational knowledge about running Codex as the implementation agent: the file-based prompt invocation pattern, known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering guidelines, and a pre-run checklist. Read this before starting a project that uses the Codex CLI.
 
 **Capability Profiles** (`PLAYBOOK.md §2c`) — optional architectural modes activated in Phase 1 (e.g. RAG). When a profile is ON, it extends the workflow with profile-specific artifacts, review checks, state tracking, and an evaluation artifact. Each profile must satisfy the 9-property invariant defined in §2c before activation. RAG is the reference implementation.
 
