@@ -63,8 +63,16 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 **Deep review also triggers if:**
 - Last task touched security-critical code: auth, middleware, RLS, tenant isolation, secrets
 - 5+ P2 findings have been open for 3+ cycles (architectural drift)
-- Task is tagged `Type: rag:ingestion` or `Type: rag:query` in tasks.md
-- Task changed any of: retrieval policy, chunking logic, index/metadata schema, evidence/citation format, corpus isolation, reindex/delete/lifecycle logic, or `insufficient_evidence` behavior
+- Next task carries a profile deep-review trigger tag for any active profile:
+
+| Profile | Trigger tags |
+|---------|-------------|
+| RAG | `rag:ingestion`, `rag:query` |
+| Tool-Use | `tool:schema`, `tool:unsafe` |
+| Agentic | `agent:loop`, `agent:handoff`, `agent:termination` |
+| Planning | `plan:schema`, `plan:validation` |
+
+- Task changes retrieval semantics (when RAG = ON) — regardless of implementation mechanism: retrieval policy, chunking, index/metadata schema, evidence/citation format, corpus isolation, reindex/delete/lifecycle logic, or `insufficient_evidence` behavior (semantic ownership rule)
 
 **Skip all review for:** doc-only patches, test-only changes, dependency bumps.
 
@@ -96,7 +104,7 @@ Read in full:
 1. `docs/CODEX_PROMPT.md` — baseline, Fix Queue, open findings, next task
 2. `docs/tasks.md` — full task graph with phases
 
-Check `docs/ARCHITECTURE.md` for `RAG Profile: ON | OFF`. Record this — it affects review tier and state update requirements below.
+Check `docs/ARCHITECTURE.md` for `## Capability Profiles` table (or `RAG Profile: ON | OFF` in legacy projects). Record all active profiles — they affect review tier, deep-review trigger tags, and state block update requirements below.
 
 Determine:
 
@@ -125,14 +133,14 @@ Print status block:
 Baseline: [N passed, N skipped]
 Fix Queue: [empty | N items: FIX-A, FIX-B...]
 Next task: [T## — Title]
-RAG Profile: [ON | OFF]
+Active Profiles: [RAG:ON/OFF | Tool-Use:ON/OFF | Agentic:ON/OFF | Planning:ON/OFF]
 Phase boundary: [yes | no]
 Review tier: [light | deep] — [reason]
 Action: [what happens next]
 =========================
 ```
 
-If RAG Profile = ON and the next task is tagged `Type: rag:ingestion` or `Type: rag:query`, note it in the Action line. Deep review is mandatory for these tasks regardless of phase boundary.
+For each active profile, check whether the next task carries a profile deep-review trigger tag (see Two-tier review system table). If it does, note it in the Action line — deep review is mandatory for that task regardless of phase boundary.
 
 ---
 
@@ -508,7 +516,11 @@ Rules:
 - Change only what is factually wrong or missing. No rewrites.
 - Every change must be traceable to something in REVIEW_REPORT.md or the implementer completion report.
 - Do not update docs/tasks.md — that was already patched by Consolidation Agent.
-- If RAG Profile = ON: also update the `## RAG State` block in docs/CODEX_PROMPT.md — refresh retrieval baseline, open retrieval findings, index schema version, and pending reindex actions. If retrieval behavior changed this phase, note whether docs/retrieval_eval.md was updated.
+- For each active profile with work completed this phase, update its state block in docs/CODEX_PROMPT.md:
+  - `## RAG State` (RAG = ON): refresh retrieval baseline, open retrieval findings, index schema version, pending reindex actions. If retrieval behavior changed, note whether docs/retrieval_eval.md was updated.
+  - `## Tool-Use State` (Tool-Use = ON): refresh registered tool schemas, unsafe-action guardrails, open tool findings.
+  - `## Agentic State` (Agentic = ON): refresh agent roles in use, loop termination contract version, open agent findings.
+  - `## Planning State` (Planning = ON): refresh plan schema version, open plan validation findings.
 
 Return:
 DOC_UPDATE_RESULT: DONE
