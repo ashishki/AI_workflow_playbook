@@ -53,13 +53,13 @@ PLAYBOOK.md + project description
   [Orchestrator session]
   Reads CODEX_PROMPT.md before every task
   Spawns Codex subagents for implementation
-  Each Codex agent: captures baseline → implements → tests → commits
+  Each Codex agent: captures baseline → implements → tests → evaluates (if capability tag) → commits
         |
         v
-  [Evaluation gate] (if task has capability tag)
-  Orchestrator checks evaluation artifact was updated
-  Compares result against baseline — regression → P1, blocks task
-  Updates Evaluation State in CODEX_PROMPT.md
+  [Evaluation gate — Step 3.5] (if task has capability tag)
+  Orchestrator verifies Codex updated the evaluation artifact
+  Regression detected → P1 finding, task not complete
+  Missing evaluation → focused remediation prompt back to Codex (not a new agent)
         |
         v
   [Review cycle] (after each phase)
