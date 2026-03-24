@@ -151,22 +151,38 @@ For retrieval-critical findings (corpus isolation, `insufficient_evidence` path,
 
 ### Retrieval Evaluation Gate
 
-A retrieval-related task (tagged `Type: rag:ingestion` or `Type: rag:query`, or touching chunking, embedding, ranking, evidence assembly, or `insufficient_evidence` behavior) is **not complete** unless all three of the following are true:
+A retrieval-related task (tagged `Type: rag:ingestion` or `Type: rag:query`, or touching chunking, embedding, ranking, evidence assembly, or `insufficient_evidence` behavior) is **not complete** unless all five of the following are true:
 
-1. `docs/retrieval_eval.md` is updated with current metrics for the affected pipeline stage.
-2. Current metrics are explicitly compared to the baseline row in the Evaluation History table.
-3. Any metric regressions are documented in the Regression Notes section with a justification.
+1. `docs/retrieval_eval.md` is updated with current retrieval metrics for the affected pipeline stage.
+2. Current retrieval metrics are explicitly compared to the baseline row in the Evaluation History table.
+3. Any retrieval metric regressions are documented in the Regression Notes section with a justification.
+4. `docs/retrieval_eval.md §Answer Quality Metrics` is updated with current answer quality scores (Faithfulness, Completeness, Relevance) for the evaluation query set.
+5. The Evaluation History row for this run records the corpus version active at time of evaluation.
 
-Submitting a task as `IMPLEMENTATION_RESULT: DONE` without fulfilling these conditions is a P1 finding. The code passing tests does not imply the retrieval is correct.
+Submitting a task as `IMPLEMENTATION_RESULT: DONE` without fulfilling these conditions is a P1 finding. The code passing tests does not imply retrieval or answer quality is correct.
+
+Retrieval metrics and answer quality metrics are independent gates. A task that passes one but not the other is not complete.
 
 ### Retrieval Regression Policy
 
-A retrieval regression (any metric decline vs. the current baseline) is a **P1 finding** unless:
+A regression in retrieval metrics (hit@k, MRR, citation precision, no-answer accuracy) or in answer quality metrics (Faithfulness, Completeness, Relevance) vs. the current baseline is a **P1 finding** unless:
 - the regression is documented in `docs/retrieval_eval.md §Regression Notes`
 - a trade-off justification is provided (e.g., latency increased because reranking was added and quality improved)
 - the human reviewer explicitly accepts it before the phase gate passes
 
-"Tests are green" does not close a retrieval regression.
+A retrieval metric regression is not masked by stable answer quality. An answer quality regression is not masked by stable retrieval metrics. Both dimensions must hold independently.
+
+"Tests are green" does not close either type of regression.
+
+### Corpus Version Recording
+
+Every entry in `docs/retrieval_eval.md §Evaluation History` must record the corpus version (date, tag, or hash) active at the time of the evaluation run.
+
+When a metric changes, the root cause must be classified as one of:
+- **Code-change-induced**: a change in retrieval logic, embedding model, chunking, or prompt caused the change
+- **Corpus-change-induced**: the document corpus was updated (new documents, removed documents, re-indexing) and that caused the change
+
+A finding attributed to corpus change does not count as a code regression, but it must still be documented. Metric changes with no root cause classification are treated as unresolved regression findings.
 
 ---
 

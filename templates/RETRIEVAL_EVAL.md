@@ -31,17 +31,24 @@ Changed by: {{TASK_ID}} — {{TASK_TITLE}}
 
 ## Evaluation Dataset
 
-| ID | Query | Expected top document(s) | Notes |
-|----|-------|--------------------------|-------|
-| Q01 | {{query}} | {{doc_id or title}} | {{e.g., canonical answer, section}} |
-| Q02 | | | |
-| Q-NA-01 | {{query with no good answer}} | — (should return insufficient_evidence) | no-answer test case |
+| ID | Query | Query Type | Expected top document(s) | Notes |
+|----|-------|------------|--------------------------|-------|
+| Q01 | {{query}} | simple | {{doc_id or title}} | {{e.g., canonical answer, section}} |
+| Q02 | {{query}} | multi-doc | | |
+| Q03 | {{query}} | multi-hop | | |
+| Q-NA-01 | {{query with no good answer}} | no-answer | — (should return insufficient_evidence) | no-answer test case |
 
 <!--
-Maintain at least 10 representative queries covering:
-- Typical successful retrievals
-- Edge cases (ambiguous queries, partial matches)
-- Queries that should trigger insufficient_evidence (no-answer cases)
+Maintain at least 10 representative queries.
+Query Type values: simple | multi-doc | multi-hop | no-answer
+
+Type coverage requirements:
+- simple: single-document lookup; catches basic retrieval misses
+- multi-doc: answer requires aggregating evidence from ≥2 documents; catches synthesis failures
+- multi-hop: answer requires chaining facts across documents; catches reasoning and context-assembly failures
+- no-answer: no document in corpus answers the query; tests the insufficient_evidence path
+
+Cover at least 3 of the 4 types. A dataset that is all simple queries will miss entire failure classes.
 Keep the dataset append-only. Add new queries; do not remove old ones.
 -->
 
@@ -82,6 +89,40 @@ _Recorded at: {{DATE}} after {{TASK_ID}}_
 | No-answer accuracy | | | | |
 | Median retrieval latency | | | | |
 | p95 retrieval latency | | | | |
+
+---
+
+## Answer Quality Metrics
+
+<!--
+Tracks end-to-end answer quality — a separate dimension from retrieval quality.
+Retrieval metrics measure what was found. Answer quality metrics measure what was said about it.
+These two dimensions can diverge: retrieval can regress while answer quality holds (easy queries mask retrieval failures),
+or retrieval can be stable while answer quality regresses (prompt or model change degrades reasoning).
+Both dimensions require a regression gate.
+
+Evaluate using an LLM judge with access to (question, retrieved context, generated answer).
+Do NOT give the judge access to expected answers when scoring Faithfulness — that conflates retrieval with generation.
+A spot-check over the evaluation dataset (≥5 queries) is acceptable for early phases. Automate when query set is stable.
+-->
+
+_Recorded at: {{DATE}} after {{TASK_ID}}_
+_Corpus version: {{CORPUS_VERSION_TAG_OR_DATE}}_
+
+| Metric | Description | Baseline | Previous | Current | Delta | Regression? |
+|--------|-------------|----------|----------|---------|-------|-------------|
+| Faithfulness | Answer contains only claims supported by the retrieved context | — | — | — | — | — |
+| Answer Completeness | Answer addresses the full question given the retrieved context | — | — | — | — | — |
+| Answer Relevance | Answer is on-topic and appropriately scoped to the query | — | — | — | — | — |
+
+Scoring: 0.0–1.0 per metric, averaged across the evaluation query set.
+Judge: {{LLM_JUDGE_MODEL_AND_PROMPT_REF}}
+
+<!--
+Security note: this file contains ground-truth query→document mappings.
+If answer quality evaluation is automated, keep expected answers in a separate file not accessible to the implementation agent.
+Exposing expected answers in the same file the agent reads during implementation creates a contamination risk.
+-->
 
 ---
 
@@ -155,6 +196,12 @@ none
 Append a one-line summary after each evaluation run.
 -->
 
-| Date | Task | hit@3 | MRR | No-answer acc. | Note |
-|------|------|-------|-----|----------------|------|
-| {{DATE}} | {{TASK_ID}} | — | — | — | initial baseline |
+| Date | Task | Corpus Version | hit@3 | MRR | No-answer acc. | Faithfulness | Completeness | Note |
+|------|------|----------------|-------|-----|----------------|--------------|--------------|------|
+| {{DATE}} | {{TASK_ID}} | {{CORPUS_VERSION_TAG_OR_DATE}} | — | — | — | — | — | initial baseline |
+
+<!--
+Corpus Version: tag, date, or hash that identifies the document corpus active at time of evaluation.
+Required so metric changes can be attributed to code changes vs. corpus changes.
+If the corpus never changes, record a static tag (e.g., "v1.0-static") and note it once.
+-->

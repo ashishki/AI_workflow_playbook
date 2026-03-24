@@ -37,6 +37,7 @@ RET-3  Metadata/schema discipline — retrieval changes preserve index schema ve
 RET-4  Corpus isolation — no cross-corpus retrieval; corpus boundaries enforced at retrieval layer, not only application layer
 RET-5  Retrieval regression — if retrieval logic changed, is `docs/retrieval_eval.md` updated with new results and baseline refreshed?
 RET-6  Ingestion/query-time separation — ingestion pipeline code and query-time code are in separate modules; no mixing
+RET-7  Answer quality tracking — if Phase ≥ 2, does `docs/retrieval_eval.md §Answer Quality Metrics` contain at least one completed evaluation run (Faithfulness, Completeness, Relevance scores recorded)? Absent after Phase 2 = P2. Also verify Evaluation History rows include a Corpus Version entry.
 
 ## Finding format
 
