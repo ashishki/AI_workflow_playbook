@@ -22,7 +22,7 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **CI in Phase 1, not Phase 3.** CI is mandatory in Phase 1. There is never a moment in this workflow when "tests pass locally but CI is unknown."
 
-**Capability Profiles.** Optional architectural modes that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Four profiles are supported: **RAG** (document retrieval), **Tool-Use** (LLM-directed tool calls), **Agentic** (multi-step decision loops), **Planning** (structured plan output). RAG is the reference implementation with the most detailed worked example. Each active profile adds its own architecture section, contract rules, review checks, and an evaluation artifact (`retrieval_eval.md`, `tool_eval.md`, etc.) that is updated whenever the relevant logic changes.
+**Capability Profiles.** Optional architectural modes that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Four profiles are supported: **RAG** (document retrieval), **Tool-Use** (LLM-directed tool calls), **Agentic** (multi-step decision loops), **Planning** (structured plan output). RAG is the reference implementation with the most detailed worked example. Each active profile adds its own architecture section, contract rules, review checks, and an evaluation artifact (`retrieval_eval.md`, `tool_eval.md`, etc.) that is updated whenever the relevant logic changes. For the RAG profile, evaluation covers two independent dimensions: retrieval quality (hit@k, MRR, citation precision) and answer quality (faithfulness, completeness, relevance via LLM judge). Both have separate regression gates — a system can pass one and fail the other.
 
 **Operational reference for the implementation agent.** `reference/CODEX_CLI.md` documents real-world Codex CLI behavior: known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns, and a pre-run checklist. This knowledge was learned through failures; it is not theoretical.
 
@@ -93,7 +93,8 @@ AI_workflow_playbook/
 ├── templates/
 │   ├── ARCHITECTURE.md         — template for system architecture document
 │   ├── CODEX_PROMPT.md         — template for session handoff document
-│   └── IMPLEMENTATION_CONTRACT.md — template for immutable rules document
+│   ├── IMPLEMENTATION_CONTRACT.md — template for immutable rules document
+│   └── RETRIEVAL_EVAL.md       — RAG evaluation artifact template (copy to docs/ when RAG=ON)
 ├── ci/
 │   └── ci.yml                  — GitHub Actions CI template
 └── reference/
@@ -113,7 +114,7 @@ AI_workflow_playbook/
 
 **prompts/audit/** contains the four deep-review prompt templates (META → ARCH → CODE → CONSOLIDATED) and the AUDIT_INDEX template. The Strategist copies these into your project's `docs/audit/` at project creation, filling in the project name. The Orchestrator's review agents read them from there at runtime.
 
-**templates/** contains starting-point documents with `{{PLACEHOLDER}}` markers. The Strategist agent fills these in for your specific project.
+**templates/** contains starting-point documents with `{{PLACEHOLDER}}` markers. The Strategist agent fills these in for your specific project. `RETRIEVAL_EVAL.md` is copied to `docs/retrieval_eval.md` when the RAG profile is activated; it tracks retrieval metrics, answer quality metrics, query type coverage, corpus versioning, and evaluation history.
 
 **ci/ci.yml** is a GitHub Actions template that mirrors the pattern proven in gdev-agent.
 
