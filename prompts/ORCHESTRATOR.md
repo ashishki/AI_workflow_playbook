@@ -303,19 +303,28 @@ Evaluation trigger tags (check the `Type:` field of the current task in `docs/ta
 
 **No matching tag** → skip this step, go to Step 4.
 
-**Matching tag found** → evaluation required before Step 4:
+**Matching tag found** → verify evaluation before Step 4.
 
-1. Read `docs/CODEX_PROMPT.md §Evaluation State` — was the evaluation artifact updated for this task?
-2. Read the relevant evaluation artifact (e.g. `docs/retrieval_eval.md`) — is the current result recorded and compared to baseline?
+The Orchestrator does NOT run evaluation. The implementation agent (Codex) is responsible for updating the evaluation artifact as part of its post-task protocol. Step 3.5 is a verification-only step.
 
-If evaluation was **NOT** performed:
+1. Read `docs/CODEX_PROMPT.md §Evaluation State` — was the Last Evaluation entry updated for this task?
+2. If yes: read the evaluation artifact (e.g. `docs/retrieval_eval.md`) to confirm results are recorded.
+
+If evaluation was **NOT** performed (Codex skipped it):
 - Do NOT proceed to Step 4.
-- Add to Fix Queue in `docs/CODEX_PROMPT.md`: `EV-NN: [T-NN] Evaluation required — [profile] evaluation artifact not updated.`
-- Spawn a Codex agent to perform the evaluation and update the artifact. Re-enter Step 3.5.
+- Send a focused remediation prompt back to the same implementation agent (not a new full agent):
+  ```
+  Task [T-NN] is incomplete. The task tag requires evaluation.
+  Read docs/IMPLEMENTATION_CONTRACT.md §Retrieval Evaluation Gate (or relevant profile gate).
+  Update the evaluation artifact with current results. Compare against baseline.
+  Update docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation.
+  Return IMPLEMENTATION_RESULT: DONE when complete.
+  ```
+- Re-enter Step 3.5 after the agent responds.
 
 If evaluation was **performed**:
 - Regression detected → add P1 finding to `docs/CODEX_PROMPT.md §Evaluation State §Open Evaluation Issues`. Document in evaluation artifact §Regression Notes. Proceed to Step 4 (regression will be caught by CODE review).
-- No regression → update `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation` with current results. Proceed to Step 4.
+- No regression → confirm `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation` is current. Proceed to Step 4.
 
 ---
 

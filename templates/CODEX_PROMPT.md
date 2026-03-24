@@ -248,13 +248,18 @@ Read these instructions every time you pick up a task. Do not skip steps.
 1. Run `pytest -q` — baseline must be ≥ pre-task baseline. If lower, something broke; fix it before committing.
 2. Run `ruff check app/ tests/` — must exit 0.
 3. Run `ruff format --check app/ tests/` — must exit 0.
-4. Update this file (`docs/CODEX_PROMPT.md`):
+4. **If this task has a capability tag** (`rag:*`, `tool:*`, `agent:*`, `plan:*`) — evaluation is required before marking DONE:
+   - Update the relevant evaluation artifact (e.g. `docs/retrieval_eval.md`) with current results.
+   - Compare against baseline. Document any regression in §Regression Notes.
+   - Update `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation` with the result summary.
+   - Do NOT return `IMPLEMENTATION_RESULT: DONE` until this is complete. The Orchestrator will verify it.
+5. Update this file (`docs/CODEX_PROMPT.md`):
    - New baseline (number of passing tests)
    - Move this task to "Completed Tasks"
    - Set "Next Task" to the next task
    - Add any new open findings discovered during this task
-5. Commit with format: `type(scope): description` — one logical change per commit.
-6. If the task produced multiple logical changes (migration + service + tests), use multiple commits.
+6. Commit with format: `type(scope): description` — one logical change per commit.
+7. If the task produced multiple logical changes (migration + service + tests), use multiple commits.
 
 ### Return Format
 
