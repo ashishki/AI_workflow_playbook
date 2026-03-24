@@ -22,7 +22,7 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **CI in Phase 1, not Phase 3.** CI is mandatory in Phase 1. There is never a moment in this workflow when "tests pass locally but CI is unknown."
 
-**Capability Profiles.** Optional architectural modes that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Four profiles are supported: **RAG** (document retrieval), **Tool-Use** (LLM-directed tool calls), **Agentic** (multi-step decision loops), **Planning** (structured plan output). RAG is the reference implementation with the most detailed worked example. Each active profile adds its own architecture section, contract rules, review checks, and an evaluation artifact (`retrieval_eval.md`, `tool_eval.md`, etc.) that is updated whenever the relevant logic changes. For the RAG profile, evaluation covers two independent dimensions: retrieval quality (hit@k, MRR, citation precision) and answer quality (faithfulness, completeness, relevance via LLM judge). Both have separate regression gates — a system can pass one and fail the other.
+**Capability Profiles with enforced evaluation.** Optional architectural modes that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Four profiles are supported: **RAG** (document retrieval), **Tool-Use** (LLM-directed tool calls), **Agentic** (multi-step decision loops), **Planning** (structured plan output). RAG is the reference implementation with the most detailed worked example. Each active profile adds its own architecture section, contract rules, review checks, and an evaluation artifact (`retrieval_eval.md`, `tool_eval.md`, etc.). Evaluation is not optional — the Orchestrator enforces it as Step 3.5: whenever a task carries a capability tag (`rag:query`, `tool:schema`, `agent:loop`, etc.), the task is not complete until the evaluation artifact is updated and compared against its baseline. A regression blocks task completion and becomes a P1 finding. For the RAG profile specifically, evaluation covers two independent dimensions: retrieval quality (hit@k, MRR, citation precision) and answer quality (faithfulness, completeness, relevance via LLM judge).
 
 **Operational reference for the implementation agent.** `reference/CODEX_CLI.md` documents real-world Codex CLI behavior: known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns, and a pre-run checklist. This knowledge was learned through failures; it is not theoretical.
 
@@ -54,6 +54,12 @@ PLAYBOOK.md + project description
   Reads CODEX_PROMPT.md before every task
   Spawns Codex subagents for implementation
   Each Codex agent: captures baseline → implements → tests → commits
+        |
+        v
+  [Evaluation gate] (if task has capability tag)
+  Orchestrator checks evaluation artifact was updated
+  Compares result against baseline — regression → P1, blocks task
+  Updates Evaluation State in CODEX_PROMPT.md
         |
         v
   [Review cycle] (after each phase)
