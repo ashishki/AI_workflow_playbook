@@ -385,6 +385,31 @@ Every Capability Profile must define all nine of the following properties before
 
 A profile that omits any property is incomplete and must not be activated.
 
+### Evaluation Invariant
+
+Every active Capability Profile MUST define:
+- **evaluation method** — what is measured and how (e.g. hit@k + MRR for RAG; schema validity + side-effect correctness for Tool-Use)
+- **baseline** — reference values established in Phase 1, before any capability behavior is in production
+- **regression criteria** — what constitutes a degradation that blocks task completion
+
+Evaluation is **not optional**. Evaluation is required whenever capability behavior changes.
+
+Evaluation trigger tags by profile (task `Type:` field):
+
+| Profile | Evaluation trigger tags |
+|---------|-------------------------|
+| RAG | `rag:ingestion`, `rag:query` |
+| Tool-Use | `tool:schema`, `tool:unsafe`, `tool:call` |
+| Agentic | `agent:loop`, `agent:handoff`, `agent:termination` |
+| Planning | `plan:schema`, `plan:validation` |
+
+A task whose `Type:` tag matches any row above is **not complete** until:
+1. The profile's evaluation artifact is updated with current results.
+2. Current results are compared against the baseline.
+3. Any regression is documented and either justified or escalated as P1.
+
+"Tests are green" does not satisfy this requirement. Evaluation is a separate gate.
+
 ---
 
 ## 2b. Session Start Ritual — The Loop Mechanism

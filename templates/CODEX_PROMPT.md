@@ -152,6 +152,47 @@ Task tags that update this block: Type: plan:schema | plan:validation
 
 ---
 
+## Evaluation State
+
+<!--
+Tracks evaluation results for all active Capability Profiles.
+Updated by the Orchestrator in Step 3.5 after every capability-affecting task.
+A task with a capability trigger tag is NOT complete until this section is updated.
+
+Trigger tags: rag:ingestion, rag:query | tool:schema, tool:unsafe, tool:call |
+              agent:loop, agent:handoff, agent:termination | plan:schema, plan:validation
+
+The evaluation artifact (e.g. docs/retrieval_eval.md) holds the full detail.
+This section holds the summary used by the Orchestrator for decision-making.
+-->
+
+### Last Evaluation
+
+- Profile: n/a
+- Task: n/a
+- Date: n/a
+- Metric(s): n/a
+- Score: n/a
+- Baseline: n/a
+- Delta: n/a
+- Regression: n/a
+
+### Open Evaluation Issues
+
+none
+
+<!--
+Format:
+- EV-01: [PROFILE] [T-NN] Description. Opened: YYYY-MM-DD. Must resolve before phase gate.
+-->
+
+### Evaluation History
+
+| Date | Task | Profile | Key metric | Score | Baseline | Delta | Regression? |
+|------|------|---------|------------|-------|----------|-------|-------------|
+
+---
+
 ## Completed Tasks
 
 none

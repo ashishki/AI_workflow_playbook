@@ -282,9 +282,40 @@ PROMPT=$(cat /tmp/orchestrator_codex_prompt.txt)
 cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 ```
 
-- `DONE` + all AC PASS + 0 failures → Step 4
+- `DONE` + all AC PASS + 0 failures → Step 3.5
 - `BLOCKED` → mark `[!]` in tasks.md, stop, report to user
 - Test failures → show list, stop, ask user
+
+---
+
+### Step 3.5 — Capability Evaluation (conditional)
+
+Runs only when the completed task has a capability-profile tag.
+
+Evaluation trigger tags (check the `Type:` field of the current task in `docs/tasks.md`):
+
+| Profile | Tags that require evaluation |
+|---------|------------------------------|
+| RAG | `rag:ingestion`, `rag:query` |
+| Tool-Use | `tool:schema`, `tool:unsafe`, `tool:call` |
+| Agentic | `agent:loop`, `agent:handoff`, `agent:termination` |
+| Planning | `plan:schema`, `plan:validation` |
+
+**No matching tag** → skip this step, go to Step 4.
+
+**Matching tag found** → evaluation required before Step 4:
+
+1. Read `docs/CODEX_PROMPT.md §Evaluation State` — was the evaluation artifact updated for this task?
+2. Read the relevant evaluation artifact (e.g. `docs/retrieval_eval.md`) — is the current result recorded and compared to baseline?
+
+If evaluation was **NOT** performed:
+- Do NOT proceed to Step 4.
+- Add to Fix Queue in `docs/CODEX_PROMPT.md`: `EV-NN: [T-NN] Evaluation required — [profile] evaluation artifact not updated.`
+- Spawn a Codex agent to perform the evaluation and update the artifact. Re-enter Step 3.5.
+
+If evaluation was **performed**:
+- Regression detected → add P1 finding to `docs/CODEX_PROMPT.md §Evaluation State §Open Evaluation Issues`. Document in evaluation artifact §Regression Notes. Proceed to Step 4 (regression will be caught by CODE review).
+- No regression → update `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation` with current results. Proceed to Step 4.
 
 ---
 
