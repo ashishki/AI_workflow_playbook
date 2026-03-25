@@ -99,7 +99,7 @@ AI_workflow_playbook/
 ├── prompts/
 │   ├── STRATEGIST.md                — architecture-generation agent prompt
 │   ├── ORCHESTRATOR.md              — development orchestrator prompt
-│   ├── PHASE1_VALIDATOR.md          — pre-implementation artifact validator (47+ checks)
+│   ├── PHASE1_VALIDATOR.md          — pre-implementation artifact validator (74 checks across 6 artifacts)
 │   ├── PROMPT_S_STRATEGY.md         — phase-boundary strategy reviewer prompt
 │   └── audit/
 │       ├── PROMPT_0_META.md         — review: meta-analysis
@@ -164,7 +164,7 @@ AI_workflow_playbook/
    - Review prompts: `docs/audit/PROMPT_0_META.md` through `PROMPT_3_CONSOLIDATED.md`, `docs/audit/AUDIT_INDEX.md`
    - If Compliance=ON: `docs/compliance_eval.md` (with framework-specific control rows)
    - If NFR constraints stated: `docs/nfr.md` (with SLA table)
-5. Copy `prompts/ORCHESTRATOR.md` into your project, fill `{{PROJECT_ROOT}}` and `{{CODEX_COMMAND}}`.
+5. Copy `prompts/ORCHESTRATOR.md` to `your-project/docs/prompts/ORCHESTRATOR.md`, fill `{{PROJECT_ROOT}}` and `{{CODEX_COMMAND}}`.
 6. Copy hooks and settings:
    ```bash
    cp -r hooks/ your-project/hooks/
@@ -175,7 +175,7 @@ AI_workflow_playbook/
 7. Run the Phase 1 Validator before starting implementation:
    - Open a Claude session with `prompts/PHASE1_VALIDATOR.md` as the prompt
    - Point it at your 6 starter artifacts
-   - It produces `docs/audit/PHASE1_AUDIT.md` — resolve all BLOCKERs before proceeding
+   - It produces `docs/audit/PHASE1_AUDIT.md` (74 checks across 6 artifacts) — resolve all BLOCKERs before proceeding
 8. Open a Claude Code session with `docs/prompts/ORCHESTRATOR.md` as the system prompt.
 9. Say: "Start Phase 1." The Orchestrator reads `docs/CODEX_PROMPT.md` and begins.
 

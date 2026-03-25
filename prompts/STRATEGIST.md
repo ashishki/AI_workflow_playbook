@@ -455,9 +455,9 @@ If you declare RAG Status ON, you must produce these **additional sections and a
 
 ---
 
-## Capability Profiles Decision (Phase 1 Gate)
+## Capability Profiles Decision — Non-RAG Profiles (Phase 1 Gate)
 
-Beyond RAG, the system may require Tool-Use, Agentic, or Planning capabilities. This is a **mandatory decision** — you cannot skip it, defer it, or leave any profile implicit. All profiles are OFF by default. Do not enable them speculatively.
+Beyond RAG, the system may require Tool-Use, Agentic, Planning, or Compliance capabilities. This is a **mandatory decision** — you cannot skip it, defer it, or leave any profile implicit. All profiles are OFF by default. Do not enable them speculatively.
 
 ### Profile definitions
 
@@ -474,12 +474,13 @@ In `docs/ARCHITECTURE.md`, immediately after the RAG Profile section, include:
 ```markdown
 ## Capability Profiles
 
-| Profile   | Status | Declared in Phase | Notes |
-|-----------|--------|-------------------|-------|
-| RAG       | ON/OFF | 1                 | {rationale or —} |
-| Tool-Use  | ON/OFF | 1 or —            | {rationale or —} |
-| Agentic   | ON/OFF | 1 or —            | {rationale or —} |
-| Planning  | ON/OFF | 1 or —            | {rationale or —} |
+| Profile    | Status | Declared in Phase | Notes |
+|------------|--------|-------------------|-------|
+| RAG        | ON/OFF | 1                 | {rationale or —} |
+| Tool-Use   | ON/OFF | 1 or —            | {rationale or —} |
+| Agentic    | ON/OFF | 1 or —            | {rationale or —} |
+| Planning   | ON/OFF | 1 or —            | {rationale or —} |
+| Compliance | ON/OFF | 1 or —            | {rationale or —} |
 ```
 
 A profile declared OFF in Phase 1 can only be turned ON after Phase 1 via an ADR.
