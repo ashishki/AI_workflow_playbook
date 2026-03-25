@@ -17,9 +17,6 @@ jobs:
     # SERVICES
     # Uncomment and configure the services your stack requires.
     # Remove this block entirely for projects with no external service dependencies.
-    #
-    # See gdev-agent/.github/workflows/ci.yml for a working example with
-    # PostgreSQL + pgvector and Redis.
     # -------------------------------------------------------------------------
     # services:
     #
@@ -168,22 +165,49 @@ jobs:
       #   run: python -m pytest tests/eval/test_planning.py -v
       #   # Fails CI if plan validation gate pass rate drops below baseline.
       #   # Baseline stored in docs/plan_eval.md.
+      #
+      # - name: Run Compliance checks       # Profile: Compliance
+      #   if: always()
+      #   run: python -m pytest tests/eval/test_compliance.py -v
+      #   # Verifies: audit log format contract, PHI field non-appearance in logs,
+      #   # append-only enforcement, retention policy boundary.
+      #   # Baseline stored in docs/compliance_eval.md.
+
+      # -----------------------------------------------------------------------
+      # NFR LOAD TESTS (uncomment when docs/nfr.md exists with CI gate thresholds)
+      # Runs locust in headless mode against a locally started server.
+      # Fails CI if any metric in docs/nfr.md with a CI gate threshold is breached.
+      #
+      # Prerequisites: add locust to requirements-dev.txt.
+      # Place load test script at tests/load/locustfile.py.
+      # -----------------------------------------------------------------------
+      # - name: Run load tests (NFR)
+      #   if: always()
+      #   run: |
+      #     python -m uvicorn {{APP_MODULE}}:app --host 0.0.0.0 --port 8000 &
+      #     sleep 3
+      #     locust -f tests/load/locustfile.py \
+      #       --headless -u 50 -r 10 --run-time 60s \
+      #       --host http://localhost:8000 \
+      #       --csv reports/load \
+      #       --exit-code-on-error 1
+      #   # Thresholds are defined in docs/nfr.md §SLA Table (CI gate threshold column).
+      #   # A breach at this step is a P0 — do not merge.
 
 # -------------------------------------------------------------------------------
 # HOW TO USE THIS TEMPLATE
 #
 # 1. Replace {{PYTHON_VERSION}} with your Python version (e.g., "3.11").
 # 2. Replace {{APP_DIR}} with your application source directory (e.g., "app").
-# 3. Uncomment the services block if your stack requires PostgreSQL, Redis, etc.
+# 3. Replace {{APP_MODULE}} with your ASGI app module (e.g., "app.main") if using NFR load tests.
+# 4. Uncomment the services block if your stack requires PostgreSQL, Redis, etc.
 #    Adjust image, env, and ports to match your stack.
-# 4. Add required environment variables to the "Run tests" step.
-# 5. For secrets, use GitHub Actions secrets — never hardcode real credentials.
-#
-# REFERENCE IMPLEMENTATION:
-# See https://github.com/ashishki/gdev-agent/.github/workflows/ci.yml for a
-# complete working example with PostgreSQL/pgvector and Redis services.
+# 5. Add required environment variables to the "Run tests" step.
+# 6. For secrets, use GitHub Actions secrets — never hardcode real credentials.
+# 7. Uncomment capability evaluation steps for active profiles (RAG, Agentic, Tool-Use, Planning, Compliance).
+# 8. Uncomment the NFR load test step if docs/nfr.md defines CI gate thresholds.
 #
 # IMPORTANT: CI is set up in Phase 1 alongside the first tests. Every commit
-# after Phase 1 must pass CI before being merged. This is enforced by the
+# after Phase 1 must pass CI before being merged. This is enforced by
 # IMPLEMENTATION_CONTRACT.md. Never defer CI setup to a later phase.
 # -------------------------------------------------------------------------------

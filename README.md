@@ -113,6 +113,9 @@ AI_workflow_playbook/
 │   ├── IMPLEMENTATION_CONTRACT.md — template for immutable rules document
 │   ├── RETRIEVAL_EVAL.md       — RAG evaluation artifact template (copy to docs/ when RAG=ON)
 │   ├── NFR.md                  — non-functional requirements template (copy to docs/ when NFR constraints exist)
+│   ├── tasks_schema.md         — YAML-compatible task block schema with tag namespace and worked example
+│   ├── domains/
+│   │   └── healthcare.md       — HIPAA domain skeleton: 4 pre-built tasks with full AC + test refs
 │   └── .claude/
 │       └── settings.json       — Claude Code hook configuration (copy to .claude/ in your project)
 ├── ci/
@@ -133,7 +136,7 @@ AI_workflow_playbook/
 
 **prompts/audit/** contains the four deep-review prompt templates (META → ARCH → CODE → CONSOLIDATED) and the AUDIT_INDEX template. The Strategist copies these into your project's `docs/audit/` at project creation, filling in the project name. The Orchestrator's review agents read them from there at runtime.
 
-**templates/** contains starting-point documents with `{{PLACEHOLDER}}` markers. The Strategist agent fills these in for your specific project. `RETRIEVAL_EVAL.md` is copied to `docs/retrieval_eval.md` when the RAG profile is activated; it tracks retrieval metrics, answer quality metrics, query type coverage, corpus versioning, and evaluation history. `NFR.md` is copied to `docs/nfr.md` when the project has explicit performance or reliability SLAs; it tracks targets, measurement methods, CI gate thresholds, and a phase-by-phase baseline history.
+**templates/** contains starting-point documents with `{{PLACEHOLDER}}` markers. The Strategist fills these in for your specific project. `RETRIEVAL_EVAL.md` is copied to `docs/retrieval_eval.md` when RAG=ON. `NFR.md` is copied to `docs/nfr.md` when the project has explicit SLAs. `tasks_schema.md` defines the YAML-compatible task block format (with tag namespace, AC rules, and a worked example) that all tasks in `docs/tasks.md` must follow — the Orchestrator uses it to machine-read task fields without an LLM parser. `templates/domains/healthcare.md` is a HIPAA-specific domain skeleton: four pre-built tasks (PHI enforcement, audit log, retention policy, evidence collection) with complete acceptance criteria, test function references, a starter `compliance_eval.md`, and ARCHITECTURE.md snippets — included verbatim by the Strategist when Compliance=ON and HIPAA is the active framework.
 
 **ci/ci.yml** is a GitHub Actions CI template with lint, format check, tests, and commented capability evaluation steps for all five profiles.
 

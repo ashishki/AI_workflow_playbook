@@ -97,8 +97,9 @@ Retrieval-driven tasks: tasks created as a direct result of open retrieval findi
 ## Tool-Use State
 
 <!--
-Include this section only when Tool-Use Profile = ON in docs/ARCHITECTURE.md.
-If Tool-Use Profile = OFF, omit this section entirely.
+This section is ALWAYS present — do not omit it.
+If Tool-Use Profile = OFF, keep the block with Tool-Use Profile: OFF and all other fields as n/a.
+If Tool-Use Profile = ON, fill in the fields below.
 Updated by the orchestrator at every phase boundary where tool-related work occurred.
 
 Task tag that updates this block: Type: tool:schema | tool:call | tool:unsafe
@@ -114,8 +115,9 @@ Task tag that updates this block: Type: tool:schema | tool:call | tool:unsafe
 ## Agentic State
 
 <!--
-Include this section only when Agentic Profile = ON in docs/ARCHITECTURE.md.
-If Agentic Profile = OFF, omit this section entirely.
+This section is ALWAYS present — do not omit it.
+If Agentic Profile = OFF, keep the block with Agentic Profile: OFF and all other fields as n/a.
+If Agentic Profile = ON, fill in the fields below.
 Updated by the orchestrator at every phase boundary where agent loop work occurred.
 
 Task tags that update this block: Type: agent:loop | agent:handoff | agent:termination
@@ -134,8 +136,9 @@ an agent loop, both profiles may be ON and both state blocks must be maintained.
 ## Planning State
 
 <!--
-Include this section only when Planning Profile = ON in docs/ARCHITECTURE.md.
-If Planning Profile = OFF, omit this section entirely.
+This section is ALWAYS present — do not omit it.
+If Planning Profile = OFF, keep the block with Planning Profile: OFF and all other fields as n/a.
+If Planning Profile = ON, fill in the fields below.
 Updated by the orchestrator at every phase boundary where plan structure work occurred.
 
 Planning Profile = ON means the application produces structured plans (task graphs,
@@ -155,8 +158,9 @@ Task tags that update this block: Type: plan:schema | plan:validation
 ## Compliance State
 
 <!--
-Include this section only when Compliance Status = ON in docs/ARCHITECTURE.md.
-If Compliance Status = OFF, omit this section entirely.
+This section is ALWAYS present — do not omit it.
+If Compliance Status = OFF, keep the block with Compliance Status: OFF and all other fields as n/a.
+If Compliance Status = ON, fill in the fields below.
 Updated by the orchestrator at every phase boundary where compliance-tagged work occurred.
 
 Task tags that update this block: Type: compliance:control | compliance:audit | compliance:evidence

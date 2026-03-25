@@ -60,7 +60,8 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A3-01  T01 present and is the project skeleton task (Phase 1)
 - [ ] A3-02  T02 present and is the CI setup task (Phase 1)
 - [ ] A3-03  T03 present and is the first tests task (Phase 1)
-- [ ] A3-04  Every task has: Owner, Phase, Depends-On (explicit or "none"), Objective, Acceptance Criteria, Files section
+- [ ] A3-04  Every task has: Owner, Phase, Type, Depends-On (explicit or "none"), Objective, Acceptance-Criteria (with at least one entry), Files section
+- [ ] A3-04b Every Acceptance-Criteria entry has a `test:` field pointing to a specific test function (format: `path/file.py::function`). An entry with a blank or missing `test:` field is a BLOCKER.
 - [ ] A3-05  T01 Depends-On is "none"
 - [ ] A3-06  T02 Depends-On includes T01
 - [ ] A3-07  T03 Depends-On includes T02 (or T01 and T02)
@@ -79,10 +80,10 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A4-04  Fix Queue: empty
 - [ ] A4-05  § Instructions for Codex present (pre-task protocol included)
 - [ ] A4-06  RAG State block present — value matches ARCHITECTURE.md (RAG Profile ON → active fields filled; OFF → all fields n/a)
-- [ ] A4-07  Tool-Use State block present — value matches ARCHITECTURE.md declaration
-- [ ] A4-08  Agentic State block present — value matches ARCHITECTURE.md declaration
-- [ ] A4-09  Planning State block present — value matches ARCHITECTURE.md declaration
-- [ ] A4-10  Compliance State block present — value matches ARCHITECTURE.md declaration (if Compliance = ON, active frameworks filled; if OFF, all fields n/a)
+- [ ] A4-07  Tool-Use State block present with a declared value — if Tool-Use = ON, registered schemas and guardrails filled; if OFF, block present with `Tool-Use Profile: OFF`. Absent block = BLOCKER.
+- [ ] A4-08  Agentic State block present with a declared value — if Agentic = ON, active roles filled; if OFF, block present with `Agentic Profile: OFF`. Absent block = BLOCKER.
+- [ ] A4-09  Planning State block present with a declared value — if Planning = ON, schema version filled; if OFF, block present with `Planning Profile: OFF`. Absent block = BLOCKER.
+- [ ] A4-10  Compliance State block present with a declared value — if Compliance = ON, active frameworks filled; if Compliance = OFF, block is present with `Compliance Status: OFF` and remaining fields `n/a`. A CODEX_PROMPT.md with no Compliance State block at all is a BLOCKER regardless of profile status.
 - [ ] A4-11  If docs/nfr.md exists: NFR Baseline block present in CODEX_PROMPT.md
 
 ### A5 — docs/IMPLEMENTATION_CONTRACT.md

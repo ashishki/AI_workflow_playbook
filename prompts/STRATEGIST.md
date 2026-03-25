@@ -83,37 +83,46 @@ Feature specification. Include:
 
 ### 3. `docs/tasks.md`
 
-Task graph. The complete ordered list of tasks for the entire project. Follow this format for every task:
+Task graph. The complete ordered list of tasks for the entire project. Use the structured block format below for every task — fields are machine-readable by the Orchestrator. The full schema with examples is in `templates/tasks_schema.md`.
 
 ```
-## T{NN}: {Task Name}
+## T{NN}: {Task Title}
 
-Owner: codex
-Phase: {N}
-Depends-On: {T-XX, T-YY, or "none"}
+Owner:      codex
+Phase:      {N}
+Type:       {tag(s) from Tag Namespace — use "none" if no capability tag}
+Depends-On: {T-XX, T-YY | none}
 
-### Objective
-{One paragraph — what this task accomplishes and why}
+Objective: |
+  {One paragraph. What the system can do after this task completes. Start with an action verb.}
 
-### Acceptance Criteria
-- [ ] {Specific, testable — written so a review agent can verify it by reading code and tests}
-- [ ] {Each criterion has exactly one corresponding test}
+Acceptance-Criteria:
+  - id: AC-1
+    description: "{Specific and testable. A reviewer verifies by running tests + reading code — no ambiguity.}"
+    test: "tests/path/test_file.py::test_function_name"
+  - id: AC-2
+    description: "{...}"
+    test: "{...}"
 
-### Files
-- Create: {list of files this task creates}
-- Modify: {list of files this task modifies}
+Files:
+  - {path/to/file.py}       # created or modified
+  - {tests/test_file.py}    # test file — required
 
-### Notes
-{Interface contracts, edge cases, implementation hints}
+Notes: |
+  {Interface contracts from Depends-On, edge cases, implementation constraints. Omit if none.}
 ```
+
+**Tag Namespace** (use in `Type:` field; multiple tags are space-separated):
+`none` | `rag:ingestion` | `rag:query` | `tool:schema` | `tool:unsafe` | `tool:call` | `agent:loop` | `agent:handoff` | `agent:termination` | `plan:schema` | `plan:validation` | `compliance:control` | `compliance:audit` | `compliance:evidence`
 
 Rules for the task graph:
 - T01 is always the project skeleton (directories, entry points, pyproject.toml or equivalent)
 - T02 is always CI setup
 - T03 is always the first tests (smoke tests for the skeleton)
-- Tasks are small enough to complete in one Codex session (1-3 hours of focused work)
-- Dependencies are explicit — a task never implicitly depends on something not listed in Depends-On
-- Acceptance criteria are written so a review agent can verify them by reading the code and running the tests, not by taking the agent's word for it
+- Tasks are small enough to complete in one Codex session (1–3 hours of focused work)
+- Every `Depends-On` reference is explicit — a task never implicitly depends on something not listed
+- Every acceptance criterion in `Acceptance-Criteria` has exactly one corresponding `test:` entry pointing to a real test function. A criterion without a test reference is not complete.
+- Forbidden phrases in `description:` fields: "works correctly", "handles properly", "is implemented", "functions as expected" — these cannot be verified by a review agent
 
 ### 4. `docs/CODEX_PROMPT.md`
 
@@ -593,9 +602,13 @@ In `docs/spec.md`:
 - `§ Compliance` — which frameworks apply, what data classifications are present, what audit requirements exist
 
 In `docs/tasks.md`:
-- Add separate tasks for: data classification implementation, audit log infrastructure, control evidence collection
-- Tag each: `Type: compliance:control` (control implementation tasks), `Type: compliance:audit` (audit log tasks), `Type: compliance:evidence` (evidence collection tasks)
-- Include compliance-specific acceptance criteria: audit log format test, data field handling test, retention policy test
+- Add **separate** tasks for each of the following — never merge them into a single task:
+  - Data classification implementation (identify and enforce field handling per classification) → `Type: compliance:control`
+  - Audit log infrastructure (append-only table, tamper-evidence mechanism, format contract) → `Type: compliance:audit`
+  - **Retention policy enforcement** (scheduled deletion job, TTL partitioning, or equivalent; testable boundary) → `Type: compliance:control`
+  - Control evidence collection (populate `docs/compliance_eval.md` with evidence paths) → `Type: compliance:evidence`
+- Acceptance criteria for the audit log task must include: append-only enforcement test (attempt DELETE → expect rejection), log format field completeness test, tamper-evidence mechanism test.
+- Acceptance criteria for the retention policy task must include: a test that verifies data older than the retention threshold is deleted or archived on schedule. "Policy documented" without a passing test is not acceptable.
 
 In `docs/IMPLEMENTATION_CONTRACT.md`:
 - Add `## Profile Rules: Compliance` with: data field handling rules, audit log format contract, audit log integrity rules, evidence artifact requirements, retention policy enforcement
@@ -605,6 +618,25 @@ In `docs/CODEX_PROMPT.md`:
 
 **Evaluation artifact:**
 - `docs/compliance_eval.md` — table of controls: control ID, framework, description, implementation status (Implemented / Partial / Not Started), evidence file path, last verified date. Created when Compliance Profile = ON; updated whenever a compliance-tagged task completes.
+
+**Compliance is plausible when any of the following appear in the project description:**
+
+| Signal in description | Likely framework |
+|-----------------------|-----------------|
+| "patient", "PHI", "medical record", "EHR", "healthcare", "clinical" | HIPAA |
+| "payment", "card", "PAN", "cardholder", "merchant", "transaction processing" | PCI-DSS |
+| "EU users", "GDPR", "right to erasure", "data subject", "consent" | GDPR |
+| "SOC 2", "audit report", "trust service criteria", "TSC" | SOC 2 |
+| "federal", "FedRAMP", "government contract", "FISMA" | FedRAMP |
+| "regulated industry", "compliance attestation", "BAA", "data processing agreement" | Framework TBD |
+
+When any of these signals are present, ask clarifying questions 14–16 before deciding on Compliance status.
+
+**Domain skeleton — when Compliance = ON and framework is HIPAA:**
+
+Load `templates/domains/healthcare.md`. It provides four pre-built tasks (T-HC-01 through T-HC-04) with complete acceptance criteria, test references, and a starter `docs/compliance_eval.md`. Insert these tasks after T03 in `docs/tasks.md`, renumbering if needed. Adjust `{{...}}` placeholders for the project's specific PHI fields and phase numbering.
+
+Do not use the healthcare skeleton for non-HIPAA frameworks — it is HIPAA-specific. For SOC 2, PCI-DSS, or GDPR, generate compliance tasks from first principles using the Compliance profile output requirements above.
 
 **Additional clarifying questions when Compliance is plausible:**
 
