@@ -334,6 +334,22 @@ One logical change per commit. If a task involves a database migration, a servic
 
 Tests do not share state. Each test that touches the database uses a transaction that is rolled back at the end of the test (or uses a fresh database per test run). Tests that share mutable state produce non-deterministic results and are treated as broken tests.
 
+### Evaluation Validity
+
+An evaluation artifact entry (in `docs/retrieval_eval.md` or equivalent profile evaluation file) is **invalid** if either of the following is true:
+
+- `Eval Source` is absent or blank — every metrics entry must identify the exact command, script, or method that produced the numbers.
+- `Date` / timestamp is absent or blank.
+
+An invalid entry is treated as a missing evaluation. The task is not complete regardless of whether tests pass.
+
+Acceptable `Eval Source` values:
+- `"scripts/eval.py against §Evaluation Dataset (10 queries), run YYYY-MM-DD"`
+- `"manual spot-check: retrieved docs inspected for Q01–Q05, run YYYY-MM-DD"`
+- `"pytest tests/test_retrieval_eval.py::test_hit_at_3, run YYYY-MM-DD"`
+
+`"Ran evaluation"` or `"updated metrics"` without specifics is not acceptable and constitutes a P1 finding.
+
 ### Review Cycle Integrity
 
 Review agents close findings only after verifying the fix in code. A finding is not closed because the Codex agent claims it was fixed. It is closed because a review agent read the relevant code and confirmed the fix is present and correct.

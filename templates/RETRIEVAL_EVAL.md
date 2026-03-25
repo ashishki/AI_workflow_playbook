@@ -6,6 +6,24 @@ Update this file whenever retrieval logic changes (chunking, embedding, ranking,
 Retrieval quality is evaluated separately from code quality — a green test suite does not imply good retrieval.
 -->
 
+## Evaluation Validity Rule
+
+An evaluation entry is **invalid** and must be rejected if either of the following is true:
+
+- `Eval Source` is absent or blank — every metrics entry must identify the exact command, script, or method that produced the numbers.
+- `Date` / timestamp is absent or blank.
+
+An invalid entry is treated as a missing evaluation. The task is not complete.
+
+Acceptable `Eval Source` examples:
+- `scripts/eval.py against §Evaluation Dataset (10 queries), run YYYY-MM-DD`
+- `manual spot-check: retrieved docs inspected for Q01–Q05, run YYYY-MM-DD`
+- `pytest tests/test_retrieval_eval.py::test_hit_at_3, run YYYY-MM-DD`
+
+`"Ran evaluation"` or `"updated metrics"` without specifics is **not acceptable**.
+
+---
+
 ## Retrieval Quality vs. Answer Quality
 
 These are not the same thing and must be evaluated independently.
@@ -196,9 +214,9 @@ none
 Append a one-line summary after each evaluation run.
 -->
 
-| Date | Task | Corpus Version | hit@3 | MRR | No-answer acc. | Faithfulness | Completeness | Note |
-|------|------|----------------|-------|-----|----------------|--------------|--------------|------|
-| {{DATE}} | {{TASK_ID}} | {{CORPUS_VERSION_TAG_OR_DATE}} | — | — | — | — | — | initial baseline |
+| Date | Task | Corpus Version | Eval Source | hit@3 | MRR | No-answer acc. | Faithfulness | Completeness | Note |
+|------|------|----------------|-------------|-------|-----|----------------|--------------|--------------|------|
+| {{DATE}} | {{TASK_ID}} | {{CORPUS_VERSION_TAG_OR_DATE}} | {{command or method}} | — | — | — | — | — | initial baseline |
 
 <!--
 Corpus Version: tag, date, or hash that identifies the document corpus active at time of evaluation.
