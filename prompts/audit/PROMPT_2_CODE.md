@@ -59,6 +59,13 @@ PLAN-2 Invalid plan behavior — rejection, re-plan, or escalation path is imple
 PLAN-3 Replan bounds — replan triggers are bounded (cannot cycle indefinitely); code behavior matches ARCHITECTURE.md §Plan Validation; unbounded = P1
 PLAN-4 Plan eval artifact — if task tagged `plan:schema` or `plan:validation`, is `docs/plan_eval.md` updated with Eval Source and Date for this task? Missing = P2
 
+<!-- Run the following checks ONLY if Compliance Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
+COMP-1  Data field classification — every regulated field (PHI, PII, PAN) is identified in ARCHITECTURE.md §Data Classification and handled per its classification; unclassified regulated field in code = P1
+COMP-2  Audit log completeness — every security-relevant event (auth, access, mutation, deletion) produces an audit log entry with: timestamp, actor, action, resource, result; missing event = P1
+COMP-3  Audit log integrity — audit logs are append-only and tamper-evident (separate store, signed entries, or delete-disabled table); any direct deletion path in audit log code = P0
+COMP-4  Evidence artifact currency — `docs/compliance_eval.md` is updated in the same task that implements or modifies a control; stale entry (not updated for this task's controls) = P2
+COMP-5  Retention policy enforcement — data retention and deletion policies for regulated fields are implemented in code and testable; policy documented but not enforced in code = P1
+
 <!-- Run the following checks ALWAYS (no profile condition — applies to every project) -->
 OBS-1  External call instrumentation — every new external call (DB, Redis, HTTP, LLM inference) is wrapped in a span with trace_id and operation_name using the shared tracing module; missing span or inline noop = P2
 OBS-2  AI-path metrics — for AI-specific code paths (retrieval, tool call, agent decision, plan validation), is there a labeled counter or histogram? Required in Phase ≥ 2; absent after Phase 2 = P2

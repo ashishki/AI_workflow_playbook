@@ -42,9 +42,10 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A1-07  § File Layout — directory tree present
 - [ ] A1-08  § Runtime Contract — env vars table present (may be empty if no env vars required)
 - [ ] A1-09  § Non-Goals — explicit list present (at minimum one item)
-- [ ] A1-10  § Capability Profiles table — present with all four profiles declared ON or OFF
+- [ ] A1-10  § Capability Profiles table — present with all five profiles declared ON or OFF (RAG, Tool-Use, Agentic, Planning, Compliance)
 - [ ] A1-11  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Index Strategy, §Risks all present
 - [ ] A1-12  For each active profile declared ON: a justification paragraph is present below the Capability Profiles table
+- [ ] A1-13  Compliance Profile declared ON or OFF — if ON, §Applicable Frameworks, §Data Classification, §Audit Log Requirements, §Risks all present
 
 ### A2 — docs/spec.md
 
@@ -68,6 +69,7 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A3-10  If Tool-Use Profile = ON: at least one task tagged `Type: tool:schema` present
 - [ ] A3-11  If Agentic Profile = ON: at least one task tagged `Type: agent:loop` or `Type: agent:termination` present
 - [ ] A3-12  If Planning Profile = ON: at least one task tagged `Type: plan:schema` present
+- [ ] A3-13  If Compliance Profile = ON: at least one task tagged `Type: compliance:control` and at least one tagged `Type: compliance:audit` present
 
 ### A4 — docs/CODEX_PROMPT.md
 
@@ -80,6 +82,8 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A4-07  Tool-Use State block present — value matches ARCHITECTURE.md declaration
 - [ ] A4-08  Agentic State block present — value matches ARCHITECTURE.md declaration
 - [ ] A4-09  Planning State block present — value matches ARCHITECTURE.md declaration
+- [ ] A4-10  Compliance State block present — value matches ARCHITECTURE.md declaration (if Compliance = ON, active frameworks filled; if OFF, all fields n/a)
+- [ ] A4-11  If docs/nfr.md exists: NFR Baseline block present in CODEX_PROMPT.md
 
 ### A5 — docs/IMPLEMENTATION_CONTRACT.md
 
@@ -92,6 +96,7 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A5-07  If Tool-Use Profile = ON: § Tool-Use Rules present
 - [ ] A5-08  If Agentic Profile = ON: § Agentic Rules present
 - [ ] A5-09  If Planning Profile = ON: § Planning Rules present
+- [ ] A5-10  If Compliance Profile = ON: § Compliance Rules present with data field handling, audit log format contract, audit integrity rules, evidence artifact requirements
 
 ### A6 — .github/workflows/ci.yml
 
@@ -112,10 +117,13 @@ For each check, read both referenced documents and verify the claim. Mark CONSIS
 - [ ] B-02  Tool-Use Profile consistency: ARCHITECTURE.md Capability Profiles table matches CODEX_PROMPT.md Tool-Use State block
 - [ ] B-03  Agentic Profile consistency: ARCHITECTURE.md Capability Profiles table matches CODEX_PROMPT.md Agentic State block
 - [ ] B-04  Planning Profile consistency: ARCHITECTURE.md Capability Profiles table matches CODEX_PROMPT.md Planning State block
+- [ ] B-04b Compliance Profile consistency: ARCHITECTURE.md Capability Profiles table matches CODEX_PROMPT.md Compliance State block
 - [ ] B-05  RAG tasks consistency (if RAG = ON): ARCHITECTURE.md declares RAG ON → tasks.md contains rag:ingestion and rag:query tagged tasks → IMPLEMENTATION_CONTRACT.md contains § RAG Rules
 - [ ] B-06  Tool-Use tasks consistency (if Tool-Use = ON): tasks.md contains tool:schema tagged task → IMPLEMENTATION_CONTRACT.md contains § Tool-Use Rules
 - [ ] B-07  Agentic tasks consistency (if Agentic = ON): tasks.md contains agent:loop or agent:termination tagged task → IMPLEMENTATION_CONTRACT.md contains § Agentic Rules
 - [ ] B-08  Planning tasks consistency (if Planning = ON): tasks.md contains plan:schema tagged task → IMPLEMENTATION_CONTRACT.md contains § Planning Rules
+- [ ] B-08b Compliance tasks consistency (if Compliance = ON): tasks.md contains compliance:control and compliance:audit tagged tasks → IMPLEMENTATION_CONTRACT.md contains § Compliance Rules
+- [ ] B-08c NFR consistency (if docs/nfr.md exists): SLA Table contains at least one row with a non-empty Target; CODEX_PROMPT.md contains § NFR Baseline block
 - [ ] B-09  T01/T02/T03 dependency chain: T01 Depends-On=none, T02 depends on T01, T03 depends on T01 or T02 — chain is logically sound and has no cycles
 - [ ] B-10  Tech stack consistency: every technology declared in ARCHITECTURE.md §Tech Stack that requires env vars has those env vars listed in §Runtime Contract
 - [ ] B-11  External integrations consistency: every service listed in ARCHITECTURE.md §External Integrations either (a) has env vars in §Runtime Contract, or (b) is documented as not requiring credentials

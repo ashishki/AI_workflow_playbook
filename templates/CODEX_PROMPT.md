@@ -152,6 +152,43 @@ Task tags that update this block: Type: plan:schema | plan:validation
 
 ---
 
+## Compliance State
+
+<!--
+Include this section only when Compliance Status = ON in docs/ARCHITECTURE.md.
+If Compliance Status = OFF, omit this section entirely.
+Updated by the orchestrator at every phase boundary where compliance-tagged work occurred.
+
+Task tags that update this block: Type: compliance:control | compliance:audit | compliance:evidence
+-->
+
+- Compliance Status: OFF
+- Active frameworks: n/a
+- Controls implemented: n/a
+- Controls partial: n/a
+- Controls not started: n/a
+- Evidence artifact: n/a
+- Open compliance findings: none
+
+---
+
+## NFR Baseline
+
+<!--
+Include this section when docs/nfr.md exists in the project.
+Populated after Phase 1 load tests. Leave values as "not yet measured" until tests run.
+Updated by the orchestrator at any phase boundary where load tests produced new measurements.
+A regression (measured value exceeds target by >10%) is a P2 finding.
+-->
+
+- API p99 latency: not yet measured
+- Error rate: not yet measured
+- Throughput: not yet measured
+- Last measured: —
+- NFR regression open: No
+
+---
+
 ## Evaluation State
 
 <!--

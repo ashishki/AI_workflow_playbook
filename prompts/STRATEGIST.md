@@ -27,16 +27,13 @@ Do not load §3, §4, §5, §7, §8, §11 — those govern orchestration and imp
 
 ## Reference Implementation
 
-Before producing any output, internalize this: the canonical example of this workflow applied to a real project is **gdev-agent** at https://github.com/ashishki/gdev-agent. It is a multi-tenant AI triage service built with FastAPI, PostgreSQL/pgvector, Redis, and the Claude API, developed over 12 phases using this exact playbook.
+When uncertain about how to structure a document or define a task, consult the templates in this playbook:
+- `templates/ARCHITECTURE.md` — architecture document format
+- `templates/CODEX_PROMPT.md` — session handoff format
+- `templates/IMPLEMENTATION_CONTRACT.md` — immutable rules format
+- `ci/ci.yml` — CI template
 
-When you are uncertain about how to structure a document, how to define a task, or how a pattern should look — consult gdev-agent. Key files to reference mentally:
-- `docs/ARCHITECTURE.md` — the architecture document format
-- `docs/tasks.md` — the task contract format
-- `docs/CODEX_PROMPT.md` — the session handoff format
-- `docs/IMPLEMENTATION_CONTRACT.md` — the immutable rules format
-- `.github/workflows/ci.yml` — the CI pattern
-
-Adapt, don't copy. gdev-agent is multi-tenant; your project may not be. gdev-agent uses pgvector; your project may use a different database. Use the structure, not the specifics.
+Adapt the templates to your project. Do not copy specifics from any example project.
 
 ---
 
@@ -510,6 +507,17 @@ Turn Planning **ON** if one or more of the following applies:
 
 Turn Planning **OFF** if the system produces plans only as intermediate reasoning steps that are never directly consumed outside the LLM context.
 
+### Decision criteria — Compliance Profile
+
+Turn Compliance **ON** if one or more of the following applies:
+
+- The system is subject to a named regulatory framework (SOC 2, HIPAA, PCI-DSS, GDPR, FedRAMP, ISO 27001)
+- The system handles PHI, PII, payment card data, or government-classified data as a first-class concern with regulatory obligations
+- The project requires an audit trail, evidence collection, or control mapping as a deliverable (not just a good practice)
+- Compliance attestation is a go-live gate — a launch condition, not a future milestone
+
+Turn Compliance **OFF** if the system has no formal regulatory obligations. Standard security practices (SEC-1..4 in IMPLEMENTATION_CONTRACT.md) remain in force regardless.
+
 ### Justify each active profile
 
 For each profile declared ON, include a one-paragraph justification immediately below the Capability Profiles table in `docs/ARCHITECTURE.md`.
@@ -522,6 +530,12 @@ Justification: The assistant must call a web search API and a code execution san
 
 **Agentic Profile: OFF**
 Justification: Each user request results in a single-pass LLM response. There is no multi-step decision loop. The system does not maintain agent state across requests.
+
+**Compliance Profile: ON**
+Justification: The system processes PHI under HIPAA. A control mapping is required before launch, and audit logs must be retained for 6 years. Compliance evidence collection is a first-class deliverable, not a post-launch task.
+
+**Compliance Profile: OFF**
+Justification: The system handles no regulated data. Standard security practices (SEC-1..4 in IMPLEMENTATION_CONTRACT.md) are sufficient. No formal compliance framework applies.
 ```
 
 ### Additional output when any profile is ON
@@ -567,9 +581,44 @@ In `docs/tasks.md`:
 In `docs/IMPLEMENTATION_CONTRACT.md`:
 - Add `§ Planning Rules`: plan schema versioning policy, validation failure behavior, plan-to-execution contract immutability
 
+**Compliance Profile = ON — additional artifacts:**
+
+In `docs/ARCHITECTURE.md` under `### Profile: Compliance`:
+- `#### Applicable Frameworks` — table: framework name, applicable controls scope, evidence owner, attestation deadline
+- `#### Data Classification` — table of every regulated field (PHI, PII, PAN, classified): field name, classification, storage control, transmission control, retention period
+- `#### Audit Log Requirements` — required events, retention period, tamper-evidence mechanism, log format
+- `#### Risks (Compliance-specific)` — at least 3 compliance-specific risks with mitigations (data leakage, audit gap, evidence drift, control drift)
+
+In `docs/spec.md`:
+- `§ Compliance` — which frameworks apply, what data classifications are present, what audit requirements exist
+
+In `docs/tasks.md`:
+- Add separate tasks for: data classification implementation, audit log infrastructure, control evidence collection
+- Tag each: `Type: compliance:control` (control implementation tasks), `Type: compliance:audit` (audit log tasks), `Type: compliance:evidence` (evidence collection tasks)
+- Include compliance-specific acceptance criteria: audit log format test, data field handling test, retention policy test
+
+In `docs/IMPLEMENTATION_CONTRACT.md`:
+- Add `## Profile Rules: Compliance` with: data field handling rules, audit log format contract, audit log integrity rules, evidence artifact requirements, retention policy enforcement
+
+In `docs/CODEX_PROMPT.md`:
+- Add `## Compliance State` block: active frameworks, open controls, evidence collected, outstanding remediation items
+
+**Evaluation artifact:**
+- `docs/compliance_eval.md` — table of controls: control ID, framework, description, implementation status (Implemented / Partial / Not Started), evidence file path, last verified date. Created when Compliance Profile = ON; updated whenever a compliance-tagged task completes.
+
+**Additional clarifying questions when Compliance is plausible:**
+
+14. Does this system handle PHI, PII, payment card data, or other regulated data as a formal obligation?
+15. Is there a named compliance framework the system must satisfy (SOC 2, HIPAA, PCI-DSS, GDPR, FedRAMP)?
+16. Is compliance attestation a launch gate, or a post-launch activity?
+
+Ask all questions together with the existing clarifying questions. Do not ask them separately.
+
+---
+
 **CODEX_PROMPT.md — state blocks for active profiles:**
 
-For each profile declared ON, initialize the corresponding state block in `docs/CODEX_PROMPT.md` at Phase 1 initial state. The CODEX_PROMPT.md template contains all four state blocks. Set each active profile's block to its initial values; set inactive profiles to OFF with all other fields as `n/a`.
+For each profile declared ON, initialize the corresponding state block in `docs/CODEX_PROMPT.md` at Phase 1 initial state. The CODEX_PROMPT.md template contains all five state blocks (RAG, Tool-Use, Agentic, Planning, Compliance). Set each active profile's block to its initial values; set inactive profiles to OFF with all other fields as `n/a`.
 
 ### Additional clarifying questions when profiles are plausible
 

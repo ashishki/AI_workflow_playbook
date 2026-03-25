@@ -297,6 +297,56 @@ _Applies only when `docs/ARCHITECTURE.md` declares Planning Status = ON._
 
 ---
 
+## Profile Rules: Compliance
+
+<!--
+This section applies ONLY when Compliance Status = ON in docs/ARCHITECTURE.md.
+If Compliance Status = OFF, delete this entire section.
+-->
+
+_Applies only when `docs/ARCHITECTURE.md` declares Compliance Status = ON in the Capability Profiles table._
+
+### Data Field Classification
+
+- Every regulated data field (PHI, PII, PAN, government-classified) is identified in ARCHITECTURE.md §Data Classification and handled according to its classification.
+- No regulated field may appear in log messages, span attributes, metrics labels, or error responses returned to clients.
+- An unclassified regulated field discovered in code is an automatic P1.
+
+### Audit Log Contract
+
+- All security-relevant events — authentication, authorization, data access, data mutation, data deletion — must produce an audit log entry.
+- Required audit log format: `{timestamp, actor_id, action, resource_type, resource_id, result, trace_id}`. Missing any required field is a P1.
+- Audit logs are append-only. No code path may delete or modify an existing audit log entry.
+- Any direct deletion path (DELETE query, file truncation, log rotation that drops entries) in audit log code is a P0.
+- Changes to the audit log schema require an ADR.
+
+### Audit Log Integrity
+
+- Audit logs must be tamper-evident: use an append-only table with DELETE privilege disabled, signed log entries, or a separate write-once log store.
+- The mechanism is declared in ARCHITECTURE.md §Audit Log Requirements and must match what is implemented.
+
+### Evidence Artifact Currency
+
+- `docs/compliance_eval.md` must be updated whenever a control is implemented or modified.
+- A task that modifies a compliance control without updating the evidence artifact is not complete. Submitting `IMPLEMENTATION_RESULT: DONE` in this state is a P1.
+
+### Retention Policy Enforcement
+
+- Data retention and deletion policies for regulated fields are implemented in code and are testable — not only documented.
+- Retention schedules and deletion triggers must have at least one test covering the retention boundary.
+- Policy documented but not enforced in code: P1.
+
+### Compliance Evaluation Gate
+
+A task tagged `Type: compliance:control`, `Type: compliance:audit`, or `Type: compliance:evidence` is **not complete** until:
+
+1. `docs/compliance_eval.md` is updated: the affected control rows have their implementation status, evidence file path, and last verified date filled in.
+2. Any new P1 or P0 compliance findings are recorded in `docs/CODEX_PROMPT.md §Open Findings`.
+
+Submitting `IMPLEMENTATION_RESULT: DONE` without updating the compliance evaluation artifact is a P1 finding.
+
+---
+
 ## Mandatory Pre-Task Protocol
 
 Every Codex agent must execute these steps before writing any implementation code. No exceptions.

@@ -20,12 +20,13 @@ Each profile defaults to OFF. Decide once in Phase 1; changing status requires a
 See PLAYBOOK.md §2c for decision criteria and the 9-property profile invariant.
 -->
 
-| Profile  | Status        | Evaluation Artifact       | Justification |
-|----------|---------------|---------------------------|---------------|
-| RAG      | {{ON \| OFF}} | `docs/retrieval_eval.md` | {{one paragraph — why retrieval is or is not needed}} |
-| Tool-Use | {{ON \| OFF}} | `docs/tool_eval.md`      | {{one paragraph — why LLM-directed tool calls are or are not needed}} |
-| Agentic  | {{ON \| OFF}} | `docs/agent_eval.md`     | {{one paragraph — why a multi-step decision loop is or is not needed}} |
-| Planning | {{ON \| OFF}} | `docs/plan_eval.md`      | {{one paragraph — why structured plan output is or is not needed}} |
+| Profile    | Status        | Evaluation Artifact         | Justification |
+|------------|---------------|-----------------------------|---------------|
+| RAG        | {{ON \| OFF}} | `docs/retrieval_eval.md`   | {{one paragraph — why retrieval is or is not needed}} |
+| Tool-Use   | {{ON \| OFF}} | `docs/tool_eval.md`        | {{one paragraph — why LLM-directed tool calls are or are not needed}} |
+| Agentic    | {{ON \| OFF}} | `docs/agent_eval.md`       | {{one paragraph — why a multi-step decision loop is or is not needed}} |
+| Planning   | {{ON \| OFF}} | `docs/plan_eval.md`        | {{one paragraph — why structured plan output is or is not needed}} |
+| Compliance | {{ON \| OFF}} | `docs/compliance_eval.md` | {{one paragraph — whether a named regulatory framework applies (HIPAA, SOC 2, PCI-DSS, GDPR) and whether compliance evidence collection is a launch gate}} |
 
 <!--
 For each profile with Status = ON, fill in its sub-sections below.
@@ -38,7 +39,8 @@ Compatibility notes:
 - Retrieval semantics are owned by RAG: if an agentic system performs retrieval, RAG profile
   (not Agentic) governs ingestion, indexing, corpus isolation, and insufficient_evidence.
 - The Orchestrator dispatches deep review on task type tags — keep tags in tasks.md accurate:
-  rag:ingestion, rag:query, tool:schema, tool:unsafe, agent:loop, agent:handoff, plan:schema.
+  rag:ingestion, rag:query, tool:schema, tool:unsafe, agent:loop, agent:handoff, plan:schema,
+  compliance:control, compliance:audit, compliance:evidence.
 -->
 
 ### Profile: RAG
@@ -221,6 +223,49 @@ what the consumer must validate before executing any step.}}
 | Stale plan on changed context | Context hash in plan; replan trigger on mismatch |
 | Unapproved high-risk step executed | Approval gates declared in schema; enforced at execution |
 | Plan schema drift between producer and consumer | Schema versioning; consumers reject unknown versions |
+
+### Profile: Compliance
+
+<!--
+Include this sub-section only when Compliance Status = ON in the Capability Profiles table above.
+If Compliance Status = OFF, delete from here through the end of this profile.
+-->
+
+#### Applicable Frameworks
+
+| Framework | Applicable controls scope | Evidence owner | Attestation deadline |
+|-----------|--------------------------|----------------|---------------------|
+| {{FRAMEWORK_1}} | {{e.g., "SOC 2 Type II — CC6, CC7, CC8"}} | {{e.g., "Security team"}} | {{DATE or "ongoing / annual"}} |
+
+#### Data Classification
+
+| Field | Classification | Storage control | Transmission control | Retention |
+|-------|---------------|-----------------|---------------------|-----------|
+| {{FIELD_1}} | {{PHI / PII / PAN / Internal}} | {{e.g., "encrypted at rest (AES-256)"}} | {{e.g., "TLS 1.2+ only; never external"}} | {{e.g., "6 years (HIPAA)"}} |
+
+<!--
+At minimum: list every field that is regulated by the declared framework(s).
+PHI: Protected Health Information (HIPAA)
+PII: Personally Identifiable Information (GDPR, CCPA)
+PAN: Primary Account Number / payment card data (PCI-DSS)
+-->
+
+#### Audit Log Requirements
+
+- **Required events:** {{list — e.g., "authentication (success/failure), authorization decision, data read (PHI fields), data write, data deletion, admin actions"}}
+- **Retention period:** {{e.g., "6 years (HIPAA minimum)"}}
+- **Tamper-evidence mechanism:** {{e.g., "append-only PostgreSQL table with DELETE privilege revoked; verified by COMP-3 review check"}}
+- **Log format:** `{timestamp, actor_id, action, resource_type, resource_id, result, trace_id}`
+
+#### Risks (Compliance-specific)
+
+| Risk | Mitigation |
+|------|------------|
+| Regulated field leaked in logs or spans | Data classification table; PII-scrubbing in log formatter; COMP-1 review check at every phase boundary |
+| Audit log gap on partial transaction failure | Transactional audit write (same DB transaction as the event) or saga with compensating log entry |
+| Evidence not collected before attestation deadline | `docs/compliance_eval.md` lifecycle tied to compliance-tagged task completion gate; COMP-4 check |
+| Control implementation drifting from documentation | COMP-4 enforces artifact currency; COMP-5 enforces code-level enforcement of documented policies |
+| Retention policy never enforced | Retention boundary test required for each regulated field; COMP-5 check |
 
 ---
 
