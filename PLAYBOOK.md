@@ -323,6 +323,88 @@ MEDIUM-confidence match → warning only, no stop.
 
 This is a heuristic, not a guarantee. Semantic ownership (see above) still takes precedence: a file touching `tools/` may correctly carry `rag:ingestion` if it changes retrieval semantics.
 
+### Capability Check Scenarios
+
+Worked examples that show expected Orchestrator behavior end-to-end. Use these to calibrate the signal patterns and verify the workflow does not overfire.
+
+**Workflow effect vocabulary** (used in scenarios below):
+
+| Effect | Meaning |
+|--------|---------|
+| `BLOCK` | Orchestrator stops before spawning the implementer; user must confirm or correct tag |
+| `TASK_NOT_COMPLETE` | Implementation ran but Orchestrator withholds `✅`; light review found a check failure |
+| `LIGHT_REVIEW_EXPANDED` | Light review runs SEC-1…6 + CF + profile-conditional checks (RAG-L1/2, TOOL-L1, AGENT-L1, PLAN-L1) |
+| `DEEP_REVIEW_EXPANDED` | Phase boundary deep review runs the profile-specific check set (RET-N, TOOL-N, AGENT-N, PLAN-N) in addition to SEC+QUAL+CF |
+
+---
+
+**Scenario 1 — TAG_WARNING: missing rag tag on retrieval file**
+```
+Task:            T05 — Update embedding model
+Files scope:     app/retrieval/embedding.py
+Type:            (none)
+Active profiles: RAG:ON
+
+Step 0-E:  HIGH match — "embedding" in path, no rag:* tag → TAG_WARNING + STOP
+Step 3:    not reached
+Light:     not reached
+Workflow effect: BLOCK
+```
+
+**Scenario 2 — Negative control: no capability impact**
+```
+Task:            T06 — Fix error message copy in user-facing UI
+Files scope:     app/ui/messages.py, tests/test_ui.py
+Type:            (none)
+Active profiles: RAG:ON, Tool-Use:ON
+
+Step 0-E:  no HIGH or MEDIUM pattern matches → OK
+Step 3:    no pattern match in modified files → OK
+Light:     SEC-1…6 + CF only (no profile-conditional checks, no capability tag)
+Workflow effect: none (normal flow)
+```
+> This confirms the check does not overfire on files unrelated to any active profile.
+
+**Scenario 3 — SEMANTIC_MISMATCH: wrong tag detected post-implementation**
+```
+Task:            T07 — Swap vector index adapter
+Files scope:     app/tools/vector_client.py   (in tools/ but changes retrieval semantics)
+Type:            tool:schema   (tagged incorrectly — semantic ownership not applied)
+Active profiles: RAG:ON, Tool-Use:ON
+
+Step 0-E:  "tools/" matches Tool-Use HIGH; tool:schema tag present → OK (no warning)
+           Pre-impl check cannot detect semantic intent — only presence.
+Step 3:    Codex also modified app/retrieval/index_schema.py →
+           "retrieval/" + "index" match RAG HIGH; tag is tool:schema →
+           SEMANTIC_MISMATCH (non-blocking): "signal suggests RAG, tag is Tool-Use; verify semantic ownership"
+Light:     TOOL-L1 check runs (because tag is tool:schema) +
+           reviewer sees SEMANTIC_MISMATCH in state block → manually verifies RET-N compliance
+Workflow effect: TASK_NOT_COMPLETE if reviewer confirms RAG ownership and tag is wrong
+                 Correct fix: change Type: to rag:ingestion, re-run from Step 3.5
+```
+> Shows why post-impl detection is necessary: pre-impl saw `tools/` and passed. Post-impl caught the retrieval file added by Codex.
+
+**Scenario 4 — Mixed-profile: semantic ownership + additive checks**
+```
+Task:            T08 — Add research agent that calls retrieval tool
+Files scope:     app/agents/research_agent.py, app/tools/retrieval_tool.py
+Type:            rag:query + agent:loop   (dual tag — additive checks rule)
+Active profiles: RAG:ON, Agentic:ON, Tool-Use:ON
+
+Step 0-E:  "retrieval/" → RAG HIGH; rag:query present → OK
+           "agent/" → Agentic MEDIUM → warn-only, no stop
+           "tools/" → Tool-Use HIGH; but rag:query tag present and semantic ownership applies
+             → no TAG_WARNING (RAG tag covers the tools/ file per semantic ownership rule)
+Step 3:    modified files match rag:query + agent:loop tags → OK
+Light:     RAG-L1, RAG-L2 (rag:query tag) + AGENT-L1 (agent:loop tag) — 3 extra checks
+           TOOL-L1 NOT run — tool:unsafe tag not present
+Workflow effect: LIGHT_REVIEW_EXPANDED (RAG-L + AGENT-L)
+                 DEEP_REVIEW_EXPANDED: RET-N (RAG) + AGENT-N (Agentic); TOOL-N not triggered
+```
+> TOOL-N does not fire even though Tool-Use is ON, because the task tag is `rag:query`. TOOL-N fires only for `tool:schema` or `tool:unsafe` tagged tasks. Semantic ownership keeps RET-N as the governing check set for `app/tools/retrieval_tool.py`.
+
+---
+
 ### Additive Checks Rule (Agentic + Tool-Use)
 
 When Agentic and Tool-Use are both ON, their audit checklists are **additive** for tasks that touch both domains. Neither profile subsumes the other:
