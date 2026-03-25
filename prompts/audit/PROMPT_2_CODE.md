@@ -39,6 +39,26 @@ RET-5  Retrieval regression — if retrieval logic changed, is `docs/retrieval_e
 RET-6  Ingestion/query-time separation — ingestion pipeline code and query-time code are in separate modules; no mixing
 RET-7  Answer quality tracking — if Phase ≥ 2, does `docs/retrieval_eval.md §Answer Quality Metrics` contain at least one completed evaluation run (Faithfulness, Completeness, Relevance scores recorded)? Absent after Phase 2 = P2. Also verify Evaluation History rows include a Corpus Version entry.
 
+<!-- Run the following checks ONLY if Tool-Use Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
+TOOL-1 Tool Catalog completeness — every LLM-callable tool is listed in ARCHITECTURE.md §Tool Catalog with side-effect class (read/write/destructive), idempotency, and permission level; missing entry = P1
+TOOL-2 Unsafe-action gate — every tool marked destructive has an explicit confirmation code path (a distinct branch, not a flag or comment); absence = P0
+TOOL-3 Schema validation at generation — tool input schemas are validated when the LLM produces the call, not deferred to the executor; deferred-only = P1
+TOOL-4 Permission boundary — permission is checked at each tool boundary (not only at entry point); single-check-at-entry = P1
+TOOL-5 Tool eval artifact — if task tagged `tool:schema` or `tool:unsafe`, is `docs/tool_eval.md` updated with Eval Source and Date for this task? Missing = P2
+
+<!-- Run the following checks ONLY if Agentic Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
+AGENT-1 Role boundaries — every agent role operates within its declared authority scope (ARCHITECTURE.md §Agent Roles); undeclared cross-role call = P1
+AGENT-2 Termination contract — every loop has an explicit exit at max_iterations AND on all declared termination conditions; open-ended loop = P0
+AGENT-3 Handoff integrity — every handoff produces a structured output that the receiving role validates; silent field drop or untyped handoff = P1
+AGENT-4 Cross-iteration state — state persisting across iterations follows the declared schema (ARCHITECTURE.md §Agent Handoff Protocol); ad-hoc shared mutable state = P1
+AGENT-5 Agent eval artifact — if task tagged `agent:loop` or `agent:handoff`, is `docs/agent_eval.md` updated with Eval Source and Date for this task? Missing = P2
+
+<!-- Run the following checks ONLY if Planning Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
+PLAN-1 Schema validation gate — every plan passes schema validation before leaving the system boundary (API response, file write, downstream handoff); post-boundary validation = P1
+PLAN-2 Invalid plan behavior — rejection, re-plan, or escalation path is implemented for invalid plans; absent path = P1
+PLAN-3 Replan bounds — replan triggers are bounded (cannot cycle indefinitely); code behavior matches ARCHITECTURE.md §Plan Validation; unbounded = P1
+PLAN-4 Plan eval artifact — if task tagged `plan:schema` or `plan:validation`, is `docs/plan_eval.md` updated with Eval Source and Date for this task? Missing = P2
+
 ## Finding format
 
 ### CODE-N [P0/P1/P2/P3] — Title

@@ -304,6 +304,25 @@ Tag: Type: rag:ingestion
 Ownership: RAG — semantic wins; RET-N checks apply, not TOOL-N
 ```
 
+### Capability Signal Patterns
+
+The Orchestrator uses file path patterns to infer which profile a task touches. This is used for two checks:
+
+1. **Pre-implementation (Step 0-E):** if the task's file scope contains a HIGH-confidence pattern but lacks the corresponding `Type:` tag → `TAG_WARNING` + stop until user confirms.
+2. **Post-implementation (Step 3):** if Codex's "Files modified" list matches a profile different from the current tag → `SEMANTIC_MISMATCH` (non-blocking, surfaces to light reviewer).
+
+| File path pattern (substring match) | Profile | Confidence |
+|--------------------------------------|---------|------------|
+| `retrieval/`, `embedding`, `chunk`, `index`, `corpus`, `ingestion`, `rerank` | RAG | HIGH |
+| `tools/`, `tool_schema`, `function_call`, `@tool`, `tool_catalog` | Tool-Use | HIGH |
+| `plan_schema`, `plan_graph`, `plan_valid` | Planning | HIGH |
+| `agent/`, `loop`, `handoff`, `termination` (app code only, not workflow docs) | Agentic | MEDIUM |
+
+HIGH-confidence match + missing tag → **STOP** (Step 0) or **SEMANTIC_MISMATCH** (Step 3).
+MEDIUM-confidence match → warning only, no stop.
+
+This is a heuristic, not a guarantee. Semantic ownership (see above) still takes precedence: a file touching `tools/` may correctly carry `rag:ingestion` if it changes retrieval semantics.
+
 ### Additive Checks Rule (Agentic + Tool-Use)
 
 When Agentic and Tool-Use are both ON, their audit checklists are **additive** for tasks that touch both domains. Neither profile subsumes the other:

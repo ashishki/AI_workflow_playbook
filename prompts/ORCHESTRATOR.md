@@ -185,6 +185,28 @@ If absent → deep review required. If present → skip.
 - Security-critical task (auth, middleware, RLS, secrets) → Deep review
 - Otherwise → Light review
 
+**E. Capability tag check** — for the next task, compare each path in its `Files:` scope against the signal patterns below.
+
+| File path pattern (substring match) | Profile | Confidence |
+|--------------------------------------|---------|------------|
+| `retrieval/`, `embedding`, `chunk`, `index`, `corpus`, `ingestion`, `rerank` | RAG | HIGH |
+| `tools/`, `tool_schema`, `function_call`, `@tool`, `tool_catalog` | Tool-Use | HIGH |
+| `plan_schema`, `plan_graph`, `plan_valid` | Planning | HIGH |
+| `agent/`, `loop`, `handoff`, `termination` (app code only) | Agentic | MEDIUM |
+
+If a HIGH-confidence pattern matches but the task has no `Type:` tag in that profile's namespace:
+```
+TAG_WARNING
+Task: [T## — Title]
+Signal: [matched pattern] in [file path]
+Expected tag: Type: [rag:|tool:|plan:] (pick the matching namespace)
+Actual tag: [current Type: value, or "none"]
+Check: does semantic ownership apply? (PLAYBOOK §Capability Signal Patterns)
+ACTION REQUIRED: confirm or add the tag before the implementer runs.
+```
+**STOP. Do not proceed to Step 2 or Step 3 until the user confirms or corrects the tag.**
+MEDIUM-confidence pattern (Agentic) → print `TAG_WARNING` but do not stop.
+
 Print status block:
 ```
 === ORCHESTRATOR STATE ===
@@ -195,6 +217,7 @@ Active Profiles: [RAG:ON/OFF | Tool-Use:ON/OFF | Agentic:ON/OFF | Planning:ON/OF
 Phase 1 Audit: [PASS (N warnings) | FAIL (N blockers) | skipped (mid-project) | not yet run]
 Phase boundary: [yes | no]
 Review tier: [light | deep] — [reason]
+Tag check: [OK | WARNING: T## — [pattern] suggests [profile], verify Type: tag]
 Action: [what happens next]
 =========================
 ```
@@ -314,7 +337,16 @@ PROMPT=$(cat /tmp/orchestrator_codex_prompt.txt)
 cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 ```
 
-- `DONE` + all AC PASS + 0 failures → Step 3.5
+- `DONE` + all AC PASS + 0 failures:
+  → **Post-implementation tag check:** compare "Files modified" against capability signal patterns (same table as Step 0-E). If the modified files match a profile that differs from the task's `Type:` tag:
+  ```
+  SEMANTIC_MISMATCH (non-blocking)
+  Task: [T## — Title]   Tag: [current Type: value]
+  Signal: [matched pattern] in [file path]
+  Suggestion: verify semantic ownership (PLAYBOOK §Capability Signal Patterns) — tag may need correction before this task is archived.
+  ```
+  Add to ORCHESTRATOR STATE `Tag check:` line. Light reviewer will verify.
+  → Step 3.5
 - `BLOCKED` → mark `[!]` in tasks.md, stop, report to user
 - Test failures → show list, stop, ask user
 
@@ -403,6 +435,20 @@ SEC-5  Async: correct async client used in async def; no sync blocking I/O in as
 SEC-6  Auth: new route handlers use require_role(); exemptions documented
 CF     Contract: rules A–I from IMPLEMENTATION_CONTRACT.md — any violations?
 
+<!-- Run the following checks ONLY if the completed task carries a capability-profile tag -->
+If task tag is `rag:ingestion` or `rag:query` → also check:
+RAG-L1  insufficient_evidence path — query-time handlers return `insufficient_evidence` when evidence is inadequate; no hallucinated fallback present in the diff
+RAG-L2  Ingestion/query separation — no function mixes ingest-phase logic with query-time logic in the same scope
+
+If task tag is `tool:unsafe` → also check:
+TOOL-L1 Confirmation step — destructive tool has a distinct confirmation code path (an explicit branch, not a boolean flag or comment)
+
+If task tag is `agent:loop` or `agent:termination` → also check:
+AGENT-L1 Termination condition — loop has an explicit exit condition in code (not implicit, not only described in ARCHITECTURE.md)
+
+If task tag is `plan:schema` or `plan:validation` → also check:
+PLAN-L1  Validation gate — plan schema validation runs before the plan leaves the system boundary (not deferred to the caller)
+
 Do NOT flag style, refactoring suggestions, or P2/P3 quality items — those go to deep review.
 Report only violations of the above checklist.
 
@@ -418,7 +464,7 @@ ISSUE_COUNT: [N]
 
 ISSUE_1:
 File: [path:line]
-Check: [SEC-N or CF — exact item]
+Check: [SEC-N | CF | RAG-L1 | RAG-L2 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
 Description: [what is wrong]
 Expected: [what it should be]
 Actual: [what it is]
