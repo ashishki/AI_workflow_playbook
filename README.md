@@ -1,6 +1,6 @@
 # AI Workflow Playbook
 
-A distilled AI-assisted development workflow extracted from the [gdev-agent](https://github.com/ashishki/gdev-agent) project. This playbook provides the structure, prompts, and templates needed to replicate that workflow on any new project.
+A structured AI-assisted development workflow with hard quality guarantees. This playbook provides the prompts, templates, and enforcement mechanisms needed to build production software using Claude as both implementation agent and reviewer.
 
 ---
 
@@ -30,15 +30,13 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **Three-layer observability.** Process observability via Claude Code hooks (shell-level enforcement: immutable file guard, Bash audit log, session checkpoint). Production observability via `IMPLEMENTATION_CONTRACT.md §Observability` rules (OBS-1..3: spans, metrics, health endpoint) and CODE review checks. AI quality observability via capability evaluation artifacts, Step 3.5 regression detection (5%/15% thresholds), and optional CI eval gates. See `PLAYBOOK.md §12 Observability`.
 
-**Proven on a real project.** Every rule was validated through 12 phases of building gdev-agent — a production multi-tenant AI triage service. The reference implementation exists and is public.
-
 ---
 
 ## What This Playbook Is
 
-This playbook captures the exact development process used to build gdev-agent — a multi-tenant AI triage service built over 12 phases using Claude as both the implementation agent and the reviewer. The workflow is general enough to apply to any backend service; the templates and prompts are project-agnostic starting points.
+A workflow for building backend services with Claude as both the implementation agent and the reviewer. The Orchestrator runs the development loop; Codex (or Claude Code) implements tasks in isolation; review agents catch issues at two tiers. State lives in files, not in conversational memory — sessions are fully resumable.
 
-The playbook is not theoretical. Every rule, every template, and every prompt was validated through real phases on a real project. The reference implementation at https://github.com/ashishki/gdev-agent is the living proof of concept.
+Every rule, template, and prompt in this playbook addresses a concrete failure mode: silent quality erosion across phases, untraceable AI decisions, evaluation that never runs, and review that misses profile-specific risks.
 
 ---
 
@@ -119,7 +117,6 @@ AI_workflow_playbook/
 ├── ci/
 │   └── ci.yml                  — GitHub Actions CI template (includes commented capability eval steps)
 └── reference/
-    ├── GDEV_AGENT.md           — how to use gdev-agent as implementation reference
     └── CODEX_CLI.md            — Codex CLI invocation patterns, sandbox limitations, prompt engineering
 ```
 
@@ -137,9 +134,7 @@ AI_workflow_playbook/
 
 **templates/** contains starting-point documents with `{{PLACEHOLDER}}` markers. The Strategist agent fills these in for your specific project. `RETRIEVAL_EVAL.md` is copied to `docs/retrieval_eval.md` when the RAG profile is activated; it tracks retrieval metrics, answer quality metrics, query type coverage, corpus versioning, and evaluation history.
 
-**ci/ci.yml** is a GitHub Actions template that mirrors the pattern proven in gdev-agent.
-
-**reference/GDEV_AGENT.md** explains which parts of gdev-agent to study when you need a concrete implementation example.
+**ci/ci.yml** is a GitHub Actions CI template with lint, format check, tests, and commented capability evaluation steps for all four profiles.
 
 **reference/CODEX_CLI.md** documents hard-won operational knowledge about running Codex as the implementation agent: the file-based prompt invocation pattern, known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering guidelines, and a pre-run checklist. Read this before starting a project that uses the Codex CLI.
 
@@ -175,19 +170,3 @@ AI_workflow_playbook/
 
 That's the entire startup sequence. From there, the loop runs itself with you approving phase gates.
 
----
-
-## Reference Implementation
-
-**https://github.com/ashishki/gdev-agent**
-
-gdev-agent is a FastAPI / PostgreSQL (pgvector) / Redis / Claude API service built using this exact playbook over 12 phases. When a prompt says "see the reference implementation," it means this repo.
-
-Key things to study in gdev-agent:
-- `docs/CODEX_PROMPT.md` — see what a real session handoff looks like at mid-project
-- `docs/audit/` — see what actual review cycle reports look like
-- `app/services/` — the service layer pattern
-- `app/tracing.py` — the shared tracing module pattern
-- `tests/conftest.py` — fixture structure
-
-See `reference/GDEV_AGENT.md` for a detailed guide to which files to read and why.
