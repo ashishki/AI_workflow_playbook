@@ -98,6 +98,11 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A5-08  If Agentic Profile = ON: § Agentic Rules present
 - [ ] A5-09  If Planning Profile = ON: § Planning Rules present
 - [ ] A5-10  If Compliance Profile = ON: § Compliance Rules present with data field handling, audit log format contract, audit integrity rules, evidence artifact requirements
+- [ ] A5-11  If RAG Profile = ON: `docs/retrieval_eval.md` file present and initialized (not a blank placeholder)
+- [ ] A5-12  If Tool-Use Profile = ON: `docs/tool_eval.md` file present and initialized
+- [ ] A5-13  If Agentic Profile = ON: `docs/agent_eval.md` file present and initialized
+- [ ] A5-14  If Planning Profile = ON: `docs/plan_eval.md` file present and initialized
+- [ ] A5-15  If Compliance Profile = ON: `docs/compliance_eval.md` file present and contains at least one control row with framework, description, and status fields
 
 ### A6 — .github/workflows/ci.yml
 
@@ -125,6 +130,7 @@ For each check, read both referenced documents and verify the claim. Mark CONSIS
 - [ ] B-08  Planning tasks consistency (if Planning = ON): tasks.md contains plan:schema tagged task → IMPLEMENTATION_CONTRACT.md contains § Planning Rules
 - [ ] B-08b Compliance tasks consistency (if Compliance = ON): tasks.md contains compliance:control and compliance:audit tagged tasks → IMPLEMENTATION_CONTRACT.md contains § Compliance Rules
 - [ ] B-08c NFR consistency (if docs/nfr.md exists): SLA Table contains at least one row with a non-empty Target; CODEX_PROMPT.md contains § NFR Baseline block
+- [ ] B-08d Eval artifact consistency: for each profile declared ON in ARCHITECTURE.md, the corresponding evaluation artifact (retrieval_eval.md / tool_eval.md / agent_eval.md / plan_eval.md / compliance_eval.md) is present, initialized, and matches the profile declaration (e.g., compliance_eval.md control rows reference the frameworks declared in ARCHITECTURE.md §Applicable Frameworks)
 - [ ] B-09  T01/T02/T03 dependency chain: T01 Depends-On=none, T02 depends on T01, T03 depends on T01 or T02 — chain is logically sound and has no cycles
 - [ ] B-10  Tech stack consistency: every technology declared in ARCHITECTURE.md §Tech Stack that requires env vars has those env vars listed in §Runtime Contract
 - [ ] B-11  External integrations consistency: every service listed in ARCHITECTURE.md §External Integrations either (a) has env vars in §Runtime Contract, or (b) is documented as not requiring credentials
@@ -193,13 +199,13 @@ PHASE1_AUDIT: PASS | FAIL
 
 | Section | Checks | Passed | BLOCKER | WARNING |
 |---------|--------|--------|---------|---------|
-| A1 ARCHITECTURE.md | 12 | N | N | N |
+| A1 ARCHITECTURE.md | 14 | N | N | N |
 | A2 spec.md | 5 | N | N | N |
-| A3 tasks.md | 12 | N | N | N |
-| A4 CODEX_PROMPT.md | 9 | N | N | N |
-| A5 IMPLEMENTATION_CONTRACT.md | 9 | N | N | N |
+| A3 tasks.md | 14 | N | N | N |
+| A4 CODEX_PROMPT.md | 11 | N | N | N |
+| A5 IMPLEMENTATION_CONTRACT.md | 15 | N | N | N |
 | A6 ci.yml | 6 | N | N | N |
-| B Cross-document | 12 | N | N | N |
+| B Cross-document | 15 | N | N | N |
 | C Vagueness | — | — | N | N |
 | D Placeholder Check | — | — | N | N |
 | **Total** | | | | |

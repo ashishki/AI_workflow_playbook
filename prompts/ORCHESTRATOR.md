@@ -828,7 +828,7 @@ Common choices:
 
 | Option | Invocation |
 |---|---|
-| Codex CLI (original gdev-agent setup) | `codex exec -s workspace-write` |
+| Codex CLI | `codex exec -s workspace-write` |
 | Claude Code subagent | Use the `Agent tool` with `general-purpose` instead of the Bash block; adapt Steps 2, 3, and 5 accordingly |
 | Any sandboxed executor | Replace the Bash block with whatever invocation your tool requires |
 

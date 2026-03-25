@@ -1,8 +1,7 @@
 # AI Workflow Playbook
 
 Version: 1.0
-Last updated: 2026-03-21
-Reference implementation: https://github.com/ashishki/gdev-agent
+Last updated: 2026-03-25
 
 ---
 

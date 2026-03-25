@@ -109,7 +109,7 @@ Notes: |
 ## T-HC-03: Data Retention Policy Enforcement
 
 Owner:      codex
-Phase:      {{2 or later — after core data model is stable}}
+Phase:      2  # move to Phase 3+ if the core data model extends beyond Phase 1
 Type:       compliance:control
 Depends-On: T-HC-01, T-HC-02
 
@@ -155,7 +155,7 @@ Notes: |
 ## T-HC-04: Compliance Evidence Collection
 
 Owner:      codex
-Phase:      {{Last phase before launch gate}}
+Phase:      3  # run in the final phase before launch; adjust to match your total phase count
 Type:       compliance:evidence
 Depends-On: T-HC-01, T-HC-02, T-HC-03
 
