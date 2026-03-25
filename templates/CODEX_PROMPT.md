@@ -171,11 +171,21 @@ This section holds the summary used by the Orchestrator for decision-making.
 - Profile: n/a
 - Task: n/a
 - Date: n/a
+- Eval Source: n/a
 - Metric(s): n/a
 - Score: n/a
 - Baseline: n/a
 - Delta: n/a
 - Regression: n/a
+
+<!--
+Eval Source is REQUIRED. An evaluation entry without Eval Source is invalid.
+Acceptable values:
+  - "scripts/eval.py against §Evaluation Dataset (10 queries), run YYYY-MM-DD"
+  - "manual spot-check: retrieved docs inspected for Q01–Q05, run YYYY-MM-DD"
+  - "pytest tests/test_retrieval_eval.py::test_hit_at_3, run YYYY-MM-DD"
+"Ran evaluation" or "updated metrics" without specifics is NOT acceptable.
+-->
 
 ### Open Evaluation Issues
 
@@ -220,6 +230,41 @@ P1s resolved: N
 P2s open: N
 Gate approved by: {human name or "auto"}
 -->
+
+---
+
+## Compaction Protocol
+
+<!--
+Governs CODEX_PROMPT.md size management for long-running projects.
+The Orchestrator evaluates compaction triggers at the start of each session (Step 0).
+Compaction is performed directly by the Orchestrator — no new files, no deletions.
+-->
+
+### Compaction triggers
+
+Compact when EITHER condition is true:
+- `## Completed Tasks` contains more than 20 entries, OR
+- `## Phase History` contains more than 5 phase summaries
+
+### How to compact
+
+1. Create or update a `## Summary State` section immediately after `## Current State`:
+   - Current phase and next task
+   - Active capability profiles and their status
+   - Open findings by severity: P1: N, P2: N
+   - Current test baseline
+   - Last evaluation result (if any profile is active)
+   - This section must be self-sufficient: the Orchestrator must be able to resume from it alone.
+
+2. In `## Completed Tasks`: retain the 5 most recent entries. Move all older entries to `## Archived Tasks` (create the section at the end of the file if it does not exist).
+
+3. In `## Phase History`: retain the 2 most recent phase summaries. Move older summaries to `## Archived Phase History` (create at the end of the file if absent).
+
+4. Rules:
+   - Do NOT delete any content — only move older entries to Archive sections.
+   - Archive sections are kept in this file; they are not required reading for normal operation.
+   - After compaction, `## Summary State` must fit within ~50 lines.
 
 ---
 
