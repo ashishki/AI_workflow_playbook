@@ -22,7 +22,9 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **CI in Phase 1, not Phase 3.** CI is mandatory in Phase 1. There is never a moment in this workflow when "tests pass locally but CI is unknown."
 
-**Capability Profiles with enforced evaluation.** Optional architectural modes that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Four profiles are supported: **RAG** (document retrieval), **Tool-Use** (LLM-directed tool calls), **Agentic** (multi-step decision loops), **Planning** (structured plan output). RAG is the reference implementation with the most detailed worked example. Each active profile adds its own architecture section, contract rules, review checks, and an evaluation artifact (`retrieval_eval.md`, `tool_eval.md`, etc.). Evaluation is not optional — the Orchestrator enforces it as Step 3.5: whenever a task carries a capability tag (`rag:query`, `tool:schema`, `agent:loop`, etc.), the task is not complete until the evaluation artifact is updated and compared against its baseline. A regression blocks task completion and becomes a P1 finding. For the RAG profile specifically, evaluation covers two independent dimensions: retrieval quality (hit@k, MRR, citation precision) and answer quality (faithfulness, completeness, relevance via LLM judge).
+**Capability Profiles with enforced evaluation.** Optional architectural modes that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Four profiles are supported: **RAG** (document retrieval), **Tool-Use** (LLM-directed tool calls), **Agentic** (multi-step decision loops), **Planning** (structured plan output). RAG is the reference implementation with the most detailed worked example. Each active profile adds its own architecture section, contract rules, review checks, and an evaluation artifact (`retrieval_eval.md`, `tool_eval.md`, etc.). Evaluation is not optional — the Orchestrator enforces it as Step 3.5: whenever a task carries a capability tag (`rag:query`, `tool:schema`, `agent:loop`, etc.), the task is not complete until the evaluation artifact is updated and compared against its baseline. A regression blocks task completion and becomes a P1 finding. For the RAG profile specifically, evaluation covers two independent dimensions: retrieval quality (hit@k, MRR, citation precision) and answer quality (faithfulness, completeness, relevance via LLM judge). Each profile now has a full set of deep-review checks: **RET-N** (7 checks) for RAG, **TOOL-N** (5 checks) for Tool-Use, **AGENT-N** (5 checks) for Agentic, **PLAN-N** (4 checks) for Planning. These run at every phase-boundary deep review alongside the baseline SEC+QUAL+CF checks.
+
+**Capability auto-detection and semantic validation.** Two mechanisms that catch tagging errors before and after implementation. Pre-implementation (Step 0-E): the Orchestrator matches the task's file scope against a table of capability signal patterns (e.g. `retrieval/`, `embedding` → RAG; `tools/`, `@tool` → Tool-Use). A HIGH-confidence match with no corresponding `Type:` tag stops the session with a `TAG_WARNING` before any code is written. Post-implementation (Step 3): if Codex's actual modified files match a different profile than the task tag, a `SEMANTIC_MISMATCH` is surfaced to the light reviewer (non-blocking). Profile-conditional light review checks fire automatically based on the task tag — `RAG-L1/L2` for retrieval tasks, `TOOL-L1` for unsafe tools, `AGENT-L1` for loops, `PLAN-L1` for planning tasks — expanding the standard 6-check SEC+CF checklist without requiring a full deep review. Four worked scenarios in `PLAYBOOK.md §Capability Check Scenarios` define exact expected outputs including a negative control (no overfiring on unrelated files) and a mixed-profile case (semantic ownership + additive checks).
 
 **Operational reference for the implementation agent.** `reference/CODEX_CLI.md` documents real-world Codex CLI behavior: known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns, and a pre-run checklist. This knowledge was learned through failures; it is not theoretical.
 
@@ -54,6 +56,11 @@ PLAYBOOK.md + project description
   Reads CODEX_PROMPT.md before every task
   Spawns Codex subagents for implementation
   Each Codex agent: captures baseline → implements → tests → evaluates (if capability tag) → commits
+        |
+        v
+  [Capability tag check — Step 0-E / Step 3]
+  Pre-impl:  file scope vs. signal patterns → TAG_WARNING + STOP if mismatch (HIGH confidence)
+  Post-impl: modified files vs. tag → SEMANTIC_MISMATCH surfaced to reviewer (non-blocking)
         |
         v
   [Evaluation gate — Step 3.5] (if task has capability tag)
@@ -128,7 +135,7 @@ AI_workflow_playbook/
 
 **reference/CODEX_CLI.md** documents hard-won operational knowledge about running Codex as the implementation agent: the file-based prompt invocation pattern, known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering guidelines, and a pre-run checklist. Read this before starting a project that uses the Codex CLI.
 
-**Capability Profiles** (`PLAYBOOK.md §2c`) — optional architectural modes activated in Phase 1 (e.g. RAG). When a profile is ON, it extends the workflow with profile-specific artifacts, review checks, state tracking, and an evaluation artifact. Each profile must satisfy the 9-property invariant defined in §2c before activation. RAG is the reference implementation.
+**Capability Profiles** (`PLAYBOOK.md §2c`) — optional architectural modes activated in Phase 1. When a profile is ON, it extends the workflow with profile-specific artifacts, review checks (RET-N / TOOL-N / AGENT-N / PLAN-N), state tracking, and an evaluation artifact. Each profile must satisfy the 9-property invariant defined in §2c before activation. The section also contains the Capability Signal Patterns table (file path → profile inference), the Semantic Ownership Rule (RAG beats Tool-Use for retrieval tasks), the Additive Checks Rule (Agentic + Tool-Use checks are cumulative), and four worked Capability Check Scenarios with a shared workflow effect vocabulary (BLOCK / TASK_NOT_COMPLETE / LIGHT_REVIEW_EXPANDED / DEEP_REVIEW_EXPANDED).
 
 ---
 
