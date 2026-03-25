@@ -1045,3 +1045,66 @@ Each gap includes: what is missing, what impact it has, and the minimum viable a
 **v2 priority order:** GAP-3 (security formalization) → GAP-5 (production integration) → GAP-2 (cost tracking) → GAP-6 (coverage) → GAP-4 (performance testing) → GAP-1 (multi-model)
 
 _This section is updated at each major version of the playbook. Gaps that are closed move to the changelog._
+
+---
+
+## 12. Observability
+
+Observability operates at three independent layers. Each layer addresses a different audience and a different failure mode. All three are required; none replaces the others.
+
+---
+
+### Layer 1: Process observability — Claude Code hooks
+
+Hooks execute at the shell process level, independent of LLM decisions. They enforce the hardest-to-enforce rules and provide an independent audit trail.
+
+| Hook event | File | What it does |
+|-----------|------|-------------|
+| `PreToolUse(Write\|Edit\|MultiEdit)` | `hooks/guard_files.sh` | Blocks writes to `docs/IMPLEMENTATION_CONTRACT.md`, `prompts/ORCHESTRATOR.md`, and `docs/audit/AUDIT_INDEX.md`. Exit 2 stops the tool and feeds the reason back to the Orchestrator. |
+| `PostToolUse(Bash)` | `hooks/log_bash.sh` | Appends every Bash command and its exit code to `docs/hooks_log.txt`. For `codex exec` invocations, also extracts and logs `IMPLEMENTATION_RESULT: DONE\|BLOCKED`. Async — does not slow the Orchestrator. |
+| `Stop` | `hooks/save_checkpoint.sh` | Writes active task, Fix Queue size, and timestamp to `/tmp/orchestrator_checkpoint.md` whenever the Claude Code session ends. Complements the file-based state in `docs/CODEX_PROMPT.md`. |
+
+**Activation** (per project, not in this template repo):
+1. Copy `hooks/` from the playbook to your project root.
+2. Copy `templates/.claude/settings.json` to `.claude/settings.json` in your project root.
+3. Make scripts executable: `chmod +x hooks/*.sh`
+4. Verify: Claude Code will now block writes to protected files and log all Bash commands.
+
+Override the protected file list via `PLAYBOOK_PROTECTED_FILES` env var (colon-separated paths). Override the log path via `PLAYBOOK_HOOKS_LOG`.
+
+---
+
+### Layer 2: Production system observability
+
+Rules are enforced through `docs/IMPLEMENTATION_CONTRACT.md §Observability` and reviewed at every deep review cycle via `docs/audit/PROMPT_2_CODE.md` checks OBS-1..3.
+
+| Rule | What is required | Review check | Severity |
+|------|-----------------|-------------|---------|
+| OBS-1 | Every external call (DB, Redis, HTTP, LLM) wrapped in a span with `trace_id` + `operation_name` | OBS-1 in CODE review | P2 |
+| OBS-2 | Success/error counter + latency histogram per external call type; AI-specific metrics when profile is ON | OBS-2 in CODE review | P2 |
+| OBS-3 | `GET /health` returns `{"status": "ok"}`; no PII; no auth required | OBS-3 in CODE review | P1 |
+
+The observability stack (OTel, statsd, Prometheus, CloudWatch) is a project-level decision declared once in `docs/ARCHITECTURE.md §Observability` and used consistently. The playbook does not mandate a specific tool.
+
+---
+
+### Layer 3: AI quality evaluation
+
+Evaluation is enforced by the Orchestrator as **Step 3.5** after every task with a capability tag. CI enforces evaluation regression via the commented eval steps in `ci/ci.yml`.
+
+| Mechanism | When it runs | What it checks |
+|-----------|-------------|---------------|
+| Step 3.5 (Orchestrator) | After every capability-tagged task | Did Codex update the evaluation artifact? Are Eval Source and Date present? |
+| Regression threshold check (Step 3.5) | After confirmed evaluation | Primary metric drop vs. baseline: >15% → P0 (Stop-Ship); >5% → P1; ≤5% → no finding |
+| OBS-2 check (CODE review) | Every deep review cycle | AI-path metrics present in code (not just in eval artifact) |
+| CI eval step | Every PR (when activated) | Automated regression gate: fails CI if metric drops below stored baseline |
+
+**Regression threshold defaults:** 15% (P0) / 5% (P1). Set explicit thresholds in `docs/CODEX_PROMPT.md §Evaluation State §Regression Thresholds` to override. A missing `§Regression Thresholds` field generates a P2 reminder.
+
+The evaluation artifact per profile:
+- RAG → `docs/retrieval_eval.md`
+- Tool-Use → `docs/tool_eval.md`
+- Agentic → `docs/agent_eval.md`
+- Planning → `docs/plan_eval.md`
+
+Each artifact tracks: current metrics, baseline row, regression notes, eval source, date, and corpus version (RAG only).

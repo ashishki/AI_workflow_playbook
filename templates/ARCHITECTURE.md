@@ -300,6 +300,30 @@ PII is stored in the database in the following fields: {{LIST_PII_DB_FIELDS}}. D
 
 ---
 
+## Observability
+
+<!--
+Required section. Fill in before Phase 2.
+If a tool is not yet decided, write "TBD — decide by Phase 2" in the relevant field.
+Profile-specific metric requirements are defined in IMPLEMENTATION_CONTRACT.md §Observability.
+-->
+
+| Dimension | Choice | Notes |
+|-----------|--------|-------|
+| Tracing | {{e.g., OpenTelemetry + Jaeger \| custom noop tracer}} | Shared module: `{{TRACING_MODULE_PATH}}` |
+| Metrics | {{e.g., Prometheus / statsd / CloudWatch}} | Required labels: `service`, `env`, `operation` |
+| Logging | {{e.g., structlog JSON \| stdlib JSON formatter}} | Required fields: `trace_id`, `span_id`, `env`, `service` |
+| Dashboards | {{link or N/A}} | |
+| Alerting | {{P95 latency threshold + error rate threshold, or N/A}} | |
+
+### Observability Invariants
+
+- No PII in spans, metrics labels, or log messages (enforced by §PII Policy above).
+- Health endpoint: `GET /health` — see §OBS-3 in `docs/IMPLEMENTATION_CONTRACT.md`.
+- All external calls instrumented: spans required for DB, Redis, HTTP, LLM inference.
+
+---
+
 ## External Integrations
 
 | Integration | Purpose | Auth method | Rate limit / SLA |

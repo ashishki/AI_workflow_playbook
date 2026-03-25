@@ -395,7 +395,12 @@ If evaluation was **NOT** performed (Codex skipped it):
 If evaluation was **performed**:
 - Verify `Eval Source` field is present and non-blank in both the evaluation artifact entry and in `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation`. If absent or blank → treat as "evaluation NOT performed" (see remediation prompt below).
 - Verify `Date` / timestamp is present and non-blank in both locations. If absent → same treatment.
-- Regression detected → add P1 finding to `docs/CODEX_PROMPT.md §Evaluation State §Open Evaluation Issues`. Document in evaluation artifact §Regression Notes. Proceed to Step 4 (regression will be caught by CODE review).
+- **Regression check** — compare the current primary metric against the baseline row in `docs/CODEX_PROMPT.md §Evaluation State §Regression Thresholds`:
+  - Drop > **15 %** vs. baseline → add **P0 finding** (Stop-Ship); do NOT proceed to Step 4 until resolved.
+  - Drop > **5 %** vs. baseline → add **P1 finding**; add to Fix Queue; proceed to Step 4 (regression will be addressed before next phase gate).
+  - Drop ≤ **5 %** or metric improved → no finding; proceed to Step 4.
+  - If `§Regression Thresholds` field is absent in `docs/CODEX_PROMPT.md` → use 15 % / 5 % defaults above and add a P2 note to set explicit thresholds.
+  - Document any regression (regardless of severity) in the evaluation artifact §Regression Notes with root cause classification: `code-change-induced` or `corpus-change-induced`.
 - No regression → confirm `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation` is current. Proceed to Step 4.
 
 ---

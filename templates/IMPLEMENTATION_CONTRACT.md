@@ -77,6 +77,22 @@ _Applies only if {{PROJECT_NAME}} is multi-tenant. Delete this section if single
 - If CI is flaky (non-deterministic failures), the flakiness is fixed before the PR is merged — not bypassed.
 - Violation: automatic P1.
 
+### Observability
+
+These rules ensure the system is observable in production. They apply to all projects and all profiles.
+
+**OBS-1 — Instrumentation.** Every external call (database, Redis, HTTP, LLM inference) must be wrapped in a span with `trace_id` and `operation_name`. Use the shared tracing module (`{{TRACING_MODULE_PATH}}`). Inline noop spans or copy-pasted tracer initializations are forbidden (see §Shared Tracing Module). Violation: P2 (escalates to P1 at age cap).
+
+**OBS-2 — Metrics.** For each type of external call, emit a success/error counter and a latency histogram. Tool choice (OpenTelemetry, statsd, Prometheus) is declared once in `docs/ARCHITECTURE.md §Observability` and used consistently. Profile-specific metrics are required when the corresponding profile is ON:
+- RAG: `insufficient_evidence` rate as a labeled counter; `retrieval_ms` and `generation_ms` as separate spans.
+- Agentic: each loop iteration logs `{agent_id, iteration, reason}`; termination reason as a counter label.
+- Tool-Use: each tool call logs `{tool_name, success, latency_ms}`; unsafe confirmations as a separate counter.
+- Planning: plan validation failures as a labeled event; replan trigger as a counter.
+
+Violation for missing profile-specific metrics: P2.
+
+**OBS-3 — Health endpoint.** `GET /health` returns `{"status": "ok"}` (HTTP 200) when the system is healthy. This endpoint must not log PII, must not count toward rate limits, and must not require authentication. Staleness information (e.g., index age for RAG) is exposed here, not in application logs. Violation: P1.
+
 ---
 
 ## Project-Specific Rules

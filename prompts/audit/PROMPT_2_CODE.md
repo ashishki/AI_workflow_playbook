@@ -59,6 +59,11 @@ PLAN-2 Invalid plan behavior — rejection, re-plan, or escalation path is imple
 PLAN-3 Replan bounds — replan triggers are bounded (cannot cycle indefinitely); code behavior matches ARCHITECTURE.md §Plan Validation; unbounded = P1
 PLAN-4 Plan eval artifact — if task tagged `plan:schema` or `plan:validation`, is `docs/plan_eval.md` updated with Eval Source and Date for this task? Missing = P2
 
+<!-- Run the following checks ALWAYS (no profile condition — applies to every project) -->
+OBS-1  External call instrumentation — every new external call (DB, Redis, HTTP, LLM inference) is wrapped in a span with trace_id and operation_name using the shared tracing module; missing span or inline noop = P2
+OBS-2  AI-path metrics — for AI-specific code paths (retrieval, tool call, agent decision, plan validation), is there a labeled counter or histogram? Required in Phase ≥ 2; absent after Phase 2 = P2
+OBS-3  Health endpoint integrity — health/readiness endpoint not inadvertently changed; if changed, is the change intentional and documented? Unanticipated change = P2
+
 ## Finding format
 
 ### CODE-N [P0/P1/P2/P3] — Title

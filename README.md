@@ -28,6 +28,8 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **Operational reference for the implementation agent.** `reference/CODEX_CLI.md` documents real-world Codex CLI behavior: known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns, and a pre-run checklist. This knowledge was learned through failures; it is not theoretical.
 
+**Three-layer observability.** Process observability via Claude Code hooks (shell-level enforcement: immutable file guard, Bash audit log, session checkpoint). Production observability via `IMPLEMENTATION_CONTRACT.md §Observability` rules (OBS-1..3: spans, metrics, health endpoint) and CODE review checks. AI quality observability via capability evaluation artifacts, Step 3.5 regression detection (5%/15% thresholds), and optional CI eval gates. See `PLAYBOOK.md §12 Observability`.
+
 **Proven on a real project.** Every rule was validated through 12 phases of building gdev-agent — a production multi-tenant AI triage service. The reference implementation exists and is public.
 
 ---
@@ -103,13 +105,19 @@ AI_workflow_playbook/
 │       ├── PROMPT_2_CODE.md    — review pipeline: code & security (template)
 │       ├── PROMPT_3_CONSOLIDATED.md — review pipeline: consolidated report (template)
 │       └── AUDIT_INDEX.md      — audit index template
+├── hooks/
+│   ├── guard_files.sh          — PreToolUse hook: blocks writes to immutable files
+│   ├── log_bash.sh             — PostToolUse hook: audit log for all Bash commands + Codex results
+│   └── save_checkpoint.sh      — Stop hook: writes Orchestrator state snapshot on session end
 ├── templates/
 │   ├── ARCHITECTURE.md         — template for system architecture document
 │   ├── CODEX_PROMPT.md         — template for session handoff document
 │   ├── IMPLEMENTATION_CONTRACT.md — template for immutable rules document
-│   └── RETRIEVAL_EVAL.md       — RAG evaluation artifact template (copy to docs/ when RAG=ON)
+│   ├── RETRIEVAL_EVAL.md       — RAG evaluation artifact template (copy to docs/ when RAG=ON)
+│   └── .claude/
+│       └── settings.json       — Claude Code hook configuration (copy to .claude/ in your project)
 ├── ci/
-│   └── ci.yml                  — GitHub Actions CI template
+│   └── ci.yml                  — GitHub Actions CI template (includes commented capability eval steps)
 └── reference/
     ├── GDEV_AGENT.md           — how to use gdev-agent as implementation reference
     └── CODEX_CLI.md            — Codex CLI invocation patterns, sandbox limitations, prompt engineering
@@ -154,8 +162,16 @@ AI_workflow_playbook/
    - `docs/prompts/PROMPT_S_STRATEGY.md`
    - `docs/audit/PROMPT_0_META.md` through `PROMPT_3_CONSOLIDATED.md`
    - `docs/audit/AUDIT_INDEX.md`
-5. Open a Claude Code session in your new repo with `docs/prompts/ORCHESTRATOR.md` as the system prompt.
-6. Say: "Start Phase 1." The orchestrator reads `docs/CODEX_PROMPT.md` and begins.
+5. Copy the hooks and Claude Code settings into your new repo:
+   ```bash
+   cp -r hooks/ your-project/hooks/
+   mkdir -p your-project/.claude/
+   cp templates/.claude/settings.json your-project/.claude/settings.json
+   chmod +x your-project/hooks/*.sh
+   ```
+   The hooks enforce three things at the process level: block writes to immutable files, log every Bash command to `docs/hooks_log.txt`, and write a session checkpoint on stop. See `PLAYBOOK.md §12 Observability` for details.
+6. Open a Claude Code session in your new repo with `docs/prompts/ORCHESTRATOR.md` as the system prompt.
+7. Say: "Start Phase 1." The orchestrator reads `docs/CODEX_PROMPT.md` and begins.
 
 That's the entire startup sequence. From there, the loop runs itself with you approving phase gates.
 

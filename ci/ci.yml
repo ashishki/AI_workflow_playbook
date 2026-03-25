@@ -134,6 +134,41 @@ jobs:
           # REDIS_URL: redis://localhost:6379/0
         run: python -m pytest tests/ -q --tb=short
 
+      # -----------------------------------------------------------------------
+      # CAPABILITY EVALUATION (uncomment when profile is ON)
+      # Each step runs the profile-specific evaluation suite and fails CI
+      # if a metric regression is detected vs. the baseline in docs/CODEX_PROMPT.md.
+      #
+      # Activation: uncomment the step(s) for your active profiles.
+      # Place evaluation fixtures under tests/eval/ (isolated from unit/integration tests).
+      # See IMPLEMENTATION_CONTRACT.md §Observability and §Retrieval Evaluation Gate.
+      # -----------------------------------------------------------------------
+      # - name: Run RAG evaluation          # Profile: RAG
+      #   if: always()
+      #   run: |
+      #     python -m pytest tests/eval/test_retrieval.py -v \
+      #       --junitxml=reports/eval_retrieval.xml
+      #   # Fails CI if retrieval precision, MRR, or answer quality drops below baseline.
+      #   # Baseline stored in docs/retrieval_eval.md §Evaluation History.
+      #
+      # - name: Run Agent evaluation        # Profile: Agentic
+      #   if: always()
+      #   run: python -m pytest tests/eval/test_agent.py -v
+      #   # Fails CI if loop termination rate or handoff integrity rate drops below baseline.
+      #   # Baseline stored in docs/agent_eval.md.
+      #
+      # - name: Run Tool-Use evaluation     # Profile: Tool-Use
+      #   if: always()
+      #   run: python -m pytest tests/eval/test_tools.py -v
+      #   # Fails CI if tool call success rate or schema validation pass rate drops below baseline.
+      #   # Baseline stored in docs/tool_eval.md.
+      #
+      # - name: Run Planning evaluation     # Profile: Planning
+      #   if: always()
+      #   run: python -m pytest tests/eval/test_planning.py -v
+      #   # Fails CI if plan validation gate pass rate drops below baseline.
+      #   # Baseline stored in docs/plan_eval.md.
+
 # -------------------------------------------------------------------------------
 # HOW TO USE THIS TEMPLATE
 #
