@@ -146,6 +146,27 @@ A criterion is specific enough if a review agent can verify it by running the te
 
 ---
 
+## Part D — Unresolved Placeholder Check
+
+Scan the following files for any remaining `{{...}}` patterns:
+
+1. `docs/ARCHITECTURE.md`
+2. `docs/IMPLEMENTATION_CONTRACT.md`
+3. `docs/CODEX_PROMPT.md`
+
+Detection rule: any text matching `{{` followed by non-`}` characters followed by `}}` is an unresolved placeholder.
+
+Exception: `{{...}}` patterns that appear inside a fenced code block (``` or ~~~) are examples, not active text — skip them.
+
+For every unresolved placeholder found outside a fenced code block:
+- Location: `[file, section, approximate context]`
+- Placeholder text: `[exact string]`
+- Required action: replace with a concrete value before PHASE1_AUDIT can PASS
+
+Any unresolved placeholder in the three target files → **BLOCKER**.
+
+---
+
 ## Output format: docs/audit/PHASE1_AUDIT.md
 
 ---
@@ -171,6 +192,7 @@ PHASE1_AUDIT: PASS | FAIL
 | A6 ci.yml | 6 | N | N | N |
 | B Cross-document | 12 | N | N | N |
 | C Vagueness | — | — | N | N |
+| D Placeholder Check | — | — | N | N |
 | **Total** | | | | |
 
 ## BLOCKER Findings
@@ -211,6 +233,7 @@ Severity rules:
 - Any INCONSISTENT check in Part B → BLOCKER (cross-document inconsistency invalidates the architecture package)
 - Any vague criterion in tasks.md Part C → BLOCKER (agents cannot implement against vague AC)
 - Any vague criterion in spec.md only → WARNING (does not directly drive agent implementation)
+- Any unresolved placeholder in Part D → BLOCKER (contract cannot be enforced with template values)
 - PHASE1_AUDIT is PASS only when BLOCKER count = 0
 
 When done: "PHASE1_AUDIT.md written. Result: PASS | FAIL. Blockers: N. Warnings: N."

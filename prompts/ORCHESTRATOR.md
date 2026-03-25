@@ -96,6 +96,27 @@ Project root: `{{PROJECT_ROOT}}`
 
 ### Step 0 — Goals Check + Determine Current State
 
+**Placeholder check — runs before everything else, every session.**
+
+Scan the following files for unresolved `{{...}}` patterns (any `{{` ... `}}` outside a fenced code block):
+
+- `docs/ARCHITECTURE.md`
+- `docs/IMPLEMENTATION_CONTRACT.md`
+- `docs/CODEX_PROMPT.md`
+
+If any unresolved placeholder is found:
+
+```
+PLACEHOLDER_ERROR
+File: [path]
+Placeholder: [exact text]
+Action required: replace with a concrete value before the Orchestrator can proceed.
+```
+
+**STOP. Do not proceed to any other step.** The session cannot continue until all placeholders are resolved and the Orchestrator is re-run.
+
+---
+
 **Goals check — always, before anything else.**
 
 Read `docs/CODEX_PROMPT.md` section "Current Phase" and `docs/tasks.md` upcoming phase header.
@@ -105,6 +126,17 @@ If the next task does not map to those goals, stop and report before building.
 Read in full:
 1. `docs/CODEX_PROMPT.md` — baseline, Fix Queue, open findings, next task
 2. `docs/tasks.md` — full task graph with phases
+
+**Compaction check.**
+
+After reading `docs/CODEX_PROMPT.md`, count:
+- Entries in `## Completed Tasks`
+- Summaries in `## Phase History`
+
+If either exceeds the trigger threshold defined in `## Compaction Protocol` (20 completed tasks OR 5 phase summaries):
+- Run compaction now, before any task work.
+- The Orchestrator performs compaction directly: create/update `## Summary State`, move older entries to Archive sections.
+- Compaction must complete before Step 1.
 
 Check `docs/ARCHITECTURE.md` for `## Capability Profiles` table (or `RAG Profile: ON | OFF` in legacy projects). Record all active profiles — they affect review tier, deep-review trigger tags, and state block update requirements below.
 
@@ -318,11 +350,19 @@ If evaluation was **NOT** performed (Codex skipped it):
   Read docs/IMPLEMENTATION_CONTRACT.md §Retrieval Evaluation Gate (or relevant profile gate).
   Update the evaluation artifact with current results. Compare against baseline.
   Update docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation.
+
+  REQUIRED fields (entry is invalid without them):
+  - Eval Source: the exact command, script, or manual method used to produce the metrics
+    (e.g. "scripts/eval.py against §Evaluation Dataset (10 queries), run YYYY-MM-DD")
+  - Date: today's date in YYYY-MM-DD format
+
   Return IMPLEMENTATION_RESULT: DONE when complete.
   ```
 - Re-enter Step 3.5 after the agent responds.
 
 If evaluation was **performed**:
+- Verify `Eval Source` field is present and non-blank in both the evaluation artifact entry and in `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation`. If absent or blank → treat as "evaluation NOT performed" (see remediation prompt below).
+- Verify `Date` / timestamp is present and non-blank in both locations. If absent → same treatment.
 - Regression detected → add P1 finding to `docs/CODEX_PROMPT.md §Evaluation State §Open Evaluation Issues`. Document in evaluation artifact §Regression Notes. Proceed to Step 4 (regression will be caught by CODE review).
 - No regression → confirm `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation` is current. Proceed to Step 4.
 
