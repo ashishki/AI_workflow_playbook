@@ -1,6 +1,6 @@
 # AI Workflow Playbook
 
-A structured AI-assisted development workflow with hard quality guarantees. This playbook provides the prompts, templates, and enforcement mechanisms needed to build production software using Claude as both implementation agent and reviewer.
+A structured AI-assisted development workflow with hard quality guarantees. Provides the prompts, templates, and enforcement mechanisms needed to build production software using Claude as both implementation agent and reviewer.
 
 ---
 
@@ -8,81 +8,85 @@ A structured AI-assisted development workflow with hard quality guarantees. This
 
 Most "AI coding" workflows are a single prompt → single agent → hope for the best. This one is an engineering system with hard guarantees:
 
-**Strict layer separation.** Seven layers, each with defined inputs, outputs, and hard boundaries. The Orchestrator never writes application code. The implementation agent never reviews its own output. Review agents never write code. These are not conventions — they are enforced rules with explicit rationale.
+**Strict role separation.** The Orchestrator never writes code. The implementation agent never reviews its own output. Review agents never write code. These are not conventions — they are enforced rules with explicit rationale.
 
-**Stateless orchestration.** `docs/CODEX_PROMPT.md` is the single source of truth for all session state. Any agent, any session, any machine can resume exactly where the last one stopped by reading that file. Nothing is held in conversational memory. Sessions are fully resumable after interruption.
+**Resumable state.** `docs/CODEX_PROMPT.md` is the single source of truth for all session state. Any agent, any session, any machine can resume exactly where the last one stopped. Nothing is held in conversational memory.
 
-**Immutable contract.** `IMPLEMENTATION_CONTRACT.md` is the unchanging floor of the project. Architectural decisions may evolve; the contract does not — without an explicit ADR. This prevents incremental erosion of quality standards across phases.
+**Immutable contract.** `IMPLEMENTATION_CONTRACT.md` is the unchanging floor of the project. It does not evolve without an explicit ADR. This prevents incremental erosion of quality standards across phases.
 
-**Two-tier review, not one pass.** Every task gets a lightweight 6-check security/contract review immediately after implementation. Every phase gets a deep four-agent review cycle: META (process compliance) → ARCH (architecture compliance) → CODE (P0–P3 findings) → CONSOLIDATED (merged report). The two tiers serve different functions and neither replaces the other.
+**Structured task format.** Every task in `docs/tasks.md` follows a YAML-compatible block schema: `Owner`, `Phase`, `Type`, `Depends-On`, `Objective`, `Acceptance-Criteria` (each entry has `id`, `description`, and a `test:` field pointing to a specific test function), `Files`, `Notes`. The Orchestrator reads task fields directly without LLM parsing. A criterion without a test reference is a PHASE1_VALIDATOR blocker.
 
-**Baseline tracking with enforcement.** After Phase 1, the passing test count is recorded. Every subsequent session must not decrease it. A session that breaks tests must not commit — this is a hard rule, not a guideline.
+**Two-tier review.** Every task gets a lightweight 6-check security/contract review immediately after implementation. Every phase gets a deep four-agent review cycle: META → ARCH → CODE → CONSOLIDATED. The two tiers serve different purposes and neither replaces the other.
 
-**Finding lifecycle enforcement (P2 Age Cap).** P2 findings that survive three review cycles without resolution are escalated, closed with justification, or deferred to v2. Findings cannot accumulate indefinitely. The audit trail is append-only.
+**Baseline tracking with enforcement.** After Phase 1, the passing test count is recorded as the baseline. Every subsequent session must not decrease it. A session that breaks tests must not commit — this is a hard rule.
 
-**CI in Phase 1, not Phase 3.** CI is mandatory in Phase 1. There is never a moment in this workflow when "tests pass locally but CI is unknown."
+**Finding lifecycle enforcement.** P2 findings that survive three review cycles without resolution are escalated, closed with justification, or deferred to v2. Findings cannot accumulate indefinitely.
 
-**Capability Profiles with enforced evaluation.** Optional architectural modes that extend the base workflow with profile-specific artifacts, review checks, state tracking, and evaluation criteria. Five profiles are supported: **RAG** (document retrieval), **Tool-Use** (LLM-directed tool calls), **Agentic** (multi-step decision loops), **Planning** (structured plan output), **Compliance** (regulated industries — SOC 2, HIPAA, PCI-DSS, GDPR). RAG is the reference implementation with the most detailed worked example. Each active profile adds its own architecture section, contract rules, review checks, and an evaluation artifact (`retrieval_eval.md`, `tool_eval.md`, `compliance_eval.md`, etc.). Evaluation is not optional — the Orchestrator enforces it as Step 3.5: whenever a task carries a capability tag (`rag:query`, `tool:schema`, `agent:loop`, `compliance:control`, etc.), the task is not complete until the evaluation artifact is updated and compared against its baseline. A regression blocks task completion and becomes a P1 finding. For the RAG profile specifically, evaluation covers two independent dimensions: retrieval quality (hit@k, MRR, citation precision) and answer quality (faithfulness, completeness, relevance via LLM judge). Each profile has a full set of deep-review checks: **RET-N** (7 checks) for RAG, **TOOL-N** (5 checks) for Tool-Use, **AGENT-N** (5 checks) for Agentic, **PLAN-N** (4 checks) for Planning, **COMP-N** (5 checks) for Compliance. These run at every phase-boundary deep review alongside the baseline SEC+QUAL+CF checks.
+**CI in Phase 1.** CI is mandatory in Phase 1. There is never a moment in this workflow when "tests pass locally but CI is unknown."
 
-**Capability auto-detection and semantic validation.** Two mechanisms that catch tagging errors before and after implementation. Pre-implementation (Step 0-E): the Orchestrator matches the task's file scope against a table of capability signal patterns (e.g. `retrieval/`, `embedding` → RAG; `tools/`, `@tool` → Tool-Use). A HIGH-confidence match with no corresponding `Type:` tag stops the session with a `TAG_WARNING` before any code is written. Post-implementation (Step 3): if Codex's actual modified files match a different profile than the task tag, a `SEMANTIC_MISMATCH` is surfaced to the light reviewer (non-blocking). Profile-conditional light review checks fire automatically based on the task tag — `RAG-L1/L2` for retrieval tasks, `TOOL-L1` for unsafe tools, `AGENT-L1` for loops, `PLAN-L1` for planning tasks — expanding the standard 6-check SEC+CF checklist without requiring a full deep review. Four worked scenarios in `PLAYBOOK.md §Capability Check Scenarios` define exact expected outputs including a negative control (no overfiring on unrelated files) and a mixed-profile case (semantic ownership + additive checks).
+**Five capability profiles.** Optional architectural modes, each with algorithmic decision criteria, mandatory artifacts, profile-specific contract rules, deep-review checks, and an evaluation artifact:
 
-**Operational reference for the implementation agent.** `reference/CODEX_CLI.md` documents real-world Codex CLI behavior: known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns, and a pre-run checklist. This knowledge was learned through failures; it is not theoretical.
+| Profile | Governs | Review checks | Evaluation artifact |
+|---------|---------|---------------|---------------------|
+| **RAG** | Document retrieval: ingestion pipeline, query-time retrieval, `insufficient_evidence` path | RET-1..7 | `retrieval_eval.md` |
+| **Tool-Use** | LLM-directed tool calls: schemas, side effects, unsafe-action gates, idempotency | TOOL-1..5 | `tool_eval.md` |
+| **Agentic** | Multi-step decision loops: roles, authority boundaries, loop termination contract | AGENT-1..5 | `agent_eval.md` |
+| **Planning** | Structured plan output as primary deliverable: schema, validation gate, plan-to-execution contract | PLAN-1..4 | `plan_eval.md` |
+| **Compliance** | Regulated industries (HIPAA, SOC 2, PCI-DSS, GDPR): PHI enforcement, audit log, retention policy, evidence collection | COMP-1..5 | `compliance_eval.md` |
 
-**Three-layer observability.** Process observability via Claude Code hooks (shell-level enforcement: immutable file guard, Bash audit log, session checkpoint). Production observability via `IMPLEMENTATION_CONTRACT.md §Observability` rules (OBS-1..3: spans, metrics, health endpoint) and CODE review checks. AI quality observability via capability evaluation artifacts, Step 3.5 regression detection (5%/15% thresholds), and optional CI eval gates. See `PLAYBOOK.md §12 Observability`.
+Profiles are activated in Phase 1 and treated as architectural constraints. Evaluation is enforced at Step 3.5: any task with a capability tag is not complete until the evaluation artifact is updated and compared against its baseline. A regression is a P1 finding.
+
+**Capability auto-detection.** Pre-implementation: the Orchestrator matches the task's file scope against capability signal patterns — `retrieval/`, `embedding` → RAG; `tools/`, `@tool` → Tool-Use; `compliance/`, `audit/`, `hipaa/` → Compliance. A HIGH-confidence match with no matching `Type:` tag stops the session with a `TAG_WARNING` before any code is written. Post-implementation: file-vs-tag mismatches surface a `SEMANTIC_MISMATCH` to the reviewer.
+
+**Domain skeletons.** Pre-built task sets for specific regulated domains that drop into `docs/tasks.md` directly. The HIPAA skeleton (`templates/domains/healthcare.md`) provides four tasks — PHI field enforcement, audit log infrastructure, retention policy enforcement, compliance evidence collection — each with complete acceptance criteria, test function references, and a starter `compliance_eval.md`. The Strategist includes it automatically when Compliance=ON and HIPAA is the active framework.
+
+**Three-layer observability.** (1) Process level: Claude Code hooks block writes to immutable files, log every Bash command, write a session checkpoint on stop. (2) Production level: OBS-1..3 rules in `IMPLEMENTATION_CONTRACT.md` (spans, metrics, health endpoint) enforced by CODE review checks. (3) AI quality level: capability evaluation artifacts, Step 3.5 regression detection (>5% → P1, >15% → P0 Stop-Ship), optional CI eval gates. See `PLAYBOOK.md §12`.
 
 ---
 
 ## What This Playbook Is
 
-A workflow for building backend services with Claude as both the implementation agent and the reviewer. The Orchestrator runs the development loop; Codex (or Claude Code) implements tasks in isolation; review agents catch issues at two tiers. State lives in files, not in conversational memory — sessions are fully resumable.
+A workflow for building backend AI services with Claude as both implementation agent and reviewer. The Orchestrator runs the development loop; Codex implements tasks in isolation; review agents catch issues at two tiers. State lives in files — sessions are fully resumable.
 
-Every rule, template, and prompt in this playbook addresses a concrete failure mode: silent quality erosion across phases, untraceable AI decisions, evaluation that never runs, and review that misses profile-specific risks.
+Every rule and template addresses a concrete failure mode: silent quality erosion across phases, evaluation that never runs, review that misses profile-specific risks, compliance requirements that fall through to free-form LLM reasoning.
 
 ---
 
 ## The Loop
 
 ```
-PLAYBOOK.md + project description
+Project description
         |
         v
   [Strategist agent]
-  Reads PLAYBOOK.md and STRATEGIST.md prompt
-  Produces: ARCHITECTURE.md, spec.md, tasks.md,
-            CODEX_PROMPT.md, IMPLEMENTATION_CONTRACT.md, ci.yml
+  Produces: ARCHITECTURE.md, spec.md, tasks.md (structured format),
+            CODEX_PROMPT.md, IMPLEMENTATION_CONTRACT.md, ci.yml,
+            + profile-specific artifacts (compliance_eval.md, nfr.md, etc.)
+        |
+        v
+  [Phase 1 Validator]
+  47+ structural checks across 6 artifacts before implementation begins
+  PHASE1_AUDIT: PASS | FAIL
         |
         v
   [Orchestrator session]
   Reads CODEX_PROMPT.md before every task
-  Spawns Codex subagents for implementation
-  Each Codex agent: captures baseline → implements → tests → evaluates (if capability tag) → commits
-        |
-        v
-  [Capability tag check — Step 0-E / Step 3]
-  Pre-impl:  file scope vs. signal patterns → TAG_WARNING + STOP if mismatch (HIGH confidence)
-  Post-impl: modified files vs. tag → SEMANTIC_MISMATCH surfaced to reviewer (non-blocking)
-        |
-        v
-  [Evaluation gate — Step 3.5] (if task has capability tag)
-  Orchestrator verifies Codex updated the evaluation artifact
-  Regression detected → P1 finding, task not complete
-  Missing evaluation → focused remediation prompt back to Codex (not a new agent)
+  Step 0-E: capability signal detection → TAG_WARNING + STOP if mismatch
+  Spawns Codex for implementation
+  Step 3: semantic mismatch check (non-blocking)
+  Step 3.5: evaluation gate (if capability tag) — regression → P1
         |
         v
   [Review cycle] (after each phase)
-  META review   → process compliance
-  ARCH review   → architectural compliance
-  CODE review   → detailed code findings (P0/P1/P2/P3)
-  CONSOLIDATED  → merged report saved to docs/audit/
+  META → ARCH → CODE → CONSOLIDATED
+  CODE fires profile-specific checks: RET-N / TOOL-N / AGENT-N / PLAN-N / COMP-N
         |
         v
-  Phase gate: all P1s resolved, ruff clean, tests pass
+  Phase gate: all P1s resolved, ruff clean, tests pass, human approves
         |
         v
   Next phase — repeat
 ```
-
-The human sits at every phase gate. Agents implement and review; the human approves before the next phase begins.
 
 ---
 
@@ -90,87 +94,89 @@ The human sits at every phase gate. Agents implement and review; the human appro
 
 ```
 AI_workflow_playbook/
-├── README.md                   — this file
-├── PLAYBOOK.md                 — master workflow document (read this first)
+├── README.md
+├── PLAYBOOK.md                      — master workflow document (read this first)
 ├── prompts/
-│   ├── STRATEGIST.md           — system prompt for the architecture-generation agent
-│   ├── ORCHESTRATOR.md         — system prompt for the development orchestrator session
-│   ├── PHASE1_VALIDATOR.md     — Phase 1 completeness validator prompt
-│   ├── PROMPT_S_STRATEGY.md    — phase-boundary strategy reviewer prompt (template)
+│   ├── STRATEGIST.md                — architecture-generation agent prompt
+│   ├── ORCHESTRATOR.md              — development orchestrator prompt
+│   ├── PHASE1_VALIDATOR.md          — pre-implementation artifact validator (47+ checks)
+│   ├── PROMPT_S_STRATEGY.md         — phase-boundary strategy reviewer prompt
 │   └── audit/
-│       ├── PROMPT_0_META.md    — review pipeline: meta-analysis (template)
-│       ├── PROMPT_1_ARCH.md    — review pipeline: architecture drift (template)
-│       ├── PROMPT_2_CODE.md    — review pipeline: code & security (template)
-│       ├── PROMPT_3_CONSOLIDATED.md — review pipeline: consolidated report (template)
-│       └── AUDIT_INDEX.md      — audit index template
+│       ├── PROMPT_0_META.md         — review: meta-analysis
+│       ├── PROMPT_1_ARCH.md         — review: architecture drift
+│       ├── PROMPT_2_CODE.md         — review: code & security (SEC + profile checks)
+│       ├── PROMPT_3_CONSOLIDATED.md — review: consolidated report
+│       └── AUDIT_INDEX.md           — audit index template
 ├── hooks/
-│   ├── guard_files.sh          — PreToolUse hook: blocks writes to immutable files
-│   ├── log_bash.sh             — PostToolUse hook: audit log for all Bash commands + Codex results
-│   └── save_checkpoint.sh      — Stop hook: writes Orchestrator state snapshot on session end
+│   ├── guard_files.sh               — PreToolUse: blocks writes to immutable files
+│   ├── log_bash.sh                  — PostToolUse: audit log for Bash + Codex results
+│   └── save_checkpoint.sh           — Stop: writes Orchestrator state snapshot
 ├── templates/
-│   ├── ARCHITECTURE.md         — template for system architecture document
-│   ├── CODEX_PROMPT.md         — template for session handoff document
-│   ├── IMPLEMENTATION_CONTRACT.md — template for immutable rules document
-│   ├── RETRIEVAL_EVAL.md       — RAG evaluation artifact template (copy to docs/ when RAG=ON)
-│   ├── NFR.md                  — non-functional requirements template (copy to docs/ when NFR constraints exist)
-│   ├── tasks_schema.md         — YAML-compatible task block schema with tag namespace and worked example
+│   ├── ARCHITECTURE.md              — system architecture document template
+│   ├── CODEX_PROMPT.md              — session handoff template (all 5 profile state blocks)
+│   ├── IMPLEMENTATION_CONTRACT.md   — immutable rules template (universal + profile rules)
+│   ├── RETRIEVAL_EVAL.md            — RAG evaluation artifact template
+│   ├── NFR.md                       — non-functional requirements template (SLA table + history)
+│   ├── tasks_schema.md              — YAML-compatible task block schema, tag namespace, AC rules
 │   ├── domains/
-│   │   └── healthcare.md       — HIPAA domain skeleton: 4 pre-built tasks with full AC + test refs
+│   │   └── healthcare.md            — HIPAA skeleton: T-HC-01..04 with full AC + test refs
 │   └── .claude/
-│       └── settings.json       — Claude Code hook configuration (copy to .claude/ in your project)
+│       └── settings.json            — Claude Code hook configuration
 ├── ci/
-│   └── ci.yml                  — GitHub Actions CI template (includes commented capability eval steps)
+│   └── ci.yml                       — GitHub Actions template (lint, tests, all 5 eval steps, NFR load test)
 └── reference/
-    └── CODEX_CLI.md            — Codex CLI invocation patterns, sandbox limitations, prompt engineering
+    └── CODEX_CLI.md                 — Codex CLI patterns, sandbox limitations, pre-run checklist
 ```
 
 ### What each file is for
 
-**PLAYBOOK.md** is the master document. Read it before anything else. It defines the philosophy, phase structure, task execution protocol, review cycle structure, and all universal rules.
+**PLAYBOOK.md** is the master document. Read it before anything else. It defines the phase structure, task execution protocol, review cycle, capability profiles, and all universal rules.
 
-**prompts/STRATEGIST.md** is the system prompt you give to a Claude session when starting a new project. The agent reads your project description and produces all the starter documents.
+**prompts/STRATEGIST.md** is the system prompt for the architecture-generation session. It reads your project description and produces the complete starter package. It uses signal pattern tables to detect which capability profiles apply, asks targeted clarifying questions, and for HIPAA projects pulls in the healthcare domain skeleton directly.
 
-**prompts/ORCHESTRATOR.md** is the system prompt for the Claude Code session that runs the development loop — spawning Codex agents, running reviews, and enforcing phase gates.
+**prompts/ORCHESTRATOR.md** runs the development loop — capability signal detection (Step 0-E), Codex dispatch, evaluation gate (Step 3.5), phase gate enforcement.
 
-**prompts/PROMPT_S_STRATEGY.md** is the phase-boundary strategy reviewer prompt. At every phase gate, the Orchestrator spawns a Strategy Reviewer agent with this prompt. It reads ARCHITECTURE.md, open findings, ADRs, and the upcoming phase tasks, then issues a Proceed or Pause recommendation before implementation begins.
+**prompts/PHASE1_VALIDATOR.md** runs once, after the Strategist produces deliverables and before T01 begins. It checks 47+ structural and consistency requirements across 6 artifacts. Any blocker stops implementation.
 
-**prompts/audit/** contains the four deep-review prompt templates (META → ARCH → CODE → CONSOLIDATED) and the AUDIT_INDEX template. The Strategist copies these into your project's `docs/audit/` at project creation, filling in the project name. The Orchestrator's review agents read them from there at runtime.
+**prompts/audit/PROMPT_2_CODE.md** is the code review prompt. It fires SEC-N (universal), profile-conditional RET-N / TOOL-N / AGENT-N / PLAN-N / COMP-N checks, and OBS-N (observability) on every deep review cycle.
 
-**templates/** contains starting-point documents with `{{PLACEHOLDER}}` markers. The Strategist fills these in for your specific project. `RETRIEVAL_EVAL.md` is copied to `docs/retrieval_eval.md` when RAG=ON. `NFR.md` is copied to `docs/nfr.md` when the project has explicit SLAs. `tasks_schema.md` defines the YAML-compatible task block format (with tag namespace, AC rules, and a worked example) that all tasks in `docs/tasks.md` must follow — the Orchestrator uses it to machine-read task fields without an LLM parser. `templates/domains/healthcare.md` is a HIPAA-specific domain skeleton: four pre-built tasks (PHI enforcement, audit log, retention policy, evidence collection) with complete acceptance criteria, test function references, a starter `compliance_eval.md`, and ARCHITECTURE.md snippets — included verbatim by the Strategist when Compliance=ON and HIPAA is the active framework.
+**templates/tasks_schema.md** defines the task block format. Every task in `docs/tasks.md` must use this schema — `Type:` tag, structured `Acceptance-Criteria` entries each with a `test:` pointer, explicit `Depends-On`. The Orchestrator reads these fields directly; a missing `test:` field is a PHASE1_VALIDATOR blocker.
 
-**ci/ci.yml** is a GitHub Actions CI template with lint, format check, tests, and commented capability evaluation steps for all five profiles.
+**templates/domains/healthcare.md** is the HIPAA domain skeleton. It provides four production-ready tasks with complete acceptance criteria (including specific test function references), a starter `docs/compliance_eval.md` table with HIPAA control rows, and ARCHITECTURE.md snippets. The Strategist includes it verbatim when Compliance=ON and HIPAA is the active framework.
 
-**reference/CODEX_CLI.md** documents hard-won operational knowledge about running Codex as the implementation agent: the file-based prompt invocation pattern, known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering guidelines, and a pre-run checklist. Read this before starting a project that uses the Codex CLI.
+**templates/NFR.md** tracks non-functional SLAs: target, measurement method, CI gate threshold, and a phase-by-phase baseline history. Included when the project has explicit latency, throughput, or error rate requirements.
 
-**Capability Profiles** (`PLAYBOOK.md §2c`) — optional architectural modes activated in Phase 1. When a profile is ON, it extends the workflow with profile-specific artifacts, review checks (RET-N / TOOL-N / AGENT-N / PLAN-N / COMP-N), state tracking, and an evaluation artifact. Five profiles: **RAG**, **Tool-Use**, **Agentic**, **Planning**, **Compliance** (regulated industries — SOC 2, HIPAA, PCI-DSS, GDPR). Each profile must satisfy the 9-property invariant defined in §2c before activation. The section also contains the Capability Signal Patterns table (file path → profile inference), the Semantic Ownership Rule (RAG beats Tool-Use for retrieval tasks), the Additive Checks Rule (Agentic + Tool-Use checks are cumulative), and four worked Capability Check Scenarios with a shared workflow effect vocabulary (BLOCK / TASK_NOT_COMPLETE / LIGHT_REVIEW_EXPANDED / DEEP_REVIEW_EXPANDED).
+**ci/ci.yml** has five commented capability eval steps (RAG, Agentic, Tool-Use, Planning, Compliance) and a commented NFR load test step (locust). Uncomment the steps for your active profiles.
+
+**reference/CODEX_CLI.md** documents real operational knowledge: file-based prompt invocation, known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns.
 
 ---
 
 ## How to Start a New Project
 
 1. Open a Claude session (Claude.ai or Claude Code).
-2. Attach or paste:
-   - The contents of `PLAYBOOK.md`
-   - The contents of `prompts/STRATEGIST.md` as the system prompt
-3. Describe your project: domain, stack preferences, expected scale, team size, key constraints.
-4. The Strategist produces **13 files** — save them all into your new repo:
+2. Set `prompts/STRATEGIST.md` as the system prompt.
+3. Describe your project: domain, stack, expected scale, team size, key constraints, compliance requirements.
+4. The Strategist asks clarifying questions, then produces the starter package:
    - `docs/ARCHITECTURE.md`, `docs/spec.md`, `docs/tasks.md`
    - `docs/CODEX_PROMPT.md`, `docs/IMPLEMENTATION_CONTRACT.md`
    - `.github/workflows/ci.yml`
-   - `docs/prompts/ORCHESTRATOR.md` (stub — copy full `prompts/ORCHESTRATOR.md` from this playbook and fill `{{PROJECT_ROOT}}` and `{{CODEX_COMMAND}}`)
-   - `docs/prompts/PROMPT_S_STRATEGY.md`
-   - `docs/audit/PROMPT_0_META.md` through `PROMPT_3_CONSOLIDATED.md`
-   - `docs/audit/AUDIT_INDEX.md`
-5. Copy the hooks and Claude Code settings into your new repo:
+   - Review prompts: `docs/audit/PROMPT_0_META.md` through `PROMPT_3_CONSOLIDATED.md`, `docs/audit/AUDIT_INDEX.md`
+   - If Compliance=ON: `docs/compliance_eval.md` (with framework-specific control rows)
+   - If NFR constraints stated: `docs/nfr.md` (with SLA table)
+5. Copy `prompts/ORCHESTRATOR.md` into your project, fill `{{PROJECT_ROOT}}` and `{{CODEX_COMMAND}}`.
+6. Copy hooks and settings:
    ```bash
    cp -r hooks/ your-project/hooks/
    mkdir -p your-project/.claude/
    cp templates/.claude/settings.json your-project/.claude/settings.json
    chmod +x your-project/hooks/*.sh
    ```
-   The hooks enforce three things at the process level: block writes to immutable files, log every Bash command to `docs/hooks_log.txt`, and write a session checkpoint on stop. See `PLAYBOOK.md §12 Observability` for details.
-6. Open a Claude Code session in your new repo with `docs/prompts/ORCHESTRATOR.md` as the system prompt.
-7. Say: "Start Phase 1." The orchestrator reads `docs/CODEX_PROMPT.md` and begins.
+7. Run the Phase 1 Validator before starting implementation:
+   - Open a Claude session with `prompts/PHASE1_VALIDATOR.md` as the prompt
+   - Point it at your 6 starter artifacts
+   - It produces `docs/audit/PHASE1_AUDIT.md` — resolve all BLOCKERs before proceeding
+8. Open a Claude Code session with `docs/prompts/ORCHESTRATOR.md` as the system prompt.
+9. Say: "Start Phase 1." The Orchestrator reads `docs/CODEX_PROMPT.md` and begins.
 
-That's the entire startup sequence. From there, the loop runs itself with you approving phase gates.
-
+The human sits at every phase gate. From there, the loop runs itself.
