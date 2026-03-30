@@ -140,6 +140,21 @@ If either exceeds the trigger threshold defined in `## Compaction Protocol` (20 
 
 Check `docs/ARCHITECTURE.md` for `## Capability Profiles` table (or `RAG Profile: ON | OFF` in legacy projects). Record all active profiles — they affect review tier, deep-review trigger tags, and state block update requirements below.
 
+Read and record from `docs/ARCHITECTURE.md`:
+- `## Solution Shape` → primary shape
+- governance level
+- runtime tier
+- `## Deterministic vs LLM-Owned Subproblems`
+- `## Human Approval Boundaries`
+
+If any of these sections are missing in a new project generated from the current playbook:
+```
+ARCHITECTURE_DECLARATION_MISSING
+Missing: [section name]
+Action required: update docs/ARCHITECTURE.md before implementation proceeds.
+```
+**STOP.**
+
 **Phase 1 validation gate — run once only.**
 
 Check: does `docs/audit/PHASE1_AUDIT.md` exist?
@@ -207,17 +222,39 @@ ACTION REQUIRED: confirm or add the tag before the implementer runs.
 **STOP. Do not proceed to Step 2 or Step 3 until the user confirms or corrects the tag.**
 MEDIUM-confidence pattern (Agentic) → print `TAG_WARNING` but do not stop.
 
+**F. Complexity / runtime drift pre-check** — compare the next task against the declared solution shape and runtime tier.
+
+Stop only on the following:
+- Declared shape = `Deterministic subsystem` or `Workflow orchestration`, but the task carries `agent:*` tags or its Objective / Notes clearly introduces open-ended planning or looping → `COMPLEXITY_DRIFT`
+- Runtime tier = `T0` or `T1`, but the task Objective / Notes / Files clearly imply shell mutation, package installation, service reconfiguration, privileged action expansion, or long-lived mutable worker state → `RUNTIME_TIER_MISMATCH`
+
+If the mismatch is explicit:
+```
+COMPLEXITY_DRIFT
+Task: [T## — Title]
+Declared shape/runtime: [shape], [runtime tier]
+Conflict: [exact reason]
+Action required: update ARCHITECTURE.md and ADRs or reduce the task scope before implementation.
+```
+**STOP.**
+
+If `docs/ARCHITECTURE.md §Deterministic vs LLM-Owned Subproblems` suggests a softer mismatch, print `DETERMINISM_WARNING` and continue. This is a reviewer signal, not a stop.
+
 Print status block:
 ```
 === ORCHESTRATOR STATE ===
 Baseline: [N passed, N skipped]
 Fix Queue: [empty | N items: FIX-A, FIX-B...]
 Next task: [T## — Title]
-Active Profiles: [RAG:ON/OFF | Tool-Use:ON/OFF | Agentic:ON/OFF | Planning:ON/OFF]
+Solution shape: [Deterministic | Workflow | Bounded ReAct | Higher-autonomy | Hybrid]
+Governance: [Lean | Standard | Strict]
+Runtime tier: [T0 | T1 | T2 | T3]
+Active Profiles: [RAG:ON/OFF | Tool-Use:ON/OFF | Agentic:ON/OFF | Planning:ON/OFF | Compliance:ON/OFF]
 Phase 1 Audit: [PASS (N warnings) | FAIL (N blockers) | skipped (mid-project) | not yet run]
 Phase boundary: [yes | no]
 Review tier: [light | deep] — [reason]
 Tag check: [OK | WARNING: T## — [pattern] suggests [profile], verify Type: tag]
+Complexity check: [OK | DETERMINISM_WARNING: ... | STOPPED: ...]
 Action: [what happens next]
 =========================
 ```
@@ -313,6 +350,12 @@ Acceptance criteria (each must have a passing test):
 Files to create/modify:
 [paste file scope verbatim]
 
+Architectural constraints to respect:
+- Declared solution shape: [from ARCHITECTURE.md]
+- Declared runtime tier: [from ARCHITECTURE.md]
+- Deterministic subproblems that must stay non-LLM: [relevant entries only]
+- Human approval boundaries: [relevant entries only]
+
 Protocol:
 1. Run [YOUR_TEST_COMMAND] → record baseline BEFORE any changes
 2. Read all Depends-On task entries
@@ -346,6 +389,24 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
   Suggestion: verify semantic ownership (PLAYBOOK §Capability Signal Patterns) — tag may need correction before this task is archived.
   ```
   Add to ORCHESTRATOR STATE `Tag check:` line. Light reviewer will verify.
+  → **Post-implementation complexity / runtime check:** compare the completed diff against the declared solution shape, deterministic ownership, and runtime tier.
+  - If deterministic-owned areas were implemented as LLM behavior without architectural justification:
+    ```
+    DETERMINISM_WARNING (non-blocking)
+    Task: [T## — Title]
+    Declared deterministic area: [area]
+    Evidence: [file path or behavior]
+    Suggestion: revert to deterministic implementation or update architecture/ADR before archive.
+    ```
+  - If the task introduced runtime behavior above the approved tier:
+    ```
+    RUNTIME_TIER_MISMATCH (non-blocking)
+    Task: [T## — Title]
+    Declared runtime tier: [T0/T1/T2/T3]
+    Evidence: [shell mutation | package install | privileged runtime action | persistent mutable worker]
+    Suggestion: treat as governance drift, not implementation detail.
+    ```
+  Add these to ORCHESTRATOR STATE `Complexity check:` line. Light reviewer will verify.
   → Step 3.5
 - `BLOCKED` → mark `[!]` in tasks.md, stop, report to user
 - Test failures → show list, stop, ask user
@@ -439,6 +500,7 @@ SEC-4  Secrets: no hardcoded keys/tokens (grep for sk-ant, lin_api_, AKIA, Beare
 SEC-5  Async: correct async client used in async def; no sync blocking I/O in async context
 SEC-6  Auth: new route handlers use require_role(); exemptions documented
 CF     Contract: rules A–I from IMPLEMENTATION_CONTRACT.md — any violations?
+GOV-L1 Runtime-tier drift — no runtime mutation, privilege expansion, or persistent worker behavior above the declared tier
 
 <!-- Run the following checks ONLY if the completed task carries a capability-profile tag -->
 If task tag is `rag:ingestion` or `rag:query` → also check:
@@ -469,7 +531,8 @@ ISSUE_COUNT: [N]
 
 ISSUE_1:
 File: [path:line]
-Check: [SEC-N | CF | RAG-L1 | RAG-L2 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
+Check: [SEC-N | CF | GOV-L1 | RAG-L1 | RAG-L2 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
+Reviewer note: if you see a deterministic-vs-LLM mismatch, mention it as a warning in Description, but do not fail the task on that basis alone unless it also violates contract or runtime boundaries.
 Description: [what is wrong]
 Expected: [what it should be]
 Actual: [what it is]

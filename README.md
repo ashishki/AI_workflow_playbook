@@ -1,6 +1,6 @@
 # AI Workflow Playbook
 
-A structured AI-assisted development workflow with hard quality guarantees. Provides the prompts, templates, and enforcement mechanisms needed to build production software using Claude as both implementation agent and reviewer.
+A structured AI-assisted development workflow with hard quality guarantees. It provides prompts, templates, and enforcement mechanisms for building AI systems with explicit artifacts, review loops, and fit-for-purpose governance.
 
 ---
 
@@ -46,7 +46,49 @@ Profiles are activated in Phase 1 and treated as architectural constraints. Eval
 
 ## What This Playbook Is
 
-A workflow for building backend AI services with Claude as both implementation agent and reviewer. The Orchestrator runs the development loop; Codex implements tasks in isolation; review agents catch issues at two tiers. State lives in files — sessions are fully resumable.
+A workflow for building AI-assisted software without assuming one default architecture. The Orchestrator runs the loop; Codex implements tasks in isolation; review agents check output at two tiers; the human approves phase gates. State lives in files, so sessions are resumable.
+
+This playbook is intentionally not "agent-everywhere" and not "VM-by-default". It is designed to help teams choose the minimum sufficient solution shape, runtime substrate, and governance level for the actual risk and autonomy of the system.
+
+---
+
+## Freedom Ladder
+
+The playbook treats AI system shape as a spectrum:
+
+| Shape | Use when | Avoid when |
+|------|----------|------------|
+| **Deterministic subsystem** | Rules, routing, validation, permissions, calculations, thresholds, formatting, retries, audit triggers are already formalizable | You are adding an LLM only because it feels flexible |
+| **Workflow orchestration** | The steps are known, ordered, and reviewable; tools and humans can be composed without open-ended planning | You need adaptive multi-step reasoning beyond a fixed flow |
+| **Bounded ReAct / tool-using agent** | The system must choose among tools or iterate briefly under explicit limits | A workflow or deterministic router already solves it |
+| **Higher-autonomy agent** | The task genuinely requires longer-horizon planning, delegation, or mutable execution under stronger controls | The same job can be decomposed into bounded workflow + deterministic guards |
+| **Hybrid** | Different subsystems need different levels of freedom | You are using one architecture everywhere for convenience |
+
+Then choose governance proportionally:
+
+| Level | Typical fit | Expected control intensity |
+|------|-------------|----------------------------|
+| **Lean** | Internal assistant, prototype, low-blast-radius workflow | Core artifacts, task discipline, light controls, human approval at meaningful boundaries |
+| **Standard** | Measurable internal operational system, customer-facing but recoverable service | Full phase gates, evaluation artifacts where applicable, stronger review and audit traceability |
+| **Strict** | Business-critical, compliance-heavy, or high-blast-radius system | Tight change control, stronger approval boundaries, explicit evidence, stronger runtime and recovery controls |
+
+Runtime is separate from agent shape. An agent is not a VM. VM or microVM isolation is optional and justified only when autonomy, mutability, privilege, or blast radius require it.
+
+| Tier | Meaning | Typical use |
+|------|---------|-------------|
+| **T0** | Deterministic or managed execution with no special isolated mutable runtime | API logic, validators, fixed workflows, managed integrations |
+| **T1** | Container / devcontainer / bounded worker runtime | Normal app services, bounded tool execution, standard CI and workers |
+| **T2** | Ephemeral microVM-class or similarly isolated mutable runtime | Risky autonomous tasks that may modify workspace, shell state, or toolchain and need strong rollback |
+| **T3** | Persistent VM-class or privileged long-lived isolated worker | Long-running autonomous workers with persistence, higher privilege surface, or stronger recovery needs |
+
+Use this playbook by asking, in order:
+
+1. Start with the minimum sufficient architecture, not the most impressive one.
+2. Ask "why not deterministic?" before enabling LLM logic.
+3. Ask "why not workflow?" before enabling bounded or open-ended agency.
+4. Turn capability profiles ON only when they govern real behavior, not speculative future scope.
+5. Keep runtime at T0/T1 unless there is a concrete isolation or mutability reason to escalate.
+6. Increase governance only when error cost, auditability, or blast radius justify it.
 
 Every rule and template addresses a concrete failure mode: silent quality erosion across phases, evaluation that never runs, review that misses profile-specific risks, compliance requirements that fall through to free-form LLM reasoning.
 
@@ -65,7 +107,7 @@ Project description
         |
         v
   [Phase 1 Validator]
-  47+ structural checks across 6 artifacts before implementation begins
+  Structural and consistency checks across the Phase 1 artifact set before implementation begins
   PHASE1_AUDIT: PASS | FAIL
         |
         v
@@ -99,7 +141,7 @@ AI_workflow_playbook/
 ├── prompts/
 │   ├── STRATEGIST.md                — architecture-generation agent prompt
 │   ├── ORCHESTRATOR.md              — development orchestrator prompt
-│   ├── PHASE1_VALIDATOR.md          — pre-implementation artifact validator (74 checks across 6 artifacts)
+│   ├── PHASE1_VALIDATOR.md          — pre-implementation artifact validator
 │   ├── PROMPT_S_STRATEGY.md         — phase-boundary strategy reviewer prompt
 │   └── audit/
 │       ├── PROMPT_0_META.md         — review: meta-analysis
@@ -130,17 +172,19 @@ AI_workflow_playbook/
 
 ### What each file is for
 
-**PLAYBOOK.md** is the master document. Read it before anything else. It defines the phase structure, task execution protocol, review cycle, capability profiles, and all universal rules.
+**PLAYBOOK.md** is the master document. Read it before anything else. It defines the phase structure, right-sizing logic, runtime selection, capability profiles, task execution protocol, review cycle, and universal rules.
 
-**prompts/STRATEGIST.md** is the system prompt for the architecture-generation session. It reads your project description and produces the complete starter package. It uses signal pattern tables to detect which capability profiles apply, asks targeted clarifying questions, and for HIPAA projects pulls in the healthcare domain skeleton directly.
+**prompts/STRATEGIST.md** is the system prompt for the architecture-generation session. It reads your project description and produces the complete starter package. It forces explicit decisions about solution shape, rejected simpler alternatives, runtime tier, deterministic decomposition, human approval boundaries, and capability profiles.
 
-**prompts/ORCHESTRATOR.md** runs the development loop — capability signal detection (Step 0-E), Codex dispatch, evaluation gate (Step 3.5), phase gate enforcement.
+**prompts/ORCHESTRATOR.md** runs the development loop — capability signal detection (Step 0-E), complexity/runtime drift checks, Codex dispatch, evaluation gate (Step 3.5), and phase gate enforcement.
 
-**prompts/PHASE1_VALIDATOR.md** runs once, after the Strategist produces deliverables and before T01 begins. It checks 47+ structural and consistency requirements across 6 artifacts. Any blocker stops implementation.
+**prompts/PHASE1_VALIDATOR.md** runs once, after the Strategist produces deliverables and before T01 begins. It checks structural completeness and cross-document consistency across the Phase 1 artifact set. Any blocker stops implementation.
 
 **prompts/audit/PROMPT_2_CODE.md** is the code review prompt. It fires SEC-N (universal), profile-conditional RET-N / TOOL-N / AGENT-N / PLAN-N / COMP-N checks, and OBS-N (observability) on every deep review cycle.
 
 **templates/tasks_schema.md** defines the task block format. Every task in `docs/tasks.md` must use this schema — `Type:` tag, structured `Acceptance-Criteria` entries each with a `test:` pointer, explicit `Depends-On`. The Orchestrator reads these fields directly; a missing `test:` field is a PHASE1_VALIDATOR blocker.
+
+**templates/ARCHITECTURE.md** now requires solution shape, governance level, runtime tier, deterministic-vs-LLM ownership, human approval boundaries, and anti-overengineering non-goals.
 
 **templates/domains/healthcare.md** is the HIPAA domain skeleton. It provides four production-ready tasks with complete acceptance criteria (including specific test function references), a starter `docs/compliance_eval.md` table with HIPAA control rows, and ARCHITECTURE.md snippets. The Strategist includes it verbatim when Compliance=ON and HIPAA is the active framework.
 

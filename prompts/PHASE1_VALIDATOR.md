@@ -34,18 +34,24 @@ For each artifact, verify every required section is present. Mark each check PRE
 ### A1 — docs/ARCHITECTURE.md
 
 - [ ] A1-01  § System Overview — one paragraph present
-- [ ] A1-02  § Component Table — at least one row with name, file/directory, responsibility
-- [ ] A1-03  § Data Flow — numbered steps for primary request path
-- [ ] A1-04  § Tech Stack — table present with technology choices and rationale column (not blank)
-- [ ] A1-05  § Security Boundaries — present and non-empty (authentication mechanism described)
-- [ ] A1-06  § External Integrations — present (may be empty table if no integrations; cannot be missing)
-- [ ] A1-07  § File Layout — directory tree present
-- [ ] A1-08  § Runtime Contract — env vars table present (may be empty if no env vars required)
-- [ ] A1-09  § Non-Goals — explicit list present (at minimum one item)
-- [ ] A1-10  § Capability Profiles table — present with all five profiles declared ON or OFF (RAG, Tool-Use, Agentic, Planning, Compliance)
-- [ ] A1-11  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Index Strategy, §Risks all present
-- [ ] A1-12  For each active profile declared ON: a justification paragraph is present below the Capability Profiles table
-- [ ] A1-13  Compliance Profile declared ON or OFF — if ON, §Applicable Frameworks, §Data Classification, §Audit Log Requirements, §Risks all present
+- [ ] A1-02  § Solution Shape — primary shape, governance level, and runtime tier declared with justification
+- [ ] A1-03  § Rejected Lower-Complexity Options — present and non-empty
+- [ ] A1-04  § Minimum Viable Control Surface — present and non-empty
+- [ ] A1-05  § Human Approval Boundaries — present and non-empty
+- [ ] A1-06  § Deterministic vs LLM-Owned Subproblems — present and non-empty
+- [ ] A1-07  § Runtime and Isolation Model — present with at least isolation boundary, runtime mutation boundary, and rollback/recovery
+- [ ] A1-08  § Capability Profiles table — present with all five profiles declared ON or OFF (RAG, Tool-Use, Agentic, Planning, Compliance)
+- [ ] A1-09  § Component Table — at least one row with name, file/directory, responsibility
+- [ ] A1-10  § Data Flow — numbered steps for primary request path
+- [ ] A1-11  § Tech Stack — table present with technology choices and rationale column (not blank)
+- [ ] A1-12  § Security Boundaries — present and non-empty (authentication mechanism described)
+- [ ] A1-13  § External Integrations — present (may be empty table if no integrations; cannot be missing)
+- [ ] A1-14  § File Layout — directory tree present
+- [ ] A1-15  § Runtime Contract — env vars table present (may be empty if no env vars required)
+- [ ] A1-16  § Non-Goals — explicit list present (at minimum one item, including over-architecture non-goal)
+- [ ] A1-17  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Index Strategy, §Risks all present
+- [ ] A1-18  For each active profile declared ON: a justification paragraph is present below the Capability Profiles table
+- [ ] A1-19  Compliance Profile declared ON or OFF — if ON, §Applicable Frameworks, §Data Classification, §Audit Log Requirements, §Risks all present
 
 ### A2 — docs/spec.md
 
@@ -91,18 +97,20 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A5-01  Status: IMMUTABLE line present at top
 - [ ] A5-02  § Universal Rules present (must include: SQL Safety, PII Policy, Credentials/Secrets, CI Gate — at minimum)
 - [ ] A5-03  § Project-Specific Rules present (may be empty if no project-specific rules, but section must exist)
-- [ ] A5-04  § Mandatory Pre-Task Protocol present (must include: read contract, run pytest baseline, run ruff)
-- [ ] A5-05  § Forbidden Actions present (must include at minimum: SQL interpolation, skipping baseline capture, self-closing findings without code verification, deferring CI past Phase 1)
-- [ ] A5-06  If RAG Profile = ON: § RAG Rules present with corpus isolation, schema versioning, max index age, insufficient_evidence requirement
-- [ ] A5-07  If Tool-Use Profile = ON: § Tool-Use Rules present
-- [ ] A5-08  If Agentic Profile = ON: § Agentic Rules present
-- [ ] A5-09  If Planning Profile = ON: § Planning Rules present
-- [ ] A5-10  If Compliance Profile = ON: § Compliance Rules present with data field handling, audit log format contract, audit integrity rules, evidence artifact requirements
-- [ ] A5-11  If RAG Profile = ON: `docs/retrieval_eval.md` file present and initialized (not a blank placeholder)
-- [ ] A5-12  If Tool-Use Profile = ON: `docs/tool_eval.md` file present and initialized
-- [ ] A5-13  If Agentic Profile = ON: `docs/agent_eval.md` file present and initialized
-- [ ] A5-14  If Planning Profile = ON: `docs/plan_eval.md` file present and initialized
-- [ ] A5-15  If Compliance Profile = ON: `docs/compliance_eval.md` file present and contains at least one control row with framework, description, and status fields
+- [ ] A5-04  § Control Surface and Runtime Boundaries present with at least privileged actions, runtime mutation, and auditability; unused rows may be `N/A`
+- [ ] A5-05  If Runtime tier = T2 or T3 in ARCHITECTURE.md: conditional rollback / snapshot / drift-management rules are present
+- [ ] A5-06  § Mandatory Pre-Task Protocol present (must include: read contract, run pytest baseline, run ruff)
+- [ ] A5-07  § Forbidden Actions present (must include at minimum: SQL interpolation, skipping baseline capture, self-closing findings without code verification, deferring CI past Phase 1, unauthorized runtime-tier expansion)
+- [ ] A5-08  If RAG Profile = ON: § RAG Rules present with corpus isolation, schema versioning, max index age, insufficient_evidence requirement
+- [ ] A5-09  If Tool-Use Profile = ON: § Tool-Use Rules present
+- [ ] A5-10  If Agentic Profile = ON: § Agentic Rules present
+- [ ] A5-11  If Planning Profile = ON: § Planning Rules present
+- [ ] A5-12  If Compliance Profile = ON: § Compliance Rules present with data field handling, audit log format contract, audit integrity rules, evidence artifact requirements
+- [ ] A5-13  If RAG Profile = ON: `docs/retrieval_eval.md` file present and initialized (not a blank placeholder)
+- [ ] A5-14  If Tool-Use Profile = ON: `docs/tool_eval.md` file present and initialized
+- [ ] A5-15  If Agentic Profile = ON: `docs/agent_eval.md` file present and initialized
+- [ ] A5-16  If Planning Profile = ON: `docs/plan_eval.md` file present and initialized
+- [ ] A5-17  If Compliance Profile = ON: `docs/compliance_eval.md` file present and contains at least one control row with framework, description, and status fields
 
 ### A6 — .github/workflows/ci.yml
 
@@ -131,6 +139,10 @@ For each check, read both referenced documents and verify the claim. Mark CONSIS
 - [ ] B-08b Compliance tasks consistency (if Compliance = ON): tasks.md contains compliance:control and compliance:audit tagged tasks → IMPLEMENTATION_CONTRACT.md contains § Compliance Rules
 - [ ] B-08c NFR consistency (if docs/nfr.md exists): SLA Table contains at least one row with a non-empty Target; CODEX_PROMPT.md contains § NFR Baseline block
 - [ ] B-08d Eval artifact consistency: for each profile declared ON in ARCHITECTURE.md, the corresponding evaluation artifact (retrieval_eval.md / tool_eval.md / agent_eval.md / plan_eval.md / compliance_eval.md) is present, initialized, and matches the profile declaration (e.g., compliance_eval.md control rows reference the frameworks declared in ARCHITECTURE.md §Applicable Frameworks)
+- [ ] B-08e Solution-shape consistency: tasks.md and IMPLEMENTATION_CONTRACT.md do not require a higher-complexity solution shape than ARCHITECTURE.md declares without explicit justification
+- [ ] B-08f Runtime-tier consistency: ARCHITECTURE.md §Runtime and Isolation Model matches IMPLEMENTATION_CONTRACT.md §Control Surface and Runtime Boundaries at the declared-boundary level
+- [ ] B-08g Human approval consistency: ARCHITECTURE.md §Human Approval Boundaries is reflected in IMPLEMENTATION_CONTRACT.md privileged / unsafe action rules
+- [ ] B-08h Deterministic ownership consistency: ARCHITECTURE.md §Deterministic vs LLM-Owned Subproblems does not directly contradict task tags or profile declarations
 - [ ] B-09  T01/T02/T03 dependency chain: T01 Depends-On=none, T02 depends on T01, T03 depends on T01 or T02 — chain is logically sound and has no cycles
 - [ ] B-10  Tech stack consistency: every technology declared in ARCHITECTURE.md §Tech Stack that requires env vars has those env vars listed in §Runtime Contract
 - [ ] B-11  External integrations consistency: every service listed in ARCHITECTURE.md §External Integrations either (a) has env vars in §Runtime Contract, or (b) is documented as not requiring credentials
@@ -199,13 +211,13 @@ PHASE1_AUDIT: PASS | FAIL
 
 | Section | Checks | Passed | BLOCKER | WARNING |
 |---------|--------|--------|---------|---------|
-| A1 ARCHITECTURE.md | 14 | N | N | N |
+| A1 ARCHITECTURE.md | 19 | N | N | N |
 | A2 spec.md | 5 | N | N | N |
 | A3 tasks.md | 14 | N | N | N |
 | A4 CODEX_PROMPT.md | 11 | N | N | N |
-| A5 IMPLEMENTATION_CONTRACT.md | 15 | N | N | N |
+| A5 IMPLEMENTATION_CONTRACT.md | 17 | N | N | N |
 | A6 ci.yml | 6 | N | N | N |
-| B Cross-document | 15 | N | N | N |
+| B Cross-document | 19 | N | N | N |
 | C Vagueness | — | — | N | N |
 | D Placeholder Check | — | — | N | N |
 | **Total** | | | | |

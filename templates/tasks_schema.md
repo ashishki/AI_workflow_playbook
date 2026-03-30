@@ -7,6 +7,8 @@ completeness; Part C checks for vague acceptance criteria.
 
 The YAML-compatible block format below makes tasks machine-readable without a full YAML parser:
 the Orchestrator can extract field values by matching "Key: value" lines within task fences.
+
+Task tags describe capability ownership, not the entire solution shape. A project may be primarily deterministic or workflow-oriented while carrying a small number of capability-tagged tasks. Use `Type: none` when the task belongs to deterministic or ordinary application logic.
 -->
 
 ---

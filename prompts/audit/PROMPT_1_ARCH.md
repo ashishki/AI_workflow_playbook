@@ -34,6 +34,13 @@ Output: docs/audit/ARCH_REPORT.md (overwrite).
 - Reflected in ARCHITECTURE.md? If not → doc patch needed.
 - Aligned with spec.md? If not → finding.
 
+**Right-sizing / governance / runtime alignment**
+- Does the implementation still fit the declared solution shape in ARCHITECTURE.md?
+- Are deterministic-owned subproblems still deterministic where declared?
+- Has runtime behavior expanded beyond the declared tier (T0/T1/T2/T3)?
+- Do human approval boundaries and minimum viable control surface still match what the code now does?
+- Verdict per check: PASS | DRIFT | VIOLATION
+
 **Retrieval architecture** — run ONLY if RAG Status = ON in the `## Capability Profiles` table in `docs/ARCHITECTURE.md`:
 - Are ingestion and query-time retrieval defined as separate responsibilities (separate modules/services)?
 - Is the `insufficient_evidence` path defined in both ARCHITECTURE.md and spec.md?
@@ -93,6 +100,15 @@ Evidence: `file:line`
 Root cause: ...
 Impact: ...
 Fix: ...
+
+## Right-Sizing / Runtime Checks
+| Check | Verdict | Note |
+|-------|---------|------|
+| Solution shape still appropriate | | |
+| Deterministic-owned areas remain deterministic | | |
+| Runtime tier unchanged / justified | | |
+| Human approval boundaries still valid | | |
+| Minimum viable control surface still proportionate | | |
 
 ## Retrieval Architecture Checks
 _Omit this section entirely if RAG Status = OFF._

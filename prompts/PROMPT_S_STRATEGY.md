@@ -33,20 +33,29 @@ ARCHITECTURE.md? Are there signs of drift — new components not in ARCHITECTURE
 ADRs being ignored, layer boundaries crossed?
 Verdict: ALIGNED | DRIFT (describe)
 
-**4. ADR compliance**
+**4. Solution shape / governance / runtime drift**
+Does the current phase still fit the declared solution shape, governance level, and runtime tier?
+Specifically check for:
+- deterministic areas drifting into LLM behavior without justification
+- workflow projects drifting into agent loops
+- T0/T1 projects drifting into mutable or privileged runtime behavior
+- Lean projects accumulating Strict-style control needs without updating governance
+Verdict: ALIGNED | DRIFT (describe)
+
+**5. ADR compliance**
 For each ADR in docs/adr/: is the decision still being honoured in the current codebase
 state as reflected in CODEX_PROMPT.md and ARCHITECTURE.md?
 Verdict per ADR: HONOURED | VIOLATED | N/A
 
-**5. Capability Profile gate** (run only if any profile is ON)
+**6. Capability Profile gate** (run only if any profile is ON)
 For each active profile (RAG / Tool-Use / Agentic / Planning):
 - Does the upcoming phase include profile-tagged tasks where required?
 - Are profile-specific state blocks in CODEX_PROMPT.md up to date?
 - Any profile-specific risk that should be addressed before this phase?
 Verdict per active profile: READY | ATTENTION (describe)
 
-**6. Recommendation**
-Based on checks 1–5:
+**7. Recommendation**
+Based on checks 1–6:
 - Proceed: all checks pass or warnings only (no blockers)
 - Pause: any P0/P1 open, any ADR VIOLATED, or DRIFT severe enough to risk the phase
 
@@ -64,6 +73,7 @@ _Date: YYYY-MM-DD · Reviewing: Phase N (T##–T##)_
 | Phase coherence | | |
 | Open findings gate | | |
 | Architectural drift | | |
+| Solution shape / governance / runtime drift | | |
 | ADR compliance | | |
 | Capability Profile gate | N/A or per-profile | |
 

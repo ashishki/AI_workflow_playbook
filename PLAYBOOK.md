@@ -1,7 +1,7 @@
 # AI Workflow Playbook
 
-Version: 1.0
-Last updated: 2026-03-25
+Version: 1.1
+Last updated: 2026-03-30
 
 ---
 
@@ -32,6 +32,7 @@ Every layer has a defined input, a defined output, and a defined boundary with t
 - **Subagents** prevent context collapse. Each task and each review runs in its own context window with exactly the files it needs.
 - **CODEX_PROMPT.md** is the single source of truth for session state. Any agent can resume a session by reading it. Nothing is held in conversational memory.
 - **IMPLEMENTATION_CONTRACT.md** is the unchanging floor. Architectural decisions may evolve; the contract does not, without an explicit ADR.
+- **Right-sizing comes first.** Solution shape, capability profiles, governance intensity, and runtime tier are separate decisions. None should be escalated without justification.
 
 ---
 
@@ -90,9 +91,10 @@ The workflow has seven layers. Each layer has a defined purpose, defined outputs
                                │
 ┌──────────────────────────────▼──────────────────────────────────┐
 │  LAYER 7: RUNTIME / CI                                           │
-│  GitHub Actions CI: lint + format + tests on every commit.       │
-│  Environment contract in ARCHITECTURE.md §Runtime Contract.      │
-│  Services (PostgreSQL, Redis, etc.) declared in ci.yml.          │
+│  Runtime tier is selected proportionally: T0 managed/determin-   │
+│  istic, T1 container/bounded worker, T2 ephemeral isolated       │
+│  mutable runtime, T3 persistent privileged worker. CI verifies   │
+│  the chosen runtime contract and service dependencies.           │
 │  Output: Green/red signal per commit, baseline verification      │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -147,11 +149,105 @@ Every subsequent session starts by running `pytest` and comparing against this b
 
 ---
 
+## 2b. Right-Sizing: Solution Shape, Governance, Runtime
+
+Before enabling any complexity-bearing pattern, Phase 1 must answer three independent questions:
+
+1. What solution shape is minimally sufficient?
+2. What governance level is justified?
+3. What runtime tier is justified?
+
+These decisions are separate from the capability profiles. A project can be Agentic:OFF and still require Strict governance. A project can be Agentic:ON and still remain at Runtime T1 if the runtime stays bounded and non-privileged. Do not collapse these axes into one.
+
+### 2b.1 Solution Shape Selection
+
+Every project declares a primary solution shape in `docs/ARCHITECTURE.md`, with hybrid decomposition only where needed.
+
+| Shape | Choose it when | Default posture |
+|------|-----------------|-----------------|
+| **Deterministic subsystem** | The problem is already formalizable: routing, validation, permissions, calculations, thresholds, transformations, retries, audit triggers | Prefer code + tests over LLM judgment |
+| **Workflow orchestration** | The steps are known, ordered, and reviewable | Explicit step graph; human approval at defined boundaries |
+| **Bounded ReAct / tool-using agent** | The system must choose among tools or iterate briefly under explicit limits | Termination contract, budget limits, authority boundaries |
+| **Higher-autonomy agent** | The task requires longer-horizon planning, delegation, or mutable execution not well expressed as a fixed workflow | Stronger isolation, stronger governance, stronger rollback |
+| **Hybrid decomposition** | Different subsystems need different levels of freedom | Deterministic by default; higher freedom only where justified |
+
+The bias is downward: deterministic beats workflow when the behavior is formalizable; workflow beats agency when the steps are known; bounded agency beats freer autonomy when the task can be constrained.
+
+### 2b.2 Anti-Overengineering Gate
+
+Before turning ON complexity, the Strategist must answer all of the following:
+
+- Why is a deterministic subsystem insufficient here?
+- Why is a fixed workflow insufficient here?
+- Why is a simple human-in-the-loop assistant insufficient here?
+- Why is simple tool use without planning or loops insufficient here?
+- Why is this capability needed now rather than deferred?
+
+Weak answers mean the lower-complexity option should remain in place. "Future flexibility", "modern architecture", or "agents are powerful" are not valid justifications.
+
+### 2b.3 Proportional Governance
+
+Governance intensity scales with risk and criticality:
+
+| Level | Typical fit | Required posture |
+|------|--------------|------------------|
+| **Lean** | Prototype, internal assistant, low-blast-radius workflow | Core artifacts, explicit tasks, light review, human approval at meaningful boundaries |
+| **Standard** | Internal operational system, customer-facing but recoverable service | Full workflow, phase gates, stronger evaluation and audit trail |
+| **Strict** | Business-critical, high-blast-radius, compliance-heavy, or privileged autonomous system | Strong approval boundaries, stronger evidence, stronger runtime and recovery controls |
+
+Governance level changes how much control surface is justified. It does not weaken the workflow's hard invariants: no self-review, explicit artifacts, test discipline, and phase gates remain mandatory.
+
+### 2b.4 Execution Substrate Selection
+
+Runtime substrate is a proportional control, not the definition of the system.
+
+| Tier | Meaning | Use when |
+|------|---------|----------|
+| **T0** | Deterministic or managed-service execution; no special isolated mutable runtime | Most app logic, validators, fixed workflows, managed integrations |
+| **T1** | Container, devcontainer, or bounded worker runtime | Standard services, bounded tool execution, normal CI/workers |
+| **T2** | Ephemeral microVM-class or similarly isolated mutable runtime | Risky autonomous tasks require shell/workspace/toolchain mutation with strong isolation and easy rollback |
+| **T3** | Persistent VM-class or privileged long-lived isolated worker | Long-running autonomous execution with persistence, broader privilege, or continuity requirements |
+
+Select runtime tier by:
+- autonomy level
+- mutable runtime need
+- shell/package/toolchain modification need
+- privilege surface
+- blast radius
+- recovery / rollback need
+- persistence need
+
+Higher autonomy often increases runtime needs, but the relation is not automatic. An agent is not equal to a VM.
+
+### 2b.5 Minimum Viable Control Surface
+
+Every project should define the smallest control set that still matches its risk and autonomy. This is the **minimum viable control surface**.
+
+Examples:
+- Lean + T0 may need only explicit approval boundaries, tests, and audit triggers.
+- Standard + T1 may also need tool schemas, unsafe-action gates, and evaluation artifacts.
+- Strict + T2/T3 may additionally need egress rules, mutation boundaries, snapshots, rollback paths, and tighter approval gates.
+
+Too little control creates unmanaged risk. Too much control creates dead process. The goal is proportional sufficiency.
+
+### 2b.6 Agent System vs Runtime Substrate
+
+Keep these concerns separate:
+
+- **Agent system**: identity, goals, memory, tools, planning loop, budget, policy, audit, human approvals
+- **Runtime substrate**: where execution happens and how isolated, mutable, or privileged it is
+
+A deterministic system can run in a VM. An agent can run in a container. VM or microVM isolation may be justified for some autonomous code agents, but that is a runtime choice driven by risk, mutability, and recovery needs, not the definition of the agent itself.
+
+---
+
 ## 2c. Capability Profiles
 
 A Capability Profile is an optional architectural mode that can be activated during Phase 1. Each profile extends the base workflow with profile-specific artifacts, rules, review checks, state tracking, and evaluation criteria. Profiles are declared in the `## Capability Profiles` table in `docs/ARCHITECTURE.md`.
 
-**RAG is the only current profile and serves as the reference implementation.**
+Profiles are not the first escalation step. First choose the solution shape, governance level, and runtime tier. Then turn a profile ON only if it governs real behavior in that chosen shape.
+
+**RAG is the most fully elaborated reference implementation, but Tool-Use, Agentic, Planning, and Compliance are also supported profiles.**
 
 ---
 
@@ -512,7 +608,7 @@ A task whose `Type:` tag matches any row above is **not complete** until:
 
 ---
 
-## 2b. Session Start Ritual — The Loop Mechanism
+## 2e. Session Start Ritual — The Loop Mechanism
 
 This is the mechanism that makes the workflow run autonomously without manual step-by-step prompting.
 

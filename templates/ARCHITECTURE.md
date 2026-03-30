@@ -12,11 +12,68 @@ Status: Draft
 
 ---
 
+## Solution Shape
+
+| Decision | Selection | Justification |
+|----------|-----------|---------------|
+| Primary shape | {{Deterministic subsystem \| Workflow orchestration \| Bounded ReAct/tool-using agent \| Higher-autonomy agent \| Hybrid}} | {{Why this is the minimum sufficient shape}} |
+| Governance level | {{Lean \| Standard \| Strict}} | {{Why this control intensity is proportionate}} |
+| Runtime tier | {{T0 \| T1 \| T2 \| T3}} | {{Why this tier is justified and lower tiers are insufficient}} |
+
+### Rejected Lower-Complexity Options
+
+| Rejected option | Why it is insufficient |
+|-----------------|------------------------|
+| Deterministic-only | {{Why not deterministic everywhere}} |
+| Workflow or human-in-the-loop assistant | {{Why a simpler bounded flow is insufficient}} |
+| Simple tool use without planning / loops | {{Why this simpler pattern is insufficient}} |
+
+### Minimum Viable Control Surface
+
+List the smallest set of controls that still matches system risk. Keep this short.
+
+- {{CONTROL_1}}
+- {{CONTROL_2}}
+
+### Human Approval Boundaries
+
+| Boundary | Human approval required? | Why |
+|----------|--------------------------|-----|
+| {{e.g., destructive external action}} | {{yes / no}} | {{rationale}} |
+| {{e.g., production deployment}} | {{yes / no}} | {{rationale}} |
+
+### Deterministic vs LLM-Owned Subproblems
+
+| Subproblem | Owner | Reason |
+|------------|-------|--------|
+| Validation / permissions / policy checks | {{Deterministic \| LLM}} | {{Why}} |
+| Transformations / calculations / thresholds | {{Deterministic \| LLM}} | {{Why}} |
+| Retries / idempotency / audit triggers | {{Deterministic \| LLM}} | {{Why}} |
+| {{OPTIONAL_SUBPROBLEM}} | {{Deterministic \| LLM}} | {{Why}} |
+
+### Runtime and Isolation Model
+
+For T0/T1 projects, keep this section concise. For T2/T3 projects, fill every row explicitly.
+
+| Property | Decision |
+|----------|----------|
+| Isolation boundary | {{managed boundary \| container boundary \| ephemeral isolated runtime \| persistent privileged worker}} |
+| Persistence model | {{stateless \| DB-backed \| persistent worker state \| snapshot-backed \| N/A}} |
+| Network model | {{required egress, denied egress, service-to-service expectations \| N/A}} |
+| Secrets model | {{where secrets live and what each runtime may access \| N/A}} |
+| Runtime mutation boundary | {{whether shell/package/toolchain/service mutation is allowed and by whom}} |
+| Rollback / recovery model | {{how runtime or state is restored after failure}} |
+
+State explicitly why a lower runtime tier is insufficient if selecting T2 or T3.
+
+---
+
 ## Capability Profiles
 
 <!--
 REQUIRED: Declare which capability profiles are active. This is a Phase 1 architectural decision.
 Each profile defaults to OFF. Decide once in Phase 1; changing status requires an ADR.
+Capability profiles are separate from the primary solution shape and runtime tier above.
 See PLAYBOOK.md §2c for decision criteria and the 9-property profile invariant.
 -->
 
@@ -429,6 +486,8 @@ If there are no external integrations, write: "None in v1."
 
 These environment variables are required at startup. The application must fail fast with a clear error message if any required variable is absent or malformed.
 
+This section is only for environment variables. Runtime tier, isolation, persistence, network, secrets, and recovery decisions belong in `## Runtime and Isolation Model`.
+
 | Variable | Description | Example value | Required |
 |----------|-------------|---------------|----------|
 | `{{ENV_VAR_1}}` | {{DESCRIPTION_1}} | `{{EXAMPLE_1}}` | Yes |
@@ -449,6 +508,7 @@ The following are explicitly out of scope for v1. They may be addressed in futur
 - {{NON_GOAL_1}}
 - {{NON_GOAL_2}}
 - {{NON_GOAL_3}}
+- {{ANTI_OVERENGINEERING_NON_GOAL, e.g., "No RAG in v1", "No autonomous planning loop", "No T2/T3 isolated runtime without ADR"}}
 
 <!--
 Non-goals are as important as goals. They prevent scope creep and give the review agents

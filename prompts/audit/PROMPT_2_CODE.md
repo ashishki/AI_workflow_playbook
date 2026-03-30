@@ -29,6 +29,10 @@ SEC-4  Credentials from environment only — no hardcoded values
 QUAL-1 Error handling — no bare except without logging; external API errors handled
 QUAL-2 Test coverage — every new function/method has ≥1 test; every AC has a test case
 CF     Carry-forward — for each open finding in META_ANALYSIS: still present? worsened?
+GOV-1 Solution-shape drift — code does not introduce higher-autonomy behavior than ARCHITECTURE.md declares without justification
+GOV-2 Deterministic ownership — deterministic-owned subproblems in ARCHITECTURE.md are not implemented as LLM behavior without architectural approval
+GOV-3 Runtime-tier drift — code does not introduce shell/runtime mutation, privilege expansion, or persistent worker behavior above the declared runtime tier
+GOV-4 Human approval boundaries — unsafe or high-blast-radius actions still require the declared approval path
 
 <!-- Run the following checks ONLY if RAG Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 RET-1  insufficient_evidence path — retrieval-backed handlers return `insufficient_evidence` when evidence is inadequate; no hallucinated fallback

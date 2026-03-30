@@ -121,6 +121,37 @@ Examples of project-specific rules:
 
 ---
 
+## Control Surface and Runtime Boundaries
+
+This section is always present, but conditional and proportional. For Lean / T0 / T1 systems, keep it short and mark unused rows `N/A`. Expand it only when the declared shape, governance level, or runtime tier requires more control.
+
+| Boundary | Rule |
+|----------|------|
+| Secrets scope | {{Which runtimes, jobs, or roles may access which secrets; "least privilege" is required}} |
+| Network egress | {{Expected outbound destinations, explicit deny-by-default zones, or "N/A"}} |
+| Privileged actions | {{Which actions require elevated privilege or human approval}} |
+| Runtime mutation | {{Whether shell/package/toolchain/service mutation is allowed; who may do it; under what gate}} |
+| Persistence | {{Whether worker/runtime state may persist across runs and for how long}} |
+| Auditability | {{How runtime-changing or side-effecting actions are recorded}} |
+
+### Runtime Tier Guardrails
+
+- Implement only within the runtime tier declared in `docs/ARCHITECTURE.md`.
+- Treat runtime-tier expansion as a governance change, not an implementation detail.
+- A T0/T1 project must not silently acquire T2/T3 behaviors such as broad shell mutation, ad-hoc package installs, privileged runtime management, or long-lived mutable worker state.
+
+### Conditional Rules for T2 / T3
+
+_Applies only when `docs/ARCHITECTURE.md` declares Runtime tier T2 or T3._
+
+- Runtime-changing actions must be auditable with actor, action, target, result, and timestamp.
+- Snapshot / rollback expectations must be explicit before autonomous runtime mutation begins.
+- Recovery path must be documented: rebuild, revert, or replace the runtime without manual archaeology.
+- Network and secrets permissions must be scoped to the minimum needed for that worker.
+- Persistent runtimes (T3) require a documented drift-management plan: rebuild cadence, config reconciliation, or equivalent.
+
+---
+
 ## Profile Rules: RAG
 
 <!--
@@ -376,6 +407,7 @@ The following actions are never permitted. Violating these generates a P1 findin
 | Deferring CI setup past Phase 1 | Every commit must be CI-verified |
 | Merging a PR with failing CI | The CI gate is non-negotiable |
 | Committing credentials or secrets of any kind | Irreversible exposure |
+| Expanding runtime tier or privilege surface without updating ARCHITECTURE.md / ADRs | Runtime escalation is a governance change |
 | Leaving commented-out code in a commit | Dead code degrades readability; delete it |
 | Adding a TODO without a task reference | Orphaned TODOs accumulate and are never addressed |
 

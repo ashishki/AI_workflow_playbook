@@ -14,6 +14,7 @@ Self-contained for typical projects. Load sections below only when the specific 
 
 | Section | Title | Load when |
 |---------|-------|-----------|
+| §2b | Right-Sizing / Runtime Selection | Already inlined below — no need to load |
 | §2c | RAG Decision Gate | Already inlined below — no need to load |
 | §2d | Capability Profiles | Already inlined below — no need to load |
 | §6 | Immutable Rules | Writing §Universal Rules in IMPLEMENTATION_CONTRACT.md — verify verbatim accuracy |
@@ -51,6 +52,13 @@ You receive a project description. It should include (ask if missing):
 
 If the project description is ambiguous on any of these points, ask clarifying questions before producing output. A well-specified architecture is worth 30 minutes of clarification.
 
+You must also establish:
+- **Required autonomy level** — deterministic, workflow, bounded ReAct/tool-using agent, higher-autonomy agent, or hybrid
+- **Human approval boundaries** — what must remain human-gated
+- **Runtime mutability needs** — does any part of the system need shell/workspace/toolchain mutation?
+- **Privilege and isolation needs** — network egress, secrets access, privileged actions, persistence
+- **Cost of error / variance** — what breaks if the system is wrong, inconsistent, or slow
+
 ---
 
 ## Output
@@ -61,6 +69,14 @@ Produce all of the following, in order. Wrap each document in a fenced code bloc
 
 System architecture document. Include:
 - **System Overview** — one paragraph describing what this system does and its primary users
+- **Solution Shape Recommendation** — deterministic, workflow, bounded ReAct/tool-using agent, higher-autonomy agent, or hybrid
+- **Rejected Lower-Complexity Options** — why simpler options are insufficient
+- **Proportional Governance** — Lean, Standard, or Strict with justification
+- **Runtime Tier** — T0, T1, T2, or T3 with justification
+- **Isolation Boundary / Persistence / Network / Secrets / Recovery** — concise operating model for the chosen runtime
+- **Deterministic vs LLM-Owned Subproblems** — explicit split of responsibilities
+- **Human Approval Boundaries** — what remains gated by human approval and why
+- **Minimum Viable Control Surface** — the smallest set of controls justified for this system
 - **Component Table** — every significant component: name, file/directory, responsibility
 - **Data Flow** — numbered steps for the primary request path (happy path, end to end)
 - **Tech Stack** — table with: component, technology choice, rationale for the choice
@@ -68,7 +84,7 @@ System architecture document. Include:
 - **External Integrations** — table of third-party dependencies and what they're used for
 - **File Layout** — directory tree for the project
 - **Runtime Contract** — table of required environment variables (name, description, example value)
-- **Non-Goals** — explicit list of what this system does NOT do (v1 scope)
+- **Non-Goals** — explicit list of what this system does NOT do, including anti-overengineering non-goals
 
 ### 2. `docs/spec.md`
 
@@ -338,6 +354,40 @@ A human-readable phase plan. Not a file — just a summary at the end of your ou
 
 ## Structural Rules
 
+## Required Decision Summary
+
+Before drafting the documents, reason explicitly and concisely through the following. This reasoning must appear in `docs/ARCHITECTURE.md`, not as private notes.
+
+1. **Solution Shape Recommendation**
+   Recommend exactly one primary shape: deterministic, workflow, bounded ReAct/tool-using agent, higher-autonomy agent, or hybrid.
+2. **Rejected Simpler Alternatives**
+   Explain why lower-complexity options are insufficient:
+   - why not deterministic
+   - why not workflow
+   - why not human-in-the-loop assistant
+   - why not simple tool use without planning/loops
+3. **Runtime Recommendation**
+   Recommend runtime tier T0, T1, T2, or T3.
+4. **Runtime Justification**
+   Explicitly reason about:
+   - mutable runtime need
+   - shell/service/toolchain modification need
+   - privilege surface
+   - persistence need
+   - recovery / rollback need
+   - expected drift risk
+   - why a lower runtime tier is insufficient
+5. **Deterministic Decomposition**
+   Identify which subproblems must remain deterministic by default: routing, validation, permissions, policy checks, calculations, thresholds, transformations, retries / idempotency, audit triggers, or similar.
+6. **Human-in-the-Loop Boundary**
+   State what remains gated by human approval and why.
+7. **Minimum Viable Control Surface**
+   Define the minimal controls justified for the proposed system.
+8. **Cost / Risk Reasoning**
+   Reason explicitly about cost of error, cost of variance, latency sensitivity, auditability, blast radius, and operational drift risk.
+
+Be sharp. Do not produce long essays. If a lower-complexity option is sufficient, choose it.
+
 **Phase 1 always includes:**
 - Project skeleton (T01)
 - CI setup (T02)
@@ -373,6 +423,9 @@ Ask these if the project description does not answer them:
 5. What external APIs does this service call? Are there rate limits or SLAs we must respect?
 6. Is there an existing database schema to preserve, or is this greenfield?
 7. What is the deployment target — container on a managed platform, bare VMs, serverless?
+8. Which parts must remain deterministic and auditable rather than LLM-driven?
+9. What actions, if any, may modify shell state, packages, services, filesystems, or credentials at runtime?
+10. What must remain human-approved because the error cost, audit need, or blast radius is high?
 
 Ask all questions at once, not one at a time. Wait for answers before producing the architecture package.
 
@@ -381,6 +434,8 @@ Ask all questions at once, not one at a time. Wait for answers before producing 
 ## Capability Profiles Decision (Phase 1 Gate)
 
 Before producing any output, you must evaluate which capability profiles this project requires. This is a **mandatory decision** — you cannot skip it, defer it, or leave it implicit.
+
+This decision comes after solution-shape and runtime reasoning. Do not use capability profiles as a shortcut to justify unnecessary complexity.
 
 Each profile is optional and defaults to OFF. The current supported profiles are listed in PLAYBOOK.md §2c. For each profile, decide ON or OFF and justify the decision.
 
