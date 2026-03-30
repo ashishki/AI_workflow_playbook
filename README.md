@@ -157,6 +157,7 @@ AI_workflow_playbook/
 │   ├── ARCHITECTURE.md              — system architecture document template
 │   ├── CODEX_PROMPT.md              — session handoff template (all 5 profile state blocks)
 │   ├── IMPLEMENTATION_CONTRACT.md   — immutable rules template (universal + profile rules)
+│   ├── PROJECT_BRIEF.md             — input template for the Strategist
 │   ├── RETRIEVAL_EVAL.md            — RAG evaluation artifact template
 │   ├── NFR.md                       — non-functional requirements template (SLA table + history)
 │   ├── tasks_schema.md              — YAML-compatible task block schema, tag namespace, AC rules
@@ -186,6 +187,8 @@ AI_workflow_playbook/
 
 **templates/ARCHITECTURE.md** now requires solution shape, governance level, runtime tier, deterministic-vs-LLM ownership, human approval boundaries, and anti-overengineering non-goals.
 
+**templates/PROJECT_BRIEF.md** is the recommended input template before running the Strategist. It helps you describe goals, workflows, risks, AI scope, deterministic candidates, human approval boundaries, constraints, and success metrics without pre-deciding the architecture.
+
 **templates/domains/healthcare.md** is the HIPAA domain skeleton. It provides four production-ready tasks with complete acceptance criteria (including specific test function references), a starter `docs/compliance_eval.md` table with HIPAA control rows, and ARCHITECTURE.md snippets. The Strategist includes it verbatim when Compliance=ON and HIPAA is the active framework.
 
 **templates/NFR.md** tracks non-functional SLAs: target, measurement method, CI gate threshold, and a phase-by-phase baseline history. Included when the project has explicit latency, throughput, or error rate requirements.
@@ -200,7 +203,7 @@ AI_workflow_playbook/
 
 1. Open a Claude session (Claude.ai or Claude Code).
 2. Set `prompts/STRATEGIST.md` as the system prompt.
-3. Describe your project: domain, stack, expected scale, team size, key constraints, compliance requirements.
+3. Fill `templates/PROJECT_BRIEF.md` or describe the same fields in chat: domain, workflows, AI scope, deterministic candidates, expected scale, constraints, risk boundaries, and compliance requirements.
 4. The Strategist asks clarifying questions, then produces the starter package:
    - `docs/ARCHITECTURE.md`, `docs/spec.md`, `docs/tasks.md`
    - `docs/CODEX_PROMPT.md`, `docs/IMPLEMENTATION_CONTRACT.md`
