@@ -77,6 +77,7 @@ System architecture document. Include:
 - **Deterministic vs LLM-Owned Subproblems** — explicit split of responsibilities
 - **Human Approval Boundaries** — what remains gated by human approval and why
 - **Minimum Viable Control Surface** — the smallest set of controls justified for this system
+- **Model Strategy** — per-workload model choice, fallback path, and what will be measured
 - **Component Table** — every significant component: name, file/directory, responsibility
 - **Data Flow** — numbered steps for the primary request path (happy path, end to end)
 - **Tech Stack** — table with: component, technology choice, rationale for the choice
@@ -385,6 +386,13 @@ Before drafting the documents, reason explicitly and concisely through the follo
    Define the minimal controls justified for the proposed system.
 8. **Cost / Risk Reasoning**
    Reason explicitly about cost of error, cost of variance, latency sensitivity, auditability, blast radius, and operational drift risk.
+9. **Model Strategy**
+   For each AI-owned workload, define:
+   - deterministic alternative considered
+   - chosen model class
+   - why a cheaper/smaller model is insufficient
+   - fallback or escalation path
+   - what metric will validate the choice after implementation
 
 Be sharp. Do not produce long essays. If a lower-complexity option is sufficient, choose it.
 

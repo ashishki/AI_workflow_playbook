@@ -241,6 +241,34 @@ A deterministic system can run in a VM. An agent can run in a container. VM or m
 
 ---
 
+## 2b.7 Model Selection and Inference Budgeting
+
+If a system uses LLM inference, model choice must be treated as a measurable architecture decision, not a default.
+
+Rules:
+- choose models per workload or subproblem, not one model for the whole system by default
+- ask "can this be deterministic?" before assigning any model at all
+- if an LLM is required, choose the minimum sufficient model class for the job
+- justify stronger models by measurable need: quality, latency, context window, or required capabilities
+- track both estimated and measured inference cost; do not reason about quality in isolation from cost and latency
+
+Evaluate model choice across these axes:
+- task quality / success rate
+- latency
+- cost per call / per successful task
+- context window
+- required capabilities: function calling, multimodal input, reasoning depth, structured output
+
+Price aggregators such as `llmpricing.dev` are useful comparison inputs, but not the sole source of truth. Final project decisions should be recorded in project artifacts together with measurement date and, where possible, vendor-source confirmation.
+
+The Strategist should define:
+- which workloads need no model
+- which workloads can use a smaller / cheaper model
+- which workloads justify escalation to a stronger model
+- what metrics will prove the choice is still correct after implementation
+
+---
+
 ## 2c. Capability Profiles
 
 A Capability Profile is an optional architectural mode that can be activated during Phase 1. Each profile extends the base workflow with profile-specific artifacts, rules, review checks, state tracking, and evaluation criteria. Profiles are declared in the `## Capability Profiles` table in `docs/ARCHITECTURE.md`.

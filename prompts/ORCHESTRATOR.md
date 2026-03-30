@@ -240,6 +240,8 @@ Action required: update ARCHITECTURE.md and ADRs or reduce the task scope before
 
 If `docs/ARCHITECTURE.md §Deterministic vs LLM-Owned Subproblems` suggests a softer mismatch, print `DETERMINISM_WARNING` and continue. This is a reviewer signal, not a stop.
 
+If the task clearly increases model class, inference cost envelope, or escalation behavior relative to `docs/ARCHITECTURE.md §Inference / Model Strategy` without an architectural update, print `MODEL_STRATEGY_WARNING` and continue. This is drift, not an automatic stop.
+
 Print status block:
 ```
 === ORCHESTRATOR STATE ===
@@ -254,7 +256,7 @@ Phase 1 Audit: [PASS (N warnings) | FAIL (N blockers) | skipped (mid-project) | 
 Phase boundary: [yes | no]
 Review tier: [light | deep] — [reason]
 Tag check: [OK | WARNING: T## — [pattern] suggests [profile], verify Type: tag]
-Complexity check: [OK | DETERMINISM_WARNING: ... | STOPPED: ...]
+Complexity check: [OK | DETERMINISM_WARNING: ... | MODEL_STRATEGY_WARNING: ... | STOPPED: ...]
 Action: [what happens next]
 =========================
 ```

@@ -68,6 +68,23 @@ State explicitly why a lower runtime tier is insufficient if selecting T2 or T3.
 
 ---
 
+## Inference / Model Strategy
+
+Include this section only if the system uses LLM inference in production behavior. Omit it for fully deterministic systems.
+
+| Path / Task | Model class | Why this class | Fallback / escalation | Budget / latency constraint |
+|-------------|-------------|----------------|-----------------------|-----------------------------|
+| {{e.g., routing / classification}} | {{small / fast / reasoning / multimodal / long-context}} | {{Why this is the minimum sufficient choice}} | {{fallback or stronger-model trigger}} | {{e.g., "< $X / 1k calls", "p95 < 800ms"}} |
+| {{e.g., extraction / generation / planning}} | {{...}} | {{...}} | {{...}} | {{...}} |
+
+Rules:
+- choose models per workload, not one global default unless justified
+- record deterministic alternatives considered
+- justify stronger models by quality, latency, context, or capability needs
+- keep price-source notes in project docs or NFR history with date if cost is an explicit constraint
+
+---
+
 ## Capability Profiles
 
 <!--
