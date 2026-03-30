@@ -34,6 +34,20 @@ Every layer has a defined input, a defined output, and a defined boundary with t
 - **IMPLEMENTATION_CONTRACT.md** is the unchanging floor. Architectural decisions may evolve; the contract does not, without an explicit ADR.
 - **Right-sizing comes first.** Solution shape, capability profiles, governance intensity, and runtime tier are separate decisions. None should be escalated without justification.
 
+### Operational Load Distribution
+
+To avoid burning one model family's limits unnecessarily, distribute work by role:
+
+- **Claude / architecture-grade model**: Strategist, Phase 1 Validator, phase-boundary strategy review, deep review, architectural ambiguity resolution
+- **Codex / implementation-grade model**: task execution, narrow-scope fixes, tests, lint, local refactors within declared file scope
+
+Operational rules:
+- do not spend architecture-grade context on routine file edits
+- do not spend implementation-grade runs on broad architecture reasoning
+- prefer small tasks with explicit file scope; this reduces token load for both sides
+- run deep review only at phase boundaries or real risk boundaries, not after every small task
+- compact `CODEX_PROMPT.md` and phase history regularly so both agents read summaries, not full history
+
 ---
 
 ## 1b. System Architecture — Layer Map
@@ -1073,29 +1087,29 @@ Each gap includes: what is missing, what impact it has, and the minimum viable a
 
 ---
 
-### GAP-1: Single-Model Dependency (Claude only)
+### GAP-1: No Formal Multi-Provider / Fallback Execution Layer
 
-**What is missing:** The orchestrator has no model selection logic. All agents use Claude via the Anthropic API. There is no fallback model, no cost optimization by routing tasks to cheaper models, and no way to verify results by comparing outputs from two different models.
+**What is missing:** The playbook now documents model selection and workload-level routing, but it still lacks a formal provider-agnostic execution layer. Fallbacks, provider failover, and automatic cross-provider routing are not first-class runtime features.
 
-**Impact:** Medium. Switching providers or using GPT-4 for specific tasks (e.g., cost-sensitive code generation) requires rewriting orchestrator prompts. An Anthropic outage stops all agents.
+**Impact:** Medium. Teams can choose different models and distribute work operationally, but provider outages or model-family saturation still require manual switching.
 
 **v2 addition:**
-- Model selection policy in ORCHESTRATOR.md (e.g., "use Haiku for light review, Opus for deep review")
-- Fallback routing: if primary model returns error, retry with fallback
-- Cost tracking per model per task (see GAP-2)
+- provider-agnostic execution adapter for orchestrated agents
+- explicit fallback routing when the primary model family is unavailable or saturated
+- optional cross-provider verification for high-risk review paths
 
 ---
 
-### GAP-2: No Token / Cost Tracking
+### GAP-2: No Built-In Token / Cost Telemetry Pipeline
 
-**What is missing:** The workflow tracks test baselines and finding severity, but not token consumption per task, cost per phase, or cost trends over time. There is no budget signal.
+**What is missing:** The playbook now includes model strategy and AI cost NFRs, but it still lacks built-in telemetry that automatically records token usage, cost per task, and phase-level spend trends.
 
-**Impact:** Low-Medium. Without cost tracking, a project with many phases cannot detect cost drift until the invoice arrives.
+**Impact:** Low-Medium. Teams can define budgets and measure them manually, but the workflow does not yet emit this data by default.
 
 **v2 addition:**
-- Log `input_tokens`, `output_tokens`, `cost_usd` in CODEX_PROMPT.md per task
-- Phase cost summary in CONSOLIDATED review output
-- Optional budget gate in phase gate criteria (e.g., "if phase cost > $X, human reviews before proceeding")
+- log `input_tokens`, `output_tokens`, `cost_usd` in `CODEX_PROMPT.md` or a dedicated telemetry artifact per task
+- phase cost summary in CONSOLIDATED review output
+- optional budget gate in phase gate criteria (e.g. "if phase cost > $X, human reviews before proceeding")
 
 ---
 
