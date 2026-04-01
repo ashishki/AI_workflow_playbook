@@ -2,6 +2,15 @@
 
 A structured AI-assisted development workflow with hard quality guarantees. It provides prompts, templates, and enforcement mechanisms for building AI systems with explicit artifacts, review loops, and fit-for-purpose governance.
 
+The current playbook is strongest when read as a layered system:
+
+1. Policy / Governance
+2. Proof / Evidence
+3. Optional Execution Patterns
+4. Harness / Packaging
+
+This repository is not trying to become a generic orchestration framework. Its center of gravity remains governance, contracts, reviews, and auditable repo artifacts.
+
 ---
 
 ## Why This Playbook Is Different
@@ -49,6 +58,12 @@ Profiles are activated in Phase 1 and treated as architectural constraints. Eval
 A workflow for building AI-assisted software without assuming one default architecture. The Orchestrator runs the loop; Codex implements tasks in isolation; review agents check output at two tiers; the human approves phase gates. State lives in files, so sessions are resumable.
 
 This playbook is intentionally not "agent-everywhere" and not "VM-by-default". It is designed to help teams choose the minimum sufficient solution shape, runtime substrate, and governance level for the actual risk and autonomy of the system.
+
+For practical setup and adoption, use:
+
+- [docs/usage_guide.md](/home/AI_workflow_playbook/docs/usage_guide.md) — end-to-end usage for new and existing repositories
+- [docs/architecture_layers.md](/home/AI_workflow_playbook/docs/architecture_layers.md) — concise layer map
+- [docs/heavy_task_mode.md](/home/AI_workflow_playbook/docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
 
 ---
 
@@ -185,6 +200,8 @@ AI_workflow_playbook/
 
 **templates/tasks_schema.md** defines the task block format. Every task in `docs/tasks.md` must use this schema — `Type:` tag, structured `Acceptance-Criteria` entries each with a `test:` pointer, explicit `Depends-On`. The Orchestrator reads these fields directly; a missing `test:` field is a PHASE1_VALIDATOR blocker.
 
+It also supports optional heavy-task extension fields so risky tasks can carry proof expectations without making all tasks expensive.
+
 **templates/ARCHITECTURE.md** now requires solution shape, governance level, runtime tier, deterministic-vs-LLM ownership, human approval boundaries, and anti-overengineering non-goals.
 
 **templates/PROJECT_BRIEF.md** is the recommended input template before running the Strategist. It helps you describe goals, workflows, risks, AI scope, deterministic candidates, human approval boundaries, constraints, and success metrics without pre-deciding the architecture.
@@ -227,3 +244,18 @@ AI_workflow_playbook/
 9. Say: "Start Phase 1." The Orchestrator reads `docs/CODEX_PROMPT.md` and begins.
 
 The human sits at every phase gate. From there, the loop runs itself.
+
+## How to Retrofit an Existing Project
+
+Do not pretend the repo is greenfield.
+
+Use the playbook as a governance retrofit:
+
+1. Generate `docs/ARCHITECTURE.md` from current reality, not from an imagined rewrite.
+2. Create `docs/CODEX_PROMPT.md` using the real current baseline and next task.
+3. Create `docs/IMPLEMENTATION_CONTRACT.md` around stable rules the current repo must now obey.
+4. Build `docs/tasks.md` as a forward contract for upcoming work, remediation, and cleanup.
+5. Add audit prompts, orchestrator prompt, and CI normalization where missing.
+6. Mark only genuinely risky migration/remediation tasks as heavy.
+
+See [docs/usage_guide.md](/home/AI_workflow_playbook/docs/usage_guide.md) for the full retrofit flow.

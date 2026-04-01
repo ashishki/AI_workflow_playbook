@@ -58,6 +58,7 @@ You must also establish:
 - **Runtime mutability needs** — does any part of the system need shell/workspace/toolchain mutation?
 - **Privilege and isolation needs** — network egress, secrets access, privileged actions, persistence
 - **Cost of error / variance** — what breaks if the system is wrong, inconsistent, or slow
+- **Heavy-task candidates** — which planned tasks should use a proof-first path because tests + ordinary review are not enough evidence
 
 ---
 
@@ -140,6 +141,7 @@ Rules for the task graph:
 - Every `Depends-On` reference is explicit — a task never implicitly depends on something not listed
 - Every acceptance criterion in `Acceptance-Criteria` has exactly one corresponding `test:` entry pointing to a real test function. A criterion without a test reference is not complete.
 - Forbidden phrases in `description:` fields: "works correctly", "handles properly", "is implemented", "functions as expected" — these cannot be verified by a review agent
+- For risky tasks, add the optional heavy-task fields from `templates/tasks_schema.md` instead of inventing a second task format
 
 ### 4. `docs/CODEX_PROMPT.md`
 

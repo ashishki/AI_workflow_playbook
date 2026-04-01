@@ -26,6 +26,17 @@ Strategist (architecture)
 
 Every layer has a defined input, a defined output, and a defined boundary with the next layer. No layer crosses into another layer's responsibility.
 
+### The Four-Layer Interpretation
+
+The repository is easiest to evolve safely if you interpret it through four logical layers:
+
+1. **Policy / Governance** — phases, contracts, review policy, stop conditions, immutable rules
+2. **Proof / Evidence** — explicit evidence collection, evaluation artifacts, selective proof-first handling for risky work
+3. **Optional Execution Patterns** — parallel subagents, isolated worktrees, fanout/merge, runtime selection
+4. **Harness / Packaging** — hooks, Claude Code settings, bootstrap, templates, install story
+
+This interpretation does not replace the operational layer map below. It clarifies what the playbook is optimizing for: governance first, execution substrate second.
+
 ### Why This Works
 
 - **Phase gates** prevent drift. A flaw caught at the end of Phase 2 is infinitely cheaper than one discovered in Phase 8.
@@ -720,6 +731,23 @@ If a project already has code but lacks the workflow scaffolding:
 6. Create `docs/audit/AUDIT_INDEX.md` (start at Cycle 1)
 
 After retrofit, paste ORCHESTRATOR.md and the loop runs identically to a greenfield project.
+
+For a practical retrofit sequence, see `docs/usage_guide.md`.
+
+### Selective Heavy-Task Mode
+
+Most work should stay on the normal loop. A heavier proof-first path is justified only when risk, irreversibility, or verification difficulty is materially higher than normal.
+
+Typical triggers:
+
+- security boundary changes
+- migrations or destructive data changes
+- retrieval semantics changes
+- tool-side-effect safety logic
+- high-blast-radius refactors
+
+Recommended heavy-task add-ons live in task-local artifacts and are documented in `docs/heavy_task_mode.md`.
+This is a selective extension, not a mandatory mode for every task.
 
 ---
 

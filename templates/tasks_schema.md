@@ -46,6 +46,29 @@ Notes: |
   Leave blank or omit if nothing notable.}}
 ```
 
+### Optional heavy-task extension
+
+Use these fields only when the task needs a selective proof-first path. Do not add them to every task.
+
+```
+Execution-Mode: heavy
+Evidence:
+  - {{artifact or check expected from this task}}
+  - {{artifact or check expected from this task}}
+Verifier-Focus: |
+  {{What a fresh verifier must specifically confirm}}
+```
+
+Recommended uses:
+
+- security-critical changes
+- migrations or destructive state changes
+- retrieval semantics changes
+- unsafe tool behavior
+- refactors where local tests are not enough evidence
+
+For normal tasks, omit these fields.
+
 ---
 
 ## Tag Namespace
