@@ -37,13 +37,16 @@ The orchestrator reads all state from `docs/CODEX_PROMPT.md` and `docs/tasks.md`
 | Deep review agents (META/ARCH/CODE/CONSOLIDATED) | `Agent tool` (general-purpose) | reasoning + file analysis |
 | Strategy reviewer | `Agent tool` (general-purpose) | architectural reasoning |
 
-<!-- {{CODEX_COMMAND}} is the implementation agent invocation. Examples:
-     - Codex CLI:              codex exec -s workspace-write "$PROMPT"
-     - Claude Code subagent:   adapt Steps 2, 3, 5 to use the Agent tool instead of Bash
-     - Any sandboxed executor: replace the Bash block with whatever your tool requires
+<!-- {{CODEX_COMMAND}} is the implementation agent invocation.
+     Default and recommended value:
+     - Codex CLI: codex exec -s workspace-write
+
+     This playbook assumes application code is written by Codex via Bash -> codex exec,
+     not by Claude subagents. Replace this placeholder only if your environment requires
+     a wrapper around the same Codex CLI path.
+
      The command must accept a prompt string as its final argument, be able to read/write
-     files under {{PROJECT_ROOT}}, and execute shell commands (test runner, linter).
-     Replace this placeholder with the exact invocation for your environment. -->
+     files under {{PROJECT_ROOT}}, and execute shell commands (test runner, linter). -->
 <!-- See reference/CODEX_CLI.md for Codex CLI invocation patterns, known sandbox
      limitations (async test hangs, heavy deps), and prompt engineering guidelines. -->
 

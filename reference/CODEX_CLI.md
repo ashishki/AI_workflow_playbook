@@ -1,8 +1,11 @@
 # Reference: Codex CLI as Implementation Agent
 
 This document captures hard-won operational knowledge about using `codex exec -s workspace-write`
-as the `{{CODEX_COMMAND}}` in the Orchestrator loop. Read this before starting a project that
-uses the Codex CLI.
+as the default and recommended `{{CODEX_COMMAND}}` in the Orchestrator loop. Read this before
+starting a project that uses the Codex CLI.
+
+If you are using the standard playbook operating model, application code should be written
+through `Bash -> codex exec -s workspace-write`, not through Claude subagents.
 
 ---
 

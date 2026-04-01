@@ -244,8 +244,10 @@ the six core documents above.
 
 **Rules for this section:**
 - Replace every `{{PROJECT_NAME}}` occurrence with the actual project name.
-- Leave `{{PROJECT_ROOT}}` and `{{CODEX_COMMAND}}` as literal placeholders — they are
-  environment-specific and must be filled by the developer before starting the Orchestrator.
+- Leave `{{PROJECT_ROOT}}` as a literal placeholder.
+- Leave `{{CODEX_COMMAND}}` as a literal placeholder, but the intended default is
+  `codex exec -s workspace-write`. Replace it only if the environment needs a wrapper
+  around the same Codex CLI invocation.
 - Output each file verbatim inside a fenced code block labelled with its path.
 - Do NOT summarise or paraphrase — agents read these files exactly as written.
 
@@ -266,8 +268,8 @@ replace the two placeholders shown.
      Before first use, replace:
        {{PROJECT_NAME}}  → the project name (e.g. my-api-service)
        {{PROJECT_ROOT}}  → absolute path on disk (e.g. /home/alice/my-api-service)
-       {{CODEX_COMMAND}} → your implementation agent invocation
-                           (e.g. codex exec -s workspace-write)
+       {{CODEX_COMMAND}} → default: codex exec -s workspace-write
+                           replace only if your environment needs a wrapper
 
      See reference/CODEX_CLI.md for CODEX_COMMAND options and sandbox notes. -->
 ```

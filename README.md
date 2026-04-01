@@ -53,6 +53,8 @@ Profiles are activated in Phase 1 and treated as architectural constraints. Eval
 
 **Codex-only code writing.** Claude-side direct edits to application code can be blocked with hooks so implementation goes only through `Bash -> codex exec`, preserving the implementer/reviewer split. A separate phase-boundary hook can block `CODEX_PROMPT.md` phase advancement until the completed phase has an archived review entry.
 
+**Default implementation command.** The default and recommended implementation path is `codex exec -s workspace-write` invoked from Bash with a prompt file. The playbook's intended operating model is: Claude orchestrates and reviews; Codex writes application code.
+
 ---
 
 ## What This Playbook Is
@@ -285,7 +287,7 @@ This does not replace validation or orchestration. It gives Claude a standard bo
    - Review prompts: `docs/audit/PROMPT_0_META.md` through `PROMPT_3_CONSOLIDATED.md`, `docs/audit/AUDIT_INDEX.md`
    - If Compliance=ON: `docs/compliance_eval.md` (with framework-specific control rows)
    - If NFR constraints stated: `docs/nfr.md` (with SLA table)
-5. Copy `prompts/ORCHESTRATOR.md` to `your-project/docs/prompts/ORCHESTRATOR.md`, fill `{{PROJECT_ROOT}}` and `{{CODEX_COMMAND}}`.
+5. Copy `prompts/ORCHESTRATOR.md` to `your-project/docs/prompts/ORCHESTRATOR.md`, fill `{{PROJECT_ROOT}}`, and set `{{CODEX_COMMAND}}` to `codex exec -s workspace-write` unless your environment requires a wrapper around the same command.
 6. Copy hooks and settings:
    ```bash
    cp -r hooks/ your-project/hooks/
