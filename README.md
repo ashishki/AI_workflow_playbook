@@ -64,6 +64,7 @@ For practical setup and adoption, use:
 - [docs/usage_guide.md](/home/AI_workflow_playbook/docs/usage_guide.md) — end-to-end usage for new and existing repositories
 - [docs/architecture_layers.md](/home/AI_workflow_playbook/docs/architecture_layers.md) — concise layer map
 - [docs/heavy_task_mode.md](/home/AI_workflow_playbook/docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
+- [docs/coverage_experiment_report_ru.md](/home/AI_workflow_playbook/docs/coverage_experiment_report_ru.md) — Russian coverage experiment report: project-fit zones, heavy-task boundaries, and execution-substrate line
 
 ## Quick Start Cheat Sheet
 
