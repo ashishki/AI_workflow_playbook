@@ -185,8 +185,9 @@ If you want to introduce the playbook gradually:
 3. CODEX_PROMPT resumable state
 4. audit prompts
 5. orchestrator loop
-6. selective heavy-task mode
-7. hooks and packaging
+6. hooks for codex-only code writes and phase-boundary guards
+7. selective heavy-task mode
+8. packaging
 
 This order preserves momentum while tightening governance over time.
 
@@ -198,6 +199,7 @@ What it does:
 - tells it which local files to read
 - tells it which artifact set to generate
 - keeps startup UX simple
+- can enforce codex-only code writing and phase-boundary guards when the hook template is installed
 
 What it does not do:
 

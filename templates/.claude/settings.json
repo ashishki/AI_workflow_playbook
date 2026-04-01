@@ -9,6 +9,16 @@
             "type": "command",
             "command": "./hooks/guard_files.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "./hooks/enforce_codex_exec.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "./hooks/guard_phase_boundary.sh",
+            "timeout": 5
           }
         ]
       }

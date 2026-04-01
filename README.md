@@ -51,6 +51,8 @@ Profiles are activated in Phase 1 and treated as architectural constraints. Eval
 
 **Three-layer observability.** (1) Process level: Claude Code hooks block writes to immutable files, log every Bash command, write a session checkpoint on stop. (2) Production level: OBS-1..3 rules in `IMPLEMENTATION_CONTRACT.md` (spans, metrics, health endpoint) enforced by CODE review checks. (3) AI quality level: capability evaluation artifacts, Step 3.5 regression detection (>5% → P1, >15% → P0 Stop-Ship), optional CI eval gates. See `PLAYBOOK.md §12`.
 
+**Codex-only code writing.** Claude-side direct edits to application code can be blocked with hooks so implementation goes only through `Bash -> codex exec`, preserving the implementer/reviewer split. A separate phase-boundary hook can block `CODEX_PROMPT.md` phase advancement until the completed phase has an archived review entry.
+
 ---
 
 ## What This Playbook Is
