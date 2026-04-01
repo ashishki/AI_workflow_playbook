@@ -5,6 +5,35 @@ This guide explains how to use AI Workflow Playbook in practice for:
 1. a new repository
 2. an already existing repository
 
+## Cheat Sheet
+
+### New Repository
+
+1. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`, `ci/ci.yml`
+2. Copy `templates/.claude/settings.json` -> `.claude/settings.json`
+3. Copy `templates/.claude/commands/bootstrap-new.md` -> `.claude/commands/bootstrap-new.md`
+4. Make `hooks/*.sh` executable
+5. Run `/bootstrap-new`
+6. Run the Phase 1 validator
+7. Start the orchestrator
+
+### Existing Repository
+
+1. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`
+2. Normalize `ci/ci.yml` if missing or weak
+3. Copy `templates/.claude/settings.json` -> `.claude/settings.json`
+4. Copy `templates/.claude/commands/bootstrap-retrofit.md` -> `.claude/commands/bootstrap-retrofit.md`
+5. Make `hooks/*.sh` executable
+6. Run `/bootstrap-retrofit`
+7. Run the Phase 1 validator
+8. Start the orchestrator from the first real incomplete task
+
+### Remember
+
+- slash command = entrypoint
+- validator = gate
+- orchestrator = ongoing workflow
+
 ## New Repository
 
 ### Fastest Claude Code entrypoint

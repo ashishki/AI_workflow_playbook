@@ -65,6 +65,46 @@ For practical setup and adoption, use:
 - [docs/architecture_layers.md](/home/AI_workflow_playbook/docs/architecture_layers.md) — concise layer map
 - [docs/heavy_task_mode.md](/home/AI_workflow_playbook/docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
 
+## Quick Start Cheat Sheet
+
+### New Project
+
+1. Copy into the repo:
+   - `PLAYBOOK.md`
+   - `prompts/`
+   - `templates/`
+   - `hooks/`
+   - `ci/ci.yml`
+2. If using Claude Code:
+   - copy `templates/.claude/settings.json` -> `.claude/settings.json`
+   - copy `templates/.claude/commands/bootstrap-new.md` -> `.claude/commands/bootstrap-new.md`
+   - make `hooks/*.sh` executable
+3. Run `/bootstrap-new`
+4. Run the Phase 1 validator
+5. Start the orchestrator
+
+### Existing Project
+
+1. Copy into the repo:
+   - `PLAYBOOK.md`
+   - `prompts/`
+   - `templates/`
+   - `hooks/`
+   - `ci/ci.yml` if needed
+2. If using Claude Code:
+   - copy `templates/.claude/settings.json` -> `.claude/settings.json`
+   - copy `templates/.claude/commands/bootstrap-retrofit.md` -> `.claude/commands/bootstrap-retrofit.md`
+   - make `hooks/*.sh` executable
+3. Run `/bootstrap-retrofit`
+4. Run the Phase 1 validator
+5. Start the orchestrator from the first real incomplete task
+
+### Mental Model
+
+- `/bootstrap-*` = bootstrap entrypoint
+- validator = artifact gate
+- orchestrator = ongoing control-plane
+
 ---
 
 ## Freedom Ladder
