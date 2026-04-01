@@ -179,7 +179,10 @@ AI_workflow_playbook/
 │   ├── domains/
 │   │   └── healthcare.md            — HIPAA skeleton: T-HC-01..04 with full AC + test refs
 │   └── .claude/
-│       └── settings.json            — Claude Code hook configuration
+│       ├── settings.json            — Claude Code hook configuration
+│       └── commands/
+│           ├── bootstrap-new.md     — slash command entrypoint for greenfield bootstrap
+│           └── bootstrap-retrofit.md — slash command entrypoint for retrofit bootstrap
 ├── ci/
 │   └── ci.yml                       — GitHub Actions template (lint, tests, all 5 eval steps, NFR load test)
 └── reference/
@@ -214,9 +217,20 @@ It also supports optional heavy-task extension fields so risky tasks can carry p
 
 **reference/CODEX_CLI.md** documents real operational knowledge: file-based prompt invocation, known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns.
 
+**templates/.claude/commands/** provides command-style entrypoints so Claude Code can start the bootstrap flow without manual system-prompt replacement. The command is the entrypoint; the validator and orchestrator remain separate phases.
+
 ---
 
 ## How to Start a New Project
+
+Fast path with Claude Code:
+
+1. Copy `templates/.claude/settings.json` to `.claude/settings.json`
+2. Copy `templates/.claude/commands/bootstrap-new.md` to `.claude/commands/bootstrap-new.md`
+3. Copy `hooks/*.sh` and make them executable
+4. Run `/bootstrap-new`
+
+This does not replace validation or orchestration. It gives Claude a standard bootstrap entrypoint without changing the system prompt.
 
 1. Open a Claude session (Claude.ai or Claude Code).
 2. Set `prompts/STRATEGIST.md` as the system prompt.
@@ -250,6 +264,15 @@ The human sits at every phase gate. From there, the loop runs itself.
 Do not pretend the repo is greenfield.
 
 Use the playbook as a governance retrofit:
+
+Fast path with Claude Code:
+
+1. Copy `templates/.claude/settings.json` to `.claude/settings.json`
+2. Copy `templates/.claude/commands/bootstrap-retrofit.md` to `.claude/commands/bootstrap-retrofit.md`
+3. Copy `hooks/*.sh` and make them executable
+4. Run `/bootstrap-retrofit`
+
+This starts the retrofit bootstrap as a command-driven flow without replacing the system prompt.
 
 1. Generate `docs/ARCHITECTURE.md` from current reality, not from an imagined rewrite.
 2. Create `docs/CODEX_PROMPT.md` using the real current baseline and next task.

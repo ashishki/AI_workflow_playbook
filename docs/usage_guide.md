@@ -7,6 +7,23 @@ This guide explains how to use AI Workflow Playbook in practice for:
 
 ## New Repository
 
+### Fastest Claude Code entrypoint
+
+If you are using Claude Code, you do not need to replace the system prompt manually every time.
+
+Recommended setup:
+
+1. copy `templates/.claude/settings.json` to `.claude/settings.json`
+2. copy `templates/.claude/commands/bootstrap-new.md` to `.claude/commands/bootstrap-new.md`
+3. copy `hooks/*.sh`
+4. make hooks executable
+
+Then in Claude Code you can run:
+
+`/bootstrap-new`
+
+This command works as a user-level entrypoint. It tells Claude which local files to read and how to bootstrap the Phase 1 package.
+
 ### 1. Prepare the kit
 
 Copy into the target repo:
@@ -23,6 +40,8 @@ Use:
 
 - `prompts/STRATEGIST.md`
 - your filled project brief
+
+If you are using the command flow, `/bootstrap-new` performs this same entry step without you manually pasting the strategist prompt first.
 
 The output should create the initial governance package:
 
@@ -68,6 +87,20 @@ The orchestrator should:
 Do not fake greenfield.
 
 Retrofit the playbook onto the current repo reality instead of pretending the project is starting from zero.
+
+### Fastest Claude Code entrypoint
+
+If you are using Claude Code, copy:
+
+1. `templates/.claude/settings.json` -> `.claude/settings.json`
+2. `templates/.claude/commands/bootstrap-retrofit.md` -> `.claude/commands/bootstrap-retrofit.md`
+3. `hooks/*.sh`
+
+Then run:
+
+`/bootstrap-retrofit`
+
+This lets Claude start the retrofit flow as a command without changing the system prompt.
 
 ### 1. Add the governance kit
 
@@ -127,3 +160,24 @@ If you want to introduce the playbook gradually:
 7. hooks and packaging
 
 This order preserves momentum while tightening governance over time.
+
+## What Command-Based Bootstrap Does And Does Not Do
+
+What it does:
+
+- gives Claude a standard entrypoint
+- tells it which local files to read
+- tells it which artifact set to generate
+- keeps startup UX simple
+
+What it does not do:
+
+- it does not replace the need for clarification questions
+- it does not magically validate Phase 1 by itself
+- it does not replace the orchestrator
+
+The best mental model is:
+
+- slash command = bootstrap entrypoint
+- validator = artifact gate
+- orchestrator = control-plane for ongoing work
