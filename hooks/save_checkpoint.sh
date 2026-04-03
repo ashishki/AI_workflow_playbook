@@ -36,4 +36,16 @@ Resume: re-paste prompts/ORCHESTRATOR.md as system prompt.
         No manual state restoration needed.
 EOF
 
+# Optional: send a brief checkpoint notification when session ends.
+# Activated only when NOTIFICATION_TOKEN and NOTIFICATION_TARGET are set
+# AND SILENT is not 1 (set SILENT=1 for automated / cron-driven sessions).
+if [ "${SILENT:-0}" != "1" ] \
+   && [ -n "${NOTIFICATION_TOKEN:-}" ] \
+   && [ -n "${NOTIFICATION_TARGET:-}" ]; then
+  NOTIFY_TEXT="Session ended ${TIMESTAMP}. Active: ${ACTIVE_TASK}. Fix Queue: ${FIX_COUNT}. Resume: paste ORCHESTRATOR.md."
+  curl -s -X POST "https://api.telegram.org/bot${NOTIFICATION_TOKEN}/sendMessage" \
+    -d chat_id="${NOTIFICATION_TARGET}" \
+    --data-urlencode "text=${NOTIFY_TEXT}" > /dev/null 2>&1 || true
+fi
+
 exit 0

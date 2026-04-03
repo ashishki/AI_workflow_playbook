@@ -150,6 +150,38 @@ _Applies only when `docs/ARCHITECTURE.md` declares Runtime tier T2 or T3._
 - Network and secrets permissions must be scoped to the minimum needed for that worker.
 - Persistent runtimes (T3) require a documented drift-management plan: rebuild cadence, config reconciliation, or equivalent.
 
+#### Docker Security Baseline (T2 / T3)
+
+When Docker is used as the execution backend, the following flags are the minimum required configuration:
+
+```
+--cap-drop ALL
+--cap-add DAC_OVERRIDE,CHOWN,FOWNER
+--security-opt no-new-privileges
+--pids-limit 256
+--tmpfs /tmp:rw,noexec,nosuid,size=512m
+--network none   # unless explicit egress is required and declared in docs/ARCHITECTURE.md §Runtime and Isolation Model
+```
+
+Network and credentials:
+- Default network posture is `--network none`. Egress must be declared in ARCHITECTURE.md as an explicit list of allowed destinations before it is opened.
+- Credential files (API keys, tokens) must NOT be bind-mounted into containers by default. Pass secrets via environment variables with an explicit allowlist (`--env-file` with a scoped `.env`).
+- Subagents and child containers must not inherit the parent's full credential scope. Scope secrets to the minimum the child workload requires.
+
+Violation of network or credential rules: automatic P1.
+
+#### Hermes Agent — T3 Reference Implementation
+
+When the project is a **higher-autonomy agent** at runtime tier T3, Hermes Agent (NousResearch) is a validated candidate runtime. If Hermes is selected, the following rules apply in addition to the universal and T2/T3 rules above:
+
+- **AGENT-H1:** The learning loop (background memory daemon that autonomously creates skill files) must be explicitly evaluated in `docs/agent_eval.md §Learning Loop` before activation in production. Autonomous skill creation without this gate is a P1.
+- **AGENT-H2:** Community skills (external registry) must be treated as third-party dependencies: reviewed, pinned to a specific version, and listed in `docs/ARCHITECTURE.md §External Integrations`. Activating unreviewed community skills is a P2.
+- **AGENT-H3:** Cron jobs must run with `skip_memory=True` to prevent cross-session state contamination. Omitting this flag on scheduled jobs is a P1.
+- **AGENT-H4:** The plugin system (`~/.hermes/plugins/`) must contain only audited in-house plugins. Plugins run in-process with no sandboxing and are treated as application code — subject to the same review gates as any source file.
+- **AGENT-H5:** Self-evolution pipelines (automated prompt or skill optimization) that submit code changes must have an explicit human review gate before any change is applied. Fully automated application of self-evolution output is a P1.
+
+These rules are scoped to Hermes-based T3 deployments. They do not apply to T0/T1/T2 projects.
+
 ---
 
 ## Profile Rules: RAG

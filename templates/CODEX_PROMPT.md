@@ -22,6 +22,8 @@ Never delete history from this file. Append; do not replace.
 - **Ruff:** not yet configured
 - **Last CI run:** not yet configured
 - **Last updated:** {{DATE}}
+- **Session tokens (approx):** not yet tracked
+- **Cumulative phase tokens (approx):** not yet tracked
 
 ---
 

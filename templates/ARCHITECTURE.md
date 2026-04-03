@@ -66,6 +66,34 @@ For T0/T1 projects, keep this section concise. For T2/T3 projects, fill every ro
 
 State explicitly why a lower runtime tier is insufficient if selecting T2 or T3.
 
+#### T3 Reference Implementation: Hermes Agent
+
+<!--
+Include this sub-section only when Runtime tier = T3 AND Solution shape = Higher-autonomy agent.
+Delete if T0, T1, or T2, or if the T3 runtime is not Hermes-based.
+-->
+
+When T3 is selected with a higher-autonomy agent shape, Hermes Agent (NousResearch) is a validated candidate runtime. It provides:
+
+- Persistent server-resident execution with SQLite-backed session history
+- Messaging gateway (Telegram, Slack, Discord, and 12+ other platforms) for push notifications and human-in-the-loop interactions
+- Cron scheduling with file-lock isolation and configurable delivery targets
+- Subagent delegation (depth-2, summary-passing, restricted child toolsets)
+- Six execution backends: local, Docker, SSH, Modal, Daytona, Singularity
+
+**Required configuration for playbook compatibility:**
+
+| Rule | Setting | Rationale |
+|------|---------|-----------|
+| Cron job memory isolation | `skip_memory=True` on all scheduled jobs | Prevents cross-session state contamination |
+| Community skills | Disabled or pinned to reviewed versions | Community registry is an unaudited third-party surface |
+| Plugin system | In-house only; reviewed as application code | Plugins run in-process with no sandboxing |
+| Docker network | `--network none` by default | Egress must be declared and justified in §Network model |
+| Credential scope | Scoped per-workload via env allowlist | Subagents must not inherit parent's full credential set |
+| Learning loop | Evaluated in `docs/agent_eval.md` before production activation | Autonomous skill creation without review gate is a P1 |
+
+See `docs/IMPLEMENTATION_CONTRACT.md §Conditional Rules for T2 / T3 §Hermes Agent` for the full governance rules and P1/P2 violation thresholds.
+
 ---
 
 ## Inference / Model Strategy

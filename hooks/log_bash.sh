@@ -42,7 +42,10 @@ else
   STATUS="    "
 fi
 
-echo "[$TIMESTAMP] EXIT=${EXIT_CODE}  ${STATUS}  ${COMMAND}" >> "$LOG_FILE"
+# Task tag — set CURRENT_TASK env var in the orchestrator Execute block to annotate log lines
+TASK_TAG="${CURRENT_TASK:-?}"
+
+echo "[$TIMESTAMP] [TASK:${TASK_TAG}] EXIT=${EXIT_CODE}  ${STATUS}  ${COMMAND}" >> "$LOG_FILE"
 
 # For codex exec/run: extract IMPLEMENTATION_RESULT line from stdout
 if echo "$COMMAND" | grep -qE "codex (exec|run)"; then

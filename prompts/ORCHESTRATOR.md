@@ -368,6 +368,8 @@ Protocol:
 4. Run [YOUR_LINT_COMMAND] → zero errors
 5. Run [YOUR_TEST_COMMAND] after → must not decrease passing count
 
+Budget: if approaching iteration limit (70 %+ of your context or budget), finish the current file and stop — do not start new files. At 90 %+, commit what is complete and return BLOCKED with progress made and remaining work listed.
+
 Return:
 IMPLEMENTATION_RESULT: DONE | BLOCKED
 [BLOCKED: describe blocker]
@@ -381,6 +383,7 @@ AC status: [AC-1: PASS | FAIL, ...]
 
 Execute:
 ```bash
+export CURRENT_TASK="[T##]"   # replace [T##] with the actual task ID (e.g. T07)
 PROMPT=$(cat /tmp/orchestrator_codex_prompt.txt)
 cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 ```
@@ -845,6 +848,8 @@ Stop when:
 5. Deep review steps are strictly sequential — never parallelize
 6. Implementation agent non-zero exit or empty output → mark `[!]`, stop, report
 7. Stateless across sessions — re-reads everything from files on every run
+8. Budget-aware — if a subagent returns BLOCKED citing iteration or context budget, treat it as a normal partial completion: commit what is done, add remaining work to Fix Queue with a `FQ-NN: [T##] Budget-interrupted — [what remains]` entry, continue to next step
+9. Provider fallback — on transient LLM or tool failure (timeout, HTTP 5xx, "overloaded"), retry once after 30 s before marking blocked; on second consecutive failure, save checkpoint, print `PROVIDER_FAILURE: [error text]`, stop cleanly so the user can resume
 
 ---
 
