@@ -49,7 +49,7 @@ Profiles are activated in Phase 1 and treated as architectural constraints. Eval
 
 **Domain skeletons.** Pre-built task sets for specific regulated domains that drop into `docs/tasks.md` directly. The HIPAA skeleton (`templates/domains/healthcare.md`) provides four tasks — PHI field enforcement, audit log infrastructure, retention policy enforcement, compliance evidence collection — each with complete acceptance criteria, test function references, and a starter `compliance_eval.md`. The Strategist includes it automatically when Compliance=ON and HIPAA is the active framework.
 
-**Three-layer observability.** (1) Process level: Claude Code hooks block writes to immutable files, log every Bash command, write a session checkpoint on stop. (2) Production level: OBS-1..3 rules in `IMPLEMENTATION_CONTRACT.md` (spans, metrics, health endpoint) enforced by CODE review checks. (3) AI quality level: capability evaluation artifacts, Step 3.5 regression detection (>5% → P1, >15% → P0 Stop-Ship), optional CI eval gates. See `PLAYBOOK.md §12`.
+**Three-layer observability.** (1) Process level: Claude Code hooks block writes to immutable files; log every Bash command with `[TASK:T##]` tagging (set `CURRENT_TASK` env var in the orchestrator's Execute block); write a session checkpoint on stop with optional push notification (set `NOTIFICATION_TOKEN` + `NOTIFICATION_TARGET`, use `SILENT=1` to suppress for automated sessions). (2) Production level: OBS-1..3 rules in `IMPLEMENTATION_CONTRACT.md` (spans, metrics, health endpoint) enforced by CODE review checks. (3) AI quality level: capability evaluation artifacts, Step 3.5 regression detection (>5% → P1, >15% → P0 Stop-Ship), optional CI eval gates. See `PLAYBOOK.md §12`.
 
 **Codex-only code writing.** Claude-side direct edits to application code can be blocked with hooks so implementation goes only through `Bash -> codex exec`, preserving the implementer/reviewer split. A separate phase-boundary hook can block `CODEX_PROMPT.md` phase advancement until the completed phase has an archived review entry.
 
@@ -211,11 +211,11 @@ AI_workflow_playbook/
 │       └── AUDIT_INDEX.md           — audit index template
 ├── hooks/
 │   ├── guard_files.sh               — PreToolUse: blocks writes to immutable files
-│   ├── log_bash.sh                  — PostToolUse: audit log for Bash + Codex results
-│   └── save_checkpoint.sh           — Stop: writes Orchestrator state snapshot
+│   ├── log_bash.sh                  — PostToolUse: audit log with [TASK:T##] tagging; extracts Codex results
+│   └── save_checkpoint.sh           — Stop: writes Orchestrator snapshot; optional session-end notification (SILENT=1 for automated sessions)
 ├── templates/
 │   ├── ARCHITECTURE.md              — system architecture document template
-│   ├── CODEX_PROMPT.md              — session handoff template (all 5 profile state blocks)
+│   ├── CODEX_PROMPT.md              — session handoff template (all 5 profile state blocks; session token tracking)
 │   ├── IMPLEMENTATION_CONTRACT.md   — immutable rules template (universal + profile rules)
 │   ├── PROJECT_BRIEF.md             — input template for the Strategist
 │   ├── RETRIEVAL_EVAL.md            — RAG evaluation artifact template
@@ -250,7 +250,7 @@ AI_workflow_playbook/
 
 It also supports optional heavy-task extension fields so risky tasks can carry proof expectations without making all tasks expensive.
 
-**templates/ARCHITECTURE.md** now requires solution shape, governance level, runtime tier, deterministic-vs-LLM ownership, human approval boundaries, and anti-overengineering non-goals.
+**templates/ARCHITECTURE.md** now requires solution shape, governance level, runtime tier, deterministic-vs-LLM ownership, human approval boundaries, and anti-overengineering non-goals. When Runtime tier = T3 and solution shape = Higher-autonomy agent, an optional `§T3 Reference Implementation: Hermes Agent` sub-section provides a compatibility table and links to the governance rules in `IMPLEMENTATION_CONTRACT.md`.
 
 **templates/PROJECT_BRIEF.md** is the recommended input template before running the Strategist. It helps you describe goals, workflows, risks, AI scope, deterministic candidates, human approval boundaries, constraints, and success metrics without pre-deciding the architecture.
 

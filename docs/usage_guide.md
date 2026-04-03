@@ -212,3 +212,45 @@ The best mental model is:
 - slash command = bootstrap entrypoint
 - validator = artifact gate
 - orchestrator = control-plane for ongoing work
+
+## Operational Knobs
+
+Small env vars that change hook behaviour without touching code.
+
+### Task-tagged bash logs
+
+Set `CURRENT_TASK` before each `codex exec` invocation to annotate every bash log line with the active task ID:
+
+```bash
+export CURRENT_TASK="T07"
+PROMPT=$(cat /tmp/orchestrator_codex_prompt.txt)
+cd /path/to/project && codex exec -s workspace-write "$PROMPT"
+```
+
+The log at `docs/hooks_log.txt` will then show:
+
+```
+[2026-04-03T12:00:00Z] [TASK:T07] EXIT=0      pytest tests/ -q
+[2026-04-03T12:00:01Z] [TASK:T07]   └─ IMPLEMENTATION_RESULT: DONE
+```
+
+This is already included in the ORCHESTRATOR.md Execute block template — fill in the task ID each time.
+
+### Session-end notifications
+
+Set `NOTIFICATION_TOKEN` (Telegram bot token) and `NOTIFICATION_TARGET` (chat ID) in your environment to receive a brief push when the Claude Code session ends:
+
+```
+Session ended 2026-04-03T12:00:00Z. Active: T07 — implement auth middleware. Fix Queue: 2. Resume: paste ORCHESTRATOR.md.
+```
+
+Set `SILENT=1` to suppress notification delivery for automated or cron-driven sessions. The checkpoint file is always written regardless.
+
+### T3 projects — Hermes as runtime
+
+When the playbook's Phase 1 architecture decision results in a higher-autonomy agent at T3, Hermes Agent (NousResearch) is a validated application-level runtime. The governance rules that apply to Hermes-based T3 deployments live in:
+
+- `templates/ARCHITECTURE.md §T3 Reference Implementation` — required configuration table
+- `templates/IMPLEMENTATION_CONTRACT.md §Hermes Agent — T3 Reference Implementation` — AGENT-H1..H5 rules and P1/P2 thresholds
+
+The playbook governs the **development** of a Hermes-based application. Hermes is what gets built and deployed — not a replacement for the orchestrator or any governance layer.

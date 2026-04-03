@@ -231,7 +231,7 @@ Runtime substrate is a proportional control, not the definition of the system.
 | **T0** | Deterministic or managed-service execution; no special isolated mutable runtime | Most app logic, validators, fixed workflows, managed integrations |
 | **T1** | Container, devcontainer, or bounded worker runtime | Standard services, bounded tool execution, normal CI/workers |
 | **T2** | Ephemeral microVM-class or similarly isolated mutable runtime | Risky autonomous tasks require shell/workspace/toolchain mutation with strong isolation and easy rollback |
-| **T3** | Persistent VM-class or privileged long-lived isolated worker | Long-running autonomous execution with persistence, broader privilege, or continuity requirements |
+| **T3** | Persistent VM-class or privileged long-lived isolated worker | Long-running autonomous execution with persistence, broader privilege, or continuity requirements. Reference implementation: Hermes Agent — see `templates/ARCHITECTURE.md §T3 Reference Implementation`. |
 
 Select runtime tier by:
 - autonomy level
@@ -689,6 +689,9 @@ No manual prompting is needed between steps. The orchestrator stops only when:
 - A P0 finding cannot be resolved after 2 attempts
 - All tasks are complete
 - An API rate limit is hit (sends notification with resume time)
+- A transient provider failure persists after one retry (prints `PROVIDER_FAILURE:` and saves checkpoint)
+
+A budget-interrupted task (implementation agent returns BLOCKED citing context or iteration limits) is **not** a stop condition — the Orchestrator adds remaining work to the Fix Queue and continues normally.
 
 ### What ORCHESTRATOR.md Must Contain
 
@@ -1226,8 +1229,8 @@ Hooks execute at the shell process level, independent of LLM decisions. They enf
 | Hook event | File | What it does |
 |-----------|------|-------------|
 | `PreToolUse(Write\|Edit\|MultiEdit)` | `hooks/guard_files.sh` | Blocks writes to `docs/IMPLEMENTATION_CONTRACT.md`, `prompts/ORCHESTRATOR.md`, and `docs/audit/AUDIT_INDEX.md`. Exit 2 stops the tool and feeds the reason back to the Orchestrator. |
-| `PostToolUse(Bash)` | `hooks/log_bash.sh` | Appends every Bash command and its exit code to `docs/hooks_log.txt`. For `codex exec` invocations, also extracts and logs `IMPLEMENTATION_RESULT: DONE\|BLOCKED`. Async — does not slow the Orchestrator. |
-| `Stop` | `hooks/save_checkpoint.sh` | Writes active task, Fix Queue size, and timestamp to `/tmp/orchestrator_checkpoint.md` whenever the Claude Code session ends. Complements the file-based state in `docs/CODEX_PROMPT.md`. |
+| `PostToolUse(Bash)` | `hooks/log_bash.sh` | Appends every Bash command and its exit code to `docs/hooks_log.txt`, tagged with `[TASK:T##]` when `CURRENT_TASK` env var is set by the orchestrator's Execute block. For `codex exec` invocations, also extracts and logs `IMPLEMENTATION_RESULT: DONE\|BLOCKED`. Async — does not slow the Orchestrator. |
+| `Stop` | `hooks/save_checkpoint.sh` | Writes active task, Fix Queue size, and timestamp to `/tmp/orchestrator_checkpoint.md` whenever the Claude Code session ends. If `NOTIFICATION_TOKEN` and `NOTIFICATION_TARGET` env vars are set and `SILENT` ≠ 1, also sends a brief resume summary to the configured notification channel. Set `SILENT=1` for automated or cron-driven sessions to suppress delivery while still writing the checkpoint file. |
 
 **Activation** (per project, not in this template repo):
 1. Copy `hooks/` from the playbook to your project root.
@@ -1236,6 +1239,15 @@ Hooks execute at the shell process level, independent of LLM decisions. They enf
 4. Verify: Claude Code will now block writes to protected files and log all Bash commands.
 
 Override the protected file list via `PLAYBOOK_PROTECTED_FILES` env var (colon-separated paths). Override the log path via `PLAYBOOK_HOOKS_LOG`.
+
+Per-session env vars:
+
+| Variable | Hook | Effect |
+|----------|------|--------|
+| `CURRENT_TASK=T07` | `log_bash.sh` | Tags every log line with the active task ID — set this in the orchestrator's Execute block before each `codex exec` call |
+| `SILENT=1` | `save_checkpoint.sh` | Suppresses session-end notification; checkpoint file is still written — use for cron or automated sessions |
+| `NOTIFICATION_TOKEN=<bot_token>` | `save_checkpoint.sh` | Telegram bot token for session-end push — omit to disable |
+| `NOTIFICATION_TARGET=<chat_id>` | `save_checkpoint.sh` | Telegram chat ID for session-end push — omit to disable |
 
 ---
 
