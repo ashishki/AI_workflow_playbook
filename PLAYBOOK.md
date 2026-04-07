@@ -676,8 +676,10 @@ With the ritual, the orchestrator drives the entire cycle from a single paste. T
 Every session begins with a single action:
 
 ```
-Paste the entire contents of docs/prompts/ORCHESTRATOR.md into Claude Code.
+/orchestrate
 ```
+
+This slash command reads `docs/prompts/ORCHESTRATOR.md` and executes it. It is installed automatically when a project is bootstrapped — the file lives at `.claude/commands/orchestrate.md`. If the command is not available (e.g. legacy project), fall back to pasting the full contents of `docs/prompts/ORCHESTRATOR.md` manually.
 
 The orchestrator then:
 1. Reads `docs/CODEX_PROMPT.md` and `docs/tasks.md` to determine current state

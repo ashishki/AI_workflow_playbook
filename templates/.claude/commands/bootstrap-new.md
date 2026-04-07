@@ -25,6 +25,7 @@ Behavior:
    - `docs/prompts/PROMPT_S_STRATEGY.md`
    - `docs/audit/*`
    - `.github/workflows/ci.yml`
+   - `.claude/commands/orchestrate.md`
 3. Use the task schema from `templates/tasks_schema.md`.
 4. Mark only genuinely risky tasks with the optional heavy-task extension.
 5. Keep the architecture minimum-sufficient. Do not over-escalate solution shape, governance level, runtime tier, or capability profiles without justification.
