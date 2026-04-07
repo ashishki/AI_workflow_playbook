@@ -410,6 +410,20 @@ Submitting `IMPLEMENTATION_RESULT: DONE` without updating the compliance evaluat
 
 ---
 
+## Continuity and Retrieval Rules
+
+These rules define how prior context is retrieved without replacing canonical documents.
+
+- Canonical authority remains: `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION_CONTRACT.md`, `docs/tasks.md`, `docs/CODEX_PROMPT.md`, ADRs, review reports, evaluation artifacts, code, tests.
+- `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`, and `docs/EVIDENCE_INDEX.md` are retrieval aids. They summarize, index, and point; they do not overrule canonical files.
+- A task with `Context-Refs` must read those references before implementation begins.
+- Retrieval is mandatory when changing architecture, runtime, auth, retrieval semantics, compliance controls, migrations, or any open review finding.
+- If work supersedes a prior decision or invalidates evidence, update the retrieval artifact in the same task.
+
+Violation: P2. Repeated violation becomes P1 at age cap.
+
+---
+
 ## Mandatory Pre-Task Protocol
 
 Every Codex agent must execute these steps before writing any implementation code. No exceptions.
@@ -417,9 +431,10 @@ Every Codex agent must execute these steps before writing any implementation cod
 1. Read `docs/IMPLEMENTATION_CONTRACT.md` (this file) from top to bottom.
 2. Read the full task in `docs/tasks.md`, including all acceptance criteria, the Depends-On list, and the Notes section.
 3. Read all Depends-On tasks to understand the interface contracts your implementation must satisfy.
-4. Run `pytest -q`. Record the output: `{N} passing, {M} failed`. If M > 0, stop and report — you do not start on a broken baseline.
-5. Run `ruff check`. Must exit 0. If not, create a separate commit with ruff fixes, then restart the pre-task protocol.
-6. Confirm that every acceptance criterion in the task will have a corresponding test before implementation is considered complete.
+4. Read the task's `Context-Refs` and the relevant entries in `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`, and `docs/EVIDENCE_INDEX.md` when the task depends on prior decisions, proof, or findings.
+5. Run `pytest -q`. Record the output: `{N} passing, {M} failed`. If M > 0, stop and report — you do not start on a broken baseline.
+6. Run `ruff check`. Must exit 0. If not, create a separate commit with ruff fixes, then restart the pre-task protocol.
+7. Confirm that every acceptance criterion in the task will have a corresponding test before implementation is considered complete.
 
 Skipping any step in this protocol is a P1 finding in the next review cycle.
 
@@ -440,6 +455,7 @@ The following actions are never permitted. Violating these generates a P1 findin
 | Merging a PR with failing CI | The CI gate is non-negotiable |
 | Committing credentials or secrets of any kind | Irreversible exposure |
 | Expanding runtime tier or privilege surface without updating ARCHITECTURE.md / ADRs | Runtime escalation is a governance change |
+| Treating `DECISION_LOG.md`, `IMPLEMENTATION_JOURNAL.md`, or `EVIDENCE_INDEX.md` as authority over canonical docs | Retrieval surfaces are convenience, not source of truth |
 | Leaving commented-out code in a commit | Dead code degrades readability; delete it |
 | Adding a TODO without a task reference | Orphaned TODOs accumulate and are never addressed |
 

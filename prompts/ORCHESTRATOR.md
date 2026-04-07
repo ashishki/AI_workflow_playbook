@@ -129,6 +129,8 @@ If the next task does not map to those goals, stop and report before building.
 Read in full:
 1. `docs/CODEX_PROMPT.md` — baseline, Fix Queue, open findings, next task
 2. `docs/tasks.md` — full task graph with phases
+3. `docs/DECISION_LOG.md` and `docs/IMPLEMENTATION_JOURNAL.md` if they exist
+4. `docs/EVIDENCE_INDEX.md` if it exists
 
 **Compaction check.**
 
@@ -187,6 +189,24 @@ Determine:
 **A. Fix Queue** — non-empty? List each FIX-N item with file + change + test.
 
 **B. Next task** — task ID, title, AC list from tasks.md.
+
+**B1. Continuity retrieval check** — inspect the task's `Context-Refs` field.
+
+- If `Context-Refs` is present, read every referenced item before dispatching the implementer.
+- If the task resolves an open finding, changes architecture/runtime/auth/retrieval/compliance semantics, or is `Execution-Mode: heavy`, continuity retrieval is mandatory even when `Context-Refs` is absent:
+  - read the relevant decision log entries
+  - read recent implementation journal entries for the same scope
+  - read evidence rows or prior review artifacts for the same boundary
+- If required retrieval material is missing, print:
+
+```
+CONTINUITY_GAP
+Task: [T## — Title]
+Missing: [decision log entry | journal entry | evidence reference]
+Action required: add a scoped continuity reference or document why none is needed before implementation proceeds.
+```
+
+For ordinary isolated tasks with no risky history dependency, continuity retrieval remains optional.
 
 **C. Phase boundary?**
 All tasks in the current phase are `✅`/`[x]` and the next task belongs to a different phase.
@@ -258,6 +278,7 @@ Active Profiles: [RAG:ON/OFF | Tool-Use:ON/OFF | Agentic:ON/OFF | Planning:ON/OF
 Phase 1 Audit: [PASS (N warnings) | FAIL (N blockers) | skipped (mid-project) | not yet run]
 Phase boundary: [yes | no]
 Review tier: [light | deep] — [reason]
+Continuity context: [none | N refs read | CONTINUITY_GAP]
 Tag check: [OK | WARNING: T## — [pattern] suggests [profile], verify Type: tag]
 Complexity check: [OK | DETERMINISM_WARNING: ... | MODEL_STRATEGY_WARNING: ... | STOPPED: ...]
 Action: [what happens next]

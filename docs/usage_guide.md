@@ -79,6 +79,9 @@ The output should create the initial governance package:
 - `docs/tasks.md`
 - `docs/CODEX_PROMPT.md`
 - `docs/IMPLEMENTATION_CONTRACT.md`
+- `docs/DECISION_LOG.md`
+- `docs/IMPLEMENTATION_JOURNAL.md`
+- `docs/EVIDENCE_INDEX.md` when the project warrants an evidence index
 - `docs/prompts/ORCHESTRATOR.md`
 - `docs/prompts/PROMPT_S_STRATEGY.md`
 - `docs/audit/*`
@@ -149,6 +152,9 @@ Generate:
 - `docs/spec.md` for current supported behavior plus near-term intended scope
 - `docs/CODEX_PROMPT.md` with the real current baseline and next task
 - `docs/IMPLEMENTATION_CONTRACT.md` from stable rules the repo should obey going forward
+- `docs/DECISION_LOG.md` seeded from the real architecture, ADRs, and unresolved tradeoffs
+- `docs/IMPLEMENTATION_JOURNAL.md` starting from the retrofit session and the next real task
+- `docs/EVIDENCE_INDEX.md` only if the repo already has heavy tasks, evaluation artifacts, compliance evidence, or recurring review churn
 
 ### 3. Build forward-looking tasks
 
@@ -183,11 +189,13 @@ If you want to introduce the playbook gradually:
 1. task schema
 2. implementation contract
 3. CODEX_PROMPT resumable state
-4. audit prompts
-5. orchestrator loop
-6. hooks for codex-only code writes and phase-boundary guards
-7. selective heavy-task mode
-8. packaging
+4. decision log + implementation journal
+5. task `Context-Refs` for history-sensitive work
+6. audit prompts
+7. orchestrator loop
+8. hooks for codex-only code writes and phase-boundary guards
+9. selective heavy-task mode + evidence index
+10. packaging
 
 This order preserves momentum while tightening governance over time.
 

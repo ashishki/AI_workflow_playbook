@@ -64,6 +64,13 @@ List the parts that probably should stay deterministic unless the Strategist pro
 - **Sensitive / regulated data present:**
 - **Retention / deletion expectations:**
 
+## 8b. Continuity and Evidence
+
+- **Which decisions are likely to be revisited later:**
+- **What prior evidence or proof will future agents need to find quickly:**
+- **Will work span multiple sessions / agents / weeks:**
+- **Any existing docs, ADRs, audits, or notes that should become retrieval anchors:**
+
 ## 9. Integrations
 
 - **External APIs / services:**

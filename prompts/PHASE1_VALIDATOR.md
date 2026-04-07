@@ -24,6 +24,9 @@ This validator runs exactly once: after the Strategist produces Phase 1 delivera
 4. docs/CODEX_PROMPT.md
 5. docs/IMPLEMENTATION_CONTRACT.md
 6. .github/workflows/ci.yml
+7. docs/DECISION_LOG.md
+8. docs/IMPLEMENTATION_JOURNAL.md
+9. docs/EVIDENCE_INDEX.md (if present)
 
 ---
 
@@ -48,10 +51,11 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A1-13  § External Integrations — present (may be empty table if no integrations; cannot be missing)
 - [ ] A1-14  § File Layout — directory tree present
 - [ ] A1-15  § Runtime Contract — env vars table present (may be empty if no env vars required)
-- [ ] A1-16  § Non-Goals — explicit list present (at minimum one item, including over-architecture non-goal)
-- [ ] A1-17  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Index Strategy, §Risks all present
-- [ ] A1-18  For each active profile declared ON: a justification paragraph is present below the Capability Profiles table
-- [ ] A1-19  Compliance Profile declared ON or OFF — if ON, §Applicable Frameworks, §Data Classification, §Audit Log Requirements, §Risks all present
+- [ ] A1-16  § Continuity and Retrieval Model — canonical truth, retrieval convenience, and scoped retrieval rules declared
+- [ ] A1-17  § Non-Goals — explicit list present (at minimum one item, including over-architecture non-goal)
+- [ ] A1-18  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Index Strategy, §Risks all present
+- [ ] A1-19  For each active profile declared ON: a justification paragraph is present below the Capability Profiles table
+- [ ] A1-20  Compliance Profile declared ON or OFF — if ON, §Applicable Frameworks, §Data Classification, §Audit Log Requirements, §Risks all present
 
 ### A2 — docs/spec.md
 
@@ -67,6 +71,7 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A3-02  T02 present and is the CI setup task (Phase 1)
 - [ ] A3-03  T03 present and is the first tests task (Phase 1)
 - [ ] A3-04  Every task has: Owner, Phase, Type, Depends-On (explicit or "none"), Objective, Acceptance-Criteria (with at least one entry), Files section
+- [ ] A3-04a If a task resolves a finding, changes a risky boundary, or uses heavy mode, it includes `Context-Refs` or an explicit note that no historical context is required
 - [ ] A3-04b Every Acceptance-Criteria entry has a `test:` field pointing to a specific test function (format: `path/file.py::function`). An entry with a blank or missing `test:` field is a BLOCKER.
 - [ ] A3-05  T01 Depends-On is "none"
 - [ ] A3-06  T02 Depends-On includes T01
@@ -90,27 +95,35 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A4-08  Agentic State block present with a declared value — if Agentic = ON, active roles filled; if OFF, block present with `Agentic Profile: OFF`. Absent block = BLOCKER.
 - [ ] A4-09  Planning State block present with a declared value — if Planning = ON, schema version filled; if OFF, block present with `Planning Profile: OFF`. Absent block = BLOCKER.
 - [ ] A4-10  Compliance State block present with a declared value — if Compliance = ON, active frameworks filled; if Compliance = OFF, block is present with `Compliance Status: OFF` and remaining fields `n/a`. A CODEX_PROMPT.md with no Compliance State block at all is a BLOCKER regardless of profile status.
-- [ ] A4-11  If docs/nfr.md exists: NFR Baseline block present in CODEX_PROMPT.md
+- [ ] A4-11  § Continuity Pointers present and points to decision log / implementation journal / evidence index usage
+- [ ] A4-12  If docs/nfr.md exists: NFR Baseline block present in CODEX_PROMPT.md
 
 ### A5 — docs/IMPLEMENTATION_CONTRACT.md
 
 - [ ] A5-01  Status: IMMUTABLE line present at top
 - [ ] A5-02  § Universal Rules present (must include: SQL Safety, PII Policy, Credentials/Secrets, CI Gate — at minimum)
 - [ ] A5-03  § Project-Specific Rules present (may be empty if no project-specific rules, but section must exist)
-- [ ] A5-04  § Control Surface and Runtime Boundaries present with at least privileged actions, runtime mutation, and auditability; unused rows may be `N/A`
-- [ ] A5-05  If Runtime tier = T2 or T3 in ARCHITECTURE.md: conditional rollback / snapshot / drift-management rules are present
-- [ ] A5-06  § Mandatory Pre-Task Protocol present (must include: read contract, run pytest baseline, run ruff)
-- [ ] A5-07  § Forbidden Actions present (must include at minimum: SQL interpolation, skipping baseline capture, self-closing findings without code verification, deferring CI past Phase 1, unauthorized runtime-tier expansion)
-- [ ] A5-08  If RAG Profile = ON: § RAG Rules present with corpus isolation, schema versioning, max index age, insufficient_evidence requirement
-- [ ] A5-09  If Tool-Use Profile = ON: § Tool-Use Rules present
-- [ ] A5-10  If Agentic Profile = ON: § Agentic Rules present
-- [ ] A5-11  If Planning Profile = ON: § Planning Rules present
-- [ ] A5-12  If Compliance Profile = ON: § Compliance Rules present with data field handling, audit log format contract, audit integrity rules, evidence artifact requirements
-- [ ] A5-13  If RAG Profile = ON: `docs/retrieval_eval.md` file present and initialized (not a blank placeholder)
-- [ ] A5-14  If Tool-Use Profile = ON: `docs/tool_eval.md` file present and initialized
-- [ ] A5-15  If Agentic Profile = ON: `docs/agent_eval.md` file present and initialized
-- [ ] A5-16  If Planning Profile = ON: `docs/plan_eval.md` file present and initialized
-- [ ] A5-17  If Compliance Profile = ON: `docs/compliance_eval.md` file present and contains at least one control row with framework, description, and status fields
+- [ ] A5-04  § Continuity and Retrieval Rules present with canonical-vs-retrieval boundary and required lookup triggers
+- [ ] A5-05  § Control Surface and Runtime Boundaries present with at least privileged actions, runtime mutation, and auditability; unused rows may be `N/A`
+- [ ] A5-06  If Runtime tier = T2 or T3 in ARCHITECTURE.md: conditional rollback / snapshot / drift-management rules are present
+- [ ] A5-07  § Mandatory Pre-Task Protocol present (must include: read contract, run pytest baseline, run ruff, and required continuity lookup when applicable)
+- [ ] A5-08  § Forbidden Actions present (must include at minimum: SQL interpolation, skipping baseline capture, self-closing findings without code verification, deferring CI past Phase 1, unauthorized runtime-tier expansion)
+- [ ] A5-09  If RAG Profile = ON: § RAG Rules present with corpus isolation, schema versioning, max index age, insufficient_evidence requirement
+- [ ] A5-10  If Tool-Use Profile = ON: § Tool-Use Rules present
+- [ ] A5-11  If Agentic Profile = ON: § Agentic Rules present
+- [ ] A5-12  If Planning Profile = ON: § Planning Rules present
+- [ ] A5-13  If Compliance Profile = ON: § Compliance Rules present with data field handling, audit log format contract, audit integrity rules, evidence artifact requirements
+- [ ] A5-14  If RAG Profile = ON: `docs/retrieval_eval.md` file present and initialized (not a blank placeholder)
+- [ ] A5-15  If Tool-Use Profile = ON: `docs/tool_eval.md` file present and initialized
+- [ ] A5-16  If Agentic Profile = ON: `docs/agent_eval.md` file present and initialized
+- [ ] A5-17  If Planning Profile = ON: `docs/plan_eval.md` file present and initialized
+- [ ] A5-18  If Compliance Profile = ON: `docs/compliance_eval.md` file present and contains at least one control row with framework, description, and status fields
+
+### A5b — Continuity artifacts
+
+- [ ] A5b-01 `docs/DECISION_LOG.md` exists and every row points to a canonical source
+- [ ] A5b-02 `docs/IMPLEMENTATION_JOURNAL.md` exists and is initialized with the append-only entry template
+- [ ] A5b-03 If `docs/EVIDENCE_INDEX.md` exists: every row points to an actual artifact and does not claim authority over canonical proof
 
 ### A6 — .github/workflows/ci.yml
 
@@ -211,11 +224,12 @@ PHASE1_AUDIT: PASS | FAIL
 
 | Section | Checks | Passed | BLOCKER | WARNING |
 |---------|--------|--------|---------|---------|
-| A1 ARCHITECTURE.md | 19 | N | N | N |
+| A1 ARCHITECTURE.md | 20 | N | N | N |
 | A2 spec.md | 5 | N | N | N |
-| A3 tasks.md | 14 | N | N | N |
-| A4 CODEX_PROMPT.md | 11 | N | N | N |
-| A5 IMPLEMENTATION_CONTRACT.md | 17 | N | N | N |
+| A3 tasks.md | 15 | N | N | N |
+| A4 CODEX_PROMPT.md | 12 | N | N | N |
+| A5 IMPLEMENTATION_CONTRACT.md | 18 | N | N | N |
+| A5b continuity artifacts | 3 | N | N | N |
 | A6 ci.yml | 6 | N | N | N |
 | B Cross-document | 19 | N | N | N |
 | C Vagueness | — | — | N | N |

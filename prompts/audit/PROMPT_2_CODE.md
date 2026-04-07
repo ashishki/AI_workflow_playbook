@@ -33,6 +33,7 @@ GOV-1 Solution-shape drift — code does not introduce higher-autonomy behavior 
 GOV-2 Deterministic ownership — deterministic-owned subproblems in ARCHITECTURE.md are not implemented as LLM behavior without architectural approval
 GOV-3 Runtime-tier drift — code does not introduce shell/runtime mutation, privilege expansion, or persistent worker behavior above the declared runtime tier
 GOV-4 Human approval boundaries — unsafe or high-blast-radius actions still require the declared approval path
+GOV-5 Continuity discipline — tasks that supersede decisions, close repeated findings, or depend on prior proof update the decision log / journal / evidence index as required; no silent drift
 
 <!-- Run the following checks ONLY if RAG Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 RET-1  insufficient_evidence path — retrieval-backed handlers return `insufficient_evidence` when evidence is inadequate; no hallucinated fallback

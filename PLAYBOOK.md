@@ -45,6 +45,16 @@ This interpretation does not replace the operational layer map below. It clarifi
 - **IMPLEMENTATION_CONTRACT.md** is the unchanging floor. Architectural decisions may evolve; the contract does not, without an explicit ADR.
 - **Right-sizing comes first.** Solution shape, capability profiles, governance intensity, and runtime tier are separate decisions. None should be escalated without justification.
 
+### Continuity Model
+
+The playbook does not use fuzzy agent memory as authority. It uses explicit files with different roles:
+
+- **Canonical truth:** `ARCHITECTURE.md`, `IMPLEMENTATION_CONTRACT.md`, `tasks.md`, `CODEX_PROMPT.md`, ADRs, audit reports, evaluation artifacts, code, tests
+- **Retrieval convenience:** `DECISION_LOG.md`, `IMPLEMENTATION_JOURNAL.md`, `EVIDENCE_INDEX.md`, task-level `Context-Refs`
+- **Role-scoped recall:** the Strategist, Orchestrator, implementer, and reviewers read only the continuity artifacts relevant to the current task or finding
+
+Retrieval is mandatory when a task changes architecture, runtime, risky boundaries, open findings, or capability semantics. Otherwise, keep reads narrow.
+
 ### Operational Load Distribution
 
 To avoid burning one model family's limits unnecessarily, distribute work by role:
@@ -147,9 +157,22 @@ Phase 1 is not optional and is not abbreviated. Every project — regardless of 
 3. `docs/tasks.md` — complete task graph
 4. `docs/CODEX_PROMPT.md` — session handoff document, initialized
 5. `docs/IMPLEMENTATION_CONTRACT.md` — immutable rules, tailored to the project
-6. Project skeleton (directories, `__init__.py`, entry points)
-7. First tests (at minimum: smoke tests proving the skeleton works)
-8. CI setup (`.github/workflows/ci.yml`) — passing on first commit
+6. `docs/DECISION_LOG.md` — concise decision index pointing to canonical sources
+7. `docs/IMPLEMENTATION_JOURNAL.md` — append-only implementation continuity log
+8. Project skeleton (directories, `__init__.py`, entry points)
+9. First tests (at minimum: smoke tests proving the skeleton works)
+10. CI setup (`.github/workflows/ci.yml`) — passing on first commit
+
+`docs/EVIDENCE_INDEX.md` is required when the project uses heavy-task mode, active evaluation artifacts, compliance evidence, or recurring cross-phase findings. Lean projects may add it later.
+
+### Continuity Artifacts
+
+Use the continuity artifacts as follows:
+
+- `docs/DECISION_LOG.md` is a retrieval index for major architectural, policy, and scope decisions. It is not a replacement for ADRs or `ARCHITECTURE.md`.
+- `docs/IMPLEMENTATION_JOURNAL.md` records durable handoff context: why a change happened, what evidence was collected, and what the next agent must know.
+- `docs/EVIDENCE_INDEX.md` is an optional proof index. It helps reviewers and implementers find prior tests, evals, and review reports without treating summaries as evidence.
+- `Context-Refs` in `docs/tasks.md` point an agent to the small set of prior docs that must be read before implementation.
 
 ### Why CI Is Set Up in Phase 1
 

@@ -27,6 +27,15 @@ Never delete history from this file. Append; do not replace.
 
 ---
 
+## Continuity Pointers
+
+- **Decision log:** `docs/DECISION_LOG.md`
+- **Implementation journal:** `docs/IMPLEMENTATION_JOURNAL.md`
+- **Evidence index:** `docs/EVIDENCE_INDEX.md` (if present)
+- **Task-scoped context:** read `Context-Refs` in `docs/tasks.md` before broad searching
+
+---
+
 ## Next Task
 
 **T01: Project Skeleton**
@@ -320,9 +329,10 @@ Read these instructions every time you pick up a task. Do not skip steps.
 1. **Read `docs/IMPLEMENTATION_CONTRACT.md`** — before anything else. Know the rules before touching code.
 2. **Read the full task in `docs/tasks.md`** — including all acceptance criteria, file lists, and notes.
 3. **Read all Depends-On tasks** — understand the interface contracts your task must satisfy.
-4. **Run `pytest -q`** — capture the current baseline. Record: `N passing, M failed`. If M > 0, stop and report: you cannot add failures to an already-failing baseline.
-5. **Run `ruff check`** — must exit 0. If not, fix ruff issues first. Commit the ruff fix separately with message `chore(lint): resolve ruff issues`. Then re-run the pre-task protocol.
-6. **Write tests before or alongside implementation.** Every acceptance criterion has exactly one corresponding test (or more, never zero).
+4. **Read task `Context-Refs` and continuity artifacts as needed** — required when the task resolves a finding, changes a risky boundary, or depends on prior decisions / evidence.
+5. **Run `pytest -q`** — capture the current baseline. Record: `N passing, M failed`. If M > 0, stop and report: you cannot add failures to an already-failing baseline.
+6. **Run `ruff check`** — must exit 0. If not, fix ruff issues first. Commit the ruff fix separately with message `chore(lint): resolve ruff issues`. Then re-run the pre-task protocol.
+7. **Write tests before or alongside implementation.** Every acceptance criterion has exactly one corresponding test (or more, never zero).
 
 ### During Implementation
 
@@ -330,6 +340,7 @@ Read these instructions every time you pick up a task. Do not skip steps.
 - Read only the files you need. Use `grep` to find relevant sections first.
 - Do not modify files outside the task's scope without documenting why.
 - If you discover an interface mismatch or missing dependency, stop and report it. Do not silently patch adjacent tasks.
+- If you supersede a prior decision or close a repeated finding, update `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`, and `docs/EVIDENCE_INDEX.md` as applicable.
 
 ### Post-Task Protocol
 

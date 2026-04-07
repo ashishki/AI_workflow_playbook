@@ -546,6 +546,38 @@ not a real value. Actual values live in environment variables or a secrets manag
 
 ---
 
+## Continuity and Retrieval Model
+
+Define how this project preserves and retrieves prior context without replacing canonical files.
+
+### Canonical Truth
+
+| Artifact | Authority |
+|----------|-----------|
+| `docs/ARCHITECTURE.md` | architecture and boundary decisions |
+| `docs/IMPLEMENTATION_CONTRACT.md` | immutable implementation rules |
+| `docs/tasks.md` | execution contract and task graph |
+| `docs/CODEX_PROMPT.md` | live session state and open findings |
+| `docs/adr/` | formal decision changes |
+| `docs/audit/` + eval artifacts | review and proof history |
+
+### Retrieval Convenience
+
+| Artifact | Purpose | Required? |
+|----------|---------|-----------|
+| `docs/DECISION_LOG.md` | quick recall of why key decisions were made | Yes |
+| `docs/IMPLEMENTATION_JOURNAL.md` | cross-session implementation handoff | Yes |
+| `docs/EVIDENCE_INDEX.md` | proof lookup across reviews / evals / heavy tasks | {{Yes \| No}} |
+
+### Scoped Retrieval Rules
+
+- Tasks that touch architecture, runtime, auth, retrieval semantics, compliance, migrations, or open findings must include `Context-Refs` in `docs/tasks.md`.
+- Agents read task `Context-Refs` first, then only the linked canonical documents.
+- Retrieval artifacts summarize and index. They do not overrule canonical files.
+- If this project omits `docs/EVIDENCE_INDEX.md`, explain why the current evidence volume does not justify it.
+
+---
+
 ## Non-Goals (v1)
 
 The following are explicitly out of scope for v1. They may be addressed in future versions.

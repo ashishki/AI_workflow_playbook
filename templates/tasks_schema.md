@@ -41,10 +41,18 @@ Files:
   - {{path/to/file.py}}         # created or modified
   - {{tests/test_file.py}}      # test file (required)
 
+Context-Refs:
+  - {{optional pointer to prior decision / finding / evidence}}
+  - {{e.g., docs/DECISION_LOG.md#D-003}}
+
 Notes: |
   {{Optional. Constraints, gotchas, interface contracts from Depends-On tasks.
   Leave blank or omit if nothing notable.}}
 ```
+
+`Context-Refs` is optional for simple isolated work.
+Use it when a task depends on prior decisions, resolves an open finding, changes a risky boundary,
+or needs specific evidence from an earlier phase. Prefer a short, scoped list over broad reading.
 
 ### Optional heavy-task extension
 

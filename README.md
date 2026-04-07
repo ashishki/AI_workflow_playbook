@@ -19,7 +19,9 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **Strict role separation.** The Orchestrator never writes code. The implementation agent never reviews its own output. Review agents never write code. These are not conventions — they are enforced rules with explicit rationale.
 
-**Resumable state.** `docs/CODEX_PROMPT.md` is the single source of truth for all session state. Any agent, any session, any machine can resume exactly where the last one stopped. Nothing is held in conversational memory.
+**Resumable state.** `docs/CODEX_PROMPT.md` is the single source of truth for live session state. Any agent, any session, any machine can resume exactly where the last one stopped. Nothing operational is held in conversational memory.
+
+**Scoped continuity.** Prior decisions, implementation history, and proof are retrieved from explicit repo artifacts such as `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`, `docs/EVIDENCE_INDEX.md`, ADRs, and review archives. Retrieval is convenience, not authority.
 
 **Immutable contract.** `IMPLEMENTATION_CONTRACT.md` is the unchanging floor of the project. It does not evolve without an explicit ADR. This prevents incremental erosion of quality standards across phases.
 
@@ -61,14 +63,17 @@ Profiles are activated in Phase 1 and treated as architectural constraints. Eval
 
 A workflow for building AI-assisted software without assuming one default architecture. The Orchestrator runs the loop; Codex implements tasks in isolation; review agents check output at two tiers; the human approves phase gates. State lives in files, so sessions are resumable.
 
+This playbook does not add a generic "memory layer" above the repo. It adds disciplined retrieval surfaces for architectural recall, implementation continuity, prior findings, and durable evidence while keeping files as the source of truth.
+
 This playbook is intentionally not "agent-everywhere" and not "VM-by-default". It is designed to help teams choose the minimum sufficient solution shape, runtime substrate, and governance level for the actual risk and autonomy of the system.
 
 For practical setup and adoption, use:
 
-- [docs/usage_guide.md](/home/AI_workflow_playbook/docs/usage_guide.md) — end-to-end usage for new and existing repositories
-- [docs/architecture_layers.md](/home/AI_workflow_playbook/docs/architecture_layers.md) — concise layer map
-- [docs/heavy_task_mode.md](/home/AI_workflow_playbook/docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
-- [docs/coverage_experiment_report_ru.md](/home/AI_workflow_playbook/docs/coverage_experiment_report_ru.md) — Russian coverage experiment report: project-fit zones, heavy-task boundaries, and execution-substrate line
+- [docs/usage_guide.md](docs/usage_guide.md) — end-to-end usage for new and existing repositories
+- [docs/architecture_layers.md](docs/architecture_layers.md) — concise layer map
+- [docs/heavy_task_mode.md](docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
+- [docs/workflow_continuity_retrofit.md](docs/workflow_continuity_retrofit.md) — MemPalace assessment and the playbook-native continuity retrofit
+- [docs/coverage_experiment_report_ru.md](docs/coverage_experiment_report_ru.md) — Russian coverage experiment report: project-fit zones, heavy-task boundaries, and execution-substrate line
 
 ## Quick Start Cheat Sheet
 
@@ -216,7 +221,10 @@ AI_workflow_playbook/
 ├── templates/
 │   ├── ARCHITECTURE.md              — system architecture document template
 │   ├── CODEX_PROMPT.md              — session handoff template (all 5 profile state blocks; session token tracking)
+│   ├── DECISION_LOG.md              — architectural / product decision index (retrieval surface, not authority)
+│   ├── IMPLEMENTATION_JOURNAL.md    — append-only task / session continuity log
 │   ├── IMPLEMENTATION_CONTRACT.md   — immutable rules template (universal + profile rules)
+│   ├── EVIDENCE_INDEX.md            — index of durable proof, review findings, and evaluation artifacts
 │   ├── PROJECT_BRIEF.md             — input template for the Strategist
 │   ├── RETRIEVAL_EVAL.md            — RAG evaluation artifact template
 │   ├── NFR.md                       — non-functional requirements template (SLA table + history)
@@ -248,9 +256,15 @@ AI_workflow_playbook/
 
 **templates/tasks_schema.md** defines the task block format. Every task in `docs/tasks.md` must use this schema — `Type:` tag, structured `Acceptance-Criteria` entries each with a `test:` pointer, explicit `Depends-On`. The Orchestrator reads these fields directly; a missing `test:` field is a PHASE1_VALIDATOR blocker.
 
-It also supports optional heavy-task extension fields so risky tasks can carry proof expectations without making all tasks expensive.
+It also supports optional `Context-Refs` and heavy-task extension fields so risky or history-sensitive tasks can carry retrieval pointers and proof expectations without making all tasks expensive.
 
 **templates/ARCHITECTURE.md** now requires solution shape, governance level, runtime tier, deterministic-vs-LLM ownership, human approval boundaries, and anti-overengineering non-goals. When Runtime tier = T3 and solution shape = Higher-autonomy agent, an optional `§T3 Reference Implementation: Hermes Agent` sub-section provides a compatibility table and links to the governance rules in `IMPLEMENTATION_CONTRACT.md`.
+
+**templates/DECISION_LOG.md** is a lightweight index of why important choices were made and where the canonical record lives. It is not a replacement for `ARCHITECTURE.md` or ADRs; it makes them easier to retrieve.
+
+**templates/IMPLEMENTATION_JOURNAL.md** captures append-only task handoffs: what changed, why, what evidence was collected, and what the next agent should know. It is the playbook's reusable implementation memory surface.
+
+**templates/EVIDENCE_INDEX.md** indexes tests, evaluation runs, review findings, and manual proof so agents can retrieve prior evidence without treating summaries as truth.
 
 **templates/PROJECT_BRIEF.md** is the recommended input template before running the Strategist. It helps you describe goals, workflows, risks, AI scope, deterministic candidates, human approval boundaries, constraints, and success metrics without pre-deciding the architecture.
 
@@ -322,8 +336,9 @@ This starts the retrofit bootstrap as a command-driven flow without replacing th
 1. Generate `docs/ARCHITECTURE.md` from current reality, not from an imagined rewrite.
 2. Create `docs/CODEX_PROMPT.md` using the real current baseline and next task.
 3. Create `docs/IMPLEMENTATION_CONTRACT.md` around stable rules the current repo must now obey.
-4. Build `docs/tasks.md` as a forward contract for upcoming work, remediation, and cleanup.
-5. Add audit prompts, orchestrator prompt, and CI normalization where missing.
-6. Mark only genuinely risky migration/remediation tasks as heavy.
+4. Seed `docs/DECISION_LOG.md` and `docs/IMPLEMENTATION_JOURNAL.md` from active architecture and the next real task.
+5. Build `docs/tasks.md` as a forward contract for upcoming work, remediation, and cleanup.
+6. Add audit prompts, orchestrator prompt, and CI normalization where missing.
+7. Mark only genuinely risky migration/remediation tasks as heavy.
 
-See [docs/usage_guide.md](/home/AI_workflow_playbook/docs/usage_guide.md) for the full retrofit flow.
+See [docs/usage_guide.md](docs/usage_guide.md) for the full retrofit flow.

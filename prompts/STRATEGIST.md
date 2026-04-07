@@ -59,6 +59,7 @@ You must also establish:
 - **Privilege and isolation needs** — network egress, secrets access, privileged actions, persistence
 - **Cost of error / variance** — what breaks if the system is wrong, inconsistent, or slow
 - **Heavy-task candidates** — which planned tasks should use a proof-first path because tests + ordinary review are not enough evidence
+- **Continuity needs** — which decisions, findings, or proof future sessions must retrieve without re-reading the whole repo
 
 ---
 
@@ -86,6 +87,7 @@ System architecture document. Include:
 - **External Integrations** — table of third-party dependencies and what they're used for
 - **File Layout** — directory tree for the project
 - **Runtime Contract** — table of required environment variables (name, description, example value)
+- **Continuity and Retrieval Model** — canonical truth, retrieval convenience docs, when scoped retrieval is mandatory
 - **Non-Goals** — explicit list of what this system does NOT do, including anti-overengineering non-goals
 
 ### 2. `docs/spec.md`
@@ -126,6 +128,10 @@ Files:
   - {path/to/file.py}       # created or modified
   - {tests/test_file.py}    # test file — required
 
+Context-Refs:
+  - {optional prior decision / evidence pointer}
+  - {e.g., docs/DECISION_LOG.md#D-003}
+
 Notes: |
   {Interface contracts from Depends-On, edge cases, implementation constraints. Omit if none.}
 ```
@@ -163,6 +169,12 @@ Phase: 1
 - Ruff: not yet configured
 - Last CI: not yet configured
 
+## Continuity Pointers
+
+- Decision log: `docs/DECISION_LOG.md`
+- Implementation journal: `docs/IMPLEMENTATION_JOURNAL.md`
+- Evidence index: `docs/EVIDENCE_INDEX.md` (if present)
+
 ## Next Task
 
 T01: Project Skeleton
@@ -186,13 +198,14 @@ none
 1. Read `docs/IMPLEMENTATION_CONTRACT.md` before starting any task.
 2. Read the full task definition in `docs/tasks.md` before writing any code.
 3. Read all Depends-On tasks to understand interface contracts.
-4. Run `pytest` to capture the current baseline before making any changes.
-5. Run `ruff check` — must be zero before starting. Fix ruff issues first, in a separate commit.
-6. Write tests before or alongside implementation. Every acceptance criterion has a passing test.
-7. Update this file at every phase boundary (new baseline, next task, open findings).
-8. Commit with format: `type(scope): description` — one logical change per commit.
-9. When done: return `IMPLEMENTATION_RESULT: DONE` with the new baseline and what changed.
-10. When blocked: return `IMPLEMENTATION_RESULT: BLOCKED` with the exact blocker.
+4. Read task `Context-Refs` and relevant continuity artifacts when the task depends on prior decisions, findings, or evidence.
+5. Run `pytest` to capture the current baseline before making any changes.
+6. Run `ruff check` — must be zero before starting. Fix ruff issues first, in a separate commit.
+7. Write tests before or alongside implementation. Every acceptance criterion has a passing test.
+8. Update this file at every phase boundary (new baseline, next task, open findings).
+9. Commit with format: `type(scope): description` — one logical change per commit.
+10. When done: return `IMPLEMENTATION_RESULT: DONE` with the new baseline and what changed.
+11. When blocked: return `IMPLEMENTATION_RESULT: BLOCKED` with the exact blocker.
 ```
 
 ### 5. `docs/IMPLEMENTATION_CONTRACT.md`
@@ -224,6 +237,19 @@ Version: 1.0
 ## Governing Documents
 {table of documents that govern this project}
 ```
+
+### 5b. Continuity Artifacts
+
+Create the following retrieval surfaces:
+
+- `docs/DECISION_LOG.md` — concise index of important decisions with links to canonical sources
+- `docs/IMPLEMENTATION_JOURNAL.md` — append-only task / session continuity log
+- `docs/EVIDENCE_INDEX.md` — only when the project has heavy tasks, active evaluation artifacts, compliance evidence, or expected recurring findings
+
+Rules:
+- these files are retrieval aids, not authority
+- every entry must point to a canonical document, test, eval, or review artifact
+- do not invent a generic memory hierarchy beyond what the workflow needs
 
 ### 6. `.github/workflows/ci.yml`
 
