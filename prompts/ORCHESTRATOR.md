@@ -78,6 +78,7 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 | Planning | `plan:schema`, `plan:validation` |
 
 - Task changes retrieval semantics (when RAG = ON) — regardless of implementation mechanism: retrieval policy, chunking, index/metadata schema, evidence/citation format, corpus isolation, reindex/delete/lifecycle logic, or `insufficient_evidence` behavior (semantic ownership rule)
+- Task changes retrieval mode or modality scope (text-only vs multimodal, supported modalities, embedding model stability, fallback path)
 
 **Skip all review for:** doc-only patches, test-only changes, dependency bumps.
 
@@ -535,6 +536,7 @@ GOV-L1 Runtime-tier drift — no runtime mutation, privilege expansion, or persi
 If task tag is `rag:ingestion` or `rag:query` → also check:
 RAG-L1  insufficient_evidence path — query-time handlers return `insufficient_evidence` when evidence is inadequate; no hallucinated fallback present in the diff
 RAG-L2  Ingestion/query separation — no function mixes ingest-phase logic with query-time logic in the same scope
+RAG-L3  Retrieval mode drift — no silent change from text-only to multimodal (or modality-scope expansion) without corresponding architecture / eval updates
 
 If task tag is `tool:unsafe` → also check:
 TOOL-L1 Confirmation step — destructive tool has a distinct confirmation code path (an explicit branch, not a boolean flag or comment)
@@ -560,7 +562,7 @@ ISSUE_COUNT: [N]
 
 ISSUE_1:
 File: [path:line]
-Check: [SEC-N | CF | GOV-L1 | RAG-L1 | RAG-L2 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
+Check: [SEC-N | CF | GOV-L1 | RAG-L1 | RAG-L2 | RAG-L3 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
 Reviewer note: if you see a deterministic-vs-LLM mismatch, mention it as a warning in Description, but do not fail the task on that basis alone unless it also violates contract or runtime boundaries.
 Description: [what is wrong]
 Expected: [what it should be]
@@ -768,6 +770,7 @@ Rules:
 - Do not update docs/tasks.md — that was already patched by Consolidation Agent.
 - For each active profile with work completed this phase, update its state block in docs/CODEX_PROMPT.md:
   - `## RAG State` (RAG = ON): refresh retrieval baseline, open retrieval findings, index schema version, pending reindex actions. If retrieval behavior changed, note whether docs/retrieval_eval.md was updated.
+    Also refresh retrieval mode (`text-only` or `multimodal`), active modalities, and any preview-model fallback note if applicable.
   - `## Tool-Use State` (Tool-Use = ON): refresh registered tool schemas, unsafe-action guardrails, open tool findings.
   - `## Agentic State` (Agentic = ON): refresh agent roles in use, loop termination contract version, open agent findings.
   - `## Planning State` (Planning = ON): refresh plan schema version, open plan validation findings.

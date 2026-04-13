@@ -191,12 +191,27 @@ The `insufficient_evidence` path is **not optional**. When retrieved evidence do
 | Estimated size | {{Number of documents / chunks / tokens at index time}} |
 | Access control | {{Who/what can query which corpus segments}} |
 
+#### Retrieval / Embedding Strategy
+
+| Decision | Selection | Why |
+|----------|-----------|-----|
+| Retrieval mode | {{text-only \| multimodal}} | {{Why this is the minimum sufficient retrieval mode}} |
+| Modalities in scope | {{e.g., text only \| text + images \| text + PDFs}} | {{Which modalities are truly required now}} |
+| Text-only baseline considered? | {{yes \| no}} | {{If no, explain why not; if multimodal, comparison is expected}} |
+| Embedding provider / model | {{provider-neutral description + concrete model/version in project docs}} | {{Why this option fits quality, cost, and latency constraints}} |
+| Stability status | {{stable \| preview \| experimental}} | {{Risk posture for this choice}} |
+| Fallback / migration path | {{text-only fallback, prior model, or re-index plan}} | {{How retrieval continues if the model changes or is withdrawn}} |
+
+Bias toward `text-only` unless multimodal retrieval is clearly justified by product behavior. If `multimodal` is selected, explain why extracting text or metadata alone is insufficient.
+
 #### Index Strategy
 
 - **Embedding model:** {{Model name and version}} — rationale: {{why this model}}
 - **Chunking:** {{Strategy and chunk size}} — rationale: {{why this chunking approach}}
+- **Vector dimensions / representation contract:** {{dimension count or provider-managed opaque representation}} — rationale: {{why this is stable enough for the index design}}
 - **Index schema version:** v1 — changes require ADR; re-indexing required on schema change
 - **Max index age:** {{e.g., "24 hours"}} — staleness beyond this threshold must trigger an alert
+- **Evaluation plan:** {{text-only baseline, modality-specific query set, fallback checks}} — rationale: {{how retrieval quality will be validated}}
 
 #### Risks (RAG-specific)
 
@@ -207,6 +222,8 @@ The `insufficient_evidence` path is **not optional**. When retrieved evidence do
 | Stale index | Max age policy ({{MAX_AGE}}); staleness check on health endpoint |
 | Corpus isolation failure | {{Corpus-level ACL strategy — e.g., namespace per tenant, filter at retrieval layer}} |
 | Retrieval latency regression | Latency acceptance criteria per RAG task; tracked in baseline |
+| Multimodal cost or complexity overrun | {{Keep text-only as baseline; enable only the modalities that materially improve retrieval outcomes}} |
+| Preview model instability | {{Document stable vs. preview status; define fallback model and re-index / migration path}} |
 
 ### Profile: Tool-Use
 

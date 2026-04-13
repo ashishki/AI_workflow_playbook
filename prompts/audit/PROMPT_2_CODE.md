@@ -43,6 +43,8 @@ RET-4  Corpus isolation — no cross-corpus retrieval; corpus boundaries enforce
 RET-5  Retrieval regression — if retrieval logic changed, is `docs/retrieval_eval.md` updated with new results and baseline refreshed?
 RET-6  Ingestion/query-time separation — ingestion pipeline code and query-time code are in separate modules; no mixing
 RET-7  Answer quality tracking — if Phase ≥ 2, does `docs/retrieval_eval.md §Answer Quality Metrics` contain at least one completed evaluation run (Faithfulness, Completeness, Relevance scores recorded)? Absent after Phase 2 = P2. Also verify Evaluation History rows include a Corpus Version entry.
+RET-8  Retrieval mode discipline — no silent shift from text-only to multimodal retrieval, no unjustified modality-scope expansion, and no preview-model adoption without documented fallback / migration note
+RET-9  Multimodal proportionality — if multimodal retrieval is active, does `docs/retrieval_eval.md` compare against a text-only baseline or explain why that baseline is not feasible?
 
 <!-- Run the following checks ONLY if Tool-Use Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 TOOL-1 Tool Catalog completeness — every LLM-callable tool is listed in ARCHITECTURE.md §Tool Catalog with side-effect class (read/write/destructive), idempotency, and permission level; missing entry = P1

@@ -1,7 +1,7 @@
 # AI Workflow Playbook
 
 Version: 1.1
-Last updated: 2026-03-30
+Last updated: 2026-04-13
 
 ---
 
@@ -362,13 +362,36 @@ If the Strategist declares RAG Status ON, the following additional artifacts mus
 
 | Artifact | Path | Purpose |
 |----------|------|---------|
-| RAG Architecture section | `docs/ARCHITECTURE.md §Profile: RAG > §RAG Architecture` | Ingestion pipeline, query-time pipeline, corpus description, index strategy |
+| RAG Architecture section | `docs/ARCHITECTURE.md §Profile: RAG > §RAG Architecture` | Ingestion pipeline, query-time pipeline, corpus description, index strategy, retrieval / embedding strategy |
 | Retrieval spec section | `docs/spec.md §Retrieval` | What sources are indexed, update frequency, expected query types, citation requirements |
 | RAG tasks | `docs/tasks.md` | Separate tasks for ingestion pipeline and query-time retrieval (never merged into a single task) |
 | Retrieval acceptance criteria | `docs/tasks.md` (per task) | Retrieval-specific criteria: recall targets, latency bounds, insufficient-evidence path |
 | Profile contract rules | `docs/IMPLEMENTATION_CONTRACT.md §Profile Rules: RAG` | Corpus isolation, schema versioning, stale-index handling policy |
 | Profile state block | `docs/CODEX_PROMPT.md §Profile State: RAG` | Retrieval baseline, open retrieval findings, index schema version, pending reindex |
 | Evaluation artifact | `docs/retrieval_eval.md` | Retrieval quality metrics with own lifecycle (separate from code quality) |
+
+#### Retrieval / Embedding Strategy
+
+When RAG Status = ON, embedding strategy is an architectural decision, not an implementation footnote.
+
+The Strategist must declare one of:
+
+- **No retrieval** — RAG stays OFF; no embedding system is introduced
+- **Text-only retrieval** — default baseline when retrieval is needed
+- **Multimodal retrieval** — optional advanced path; justify explicitly
+
+Text-only retrieval remains a valid and often optimal baseline. Multimodal retrieval is justified only when the product truly depends on retrieving non-text evidence as first-class input rather than by converting everything to text or metadata.
+
+If multimodal retrieval is selected, `docs/ARCHITECTURE.md` must state:
+
+- modalities in scope now (for example: text + images, or text + PDFs)
+- why text-only retrieval is insufficient
+- expected value vs. added complexity, latency, and cost
+- model stability status (stable vs. preview / experimental)
+- fallback or migration path if the chosen model changes, degrades, or is withdrawn
+- evaluation plan, including comparison against a text-only baseline where feasible
+
+Do not enable multimodal retrieval for "future flexibility" alone. Unused modalities are architecture drift.
 
 #### RAG Workflow Shape
 
@@ -386,6 +409,8 @@ query analyze → retrieve → rerank/filter → assemble evidence → answer | 
 
 The `insufficient_evidence` path is not optional. If the retrieved evidence does not support an answer, the system must return `insufficient_evidence` rather than hallucinating a response. This path must have an explicit acceptance criterion and a test.
 
+The retrieval architecture must also declare whether retrieval is text-only or multimodal. If multimodal, list the supported modalities explicitly and explain why a text-only baseline is insufficient.
+
 #### Retrieval Quality is Evaluated Separately from Code Quality
 
 Retrieval correctness cannot be verified by code review alone. When RAG Status = ON, the review cycle must include retrieval-specific checks:
@@ -395,6 +420,8 @@ Retrieval correctness cannot be verified by code review alone. When RAG Status =
 - **Insufficient-evidence path**: Is the fallback path exercised in tests with queries that should not be answerable?
 - **Index staleness**: Is there a defined maximum age for indexed documents? Is it enforced?
 - **Corpus isolation**: If multi-tenant, are corpus boundaries enforced at the retrieval layer?
+- **Modality fit**: If multimodal retrieval is enabled, does each enabled modality improve the target workflow enough to justify its cost and latency?
+- **Baseline comparison**: If multimodal retrieval is enabled, is it compared against a text-only baseline rather than assumed superior?
 
 These checks are added to `PROMPT_2_CODE.md` (code review) and `PROMPT_1_ARCH.md` (architecture review) when RAG Status = ON.
 
@@ -409,6 +436,8 @@ The following risks apply only to RAG-profile projects and must be documented in
 | Stale index | Indexed documents fall out of date silently | Define max index age; add staleness check to health endpoint |
 | Corpus isolation failure | Retrieval crosses tenant or classification boundaries | Enforce corpus-level ACLs at the retrieval layer, not just application layer |
 | Retrieval latency regression | Adding reranking or larger corpora degrades p95 latency | Set latency acceptance criteria per retrieval task; track in baseline |
+| Multimodal overreach | Extra modalities add cost and complexity without measurable value | Default to text-only; require explicit justification and text-baseline comparison before enabling multimodal |
+| Preview model instability | Preview / experimental embedding model changes, degrades, or is withdrawn | Record stability status, fallback target, and migration / re-index plan in architecture |
 
 #### Orchestrator Handling of RAG Work
 
@@ -504,7 +533,7 @@ Worked examples that show expected Orchestrator behavior end-to-end. Use these t
 |--------|---------|
 | `BLOCK` | Orchestrator stops before spawning the implementer; user must confirm or correct tag |
 | `TASK_NOT_COMPLETE` | Implementation ran but Orchestrator withholds `✅`; light review found a check failure |
-| `LIGHT_REVIEW_EXPANDED` | Light review runs SEC-1…6 + CF + profile-conditional checks (RAG-L1/2, TOOL-L1, AGENT-L1, PLAN-L1) |
+| `LIGHT_REVIEW_EXPANDED` | Light review runs SEC-1…6 + CF + profile-conditional checks (RAG-L1/3, TOOL-L1, AGENT-L1, PLAN-L1) |
 | `DEEP_REVIEW_EXPANDED` | Phase boundary deep review runs the profile-specific check set (RET-N, TOOL-N, AGENT-N, PLAN-N) in addition to SEC+QUAL+CF |
 
 ---

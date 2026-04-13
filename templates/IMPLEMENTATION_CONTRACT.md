@@ -212,6 +212,14 @@ _Applies only when `docs/ARCHITECTURE.md` declares RAG Status = ON in the Capabi
 - Changing any schema parameter requires an ADR. After the ADR is filed, the corpus must be fully re-indexed before the new schema goes to production.
 - A partial index (some documents using old schema, some using new) is forbidden.
 
+### Embedding Strategy Declaration
+
+- Every RAG project must declare its retrieval mode in `docs/ARCHITECTURE.md`: `text-only` or `multimodal`.
+- `text-only` is the default baseline unless the architecture explicitly justifies multimodal retrieval.
+- If `multimodal` is selected, `docs/ARCHITECTURE.md` must name the modalities in scope, the reason text-only is insufficient, the expected cost/latency impact, and the fallback or migration path.
+- Preview / experimental embedding models require an explicit fallback target and re-index plan before production use.
+- Changing retrieval mode, supported modalities, embedding provider/model, vector dimensions (when applicable), or representation contract is a schema-affecting change and requires an ADR plus full re-index before production.
+
 ### Max Index Age
 
 - The maximum allowed age for indexed documents is: `{{MAX_INDEX_AGE, e.g., "24 hours"}}`.
@@ -237,6 +245,12 @@ A retrieval-related task (tagged `Type: rag:ingestion` or `Type: rag:query`, or 
 3. Any retrieval metric regressions are documented in the Regression Notes section with a justification.
 4. `docs/retrieval_eval.md §Answer Quality Metrics` is updated with current answer quality scores (Faithfulness, Completeness, Relevance) for the evaluation query set.
 5. The Evaluation History row for this run records the corpus version active at time of evaluation.
+
+If retrieval mode = `multimodal`, the task is also not complete unless:
+
+6. `docs/retrieval_eval.md` records modality-specific coverage for the affected workflow.
+7. Results are compared against a text-only baseline or a documented reason is given for why no text-only baseline is possible.
+8. Any preview / experimental model risk and fallback behavior are current in `docs/ARCHITECTURE.md` and `docs/retrieval_eval.md`.
 
 Submitting a task as `IMPLEMENTATION_RESULT: DONE` without fulfilling these conditions is a P1 finding. The code passing tests does not imply retrieval or answer quality is correct.
 

@@ -30,6 +30,8 @@ Write short, concrete answers. If something is unknown, say `unknown` rather tha
 - **Where AI may be needed:**
 - **Where AI is explicitly not wanted:**
 - **Possible retrieval / RAG need:**
+- **If retrieval is needed, is text-only likely sufficient or is multimodal evidence truly required:**
+- **If multimodal may be needed, which modalities and why:**
 - **Possible tool-use need:**
 - **Possible planning / agentic behavior need:**
 
@@ -103,6 +105,7 @@ Only fill what you know. The Strategist should still make the final recommendati
 - **Expected request / task volume:**
 - **If AI is used, should the system prefer smaller / cheaper models by default:**
 - **Any required capabilities:** reasoning / multimodal / function calling / long context / structured output
+- **Preview-model tolerance:** none / low / medium / high
 
 ## 13. Success Metrics
 

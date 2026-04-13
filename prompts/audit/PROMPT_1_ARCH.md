@@ -48,6 +48,8 @@ Output: docs/audit/ARCH_REPORT.md (overwrite).
 - Is the evidence/citation contract defined (format, fields, traceability to source)?
 - Is a freshness / max-index-age policy documented? Is it enforced at the health endpoint?
 - Is index schema versioning documented (ADR required before schema change; full re-index on change)?
+- Is retrieval mode declared explicitly (`text-only` or `multimodal`), and if multimodal is selected, are the in-scope modalities and the reason text-only is insufficient documented?
+- If multimodal retrieval is selected, are cost/latency implications, model stability (stable vs preview), and fallback / migration path documented?
 - Are retrieval observability expectations defined (latency, recall, evidence quality signals)?
 - Verdict per check: PASS | DRIFT | VIOLATION | N/A
 
@@ -120,6 +122,8 @@ _Omit this section entirely if RAG Status = OFF._
 | Evidence/citation contract defined | | |
 | Freshness / max-index-age policy | | |
 | Index schema versioning | | |
+| Retrieval mode and modality scope explicit | | |
+| Multimodal justification / fallback documented | | |
 | Retrieval observability expectations | | |
 
 ## Tool-Use Architecture Checks

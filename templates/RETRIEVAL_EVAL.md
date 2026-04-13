@@ -45,16 +45,27 @@ Version: {{N}}
 Last updated: {{DATE}}
 Changed by: {{TASK_ID}} — {{TASK_TITLE}}
 
+## Retrieval Mode Declaration
+
+| Property | Value |
+|----------|-------|
+| Retrieval mode | {{text-only \| multimodal}} |
+| Modalities evaluated | {{text only \| text + images \| text + PDFs \| ...}} |
+| Text-only baseline available? | {{yes \| no}} |
+| Baseline comparison target | {{task / run / artifact ref \| n/a with reason}} |
+| Stability status | {{stable \| preview \| experimental}} |
+| Fallback path | {{fallback model / text-only path / re-index plan}} |
+
 ---
 
 ## Evaluation Dataset
 
-| ID | Query | Query Type | Expected top document(s) | Notes |
-|----|-------|------------|--------------------------|-------|
-| Q01 | {{query}} | simple | {{doc_id or title}} | {{e.g., canonical answer, section}} |
-| Q02 | {{query}} | multi-doc | | |
-| Q03 | {{query}} | multi-hop | | |
-| Q-NA-01 | {{query with no good answer}} | no-answer | — (should return insufficient_evidence) | no-answer test case |
+| ID | Query | Query Type | Primary modality | Expected top document(s) | Notes |
+|----|-------|------------|------------------|--------------------------|-------|
+| Q01 | {{query}} | simple | {{text \| image \| pdf \| audio \| video}} | {{doc_id or title}} | {{e.g., canonical answer, section}} |
+| Q02 | {{query}} | multi-doc | {{...}} | | |
+| Q03 | {{query}} | multi-hop | {{...}} | | |
+| Q-NA-01 | {{query with no good answer}} | no-answer | {{...}} | — (should return insufficient_evidence) | no-answer test case |
 
 <!--
 Maintain at least 10 representative queries.
@@ -67,6 +78,7 @@ Type coverage requirements:
 - no-answer: no document in corpus answers the query; tests the insufficient_evidence path
 
 Cover at least 3 of the 4 types. A dataset that is all simple queries will miss entire failure classes.
+If retrieval mode is multimodal, cover each in-scope modality with at least one representative query and at least one mixed-modality retrieval path if the product uses one.
 Keep the dataset append-only. Add new queries; do not remove old ones.
 -->
 
@@ -107,6 +119,20 @@ _Recorded at: {{DATE}} after {{TASK_ID}}_
 | No-answer accuracy | | | | |
 | Median retrieval latency | | | | |
 | p95 retrieval latency | | | | |
+
+---
+
+## Baseline Comparison
+
+Use this section when retrieval mode is `multimodal`, and optionally for text-only changes when comparing alternatives.
+
+| Comparison | Previous / baseline | Current | Decision note |
+|------------|---------------------|---------|---------------|
+| Text-only baseline quality | {{metric summary or run ref}} | {{metric summary or run ref}} | {{why current mode stays or should revert}} |
+| Text-only baseline latency/cost | {{summary}} | {{summary}} | {{trade-off note}} |
+| Fallback behavior | {{what the system does when the target modality underperforms}} | {{current result}} | {{acceptable / not acceptable}} |
+
+If no text-only baseline exists for a multimodal system, explain why that comparison is not feasible.
 
 ---
 
@@ -166,6 +192,12 @@ Did no-answer queries correctly trigger `insufficient_evidence`?
 | Q-NA-01 | | insufficient_evidence | |
 
 Notes: {{any patterns or failure modes observed}}
+
+## Modality-Specific Notes
+
+Document which modalities helped, which underperformed, and whether any modality should be removed from scope.
+
+{{none | modality-specific observations}}
 
 ---
 

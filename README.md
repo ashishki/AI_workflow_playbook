@@ -39,7 +39,7 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 | Profile | Governs | Review checks | Evaluation artifact |
 |---------|---------|---------------|---------------------|
-| **RAG** | Document retrieval: ingestion pipeline, query-time retrieval, `insufficient_evidence` path | RET-1..7 | `retrieval_eval.md` |
+| **RAG** | Document retrieval: ingestion pipeline, query-time retrieval, explicit embedding strategy, `insufficient_evidence` path | RET-1..9 | `retrieval_eval.md` |
 | **Tool-Use** | LLM-directed tool calls: schemas, side effects, unsafe-action gates, idempotency | TOOL-1..5 | `tool_eval.md` |
 | **Agentic** | Multi-step decision loops: roles, authority boundaries, loop termination contract | AGENT-1..5 | `agent_eval.md` |
 | **Planning** | Structured plan output as primary deliverable: schema, validation gate, plan-to-execution contract | PLAN-1..4 | `plan_eval.md` |

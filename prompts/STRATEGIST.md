@@ -36,6 +36,8 @@ When uncertain about how to structure a document or define a task, consult the t
 
 Adapt the templates to your project. Do not copy specifics from any example project.
 
+If retrieval is needed, bias toward text-only retrieval unless the project description shows that non-text evidence must be retrieved as a first-class signal. Multimodal retrieval is an advanced path and must be justified in value, cost, latency, evaluation burden, and fallback planning.
+
 ---
 
 ## Input
@@ -80,6 +82,7 @@ System architecture document. Include:
 - **Human Approval Boundaries** — what remains gated by human approval and why
 - **Minimum Viable Control Surface** — the smallest set of controls justified for this system
 - **Model Strategy** — per-workload model choice, fallback path, and what will be measured
+- **Retrieval / Embedding Strategy** — if retrieval exists: no retrieval vs text-only vs multimodal, modality scope, why multimodal is or is not justified, fallback path, and what will be measured
 - **Component Table** — every significant component: name, file/directory, responsibility
 - **Data Flow** — numbered steps for the primary request path (happy path, end to end)
 - **Tech Stack** — table with: component, technology choice, rationale for the choice

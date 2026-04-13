@@ -53,7 +53,7 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A1-15  § Runtime Contract — env vars table present (may be empty if no env vars required)
 - [ ] A1-16  § Continuity and Retrieval Model — canonical truth, retrieval convenience, and scoped retrieval rules declared
 - [ ] A1-17  § Non-Goals — explicit list present (at minimum one item, including over-architecture non-goal)
-- [ ] A1-18  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Index Strategy, §Risks all present
+- [ ] A1-18  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Retrieval / Embedding Strategy, §Index Strategy, §Risks all present
 - [ ] A1-19  For each active profile declared ON: a justification paragraph is present below the Capability Profiles table
 - [ ] A1-20  Compliance Profile declared ON or OFF — if ON, §Applicable Frameworks, §Data Classification, §Audit Log Requirements, §Risks all present
 
@@ -63,7 +63,7 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A2-02  § User Roles — at least one role defined
 - [ ] A2-03  At least one feature area present with: feature name, description, acceptance criteria, out-of-scope section
 - [ ] A2-04  Acceptance criteria are numbered and specific (see vagueness check in Part C)
-- [ ] A2-05  If RAG Profile = ON: § Retrieval section present with sources indexed, query types, citation format, insufficient_evidence behavior
+- [ ] A2-05  If RAG Profile = ON: § Retrieval section present with sources indexed, query types, citation format, insufficient_evidence behavior, and retrieval mode (`text-only` or `multimodal`)
 
 ### A3 — docs/tasks.md
 
@@ -108,7 +108,7 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A5-06  If Runtime tier = T2 or T3 in ARCHITECTURE.md: conditional rollback / snapshot / drift-management rules are present
 - [ ] A5-07  § Mandatory Pre-Task Protocol present (must include: read contract, run pytest baseline, run ruff, and required continuity lookup when applicable)
 - [ ] A5-08  § Forbidden Actions present (must include at minimum: SQL interpolation, skipping baseline capture, self-closing findings without code verification, deferring CI past Phase 1, unauthorized runtime-tier expansion)
-- [ ] A5-09  If RAG Profile = ON: § RAG Rules present with corpus isolation, schema versioning, max index age, insufficient_evidence requirement
+- [ ] A5-09  If RAG Profile = ON: § RAG Rules present with corpus isolation, schema versioning, max index age, insufficient_evidence requirement, and embedding-strategy declaration rules
 - [ ] A5-10  If Tool-Use Profile = ON: § Tool-Use Rules present
 - [ ] A5-11  If Agentic Profile = ON: § Agentic Rules present
 - [ ] A5-12  If Planning Profile = ON: § Planning Rules present
@@ -146,6 +146,7 @@ For each check, read both referenced documents and verify the claim. Mark CONSIS
 - [ ] B-04  Planning Profile consistency: ARCHITECTURE.md Capability Profiles table matches CODEX_PROMPT.md Planning State block
 - [ ] B-04b Compliance Profile consistency: ARCHITECTURE.md Capability Profiles table matches CODEX_PROMPT.md Compliance State block
 - [ ] B-05  RAG tasks consistency (if RAG = ON): ARCHITECTURE.md declares RAG ON → tasks.md contains rag:ingestion and rag:query tagged tasks → IMPLEMENTATION_CONTRACT.md contains § RAG Rules
+- [ ] B-05b Retrieval mode consistency (if RAG = ON): ARCHITECTURE.md declares retrieval mode (`text-only` or `multimodal`) → spec.md retrieval section matches → IMPLEMENTATION_CONTRACT.md and retrieval_eval.md use the same mode
 - [ ] B-06  Tool-Use tasks consistency (if Tool-Use = ON): tasks.md contains tool:schema tagged task → IMPLEMENTATION_CONTRACT.md contains § Tool-Use Rules
 - [ ] B-07  Agentic tasks consistency (if Agentic = ON): tasks.md contains agent:loop or agent:termination tagged task → IMPLEMENTATION_CONTRACT.md contains § Agentic Rules
 - [ ] B-08  Planning tasks consistency (if Planning = ON): tasks.md contains plan:schema tagged task → IMPLEMENTATION_CONTRACT.md contains § Planning Rules
@@ -231,7 +232,7 @@ PHASE1_AUDIT: PASS | FAIL
 | A5 IMPLEMENTATION_CONTRACT.md | 18 | N | N | N |
 | A5b continuity artifacts | 3 | N | N | N |
 | A6 ci.yml | 6 | N | N | N |
-| B Cross-document | 19 | N | N | N |
+| B Cross-document | 20 | N | N | N |
 | C Vagueness | — | — | N | N |
 | D Placeholder Check | — | — | N | N |
 | **Total** | | | | |
