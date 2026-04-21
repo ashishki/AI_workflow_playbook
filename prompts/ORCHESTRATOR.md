@@ -323,13 +323,15 @@ Write to `/tmp/orchestrator_codex_prompt.txt`:
 You are the implementation agent for {{PROJECT_NAME}}.
 Project root: {{PROJECT_ROOT}}
 
-Read before writing any code:
-1. docs/CODEX_PROMPT.md (full — IMPLEMENTATION CONTRACT section is mandatory)
-2. docs/IMPLEMENTATION_CONTRACT.md — rules A–I, never violate
-3. docs/tasks.md — entry for [FIX-N]
+Use the prompt as the primary working context. Do not broad-read project docs unless this fix is ambiguous or crosses a risky boundary.
+
+Inline digest:
+- Fix Queue context: [paste Fix Queue entry verbatim]
+- Applicable contract rules: [paste only the rules relevant to this fix]
+- Current file scope / likely files: [paths]
+- Dependency facts from prior tasks or findings: [1-3 bullets or "none"]
 
 Assignment: [FIX-N] — [Title]
-[paste Fix Queue entry verbatim]
 
 Rules: fix ONLY what is described. Every fix needs a failing→passing test.
 Run: cd {{PROJECT_ROOT}} && [YOUR_TEST_COMMAND]
@@ -363,11 +365,7 @@ Write to `/tmp/orchestrator_codex_prompt.txt`:
 You are the implementation agent for {{PROJECT_NAME}}.
 Project root: {{PROJECT_ROOT}}
 
-Read before writing any code:
-1. docs/CODEX_PROMPT.md (full — SESSION HANDOFF + IMPLEMENTATION CONTRACT)
-2. docs/IMPLEMENTATION_CONTRACT.md — rules A–I, never violate
-3. docs/ARCHITECTURE.md — sections relevant to this task
-4. docs/tasks.md — entry for [T##] only
+Use this prompt as the primary working context. Do not start by reading full project documents unless the task is architecture-shaping, security-sensitive, ambiguous, or explicitly marked as needing broader retrieval.
 
 Assignment: [T##] — [Title]
 
@@ -377,15 +375,27 @@ Acceptance criteria (each must have a passing test):
 Files to create/modify:
 [paste file scope verbatim]
 
+Inline dependency facts:
+- Depends-On completed work: [artifact and file path bullets; not "read prior tasks"]
+- Context refs to consult only if needed: [specific file / section bullets or "none"]
+
 Architectural constraints to respect:
 - Declared solution shape: [from ARCHITECTURE.md]
 - Declared runtime tier: [from ARCHITECTURE.md]
 - Deterministic subproblems that must stay non-LLM: [relevant entries only]
 - Human approval boundaries: [relevant entries only]
 
+Applicable contract rules only:
+- [rule 1]
+- [rule 2]
+- [rule 3]
+
+Immediate flow / pipeline:
+- [one-line execution flow relevant to this task, or "n/a"]
+
 Protocol:
 1. Run [YOUR_TEST_COMMAND] → record baseline BEFORE any changes
-2. Read all Depends-On task entries
+2. Open additional docs only when the inline digest is insufficient for correctness
 3. Write tests alongside code
 4. Run [YOUR_LINT_COMMAND] → zero errors
 5. Run [YOUR_TEST_COMMAND] after → must not decrease passing count

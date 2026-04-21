@@ -40,7 +40,15 @@ Never delete history from this file. Append; do not replace.
 
 **T01: Project Skeleton**
 
-Read T01 in `docs/tasks.md` for the full specification, acceptance criteria, and file list.
+Before implementation, the orchestrator should hand Codex a narrow task digest inline:
+
+- assignment and acceptance criteria
+- file scope
+- applicable contract rules only
+- dependency facts from prior tasks
+- immediate pipeline / flow if one matters
+
+Only send Codex to full documents when the task is architecture-shaping, security-sensitive, ambiguous, or otherwise too risky to compress safely.
 
 ---
 
@@ -326,10 +334,10 @@ Read these instructions every time you pick up a task. Do not skip steps.
 
 ### Pre-Task Protocol (mandatory — do not skip)
 
-1. **Read `docs/IMPLEMENTATION_CONTRACT.md`** — before anything else. Know the rules before touching code.
-2. **Read the full task in `docs/tasks.md`** — including all acceptance criteria, file lists, and notes.
-3. **Read all Depends-On tasks** — understand the interface contracts your task must satisfy.
-4. **Read task `Context-Refs` and continuity artifacts as needed** — required when the task resolves a finding, changes a risky boundary, or depends on prior decisions / evidence.
+1. **Read the orchestrator's inline task digest first** — assignment, acceptance criteria, file scope, dependency facts, and applicable rules should already be summarized there.
+2. **Read `docs/tasks.md` for the current task entry only** when the digest references details that must be copied exactly.
+3. **Read `docs/IMPLEMENTATION_CONTRACT.md` only if the digest did not inline the applicable rules** or if the task crosses a risky boundary.
+4. **Read Depends-On tasks, `Context-Refs`, and continuity artifacts only when required** — mandatory for architecture changes, risky boundaries, open findings, or tasks where prior interfaces / evidence materially constrain the implementation.
 5. **Run `pytest -q`** — capture the current baseline. Record: `N passing, M failed`. If M > 0, stop and report: you cannot add failures to an already-failing baseline.
 6. **Run `ruff check`** — must exit 0. If not, fix ruff issues first. Commit the ruff fix separately with message `chore(lint): resolve ruff issues`. Then re-run the pre-task protocol.
 7. **Write tests before or alongside implementation.** Every acceptance criterion has exactly one corresponding test (or more, never zero).

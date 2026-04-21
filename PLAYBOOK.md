@@ -55,6 +55,35 @@ The playbook does not use fuzzy agent memory as authority. It uses explicit file
 
 Retrieval is mandatory when a task changes architecture, runtime, risky boundaries, open findings, or capability semantics. Otherwise, keep reads narrow.
 
+### Prompt Context Policy
+
+This playbook treats prompt design as an execution concern, not just a documentation concern. A good implementation prompt is a compressed, task-ready digest of the relevant context, not a list of files for the model to discover and summarize itself.
+
+Default rule: prefer `inline digest` over `read these docs`.
+
+- inline only the facts that change implementation behavior: applicable contract rules, task dependencies, concrete prior artifacts, narrow architectural constraints, and the immediate pipeline / flow
+- keep full-document reads for architecture-shaping, security-sensitive, ambiguous, or review-heavy tasks where compression would hide important tradeoffs
+- if a large document contributes only a few actionable facts, put those facts directly in the prompt instead of linking the document
+- task prompts should usually contain the minimum executable context needed to start coding without opening multiple additional files
+
+Prompt anti-patterns:
+
+- "Read `ARCHITECTURE.md`, `IMPLEMENTATION_CONTRACT.md`, `spec.md`, and `tasks.md` before writing code"
+- "Read all Depends-On tasks"
+- "See `spec.md §X` for the pipeline"
+
+Preferred replacements:
+
+- "Applicable contract rules for this task: [3-6 bullets]"
+- "`T21` done — added `SourceDocument` in `app/retrieval/types.py`; `GoogleDocsSourceConnector` in `gdocs_client.py`"
+- "Pipeline: source connector -> normalized document -> chunking -> embeddings -> index"
+
+Guardrails:
+
+- if the implementation agent would need to open more than one extra document before starting, the prompt is probably under-digested
+- if a task is routine and the prompt mostly contains references to canonical docs, the prompt is probably over-indexed
+- compact prompts reduce token spend, but never omit a rule that materially changes correctness, safety, or interface compatibility
+
 ### Operational Load Distribution
 
 To avoid burning one model family's limits unnecessarily, distribute work by role:
@@ -66,6 +95,7 @@ Operational rules:
 - do not spend architecture-grade context on routine file edits
 - do not spend implementation-grade runs on broad architecture reasoning
 - prefer small tasks with explicit file scope; this reduces token load for both sides
+- prefer pre-digested implementation prompts; do not make Codex reconstruct narrow task context from multiple long docs unless the task genuinely needs broad retrieval
 - run deep review only at phase boundaries or real risk boundaries, not after every small task
 - compact `CODEX_PROMPT.md` and phase history regularly so both agents read summaries, not full history
 
@@ -845,11 +875,12 @@ Each task is executed by a Codex subagent. The orchestrator spawns the subagent 
 
 The following steps are mandatory before writing any implementation code:
 
-1. **Read the full task** in `tasks.md` — including all acceptance criteria and the Depends-On list.
-2. **Read all Depends-On tasks** to understand the interface contracts you must satisfy.
-3. **Run `pytest`** to capture the pre-task baseline. Record the number: `N passing, M failed`.
-4. **Run `ruff check`** — must exit 0. Do not begin if ruff is not clean. Fix ruff issues first, commit them separately.
-5. **Write tests before or alongside implementation.** No task is complete until every acceptance criterion has a passing test.
+1. **Read the orchestrator's inline task digest first** — it should already contain the assignment, acceptance criteria, file scope, dependency facts, and the applicable rules for this task.
+2. **Read the current task entry in `tasks.md` only as needed** — use it to confirm exact acceptance criteria, file scope, or notes, not as a default excuse to broad-read unrelated context.
+3. **Read Depends-On tasks, `Context-Refs`, and canonical docs only when the digest is insufficient** — this is mandatory for architecture changes, risky boundaries, open findings, or interface-sensitive tasks.
+4. **Run `pytest`** to capture the pre-task baseline. Record the number: `N passing, M failed`.
+5. **Run `ruff check`** — must exit 0. Do not begin if ruff is not clean. Fix ruff issues first, commit them separately.
+6. **Write tests before or alongside implementation.** No task is complete until every acceptance criterion has a passing test.
 
 ### During Implementation
 
