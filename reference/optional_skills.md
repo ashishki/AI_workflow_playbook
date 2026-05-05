@@ -19,6 +19,7 @@ relaxes any contract rule.
 | Skill | Status | Allowed Role | Output | Descriptor |
 |-------|--------|--------------|--------|------------|
 | External Tools / MCP | optional | Strategist, Reviewer, Human | Proposed Tool Catalog rows; audit-log shape; env-var entries; tool-task drafts | [`templates/skills/external_tools_skill.md`](../templates/skills/external_tools_skill.md) — guide: [`reference/external_tools_mcp_companion.md`](external_tools_mcp_companion.md) |
+| Research Companion | EXPERIMENTAL | Strategist, Reviewer, Human | `docs/research/{slug}.md` source-grounded notes consumed by ADRs and `docs/DECISION_LOG.md` | [`templates/skills/research_skill.md`](../templates/skills/research_skill.md) — guide: [`reference/research_companion.md`](research_companion.md) |
 
 ---
 

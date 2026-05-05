@@ -38,6 +38,8 @@ Adapt the templates to your project. Do not copy specifics from any example proj
 
 If retrieval is needed, bias toward text-only retrieval unless the project description shows that non-text evidence must be retrieved as a first-class signal. Multimodal retrieval is an advanced path and must be justified in value, cost, latency, evaluation burden, and fallback planning.
 
+When making a non-trivial technology, compliance, or runtime choice, you may invoke the experimental Research Companion (`reference/research_companion.md`) to produce a source-grounded `docs/research/{slug}.md`. Cite it from the consuming ADR or `docs/DECISION_LOG.md` row as `(research: docs/research/{slug}.md#R-N)`. The research file is a retrieval surface, not authority — canonical documents win on conflict. Skip this when an existing canonical document already answers the question.
+
 ---
 
 ## Input

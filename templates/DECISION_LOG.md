@@ -20,6 +20,7 @@ the canonical document wins and this file must be corrected.
 - Record why a decision was made and what it replaced.
 - Update this file when architecture, runtime, governance, or major implementation direction changes.
 - Mark superseded decisions explicitly instead of deleting them.
+- Optionally append `(research: docs/research/{slug}.md#R-N)` to the "Why it matters" cell when a decision is backed by a note from the experimental Research Companion (`reference/research_companion.md`). The research note is a retrieval surface; this row remains the index entry, and the canonical source linked above remains authority.
 
 ---
 
