@@ -211,8 +211,9 @@ AI_workflow_playbook/
 │   └── audit/
 │       ├── PROMPT_0_META.md         — review: meta-analysis
 │       ├── PROMPT_1_ARCH.md         — review: architecture drift
-│       ├── PROMPT_2_CODE.md         — review: code & security (SEC + profile checks)
+│       ├── PROMPT_2_CODE.md         — review: code & security (SEC + profile checks + TOOL-6 MCP integrity)
 │       ├── PROMPT_3_CONSOLIDATED.md — review: consolidated report
+│       ├── PROMPT_SIMPLIFY.md       — EXPERIMENTAL: opt-in Simplification Pass reviewer prompt
 │       └── AUDIT_INDEX.md           — audit index template
 ├── hooks/
 │   ├── guard_files.sh               — PreToolUse: blocks writes to immutable files
@@ -233,18 +234,25 @@ AI_workflow_playbook/
 │   │   └── healthcare.md            — HIPAA skeleton: T-HC-01..04 with full AC + test refs
 │   ├── skills/
 │   │   ├── SKILL_INTERFACE.md       — descriptor format for optional skills
-│   │   └── external_tools_skill.md  — descriptor for the External Tools / MCP skill
+│   │   ├── external_tools_skill.md  — descriptor for the External Tools / MCP skill
+│   │   ├── research_skill.md        — EXPERIMENTAL descriptor for the Research Companion skill
+│   │   └── simplification_skill.md  — EXPERIMENTAL descriptor for the Simplification Pass skill
+│   ├── research/
+│   │   └── RESEARCH_NOTE.md         — template for docs/research/{slug}.md source-grounded notes
+│   ├── SIMPLIFICATION_REPORT.md     — template for Simplification Pass audit output
 │   └── .claude/
 │       ├── settings.json            — Claude Code hook configuration
 │       └── commands/
-│           ├── bootstrap-new.md     — slash command entrypoint for greenfield bootstrap
-│           └── bootstrap-retrofit.md — slash command entrypoint for retrofit bootstrap
+│           ├── bootstrap-new.md     — greenfield bootstrap (surfaces optional skills at end)
+│           ├── bootstrap-retrofit.md — retrofit bootstrap (surfaces optional skills at end)
+│           └── simplify.md          — opt-in slash command for the Simplification Pass
 ├── ci/
 │   └── ci.yml                       — GitHub Actions template (lint, tests, all 5 eval steps, NFR load test)
 └── reference/
     ├── CODEX_CLI.md                 — Codex CLI patterns, sandbox limitations, pre-run checklist
-    ├── optional_skills.md           — index of opt-in skills layered on the playbook
-    └── external_tools_mcp_companion.md — Tool-Use profile worked example for MCP integrations
+    ├── optional_skills.md           — index of opt-in skills with registration table and scope rules
+    ├── external_tools_mcp_companion.md — Tool-Use companion: Tool Catalog schema, unsafe-action conventions, MCP secret handling
+    └── research_companion.md        — EXPERIMENTAL: source-grounded research notes for non-trivial arch decisions
 ```
 
 ### What each file is for
@@ -257,7 +265,7 @@ AI_workflow_playbook/
 
 **prompts/PHASE1_VALIDATOR.md** runs once, after the Strategist produces deliverables and before T01 begins. It checks structural completeness and cross-document consistency across the Phase 1 artifact set. Any blocker stops implementation.
 
-**prompts/audit/PROMPT_2_CODE.md** is the code review prompt. It fires SEC-N (universal), profile-conditional RET-N / TOOL-N / AGENT-N / PLAN-N / COMP-N checks, and OBS-N (observability) on every deep review cycle.
+**prompts/audit/PROMPT_2_CODE.md** is the code review prompt. It fires SEC-N (universal), profile-conditional RET-N / TOOL-N / AGENT-N / PLAN-N / COMP-N checks, OBS-N (observability), and TOOL-6 (MCP-backed tool integrity: pinned server version, side-effect class, idempotency, distinct confirmation path for destructive tools) on every deep review cycle.
 
 **templates/tasks_schema.md** defines the task block format. Every task in `docs/tasks.md` must use this schema — `Type:` tag, structured `Acceptance-Criteria` entries each with a `test:` pointer, explicit `Depends-On`. The Orchestrator reads these fields directly; a missing `test:` field is a PHASE1_VALIDATOR blocker.
 
@@ -281,7 +289,13 @@ It also supports optional `Context-Refs` and heavy-task extension fields so risk
 
 **reference/CODEX_CLI.md** documents real operational knowledge: file-based prompt invocation, known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns.
 
-**templates/.claude/commands/** provides command-style entrypoints so Claude Code can start the bootstrap flow without manual system-prompt replacement. The command is the entrypoint; the validator and orchestrator remain separate phases.
+**reference/optional_skills.md** is the index of registered optional skills — registration table, "How to Add" steps, and an "Out of Scope" redirect table for things that belong in canonical artifacts instead.
+
+**reference/external_tools_mcp_companion.md** is the Tool-Use profile companion guide: Tool Catalog row schema, side-effect classification table, idempotency requirements, unsafe-action confirmation code-path requirement, audit log shape, secret handling, tool-schema versioning, and two worked examples. Shape-only — does not require any specific vendor.
+
+**reference/research_companion.md** (EXPERIMENTAL) governs when and how to produce source-grounded `docs/research/{slug}.md` notes for non-trivial architecture, library, or compliance decisions. Promotes to optional after experiment E3.
+
+**templates/.claude/commands/** provides command-style entrypoints. `bootstrap-new` and `bootstrap-retrofit` start the bootstrap flow and, after generating the package, surface optional skills with conditional recommendations (MCP companion activates silently when Tool-Use=ON; Research Companion asks yes/no for non-trivial decisions; Simplification Pass is always human-triggered). `simplify.md` is the opt-in entrypoint for the Simplification Pass.
 
 ---
 

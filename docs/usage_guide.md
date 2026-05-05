@@ -206,6 +206,7 @@ What it does:
 - gives Claude a standard entrypoint
 - tells it which local files to read
 - tells it which artifact set to generate
+- surfaces optional skills after generating the package, with conditional recommendations (see below)
 - keeps startup UX simple
 - can enforce codex-only code writing and phase-boundary guards when the hook template is installed
 
@@ -220,6 +221,20 @@ The best mental model is:
 - slash command = bootstrap entrypoint
 - validator = artifact gate
 - orchestrator = control-plane for ongoing work
+
+## Optional Skills
+
+Optional, opt-in capabilities layered on the playbook. The full registry lives in `reference/optional_skills.md`. Bootstrap commands surface them automatically after generating the package.
+
+| Skill | Status | How it activates |
+|-------|--------|-----------------|
+| External Tools / MCP companion | optional | Silently active when Tool-Use=ON or MCP shape detected — no confirmation needed. TOOL-6 enforces compliance at review. |
+| Research Companion | EXPERIMENTAL | Bootstrap asks yes/no if a non-trivial arch or compliance choice is found without an ADR. Can also be invoked mid-project by the Strategist or reviewer. |
+| Simplification Pass | EXPERIMENTAL | Always human-triggered: run `/simplify` with a file or directory scope after code exists. Produces `docs/audit/SIMPLIFICATION_REPORT.md`; approved findings become normal Codex tasks. |
+
+Skills never modify canonical artifacts (`IMPLEMENTATION_CONTRACT.md`, `ARCHITECTURE.md`, `spec.md`, `tasks.md`, `CODEX_PROMPT.md`). Their output is always the lowest authority in the conflict hierarchy. To add a skill, follow `reference/optional_skills.md §How to Add a Skill`.
+
+---
 
 ## Operational Knobs
 
