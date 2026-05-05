@@ -350,6 +350,21 @@ Read these instructions every time you pick up a task. Do not skip steps.
 - If you discover an interface mismatch or missing dependency, stop and report it. Do not silently patch adjacent tasks.
 - If you supersede a prior decision or close a repeated finding, update `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`, and `docs/EVIDENCE_INDEX.md` as applicable.
 
+### Simplicity Constraints
+
+Apply at every task. These are verified by the optional Simplification Pass
+(`/simplify`); violations found after the fact become Codex tasks.
+
+- **No redundant abstraction.** Do not add a class, function, or module whose
+  entire body is a single delegation call with no added logic.
+- **No restatement comments.** Do not write a comment that only paraphrases the
+  line below it. Comments must explain *why*, not *what*.
+- **No premature generalization.** Implement the concrete case the task
+  requires. Do not introduce parameters, strategy objects, or config toggles for
+  hypothetical future callers.
+- **No untestable boilerplate.** Every non-trivial function must be reachable by
+  at least one test. Do not write setup/teardown glue that cannot be exercised.
+
 ### Post-Task Protocol
 
 1. Run `pytest -q` — baseline must be ≥ pre-task baseline. If lower, something broke; fix it before committing.
