@@ -36,10 +36,29 @@ Behavior:
 6. After generating the package, tell me exactly what to run next:
    - Phase 1 validation
    - Orchestrator start from the first real incomplete task
-7. After listing next steps, briefly surface the optional skills available in
-   `reference/optional_skills.md`. For each registered skill, state in one
-   sentence when it is useful and whether it is opt-in or EXPERIMENTAL. Do not
-   activate any skill automatically — the human decides.
+7. After listing next steps, evaluate each optional skill against the project
+   signals you have collected and make a conditional recommendation:
+
+   a. External Tools / MCP companion (`reference/external_tools_mcp_companion.md`):
+      - If Tool-Use profile is ON or any MCP-shaped integration appears in the
+        current repo, state: "MCP companion is active for this project — Tool
+        Catalog rows must follow the schema in reference/external_tools_mcp_companion.md."
+        No further confirmation needed; TOOL-6 enforces it at review.
+      - Otherwise: one sentence — it exists and when to reach for it.
+
+   b. Research Companion (EXPERIMENTAL, `reference/research_companion.md`):
+      - If the current repo has a known major risk, compliance gap, or
+        under-justified past decision flagged during retrofit analysis, state:
+        "I recommend invoking the Research Companion for [specific question].
+        Reply yes to proceed, or no to skip." Wait for the human's reply before
+        invoking.
+      - If no such gap is present: one sentence — it exists and when to use it.
+
+   c. Simplification Pass (EXPERIMENTAL, `/simplify`):
+      - If the repo already has substantial code: "Simplification Pass is
+        available now — run `/simplify` with a file or directory scope to get
+        a complexity audit."
+      - Otherwise: one sentence — available after code exists.
 
 Output requirements:
 
