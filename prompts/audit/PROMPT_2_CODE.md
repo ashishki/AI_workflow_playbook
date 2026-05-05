@@ -52,6 +52,7 @@ TOOL-2 Unsafe-action gate — every tool marked destructive has an explicit conf
 TOOL-3 Schema validation at generation — tool input schemas are validated when the LLM produces the call, not deferred to the executor; deferred-only = P1
 TOOL-4 Permission boundary — permission is checked at each tool boundary (not only at entry point); single-check-at-entry = P1
 TOOL-5 Tool eval artifact — if task tagged `tool:schema` or `tool:unsafe`, is `docs/tool_eval.md` updated with Eval Source and Date for this task? Missing = P2
+TOOL-6 MCP-backed tool integrity — for any tool reached through an MCP server or equivalent external integration shape, does the Tool Catalog row include MCP server name with a pinned version, side-effect class, idempotency note, retry policy, audit log fields, and (if destructive) a distinct confirmation code path matching `reference/external_tools_mcp_companion.md`? Missing fields or unpinned MCP server = P1; missing rollback path on a destructive tool = P1
 
 <!-- Run the following checks ONLY if Agentic Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 AGENT-1 Role boundaries — every agent role operates within its declared authority scope (ARCHITECTURE.md §Agent Roles); undeclared cross-role call = P1

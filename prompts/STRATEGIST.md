@@ -589,6 +589,7 @@ Turn Tool-Use **ON** if one or more of the following applies:
 - Tool calls have side effects that require idempotency, permission gating, or rollback
 - The system must enforce an "unsafe action" confirmation step before executing destructive tool calls
 - Tool schemas are first-class design artifacts (versioned, validated, tested independently)
+- Integration shape is an MCP server, vendor MCP gateway, or equivalent external tool registry — see `reference/external_tools_mcp_companion.md` for Tool Catalog row mapping, secret handling, audit log shape, and unsafe-action conventions; the guide is shape-only and does not require any specific vendor
 
 Turn Tool-Use **OFF** if the system only reads from databases or internal services via ordinary application code paths that are not LLM-directed.
 

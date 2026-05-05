@@ -231,6 +231,9 @@ AI_workflow_playbook/
 │   ├── tasks_schema.md              — YAML-compatible task block schema, tag namespace, AC rules
 │   ├── domains/
 │   │   └── healthcare.md            — HIPAA skeleton: T-HC-01..04 with full AC + test refs
+│   ├── skills/
+│   │   ├── SKILL_INTERFACE.md       — descriptor format for optional skills
+│   │   └── external_tools_skill.md  — descriptor for the External Tools / MCP skill
 │   └── .claude/
 │       ├── settings.json            — Claude Code hook configuration
 │       └── commands/
@@ -239,7 +242,9 @@ AI_workflow_playbook/
 ├── ci/
 │   └── ci.yml                       — GitHub Actions template (lint, tests, all 5 eval steps, NFR load test)
 └── reference/
-    └── CODEX_CLI.md                 — Codex CLI patterns, sandbox limitations, pre-run checklist
+    ├── CODEX_CLI.md                 — Codex CLI patterns, sandbox limitations, pre-run checklist
+    ├── optional_skills.md           — index of opt-in skills layered on the playbook
+    └── external_tools_mcp_companion.md — Tool-Use profile worked example for MCP integrations
 ```
 
 ### What each file is for

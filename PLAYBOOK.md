@@ -1193,6 +1193,17 @@ Depends-On: T{XX}, T{YY}
 
 Vague acceptance criteria produce vague implementations. "The endpoint works" is not an acceptance criterion. "GET /items returns 200 with `{"items": [...]}` when the tenant has items, 200 with `{"items": []}` when empty, and 404 when the tenant does not exist" is an acceptance criterion.
 
+### Optional Skills
+
+Optional, opt-in capabilities layered on the playbook live in
+`reference/optional_skills.md`. Each skill follows the format in
+`templates/skills/SKILL_INTERFACE.md`. Skills extend the workflow without
+modifying canonical artifacts; they produce retrieval surfaces, finding
+reports, or proposed task drafts that flow through normal Codex implementation
+and review channels. A skill never overrides this section,
+`IMPLEMENTATION_CONTRACT.md`, ADRs, `ARCHITECTURE.md`, `spec.md`, `tasks.md`,
+or `CODEX_PROMPT.md`.
+
 ---
 
 ## 11. Known Gaps — v2 Roadmap
