@@ -24,3 +24,4 @@ _Append-only. One row per review cycle._
 ## Notes
 
 - Add cycle notes here.
+- Optional simplification passes use a separate row prefix (`SIMP-N`) and live in `docs/audit/SIMPLIFICATION_REPORT.md`. They do not interleave with deep review cycles in this index. See `templates/skills/simplification_skill.md`.

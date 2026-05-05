@@ -1001,6 +1001,19 @@ PROMPT_1 (META) and PROMPT_2 (ARCH) can run concurrently — they read different
 [PROMPT_1 || PROMPT_2] → PROMPT_3 → PROMPT_4
 ```
 
+### 5.5 Optional: Simplification Pass
+
+A user-triggered pass focused on reducing redundancy, dead code, over-abstraction, and over-comment density. Runs separately from the mandatory META → ARCH → CODE → CONSOLIDATED cycle. It is opt-in and experimental — see §8 Experiment E5 in the integration assessment.
+
+- **Trigger:** explicit user invocation (e.g. via `templates/.claude/commands/simplify.md`). Never automatic. Never part of the mandatory phase-boundary cycle.
+- **Scope:** a user-named file or directory list, or — only as fallback — the scope from the most recent META analysis.
+- **Output:** `docs/audit/SIMPLIFICATION_REPORT.md` (overwrite per pass; row prefix `SIMP-N` so it does not collide with `CYCLE-N`).
+- **Approved simplifications** become normal Codex tasks with behavior-preservation acceptance criteria — existing tests pass, a new test pins the prior behavior when needed, and the complexity metric improves by a stated delta. The task runs through normal light or deep review like any other.
+- **Findings that would change behavior** are rejected by the Simplification Reviewer. They do not enter `tasks.md`.
+- The simplification pass does not replace, gate, or alter the mandatory phase-boundary review cycle. It does not close existing review findings, drop tests, or relax any rule in `IMPLEMENTATION_CONTRACT.md` or any active capability profile.
+
+See `prompts/audit/PROMPT_SIMPLIFY.md`, `templates/skills/simplification_skill.md`, and the `Simplification Pass` row in `reference/optional_skills.md`.
+
 ---
 
 ## 6. Immutable Implementation Rules

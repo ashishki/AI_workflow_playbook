@@ -20,6 +20,7 @@ relaxes any contract rule.
 |-------|--------|--------------|--------|------------|
 | External Tools / MCP | optional | Strategist, Reviewer, Human | Proposed Tool Catalog rows; audit-log shape; env-var entries; tool-task drafts | [`templates/skills/external_tools_skill.md`](../templates/skills/external_tools_skill.md) — guide: [`reference/external_tools_mcp_companion.md`](external_tools_mcp_companion.md) |
 | Research Companion | EXPERIMENTAL | Strategist, Reviewer, Human | `docs/research/{slug}.md` source-grounded notes consumed by ADRs and `docs/DECISION_LOG.md` | [`templates/skills/research_skill.md`](../templates/skills/research_skill.md) — guide: [`reference/research_companion.md`](research_companion.md) |
+| Simplification Pass | EXPERIMENTAL | Reviewer (specialized), Human | `docs/audit/SIMPLIFICATION_REPORT.md`; approved findings become normal Codex tasks | [`templates/skills/simplification_skill.md`](../templates/skills/simplification_skill.md) — prompt: [`prompts/audit/PROMPT_SIMPLIFY.md`](../prompts/audit/PROMPT_SIMPLIFY.md) |
 
 ---
 
