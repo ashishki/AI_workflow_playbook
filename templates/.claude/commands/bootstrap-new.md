@@ -32,6 +32,10 @@ Behavior:
 6. After generating the package, tell me exactly what to run next:
    - Phase 1 validation
    - Orchestrator start
+7. After listing next steps, briefly surface the optional skills available in
+   `reference/optional_skills.md`. For each registered skill, state in one
+   sentence when it is useful and whether it is opt-in or EXPERIMENTAL. Do not
+   activate any skill automatically — the human decides.
 
 Output requirements:
 
