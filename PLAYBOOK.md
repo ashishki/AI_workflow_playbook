@@ -227,6 +227,48 @@ Every subsequent session starts by running `pytest` and comparing against this b
 
 ---
 
+## 2a. Problem-First Entry Gate and Adoption Reality
+
+Before selecting an agent shape, runtime tier, or capability profile, Phase 1 must
+prove that the project is attached to a real operational pain. The playbook is a
+governance and proof system, not a way to make an unvalidated AI idea look
+production-ready.
+
+### 2a.1 Problem-First Entry Gate
+
+Every Phase 1 architecture package must answer:
+
+- What concrete operational pain exists today?
+- How is the team handling it now?
+- Why are checklists, CI, ordinary review, scripts, or manual SOPs insufficient?
+- Who is the first user, operator, or buyer who feels the pain?
+- What would make v1 not worth adopting?
+- What first metric or observation proves the system is useful in real work?
+
+If these answers are missing or weak, do not proceed to an agentic build. Reduce
+the next step to discovery, measurement, or a small deterministic improvement.
+
+### 2a.2 Adoption Reality Gate
+
+AI adoption claims must be scoped before implementation begins:
+
+- name the work AI is expected to improve
+- name the work AI will not replace
+- keep human approval and accountability explicit
+- list claims that cannot be made before evaluation evidence exists
+- define what evidence is required to move from a good demo to a trusted workflow
+
+Forbidden weak claims include broad promises such as "replace engineers",
+"fully autonomous team", "production-ready swarm", or "AI-native transformation"
+unless the architecture package also defines the exact workflow scope,
+human-approval boundary, and metric that would make the claim testable.
+
+This gate does not weaken ambition. It prevents demo energy from replacing
+evidence. Agentic behavior is justified by measured need, not by executive
+excitement or vendor narrative.
+
+---
+
 ## 2b. Right-Sizing: Solution Shape, Governance, Runtime
 
 Before enabling any complexity-bearing pattern, Phase 1 must answer three independent questions:
@@ -819,7 +861,8 @@ If a project already has code but lacks the workflow scaffolding:
 
 After retrofit, paste ORCHESTRATOR.md and the loop runs identically to a greenfield project.
 
-For a practical retrofit sequence, see `docs/usage_guide.md`.
+For project-fit screening and a practical retrofit sequence, see
+`docs/project_fit_guide.md` and `docs/usage_guide.md`.
 
 ### Selective Heavy-Task Mode
 
@@ -1145,7 +1188,7 @@ Every project using this playbook maintains the following documents. They are no
 
 | Document | Path | Role | Mutability |
 |----------|------|------|------------|
-| Architecture | `docs/ARCHITECTURE.md` | System design, component table, data flows, runtime contract | Updated when architecture changes; changes need ADR if significant |
+| Architecture | `docs/ARCHITECTURE.md` | Problem fit, adoption reality boundaries, system design, component table, data flows, runtime contract | Updated when architecture changes; changes need ADR if significant |
 | Specification | `docs/spec.md` | Feature specification and acceptance criteria | Updated when scope changes; changes need human approval |
 | Task graph | `docs/tasks.md` | Authoritative task contracts — the ground truth for what agents implement | Append-only for completed tasks; active tasks updated as needed |
 | Session handoff | `docs/CODEX_PROMPT.md` | Current baseline, Fix Queue, open findings, next task | Updated at every phase boundary and before every Codex spawn |

@@ -37,6 +37,7 @@ For each artifact, verify every required section is present. Mark each check PRE
 ### A1 — docs/ARCHITECTURE.md
 
 - [ ] A1-01  § System Overview — one paragraph present
+- [ ] A1-01a § Problem Fit and Adoption Reality — present with concrete pain, current workaround, first proof of value, claims not allowed before evidence, and work AI will not replace
 - [ ] A1-02  § Solution Shape — primary shape, governance level, and runtime tier declared with justification
 - [ ] A1-03  § Rejected Lower-Complexity Options — present and non-empty
 - [ ] A1-04  § Minimum Viable Control Surface — present and non-empty
@@ -157,6 +158,7 @@ For each check, read both referenced documents and verify the claim. Mark CONSIS
 - [ ] B-08f Runtime-tier consistency: ARCHITECTURE.md §Runtime and Isolation Model matches IMPLEMENTATION_CONTRACT.md §Control Surface and Runtime Boundaries at the declared-boundary level
 - [ ] B-08g Human approval consistency: ARCHITECTURE.md §Human Approval Boundaries is reflected in IMPLEMENTATION_CONTRACT.md privileged / unsafe action rules
 - [ ] B-08h Deterministic ownership consistency: ARCHITECTURE.md §Deterministic vs LLM-Owned Subproblems does not directly contradict task tags or profile declarations
+- [ ] B-08i Adoption reality consistency: ARCHITECTURE.md §Problem Fit and Adoption Reality does not make broad AI replacement or autonomy claims unless matching proof metrics, human approval boundaries, and evaluation artifacts are present
 - [ ] B-09  T01/T02/T03 dependency chain: T01 Depends-On=none, T02 depends on T01, T03 depends on T01 or T02 — chain is logically sound and has no cycles
 - [ ] B-10  Tech stack consistency: every technology declared in ARCHITECTURE.md §Tech Stack that requires env vars has those env vars listed in §Runtime Contract
 - [ ] B-11  External integrations consistency: every service listed in ARCHITECTURE.md §External Integrations either (a) has env vars in §Runtime Contract, or (b) is documented as not requiring credentials
@@ -208,6 +210,35 @@ Any unresolved placeholder in the three target files → **BLOCKER**.
 
 ---
 
+## Part E — Adoption Reality Check
+
+Scan docs/ARCHITECTURE.md, docs/spec.md, and docs/tasks.md for adoption claims.
+
+Flag a **BLOCKER** if any document:
+- promises to replace people, teams, engineers, reviewers, operators, or domain
+  experts without an exact workflow scope, proof metric, and human approval
+  boundary
+- describes a "fully autonomous" or "production-ready swarm" without an active
+  Agentic profile, evaluation artifact, termination contract, and rollback or
+  recovery boundary
+- cannot name the concrete operational pain, current workaround, and first proof
+  metric in `docs/ARCHITECTURE.md §Problem Fit and Adoption Reality`
+
+Flag a **WARNING** if:
+- success is described primarily as "AI-native", "agentic", "modern", or
+  "impressive demo" rather than a business, quality, latency, cost, or
+  operational metric
+- the first proof metric is present but cannot be measured during Phase 1 or
+  the first real workflow phase
+
+For each finding, provide:
+- Location: file and section
+- Claim: quote the exact claim when present
+- Missing proof: scope, metric, evaluation, approval boundary, or rollback
+- Suggested fix: concrete rewrite or required evidence artifact
+
+---
+
 ## Output format: docs/audit/PHASE1_AUDIT.md
 
 ---
@@ -225,16 +256,17 @@ PHASE1_AUDIT: PASS | FAIL
 
 | Section | Checks | Passed | BLOCKER | WARNING |
 |---------|--------|--------|---------|---------|
-| A1 ARCHITECTURE.md | 20 | N | N | N |
+| A1 ARCHITECTURE.md | 21 | N | N | N |
 | A2 spec.md | 5 | N | N | N |
 | A3 tasks.md | 15 | N | N | N |
 | A4 CODEX_PROMPT.md | 12 | N | N | N |
 | A5 IMPLEMENTATION_CONTRACT.md | 18 | N | N | N |
 | A5b continuity artifacts | 3 | N | N | N |
 | A6 ci.yml | 6 | N | N | N |
-| B Cross-document | 20 | N | N | N |
+| B Cross-document | 21 | N | N | N |
 | C Vagueness | — | — | N | N |
 | D Placeholder Check | — | — | N | N |
+| E Adoption Reality | — | — | N | N |
 | **Total** | | | | |
 
 ## BLOCKER Findings
@@ -276,6 +308,7 @@ Severity rules:
 - Any vague criterion in tasks.md Part C → BLOCKER (agents cannot implement against vague AC)
 - Any vague criterion in spec.md only → WARNING (does not directly drive agent implementation)
 - Any unresolved placeholder in Part D → BLOCKER (contract cannot be enforced with template values)
+- Any blocker-level adoption claim in Part E → BLOCKER (the package is overclaiming without evidence)
 - PHASE1_AUDIT is PASS only when BLOCKER count = 0
 
 When done: "PHASE1_AUDIT.md written. Result: PASS | FAIL. Blockers: N. Warnings: N."

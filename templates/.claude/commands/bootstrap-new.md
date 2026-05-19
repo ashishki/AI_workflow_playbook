@@ -1,6 +1,7 @@
 Read these local files before doing anything else:
 
 - `PLAYBOOK.md`
+- `docs/project_fit_guide.md`
 - `prompts/STRATEGIST.md`
 - `templates/PROJECT_BRIEF.md`
 - `templates/tasks_schema.md`
@@ -14,7 +15,7 @@ Bootstrap a brand-new project using AI Workflow Playbook.
 
 Behavior:
 
-1. Ask me for any missing project-brief fields needed to complete the Phase 1 package.
+1. Ask me for any missing project-brief fields needed to complete the Phase 1 package, including `templates/PROJECT_BRIEF.md §1b Problem Fit and Adoption Reality`.
 2. Once enough information exists, generate the initial project governance package:
    - `docs/ARCHITECTURE.md`
    - `docs/spec.md`
@@ -29,6 +30,7 @@ Behavior:
 3. Use the task schema from `templates/tasks_schema.md`.
 4. Mark only genuinely risky tasks with the optional heavy-task extension.
 5. Keep the architecture minimum-sufficient. Do not over-escalate solution shape, governance level, runtime tier, or capability profiles without justification.
+   If the brief cannot name a concrete pain, current workaround, and first proof metric, recommend a discovery / measurement phase instead of a full agentic build.
 6. After generating the package, tell me exactly what to run next:
    - Phase 1 validation
    - Orchestrator start

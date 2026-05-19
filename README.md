@@ -35,6 +35,8 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **CI in Phase 1.** CI is mandatory in Phase 1. There is never a moment in this workflow when "tests pass locally but CI is unknown."
 
+**Problem-first adoption gate.** Before choosing agent shape or runtime, Phase 1 must name the concrete operational pain, current workaround, first proof metric, and claims that are out of bounds before evidence exists. This keeps the playbook attached to real workflow problems instead of demo-driven AI adoption.
+
 **Five capability profiles.** Optional architectural modes, each with algorithmic decision criteria, mandatory artifacts, profile-specific contract rules, deep-review checks, and an evaluation artifact:
 
 | Profile | Governs | Review checks | Evaluation artifact |
@@ -70,6 +72,7 @@ This playbook is intentionally not "agent-everywhere" and not "VM-by-default". I
 For practical setup and adoption, use:
 
 - [docs/usage_guide.md](docs/usage_guide.md) — end-to-end usage for new and existing repositories
+- [docs/project_fit_guide.md](docs/project_fit_guide.md) — problem-first entry points, adoption reality gate, and anti-patterns
 - [docs/architecture_layers.md](docs/architecture_layers.md) — concise layer map
 - [docs/heavy_task_mode.md](docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
 - [docs/workflow_continuity_retrofit.md](docs/workflow_continuity_retrofit.md) — MemPalace assessment and the playbook-native continuity retrofit
@@ -79,38 +82,41 @@ For practical setup and adoption, use:
 
 ### New Project
 
-1. Copy into the repo:
+1. Check fit with `docs/project_fit_guide.md`
+2. Copy into the repo:
    - `PLAYBOOK.md`
    - `prompts/`
    - `templates/`
    - `hooks/`
    - `ci/ci.yml`
-2. If using Claude Code:
+3. If using Claude Code:
    - copy `templates/.claude/settings.json` -> `.claude/settings.json`
    - copy `templates/.claude/commands/bootstrap-new.md` -> `.claude/commands/bootstrap-new.md`
    - make `hooks/*.sh` executable
-3. Run `/bootstrap-new`
-4. Run the Phase 1 validator
-5. Start the orchestrator
+4. Run `/bootstrap-new`
+5. Run the Phase 1 validator
+6. Start the orchestrator
 
 ### Existing Project
 
-1. Copy into the repo:
+1. Check fit with `docs/project_fit_guide.md`
+2. Copy into the repo:
    - `PLAYBOOK.md`
    - `prompts/`
    - `templates/`
    - `hooks/`
    - `ci/ci.yml` if needed
-2. If using Claude Code:
+3. If using Claude Code:
    - copy `templates/.claude/settings.json` -> `.claude/settings.json`
    - copy `templates/.claude/commands/bootstrap-retrofit.md` -> `.claude/commands/bootstrap-retrofit.md`
    - make `hooks/*.sh` executable
-3. Run `/bootstrap-retrofit`
-4. Run the Phase 1 validator
-5. Start the orchestrator from the first real incomplete task
+4. Run `/bootstrap-retrofit`
+5. Run the Phase 1 validator
+6. Start the orchestrator from the first real incomplete task
 
 ### Mental Model
 
+- project fit = problem-first gate
 - `/bootstrap-*` = bootstrap entrypoint
 - validator = artifact gate
 - orchestrator = ongoing control-plane
@@ -148,12 +154,14 @@ Runtime is separate from agent shape. An agent is not a VM. VM or microVM isolat
 
 Use this playbook by asking, in order:
 
-1. Start with the minimum sufficient architecture, not the most impressive one.
-2. Ask "why not deterministic?" before enabling LLM logic.
-3. Ask "why not workflow?" before enabling bounded or open-ended agency.
-4. Turn capability profiles ON only when they govern real behavior, not speculative future scope.
-5. Keep runtime at T0/T1 unless there is a concrete isolation or mutability reason to escalate.
-6. Increase governance only when error cost, auditability, or blast radius justify it.
+1. Start with the concrete operational pain and current workaround.
+2. Define the first proof metric and the claims that are not allowed before evidence exists.
+3. Start with the minimum sufficient architecture, not the most impressive one.
+4. Ask "why not deterministic?" before enabling LLM logic.
+5. Ask "why not workflow?" before enabling bounded or open-ended agency.
+6. Turn capability profiles ON only when they govern real behavior, not speculative future scope.
+7. Keep runtime at T0/T1 unless there is a concrete isolation or mutability reason to escalate.
+8. Increase governance only when error cost, auditability, or blast radius justify it.
 
 Every rule and template addresses a concrete failure mode: silent quality erosion across phases, evaluation that never runs, review that misses profile-specific risks, compliance requirements that fall through to free-form LLM reasoning.
 
@@ -203,6 +211,11 @@ Project description
 AI_workflow_playbook/
 ├── README.md
 ├── PLAYBOOK.md                      — master workflow document (read this first)
+├── docs/
+│   ├── project_fit_guide.md          — problem-first entry points, adoption reality gate, and anti-patterns
+│   ├── usage_guide.md                — end-to-end usage for new and existing repositories
+│   ├── architecture_layers.md        — concise layer map
+│   └── ...                           — focused reports and operational guides
 ├── prompts/
 │   ├── STRATEGIST.md                — architecture-generation agent prompt
 │   ├── ORCHESTRATOR.md              — development orchestrator prompt
@@ -267,11 +280,13 @@ AI_workflow_playbook/
 
 **prompts/audit/PROMPT_2_CODE.md** is the code review prompt. It fires SEC-N (universal), profile-conditional RET-N / TOOL-N / AGENT-N / PLAN-N / COMP-N checks, OBS-N (observability), and TOOL-6 (MCP-backed tool integrity: pinned server version, side-effect class, idempotency, distinct confirmation path for destructive tools) on every deep review cycle.
 
+**docs/project_fit_guide.md** helps decide whether the playbook should be used at all: concrete pain, current workaround, first proof metric, good entry points, and anti-patterns.
+
 **templates/tasks_schema.md** defines the task block format. Every task in `docs/tasks.md` must use this schema — `Type:` tag, structured `Acceptance-Criteria` entries each with a `test:` pointer, explicit `Depends-On`. The Orchestrator reads these fields directly; a missing `test:` field is a PHASE1_VALIDATOR blocker.
 
 It also supports optional `Context-Refs` and heavy-task extension fields so risky or history-sensitive tasks can carry retrieval pointers and proof expectations without making all tasks expensive.
 
-**templates/ARCHITECTURE.md** now requires solution shape, governance level, runtime tier, deterministic-vs-LLM ownership, human approval boundaries, and anti-overengineering non-goals. When Runtime tier = T3 and solution shape = Higher-autonomy agent, an optional `§T3 Reference Implementation: Hermes Agent` sub-section provides a compatibility table and links to the governance rules in `IMPLEMENTATION_CONTRACT.md`.
+**templates/ARCHITECTURE.md** now requires problem fit, adoption reality boundaries, solution shape, governance level, runtime tier, deterministic-vs-LLM ownership, human approval boundaries, and anti-overengineering non-goals. When Runtime tier = T3 and solution shape = Higher-autonomy agent, an optional `§T3 Reference Implementation: Hermes Agent` sub-section provides a compatibility table and links to the governance rules in `IMPLEMENTATION_CONTRACT.md`.
 
 **templates/DECISION_LOG.md** is a lightweight index of why important choices were made and where the canonical record lives. It is not a replacement for `ARCHITECTURE.md` or ADRs; it makes them easier to retrieve.
 
@@ -279,7 +294,7 @@ It also supports optional `Context-Refs` and heavy-task extension fields so risk
 
 **templates/EVIDENCE_INDEX.md** indexes tests, evaluation runs, review findings, and manual proof so agents can retrieve prior evidence without treating summaries as truth.
 
-**templates/PROJECT_BRIEF.md** is the recommended input template before running the Strategist. It helps you describe goals, workflows, risks, AI scope, deterministic candidates, human approval boundaries, constraints, and success metrics without pre-deciding the architecture.
+**templates/PROJECT_BRIEF.md** is the recommended input template before running the Strategist. It helps you describe concrete pain, current workaround, adoption proof, goals, workflows, risks, AI scope, deterministic candidates, human approval boundaries, constraints, and success metrics without pre-deciding the architecture.
 
 **templates/domains/healthcare.md** is the HIPAA domain skeleton. It provides four production-ready tasks with complete acceptance criteria (including specific test function references), a starter `docs/compliance_eval.md` table with HIPAA control rows, and ARCHITECTURE.md snippets. The Strategist includes it verbatim when Compliance=ON and HIPAA is the active framework.
 
@@ -303,16 +318,17 @@ It also supports optional `Context-Refs` and heavy-task extension fields so risk
 
 Fast path with Claude Code:
 
-1. Copy `templates/.claude/settings.json` to `.claude/settings.json`
-2. Copy `templates/.claude/commands/bootstrap-new.md` to `.claude/commands/bootstrap-new.md`
-3. Copy `hooks/*.sh` and make them executable
-4. Run `/bootstrap-new`
+1. Check `docs/project_fit_guide.md`
+2. Copy `templates/.claude/settings.json` to `.claude/settings.json`
+3. Copy `templates/.claude/commands/bootstrap-new.md` to `.claude/commands/bootstrap-new.md`
+4. Copy `hooks/*.sh` and make them executable
+5. Run `/bootstrap-new`
 
 This does not replace validation or orchestration. It gives Claude a standard bootstrap entrypoint without changing the system prompt.
 
 1. Open a Claude session (Claude.ai or Claude Code).
 2. Set `prompts/STRATEGIST.md` as the system prompt.
-3. Fill `templates/PROJECT_BRIEF.md` or describe the same fields in chat: domain, workflows, AI scope, deterministic candidates, expected scale, constraints, risk boundaries, and compliance requirements.
+3. Fill `templates/PROJECT_BRIEF.md` or describe the same fields in chat: concrete pain, current workaround, adoption proof metric, domain, workflows, AI scope, deterministic candidates, expected scale, constraints, risk boundaries, and compliance requirements.
 4. The Strategist asks clarifying questions, then produces the starter package:
    - `docs/ARCHITECTURE.md`, `docs/spec.md`, `docs/tasks.md`
    - `docs/CODEX_PROMPT.md`, `docs/IMPLEMENTATION_CONTRACT.md`

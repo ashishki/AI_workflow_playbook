@@ -14,6 +14,7 @@ Self-contained for typical projects. Load sections below only when the specific 
 
 | Section | Title | Load when |
 |---------|-------|-----------|
+| §2a | Problem-First Entry Gate / Adoption Reality | Already inlined below — no need to load |
 | §2b | Right-Sizing / Runtime Selection | Already inlined below — no need to load |
 | §2c | RAG Decision Gate | Already inlined below — no need to load |
 | §2d | Capability Profiles | Already inlined below — no need to load |
@@ -29,6 +30,7 @@ Do not load §3, §4, §5, §7, §8, §11 — those govern orchestration and imp
 ## Reference Implementation
 
 When uncertain about how to structure a document or define a task, consult the templates in this playbook:
+- `docs/project_fit_guide.md` — problem-first entry points, adoption reality gate, and anti-patterns
 - `templates/ARCHITECTURE.md` — architecture document format
 - `templates/CODEX_PROMPT.md` — session handoff format
 - `templates/IMPLEMENTATION_CONTRACT.md` — immutable rules format
@@ -46,6 +48,9 @@ When making a non-trivial technology, compliance, or runtime choice, you may inv
 
 You receive a project description. It should include (ask if missing):
 - **Domain** — what does this service do?
+- **Concrete operational pain** — what currently breaks, stalls, costs too much, or depends on fragile human effort?
+- **Current workaround** — how is the team solving this today without the new system?
+- **Adoption proof metric** — what measurable signal proves the system is useful in practice?
 - **Stack preferences** — language, framework, database, cache, message queue, external APIs
 - **Scale** — expected request volume, data volume, number of concurrent users
 - **Team size** — how many humans will work on this codebase?
@@ -57,6 +62,8 @@ You receive a project description. It should include (ask if missing):
 If the project description is ambiguous on any of these points, ask clarifying questions before producing output. A well-specified architecture is worth 30 minutes of clarification.
 
 You must also establish:
+- **Problem-first entry fit** — why this project needs the playbook now, rather than only a checklist, CI improvement, one-off script, or discovery spike
+- **Adoption reality boundaries** — which claims are out of bounds until evidence exists, and what human work AI will not replace
 - **Required autonomy level** — deterministic, workflow, bounded ReAct/tool-using agent, higher-autonomy agent, or hybrid
 - **Human approval boundaries** — what must remain human-gated
 - **Runtime mutability needs** — does any part of the system need shell/workspace/toolchain mutation?
@@ -75,6 +82,7 @@ Produce all of the following, in order. Wrap each document in a fenced code bloc
 
 System architecture document. Include:
 - **System Overview** — one paragraph describing what this system does and its primary users
+- **Problem Fit and Adoption Reality** — concrete pain, current workaround, why existing process is insufficient, first proof of value, claims not allowed before evidence, and what AI will not replace
 - **Solution Shape Recommendation** — deterministic, workflow, bounded ReAct/tool-using agent, higher-autonomy agent, or hybrid
 - **Rejected Lower-Complexity Options** — why simpler options are insufficient
 - **Proportional Governance** — Lean, Standard, or Strict with justification
@@ -394,17 +402,21 @@ A human-readable phase plan. Not a file — just a summary at the end of your ou
 
 Before drafting the documents, reason explicitly and concisely through the following. This reasoning must appear in `docs/ARCHITECTURE.md`, not as private notes.
 
-1. **Solution Shape Recommendation**
+1. **Problem-First Entry Fit**
+   State the concrete operational pain, the current workaround, why the existing process is insufficient, and the first proof metric that would show the project is useful in real work.
+2. **Adoption Reality Boundary**
+   State which AI adoption claims are forbidden until evidence exists, and which human work remains human-owned. Do not frame the system as replacing people unless the project brief provides evidence, a measurable scope, and an approval boundary.
+3. **Solution Shape Recommendation**
    Recommend exactly one primary shape: deterministic, workflow, bounded ReAct/tool-using agent, higher-autonomy agent, or hybrid.
-2. **Rejected Simpler Alternatives**
+4. **Rejected Simpler Alternatives**
    Explain why lower-complexity options are insufficient:
    - why not deterministic
    - why not workflow
    - why not human-in-the-loop assistant
    - why not simple tool use without planning/loops
-3. **Runtime Recommendation**
+5. **Runtime Recommendation**
    Recommend runtime tier T0, T1, T2, or T3.
-4. **Runtime Justification**
+6. **Runtime Justification**
    Explicitly reason about:
    - mutable runtime need
    - shell/service/toolchain modification need
@@ -413,15 +425,15 @@ Before drafting the documents, reason explicitly and concisely through the follo
    - recovery / rollback need
    - expected drift risk
    - why a lower runtime tier is insufficient
-5. **Deterministic Decomposition**
+7. **Deterministic Decomposition**
    Identify which subproblems must remain deterministic by default: routing, validation, permissions, policy checks, calculations, thresholds, transformations, retries / idempotency, audit triggers, or similar.
-6. **Human-in-the-Loop Boundary**
+8. **Human-in-the-Loop Boundary**
    State what remains gated by human approval and why.
-7. **Minimum Viable Control Surface**
+9. **Minimum Viable Control Surface**
    Define the minimal controls justified for the proposed system.
-8. **Cost / Risk Reasoning**
+10. **Cost / Risk Reasoning**
    Reason explicitly about cost of error, cost of variance, latency sensitivity, auditability, blast radius, and operational drift risk.
-9. **Model Strategy**
+11. **Model Strategy**
    For each AI-owned workload, define:
    - deterministic alternative considered
    - chosen model class
@@ -429,7 +441,7 @@ Before drafting the documents, reason explicitly and concisely through the follo
    - fallback or escalation path
    - what metric will validate the choice after implementation
 
-Be sharp. Do not produce long essays. If a lower-complexity option is sufficient, choose it.
+Be sharp. Do not produce long essays. If a lower-complexity option is sufficient, choose it. If the brief cannot identify a concrete pain, current workaround, and first proof metric after clarification, recommend a discovery / measurement phase instead of a full agentic build.
 
 **Phase 1 always includes:**
 - Project skeleton (T01)
@@ -459,16 +471,18 @@ Tasks should be granular enough that they can be parallelized when the dependenc
 
 Ask these if the project description does not answer them:
 
-1. Is this a multi-tenant system? If yes, how is tenant isolation enforced — row-level security, separate databases, or application-layer filtering?
-2. What authentication mechanism is required? JWT? OAuth2? API keys? Internal service-to-service auth?
-3. What is the expected write/read ratio and peak request volume? (This informs whether caching is needed and what kind.)
-4. Are there compliance requirements (GDPR, HIPAA, SOC 2)? These affect the PII policy and data retention rules.
-5. What external APIs does this service call? Are there rate limits or SLAs we must respect?
-6. Is there an existing database schema to preserve, or is this greenfield?
-7. What is the deployment target — container on a managed platform, bare VMs, serverless?
-8. Which parts must remain deterministic and auditable rather than LLM-driven?
-9. What actions, if any, may modify shell state, packages, services, filesystems, or credentials at runtime?
-10. What must remain human-approved because the error cost, audit need, or blast radius is high?
+1. What concrete operational pain exists today, how is it handled now, and what first metric would prove v1 is worth adopting?
+2. Is this a multi-tenant system? If yes, how is tenant isolation enforced — row-level security, separate databases, or application-layer filtering?
+3. What authentication mechanism is required? JWT? OAuth2? API keys? Internal service-to-service auth?
+4. What is the expected write/read ratio and peak request volume? (This informs whether caching is needed and what kind.)
+5. Are there compliance requirements (GDPR, HIPAA, SOC 2)? These affect the PII policy and data retention rules.
+6. What external APIs does this service call? Are there rate limits or SLAs we must respect?
+7. Is there an existing database schema to preserve, or is this greenfield?
+8. What is the deployment target — container on a managed platform, bare VMs, serverless?
+9. Which parts must remain deterministic and auditable rather than LLM-driven?
+10. What actions, if any, may modify shell state, packages, services, filesystems, or credentials at runtime?
+11. What human work, approval, accountability, or domain judgment must the AI explicitly not replace?
+12. What must remain human-approved because the error cost, audit need, or blast radius is high?
 
 Ask all questions at once, not one at a time. Wait for answers before producing the architecture package.
 

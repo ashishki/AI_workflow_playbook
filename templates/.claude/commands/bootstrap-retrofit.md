@@ -1,6 +1,7 @@
 Read these local files before doing anything else:
 
 - `PLAYBOOK.md`
+- `docs/project_fit_guide.md`
 - `prompts/STRATEGIST.md`
 - `templates/PROJECT_BRIEF.md`
 - `templates/tasks_schema.md`
@@ -21,6 +22,7 @@ Behavior:
    - current CI/test state
    - major risks and constraints
    - known backlog or remediation areas
+   - concrete operational pain, current workaround, and first proof metric
 2. Generate or update the project governance package around current repo reality:
    - `docs/ARCHITECTURE.md`
    - `docs/spec.md`
@@ -33,6 +35,7 @@ Behavior:
 3. Build `docs/tasks.md` as a forward-looking contract for real incomplete work. Do not invent fake greenfield skeleton tasks unless the repository truly lacks that structure.
 4. Use the real current baseline in `docs/CODEX_PROMPT.md`.
 5. Mark only materially risky remediation/migration tasks with the optional heavy-task extension.
+   If the retrofit has no concrete pain, current workaround, or first proof metric, recommend a smaller discovery / measurement pass instead of installing the full playbook ceremony.
 6. After generating the package, tell me exactly what to run next:
    - Phase 1 validation
    - Orchestrator start from the first real incomplete task

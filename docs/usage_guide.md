@@ -9,30 +9,50 @@ This guide explains how to use AI Workflow Playbook in practice for:
 
 ### New Repository
 
-1. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`, `ci/ci.yml`
-2. Copy `templates/.claude/settings.json` -> `.claude/settings.json`
-3. Copy `templates/.claude/commands/bootstrap-new.md` -> `.claude/commands/bootstrap-new.md`
-4. Make `hooks/*.sh` executable
-5. Run `/bootstrap-new`
-6. Run the Phase 1 validator
-7. Start the orchestrator
+1. Check project fit with `docs/project_fit_guide.md`
+2. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`, `ci/ci.yml`
+3. Copy `templates/.claude/settings.json` -> `.claude/settings.json`
+4. Copy `templates/.claude/commands/bootstrap-new.md` -> `.claude/commands/bootstrap-new.md`
+5. Make `hooks/*.sh` executable
+6. Run `/bootstrap-new`
+7. Run the Phase 1 validator
+8. Start the orchestrator
 
 ### Existing Repository
 
-1. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`
-2. Normalize `ci/ci.yml` if missing or weak
-3. Copy `templates/.claude/settings.json` -> `.claude/settings.json`
-4. Copy `templates/.claude/commands/bootstrap-retrofit.md` -> `.claude/commands/bootstrap-retrofit.md`
-5. Make `hooks/*.sh` executable
-6. Run `/bootstrap-retrofit`
-7. Run the Phase 1 validator
-8. Start the orchestrator from the first real incomplete task
+1. Check project fit with `docs/project_fit_guide.md`
+2. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`
+3. Normalize `ci/ci.yml` if missing or weak
+4. Copy `templates/.claude/settings.json` -> `.claude/settings.json`
+5. Copy `templates/.claude/commands/bootstrap-retrofit.md` -> `.claude/commands/bootstrap-retrofit.md`
+6. Make `hooks/*.sh` executable
+7. Run `/bootstrap-retrofit`
+8. Run the Phase 1 validator
+9. Start the orchestrator from the first real incomplete task
 
 ### Remember
 
+- project fit = problem-first gate
 - slash command = entrypoint
 - validator = gate
 - orchestrator = ongoing workflow
+
+## Before Bootstrap: Project Fit
+
+Before generating phases, read `docs/project_fit_guide.md` and fill
+`templates/PROJECT_BRIEF.md §1b Problem Fit and Adoption Reality`.
+
+Do not begin a full agentic build until the brief names:
+
+- the concrete operational pain
+- the current workaround
+- why the current process is insufficient
+- the first user or operator
+- the first proof metric
+- which AI adoption claims are not allowed before evidence exists
+
+If those answers are weak, start with discovery, measurement, a deterministic
+script, a CI gate, or a review checklist instead of the full playbook.
 
 ## New Repository
 
@@ -42,10 +62,11 @@ If you are using Claude Code, you do not need to replace the system prompt manua
 
 Recommended setup:
 
-1. copy `templates/.claude/settings.json` to `.claude/settings.json`
-2. copy `templates/.claude/commands/bootstrap-new.md` to `.claude/commands/bootstrap-new.md`
-3. copy `hooks/*.sh`
-4. make hooks executable
+1. read `docs/project_fit_guide.md`
+2. copy `templates/.claude/settings.json` to `.claude/settings.json`
+3. copy `templates/.claude/commands/bootstrap-new.md` to `.claude/commands/bootstrap-new.md`
+4. copy `hooks/*.sh`
+5. make hooks executable
 
 Then in Claude Code you can run:
 
@@ -58,6 +79,7 @@ This command works as a user-level entrypoint. It tells Claude which local files
 Copy into the target repo:
 
 - `PLAYBOOK.md`
+- `docs/project_fit_guide.md`
 - `prompts/`
 - `templates/`
 - `hooks/`
@@ -124,9 +146,10 @@ Retrofit the playbook onto the current repo reality instead of pretending the pr
 
 If you are using Claude Code, copy:
 
-1. `templates/.claude/settings.json` -> `.claude/settings.json`
-2. `templates/.claude/commands/bootstrap-retrofit.md` -> `.claude/commands/bootstrap-retrofit.md`
-3. `hooks/*.sh`
+1. read `docs/project_fit_guide.md`
+2. `templates/.claude/settings.json` -> `.claude/settings.json`
+3. `templates/.claude/commands/bootstrap-retrofit.md` -> `.claude/commands/bootstrap-retrofit.md`
+4. `hooks/*.sh`
 
 Then run:
 
@@ -139,6 +162,7 @@ This lets Claude start the retrofit flow as a command without changing the syste
 Copy:
 
 - `PLAYBOOK.md`
+- `docs/project_fit_guide.md`
 - `prompts/`
 - `templates/`
 - `hooks/`
@@ -186,16 +210,17 @@ The first task after retrofit should be the first real incomplete task, not a fa
 
 If you want to introduce the playbook gradually:
 
-1. task schema
-2. implementation contract
-3. CODEX_PROMPT resumable state
-4. decision log + implementation journal
-5. task `Context-Refs` for history-sensitive work
-6. audit prompts
-7. orchestrator loop
-8. hooks for codex-only code writes and phase-boundary guards
-9. selective heavy-task mode + evidence index
-10. packaging
+1. project fit gate: concrete pain, current workaround, first proof metric
+2. task schema
+3. implementation contract
+4. CODEX_PROMPT resumable state
+5. decision log + implementation journal
+6. task `Context-Refs` for history-sensitive work
+7. audit prompts
+8. orchestrator loop
+9. hooks for codex-only code writes and phase-boundary guards
+10. selective heavy-task mode + evidence index
+11. packaging
 
 This order preserves momentum while tightening governance over time.
 

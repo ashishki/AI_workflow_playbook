@@ -13,6 +13,27 @@ Write short, concrete answers. If something is unknown, say `unknown` rather tha
 - **Why this project exists:**
 - **What success looks like in v1:**
 
+## 1b. Problem Fit and Adoption Reality
+
+Answer these before describing the desired architecture. The Strategist uses
+this section to avoid designing a polished AI system around an unproven or
+demo-only need.
+
+- **Concrete operational pain:** What currently breaks, stalls, costs too much,
+  or depends on fragile human effort?
+- **Current workaround:** How is the team solving this today without the new
+  system?
+- **Why existing process is insufficient:** Why are checklists, CI, ordinary
+  code review, scripts, or manual SOPs not enough?
+- **First user / buyer / operator who feels the pain:**
+- **What would make v1 not worth adopting:**
+- **Adoption proof metric:** What measurable signal proves this is useful in
+  practice, not only impressive in a demo?
+- **Claims that are out of bounds before evidence:** e.g., "replaces an
+  engineer", "fully autonomous", "production-ready agent swarm".
+- **Work AI will not replace:** Which judgment, approval, accountability, or
+  domain-expert work remains human-owned?
+
 ## 2. Users and Workflows
 
 - **Primary users / operators:**

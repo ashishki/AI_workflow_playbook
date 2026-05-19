@@ -12,6 +12,34 @@ Status: Draft
 
 ---
 
+## Problem Fit and Adoption Reality
+
+### Problem-First Entry Gate
+
+| Question | Answer |
+|----------|--------|
+| Concrete operational pain | {{What currently breaks, stalls, costs too much, or depends on fragile human effort}} |
+| Current workaround | {{How the team solves this today without the new system}} |
+| Why existing process is insufficient | {{Why checklists, CI, ordinary review, scripts, or manual SOPs are not enough}} |
+| First user / operator who feels the pain | {{Specific role or team}} |
+| What would make v1 not worth adopting | {{Concrete adoption failure condition}} |
+| First proof of value | {{Metric or observation that proves practical usefulness}} |
+
+### Adoption Reality Gate
+
+| Boundary | Decision |
+|----------|----------|
+| Work AI is expected to improve | {{Specific workflow or task, not a broad headcount claim}} |
+| Work AI will not replace | {{Human judgment, approval, accountability, domain expertise, or relationship work that remains human-owned}} |
+| Claims not allowed before evidence | {{Claims that must not be made until evals, tests, or production evidence support them}} |
+| Demo-to-production evidence required | {{What must be measured before moving from impressive demo to trusted workflow}} |
+
+If this section cannot name a real pain, current workaround, and first proof of
+value, the project should be reduced to a discovery / measurement phase before
+agentic implementation begins.
+
+---
+
 ## Solution Shape
 
 | Decision | Selection | Justification |
