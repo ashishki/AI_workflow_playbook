@@ -55,6 +55,8 @@ def score_artifact(artifact: dict[str, Any], role: str, scopes: list[str], proje
         return -100, path
     if path.startswith("prompts/audit/") and not allow_template_context(project_id, scopes):
         return -100, path
+    if path.startswith("docs/audit/PROMPT_") and not allow_template_context(project_id, scopes):
+        return -100, path
 
     haystack = " ".join(
         [
