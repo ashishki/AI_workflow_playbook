@@ -27,6 +27,7 @@ This validator runs exactly once: after the Strategist produces Phase 1 delivera
 7. docs/DECISION_LOG.md
 8. docs/IMPLEMENTATION_JOURNAL.md
 9. docs/EVIDENCE_INDEX.md (if present)
+10. docs/COGNITION_MANIFEST.md
 
 ---
 
@@ -53,6 +54,7 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A1-14  § File Layout — directory tree present
 - [ ] A1-15  § Runtime Contract — env vars table present (may be empty if no env vars required)
 - [ ] A1-16  § Continuity and Retrieval Model — canonical truth, retrieval convenience, and scoped retrieval rules declared
+- [ ] A1-16a § Cognition Layer — if present, declares repo authority, generated retrieval policy, context packet rules, and Obsidian optionality
 - [ ] A1-17  § Non-Goals — explicit list present (at minimum one item, including over-architecture non-goal)
 - [ ] A1-18  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Retrieval / Embedding Strategy, §Index Strategy, §Risks all present
 - [ ] A1-19  For each active profile declared ON: a justification paragraph is present below the Capability Profiles table
@@ -97,6 +99,7 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A4-09  Planning State block present with a declared value — if Planning = ON, schema version filled; if OFF, block present with `Planning Profile: OFF`. Absent block = BLOCKER.
 - [ ] A4-10  Compliance State block present with a declared value — if Compliance = ON, active frameworks filled; if Compliance = OFF, block is present with `Compliance Status: OFF` and remaining fields `n/a`. A CODEX_PROMPT.md with no Compliance State block at all is a BLOCKER regardless of profile status.
 - [ ] A4-11  § Continuity Pointers present and points to decision log / implementation journal / evidence index usage
+- [ ] A4-11a § Continuity Pointers includes `docs/COGNITION_MANIFEST.md` when the manifest exists
 - [ ] A4-12  If docs/nfr.md exists: NFR Baseline block present in CODEX_PROMPT.md
 
 ### A5 — docs/IMPLEMENTATION_CONTRACT.md
@@ -125,6 +128,14 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A5b-01 `docs/DECISION_LOG.md` exists and every row points to a canonical source
 - [ ] A5b-02 `docs/IMPLEMENTATION_JOURNAL.md` exists and is initialized with the append-only entry template
 - [ ] A5b-03 If `docs/EVIDENCE_INDEX.md` exists: every row points to an actual artifact and does not claim authority over canonical proof
+
+### A5c — Cognition manifest
+
+- [ ] A5c-01 `docs/COGNITION_MANIFEST.md` exists
+- [ ] A5c-02 Manifest states that repo artifacts are authoritative and Obsidian/generated indexes are convenience layers only
+- [ ] A5c-03 Manifest lists canonical truth surfaces: architecture, contract, tasks, CODEX prompt, decisions, evals, evidence, and reviews
+- [ ] A5c-04 Manifest defines at least strategist, orchestrator, implementer, and reviewer retrieval scopes
+- [ ] A5c-05 Manifest defines generated artifact policy for `generated/cognition/index.json` and context packets
 
 ### A6 — .github/workflows/ci.yml
 
@@ -196,6 +207,7 @@ Scan the following files for any remaining `{{...}}` patterns:
 1. `docs/ARCHITECTURE.md`
 2. `docs/IMPLEMENTATION_CONTRACT.md`
 3. `docs/CODEX_PROMPT.md`
+4. `docs/COGNITION_MANIFEST.md`
 
 Detection rule: any text matching `{{` followed by non-`}` characters followed by `}}` is an unresolved placeholder.
 

@@ -67,6 +67,14 @@ A workflow for building AI-assisted software without assuming one default archit
 
 This playbook does not add a generic "memory layer" above the repo. It adds disciplined retrieval surfaces for architectural recall, implementation continuity, prior findings, and durable evidence while keeping files as the source of truth.
 
+The cognition layer extension turns those retrieval surfaces into a portable markdown operating layer for long-lived engineering context. It remains repo-authoritative, Git-compatible, Obsidian-optional, and deterministic-first. Start with:
+
+- [docs/cognition/architecture.md](docs/cognition/architecture.md) — cognition and operational memory architecture
+- [docs/cognition/obsidian_vault_architecture.md](docs/cognition/obsidian_vault_architecture.md) — optional Obsidian vault structure
+- [docs/cognition/retrieval_context_packets.md](docs/cognition/retrieval_context_packets.md) — deterministic retrieval and context packet model
+- [docs/cognition/migration_plan.md](docs/cognition/migration_plan.md) — staged rollout across existing repositories
+- [docs/cognition/anti_complexity_safeguards.md](docs/cognition/anti_complexity_safeguards.md) — explicit boundaries and complexity ceilings
+
 This playbook is intentionally not "agent-everywhere" and not "VM-by-default". It is designed to help teams choose the minimum sufficient solution shape, runtime substrate, and governance level for the actual risk and autonomy of the system.
 
 For practical setup and adoption, use:
@@ -253,12 +261,15 @@ AI_workflow_playbook/
 │   ├── research/
 │   │   └── RESEARCH_NOTE.md         — template for docs/research/{slug}.md source-grounded notes
 │   ├── SIMPLIFICATION_REPORT.md     — template for Simplification Pass audit output
+│   ├── cognition/                   — portable cognition, ADR, finding, packet, hypothesis templates
 │   └── .claude/
 │       ├── settings.json            — Claude Code hook configuration
 │       └── commands/
 │           ├── bootstrap-new.md     — greenfield bootstrap (surfaces optional skills at end)
 │           ├── bootstrap-retrofit.md — retrofit bootstrap (surfaces optional skills at end)
 │           └── simplify.md          — opt-in slash command for the Simplification Pass
+├── schemas/                         — JSON schemas for cognition metadata, manifests, packets
+├── tools/                           — deterministic cognition index and context packet builders
 ├── ci/
 │   └── ci.yml                       — GitHub Actions template (lint, tests, all 5 eval steps, NFR load test)
 └── reference/

@@ -28,6 +28,22 @@ Examples:
 
 This layer should grow selectively, not by making every task heavy.
 
+## 2b. Cognition / Operational Memory
+
+This layer answers: what context must survive across sessions, agents, projects, reviews, and eval regressions?
+
+Examples:
+
+- repo-local cognition manifests
+- ADR lineage and decision indexes
+- eval history linked to tasks and evidence
+- postmortems and persistent findings
+- deterministic retrieval manifests
+- role-scoped context packets
+- optional Obsidian graph notes that cite canonical repo files
+
+This layer is not a generic memory product. It remains markdown-native, Git-compatible, and repo-authoritative.
+
 ## 3. Optional Execution Patterns
 
 These patterns help execution but are not the center of the system:

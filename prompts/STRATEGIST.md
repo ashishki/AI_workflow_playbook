@@ -34,6 +34,7 @@ When uncertain about how to structure a document or define a task, consult the t
 - `templates/ARCHITECTURE.md` — architecture document format
 - `templates/CODEX_PROMPT.md` — session handoff format
 - `templates/IMPLEMENTATION_CONTRACT.md` — immutable rules format
+- `templates/cognition/COGNITION_MANIFEST.md` — repo-local cognition and retrieval map
 - `ci/ci.yml` — CI template
 
 Adapt the templates to your project. Do not copy specifics from any example project.
@@ -101,6 +102,7 @@ System architecture document. Include:
 - **File Layout** — directory tree for the project
 - **Runtime Contract** — table of required environment variables (name, description, example value)
 - **Continuity and Retrieval Model** — canonical truth, retrieval convenience docs, when scoped retrieval is mandatory
+- **Cognition Layer** — repo-local manifest path, generated retrieval policy, context packet rules, and Obsidian optionality
 - **Non-Goals** — explicit list of what this system does NOT do, including anti-overengineering non-goals
 
 ### 2. `docs/spec.md`
@@ -184,6 +186,7 @@ Phase: 1
 
 ## Continuity Pointers
 
+- Cognition manifest: `docs/COGNITION_MANIFEST.md`
 - Decision log: `docs/DECISION_LOG.md`
 - Implementation journal: `docs/IMPLEMENTATION_JOURNAL.md`
 - Evidence index: `docs/EVIDENCE_INDEX.md` (if present)
@@ -258,13 +261,27 @@ Create the following retrieval surfaces:
 - `docs/DECISION_LOG.md` — concise index of important decisions with links to canonical sources
 - `docs/IMPLEMENTATION_JOURNAL.md` — append-only task / session continuity log
 - `docs/EVIDENCE_INDEX.md` — only when the project has heavy tasks, active evaluation artifacts, compliance evidence, or expected recurring findings
+- `docs/COGNITION_MANIFEST.md` — repo-local operational memory map using `templates/cognition/COGNITION_MANIFEST.md`
 
 Rules:
 - these files are retrieval aids, not authority
 - every entry must point to a canonical document, test, eval, or review artifact
 - do not invent a generic memory hierarchy beyond what the workflow needs
+- `docs/COGNITION_MANIFEST.md` must state that Obsidian, generated indexes, and context packets are optional convenience layers
 
-### 6. `.github/workflows/ci.yml`
+### 6. `docs/COGNITION_MANIFEST.md`
+
+Repo-local cognition map. It must identify:
+
+- canonical truth files
+- decision lineage surfaces
+- eval artifacts and evidence indexes
+- finding, postmortem, and audit surfaces
+- retrieval scopes for strategist, orchestrator, implementer, and reviewer packets
+- generated artifact policy
+- explicit statement that Obsidian and generated indexes are optional convenience layers
+
+### 7. `.github/workflows/ci.yml`
 
 A GitHub Actions CI workflow appropriate for the project's stack. Include:
 - Python version appropriate for the stack (default: 3.11)
@@ -276,10 +293,10 @@ A GitHub Actions CI workflow appropriate for the project's stack. Include:
 
 Add comments explaining each section — the CI file is read by agents who need to understand what it does.
 
-### 7. Operational Files
+### 8. Operational Files
 
-These files are required by the Orchestrator at runtime. Output all seven, in order, after
-the six core documents above.
+These files are required by the Orchestrator at runtime. Output all operational files, in order, after
+the core project documents above.
 
 **Rules for this section:**
 - Replace every `{{PROJECT_NAME}}` occurrence with the actual project name.

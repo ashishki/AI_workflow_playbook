@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/cognition_frontmatter.schema.json",
+  "title": "Cognition Markdown Frontmatter",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "artifact_kind": {
+      "type": "string",
+      "enum": [
+        "architecture",
+        "contract",
+        "task_graph",
+        "session_state",
+        "decision_log",
+        "adr",
+        "journal",
+        "evidence_index",
+        "eval",
+        "review",
+        "finding",
+        "postmortem",
+        "hypothesis",
+        "research",
+        "runbook",
+        "project_map",
+        "context_packet",
+        "retrieval_manifest"
+      ]
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string"
+    },
+    "canonical": {
+      "type": "boolean"
+    },
+    "generated": {
+      "type": "boolean"
+    },
+    "source_repo": {
+      "type": "string"
+    },
+    "source_path": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related_decisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related_evals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "date": {
+      "type": "string"
+    }
+  },
+  "required": ["artifact_kind"]
+}

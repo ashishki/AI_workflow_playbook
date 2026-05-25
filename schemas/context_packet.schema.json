@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/context_packet.schema.json",
+  "title": "Context Packet Metadata",
+  "type": "object",
+  "required": ["artifact_kind", "project", "role", "scope", "generated", "canonical"],
+  "additionalProperties": true,
+  "properties": {
+    "artifact_kind": {
+      "const": "context_packet"
+    },
+    "project": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string",
+      "enum": ["strategist", "orchestrator", "implementer", "reviewer", "researcher", "postmortem-writer"]
+    },
+    "scope": {
+      "type": "string"
+    },
+    "source_manifest": {
+      "type": "string"
+    },
+    "generated": {
+      "type": "boolean"
+    },
+    "canonical": {
+      "const": false
+    },
+    "created": {
+      "type": "string"
+    }
+  }
+}

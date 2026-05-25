@@ -77,6 +77,15 @@ _Applies only if {{PROJECT_NAME}} is multi-tenant. Delete this section if single
 - If CI is flaky (non-deterministic failures), the flakiness is fixed before the PR is merged — not bypassed.
 - Violation: automatic P1.
 
+### Cognition and Memory Authority
+
+- Repository artifacts remain authoritative: architecture, contract, tasks, CODEX prompt state, ADRs, evals, reviews, evidence, code, tests, and CI.
+- `docs/COGNITION_MANIFEST.md`, generated retrieval manifests, generated context packets, Obsidian notes, and semantic indexes are navigation surfaces only.
+- A generated context packet must cite canonical source paths before it may influence implementation or review.
+- Semantic/vector retrieval may suggest candidates but must not inject uncited memory into implementation prompts.
+- Closing P1/P2 findings, changing eval baselines, changing runtime tier, or superseding ADRs requires updates to canonical repo artifacts, not only vault notes.
+- Violation: P1 when a convenience memory surface overrides or contradicts canonical repo truth.
+
 ### Observability
 
 These rules ensure the system is observable in production. They apply to all projects and all profiles.

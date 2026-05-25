@@ -107,6 +107,7 @@ Scan the following files for unresolved `{{...}}` patterns (any `{{` ... `}}` ou
 - `docs/ARCHITECTURE.md`
 - `docs/IMPLEMENTATION_CONTRACT.md`
 - `docs/CODEX_PROMPT.md`
+- `docs/COGNITION_MANIFEST.md` if present
 
 If any unresolved placeholder is found:
 
@@ -130,8 +131,9 @@ If the next task does not map to those goals, stop and report before building.
 Read in full:
 1. `docs/CODEX_PROMPT.md` — baseline, Fix Queue, open findings, next task
 2. `docs/tasks.md` — full task graph with phases
-3. `docs/DECISION_LOG.md` and `docs/IMPLEMENTATION_JOURNAL.md` if they exist
-4. `docs/EVIDENCE_INDEX.md` if it exists
+3. `docs/COGNITION_MANIFEST.md` if it exists — canonical memory map and retrieval scopes
+4. `docs/DECISION_LOG.md` and `docs/IMPLEMENTATION_JOURNAL.md` if they exist
+5. `docs/EVIDENCE_INDEX.md` if it exists
 
 **Compaction check.**
 
@@ -194,10 +196,12 @@ Determine:
 **B1. Continuity retrieval check** — inspect the task's `Context-Refs` field.
 
 - If `Context-Refs` is present, read every referenced item before dispatching the implementer.
+- If a referenced generated context packet exists, read it as a convenience layer, then verify the canonical paths cited by the packet before relying on it.
 - If the task resolves an open finding, changes architecture/runtime/auth/retrieval/compliance semantics, or is `Execution-Mode: heavy`, continuity retrieval is mandatory even when `Context-Refs` is absent:
   - read the relevant decision log entries
   - read recent implementation journal entries for the same scope
   - read evidence rows or prior review artifacts for the same boundary
+  - use `docs/COGNITION_MANIFEST.md` to find the appropriate retrieval scope when available
 - If required retrieval material is missing, print:
 
 ```

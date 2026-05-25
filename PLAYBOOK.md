@@ -55,6 +55,26 @@ The playbook does not use fuzzy agent memory as authority. It uses explicit file
 
 Retrieval is mandatory when a task changes architecture, runtime, risky boundaries, open findings, or capability semantics. Otherwise, keep reads narrow.
 
+### Cognition Layer
+
+The cognition layer extends continuity across long-lived projects and cross-project portfolios without changing the authority model:
+
+- repo files remain source of truth
+- Obsidian is an optional markdown UI and graph browser, not infrastructure
+- generated retrieval manifests and context packets are convenience artifacts
+- deterministic retrieval is preferred over semantic retrieval
+- semantic/vector search, if used, only proposes cited candidates
+- agents consume bounded role-specific packets rather than vault dumps
+
+The minimum project-local cognition artifact is `docs/COGNITION_MANIFEST.md`, which maps canonical truth, eval memory, decision lineage, evidence surfaces, and packet scopes. The minimum generated artifact is `generated/cognition/index.json`, produced by `tools/cognition_index.py` when automation is useful.
+
+Use the cognition docs when a project has multiple phases, recurring findings, active evals, ADR lineage, or cross-project reuse:
+
+- `docs/cognition/architecture.md`
+- `docs/cognition/retrieval_context_packets.md`
+- `docs/cognition/git_integration.md`
+- `docs/cognition/obsidian_vault_architecture.md`
+
 ### Prompt Context Policy
 
 This playbook treats prompt design as an execution concern, not just a documentation concern. A good implementation prompt is a compressed, task-ready digest of the relevant context, not a list of files for the model to discover and summarize itself.
@@ -189,9 +209,10 @@ Phase 1 is not optional and is not abbreviated. Every project — regardless of 
 5. `docs/IMPLEMENTATION_CONTRACT.md` — immutable rules, tailored to the project
 6. `docs/DECISION_LOG.md` — concise decision index pointing to canonical sources
 7. `docs/IMPLEMENTATION_JOURNAL.md` — append-only implementation continuity log
-8. Project skeleton (directories, `__init__.py`, entry points)
-9. First tests (at minimum: smoke tests proving the skeleton works)
-10. CI setup (`.github/workflows/ci.yml`) — passing on first commit
+8. `docs/COGNITION_MANIFEST.md` — repo-local map of canonical memory, retrieval scopes, eval/decision/finding surfaces
+9. Project skeleton (directories, `__init__.py`, entry points)
+10. First tests (at minimum: smoke tests proving the skeleton works)
+11. CI setup (`.github/workflows/ci.yml`) — passing on first commit
 
 `docs/EVIDENCE_INDEX.md` is required when the project uses heavy-task mode, active evaluation artifacts, compliance evidence, or recurring cross-phase findings. Lean projects may add it later.
 
@@ -202,6 +223,7 @@ Use the continuity artifacts as follows:
 - `docs/DECISION_LOG.md` is a retrieval index for major architectural, policy, and scope decisions. It is not a replacement for ADRs or `ARCHITECTURE.md`.
 - `docs/IMPLEMENTATION_JOURNAL.md` records durable handoff context: why a change happened, what evidence was collected, and what the next agent must know.
 - `docs/EVIDENCE_INDEX.md` is an optional proof index. It helps reviewers and implementers find prior tests, evals, and review reports without treating summaries as evidence.
+- `docs/COGNITION_MANIFEST.md` is a repo-local map for agent-readable operational memory. It identifies canonical surfaces, retrieval scopes, known gaps, and generated-artifact policy. It is not an authority layer.
 - `Context-Refs` in `docs/tasks.md` point an agent to the small set of prior docs that must be read before implementation.
 
 ### Why CI Is Set Up in Phase 1

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/retrieval_manifest.schema.json",
+  "title": "Retrieval Manifest",
+  "type": "object",
+  "required": ["schema_version", "project_id", "artifacts"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "root": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "artifact_kind", "title", "canonical", "generated", "sha256"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "artifact_kind": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "canonical": {
+            "type": "boolean"
+          },
+          "generated": {
+            "type": "boolean"
+          },
+          "frontmatter": {
+            "type": "object"
+          },
+          "headings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  }
+}

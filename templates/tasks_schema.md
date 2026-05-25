@@ -44,6 +44,7 @@ Files:
 Context-Refs:
   - {{optional pointer to prior decision / finding / evidence}}
   - {{e.g., docs/DECISION_LOG.md#D-003}}
+  - {{optional generated packet, e.g., docs/context-packets/reviewer-T06.md}}
 
 Notes: |
   {{Optional. Constraints, gotchas, interface contracts from Depends-On tasks.
@@ -53,6 +54,8 @@ Notes: |
 `Context-Refs` is optional for simple isolated work.
 Use it when a task depends on prior decisions, resolves an open finding, changes a risky boundary,
 or needs specific evidence from an earlier phase. Prefer a short, scoped list over broad reading.
+For large or risky tasks, a generated context packet may be listed here, but the packet must cite
+canonical artifacts and must not replace the direct ADR/eval/evidence links.
 
 ### Optional heavy-task extension
 

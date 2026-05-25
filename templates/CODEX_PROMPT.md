@@ -29,10 +29,12 @@ Never delete history from this file. Append; do not replace.
 
 ## Continuity Pointers
 
+- **Cognition manifest:** `docs/COGNITION_MANIFEST.md`
 - **Decision log:** `docs/DECISION_LOG.md`
 - **Implementation journal:** `docs/IMPLEMENTATION_JOURNAL.md`
 - **Evidence index:** `docs/EVIDENCE_INDEX.md` (if present)
 - **Task-scoped context:** read `Context-Refs` in `docs/tasks.md` before broad searching
+- **Generated context packets:** `docs/context-packets/` (if present; convenience only, canonical paths win)
 
 ---
 
