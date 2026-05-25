@@ -41,10 +41,21 @@ def load_manifest(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def score_artifact(artifact: dict[str, Any], role: str, scopes: list[str]) -> tuple[int, str]:
+def allow_template_context(project_id: str, scopes: list[str]) -> bool:
+    if project_id == "ai-workflow-playbook":
+        return True
+    return any("template" in scope.lower() or "prompt" in scope.lower() for scope in scopes)
+
+
+def score_artifact(artifact: dict[str, Any], role: str, scopes: list[str], project_id: str) -> tuple[int, str]:
     score = 0
     kind = artifact.get("artifact_kind", "")
     path = artifact.get("path", "")
+    if path.startswith("templates/") and not allow_template_context(project_id, scopes):
+        return -100, path
+    if path.startswith("prompts/audit/") and not allow_template_context(project_id, scopes):
+        return -100, path
+
     haystack = " ".join(
         [
             str(path),
@@ -78,8 +89,9 @@ def score_artifact(artifact: dict[str, Any], role: str, scopes: list[str]) -> tu
 
 
 def select_artifacts(manifest: dict[str, Any], role: str, scopes: list[str], max_files: int) -> list[dict[str, Any]]:
+    project_id = str(manifest.get("project_id", ""))
     scored = [
-        (score_artifact(artifact, role, scopes), artifact)
+        (score_artifact(artifact, role, scopes, project_id), artifact)
         for artifact in manifest.get("artifacts", [])
     ]
     scored.sort(key=lambda item: (-item[0][0], item[0][1]))
