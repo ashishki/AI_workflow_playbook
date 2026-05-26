@@ -86,6 +86,17 @@ For practical setup and adoption, use:
 - [docs/workflow_continuity_retrofit.md](docs/workflow_continuity_retrofit.md) — MemPalace assessment and the playbook-native continuity retrofit
 - [docs/coverage_experiment_report_ru.md](docs/coverage_experiment_report_ru.md) — Russian coverage experiment report: project-fit zones, heavy-task boundaries, and execution-substrate line
 
+The zero-trust execution extension strengthens the runtime/CI side without
+making any external router mandatory:
+
+- [docs/mythos_router_assessment.md](docs/mythos_router_assessment.md) — critical Mythos Router comparison and integration roadmap
+- [docs/filesystem_reality_principle.md](docs/filesystem_reality_principle.md) — repo state beats model claims
+- [docs/runtime_verification_protocol.md](docs/runtime_verification_protocol.md) — before/after verification record for risky writes
+- [docs/bounded_correction_turns.md](docs/bounded_correction_turns.md) — limited self-repair and escalation rules
+- [docs/provider_routing_policy.md](docs/provider_routing_policy.md) — optional multi-provider fallback policy
+- [docs/integrity_verification_jobs.md](docs/integrity_verification_jobs.md) — CI/runtime reference integrity checks
+- [docs/cognition_layer_integrity.md](docs/cognition_layer_integrity.md) — generated memory and Obsidian integrity rules
+
 ## Quick Start Cheat Sheet
 
 ### New Project

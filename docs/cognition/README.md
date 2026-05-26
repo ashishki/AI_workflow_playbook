@@ -11,6 +11,6 @@ Start here:
 - `operational_examples.md` - concrete workflows
 - `anti_complexity_safeguards.md` - boundaries and ceilings
 - `current_project_assessment.md` - analysis of the current project portfolio
+- `../cognition_layer_integrity.md` - generated-memory integrity and stale-context checks
 
 The cognition layer is markdown-native and Git-compatible. Obsidian is optional and never authoritative.
-

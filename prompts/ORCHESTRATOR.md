@@ -16,6 +16,7 @@ The following steps are NEVER optional regardless of time pressure:
 | Step 4 Deep review | Every phase boundary | Forbidden — deep review is mandatory at phase boundary |
 | Step 6 Archive | After every deep review | Forbidden — audit trail is broken without it |
 | Step 6.5 Doc update | After every phase | Forbidden — docs drift without it |
+| Runtime verification | After every implementation result | Forbidden — completion claims are not evidence |
 
 Skipping any of these is a violation of the Implementation Contract and must be surfaced as a P1 finding in the next review cycle.
 
@@ -81,6 +82,10 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 - Task changes retrieval mode or modality scope (text-only vs multimodal, supported modalities, embedding model stability, fallback path)
 
 **Skip all review for:** doc-only patches, test-only changes, dependency bumps.
+
+Even when review is skipped, runtime verification is not skipped. The
+Orchestrator still checks changed files, tests claimed, and state updates before
+accepting `IMPLEMENTATION_RESULT: DONE`.
 
 ---
 
@@ -345,6 +350,7 @@ IMPLEMENTATION_RESULT: DONE | BLOCKED
 Files changed: [file:line]
 Test added: [file:function]
 Baseline: [N passed, N skipped, N failed]
+Verification: [changed files checked by git diff; tests actually run; any unverified claims]
 ```
 
 Execute:
@@ -415,6 +421,11 @@ Tests added: [file:function]
 Baseline before: [N passed, N skipped]
 Baseline after:  [N passed, N skipped, N failed]
 AC status: [AC-1: PASS | FAIL, ...]
+Runtime verification:
+- Changed files verified by: [git diff | file existence | hash record | other]
+- Commands actually run: [exact commands]
+- Unverified claims: [none | list]
+- Out-of-scope file changes: [none | list with justification]
 ```
 
 Execute:
@@ -425,6 +436,24 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 ```
 
 - `DONE` + all AC PASS + 0 failures:
+  → **Runtime verification check:** do not accept the completion claim until repo state confirms it.
+  Verify:
+  - files listed as created/modified exist and appear in `git diff --name-only` or the relevant commit
+  - deleted files are actually absent or removed in git diff
+  - no unreported files changed without justification
+  - claimed test/eval commands are present in the implementer report
+  - task state updates in `docs/CODEX_PROMPT.md` match the completed task and next task
+  - risky writes have a runtime verification record or enough diff/hash evidence to reconstruct one
+
+  If verification fails:
+  ```
+  RUNTIME_VERIFICATION_FAILED
+  Task: [T## — Title]
+  Failure: [claimed_file_missing | unreported_file_change | test_not_run | state_not_updated | risky_write_unverified]
+  Evidence: [path / command / diff observation]
+  Action: correction turn or human escalation per docs/bounded_correction_turns.md
+  ```
+  Stop or run one bounded correction turn. Do not proceed to review with unverified completion claims.
   → **Post-implementation tag check:** compare "Files modified" against capability signal patterns (same table as Step 0-E). If the modified files match a profile that differs from the task's `Type:` tag:
   ```
   SEMANTIC_MISMATCH (non-blocking)
@@ -545,6 +574,8 @@ SEC-5  Async: correct async client used in async def; no sync blocking I/O in as
 SEC-6  Auth: new route handlers use require_role(); exemptions documented
 CF     Contract: rules A–I from IMPLEMENTATION_CONTRACT.md — any violations?
 GOV-L1 Runtime-tier drift — no runtime mutation, privilege expansion, or persistent worker behavior above the declared tier
+GOV-L2 Claim verification — claimed files, tests, eval updates, and CODEX_PROMPT changes are backed by repo state or command evidence
+GOV-L3 Correction bounds — any self-repair loop stayed within the declared attempt limit and did not weaken tests or ACs
 
 <!-- Run the following checks ONLY if the completed task carries a capability-profile tag -->
 If task tag is `rag:ingestion` or `rag:query` → also check:
@@ -576,7 +607,7 @@ ISSUE_COUNT: [N]
 
 ISSUE_1:
 File: [path:line]
-Check: [SEC-N | CF | GOV-L1 | RAG-L1 | RAG-L2 | RAG-L3 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
+Check: [SEC-N | CF | GOV-L1 | GOV-L2 | GOV-L3 | RAG-L1 | RAG-L2 | RAG-L3 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
 Reviewer note: if you see a deterministic-vs-LLM mismatch, mention it as a warning in Description, but do not fail the task on that basis alone unless it also violates contract or runtime boundaries.
 Description: [what is wrong]
 Expected: [what it should be]

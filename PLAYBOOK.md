@@ -1,7 +1,7 @@
 # AI Workflow Playbook
 
-Version: 1.1
-Last updated: 2026-04-13
+Version: 1.2
+Last updated: 2026-05-26
 
 ---
 
@@ -54,6 +54,33 @@ The playbook does not use fuzzy agent memory as authority. It uses explicit file
 - **Role-scoped recall:** the Strategist, Orchestrator, implementer, and reviewers read only the continuity artifacts relevant to the current task or finding
 
 Retrieval is mandatory when a task changes architecture, runtime, risky boundaries, open findings, or capability semantics. Otherwise, keep reads narrow.
+
+### Filesystem Reality and Runtime Verification
+
+The playbook treats model output as intent until repo state proves otherwise.
+The filesystem, git diff, tests, CI, eval artifacts, and canonical docs outrank
+agent claims, generated context packets, and chat memory.
+
+For risky writes, command-surface changes, heavy tasks, provider/tool changes,
+and correction turns, the implementer or orchestrator must capture a lightweight
+runtime verification record:
+
+- declared operation and claimed files
+- before state where useful: git commit, file existence, SHA-256 hash
+- after state: changed files, diff evidence, file existence, SHA-256 hash
+- tests/evals actually run
+- verification status and failures
+
+No task is complete merely because an agent says it is complete. Completion
+requires evidence that the claimed files, tests, and state updates exist. See
+`docs/filesystem_reality_principle.md` and
+`docs/runtime_verification_protocol.md`.
+
+Correction loops are bounded. Default maximum: two implementation correction
+turns and two test-healing turns unless the task explicitly enables heavy mode.
+Repeated failures, unchanged test output, increased failure count, budget
+exhaustion, or out-of-scope edits escalate to the Orchestrator or human. See
+`docs/bounded_correction_turns.md`.
 
 ### Cognition Layer
 
@@ -179,7 +206,8 @@ The workflow has seven layers. Each layer has a defined purpose, defined outputs
 │  Runtime tier is selected proportionally: T0 managed/determin-   │
 │  istic, T1 container/bounded worker, T2 ephemeral isolated       │
 │  mutable runtime, T3 persistent privileged worker. CI verifies   │
-│  the chosen runtime contract and service dependencies.           │
+│  the chosen runtime contract, service dependencies, integrity     │
+│  references, and risky write verification evidence.              │
 │  Output: Green/red signal per commit, baseline verification      │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -193,6 +221,7 @@ The workflow has seven layers. Each layer has a defined purpose, defined outputs
 | Orchestrator never writes application code | It reads, decides, and spawns — no direct file edits in app/ |
 | Planning precedes implementation | Phase 1 (Layer 1) must be complete before Layer 3 begins |
 | CI gate is a layer boundary | No PR crosses from Layer 3 to Layer 4 if CI is red |
+| Claims require evidence | Claimed files, tests, decisions, and eval updates must be verified against repo state |
 
 ---
 

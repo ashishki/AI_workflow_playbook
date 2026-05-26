@@ -218,9 +218,11 @@ If you want to introduce the playbook gradually:
 6. task `Context-Refs` for history-sensitive work
 7. audit prompts
 8. orchestrator loop
-9. hooks for codex-only code writes and phase-boundary guards
-10. selective heavy-task mode + evidence index
-11. packaging
+9. filesystem reality and runtime verification for risky writes
+10. hooks for codex-only code writes and phase-boundary guards
+11. integrity checks for Context-Refs, evidence, and cognition packets
+12. selective heavy-task mode + evidence index
+13. packaging
 
 This order preserves momentum while tightening governance over time.
 

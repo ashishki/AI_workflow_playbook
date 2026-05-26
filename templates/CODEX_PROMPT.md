@@ -382,8 +382,14 @@ Apply at every task. These are verified by the optional Simplification Pass
    - Move this task to "Completed Tasks"
    - Set "Next Task" to the next task
    - Add any new open findings discovered during this task
-6. Commit with format: `type(scope): description` — one logical change per commit.
-7. If the task produced multiple logical changes (migration + service + tests), use multiple commits.
+6. Verify your completion claims against repo state:
+   - `git diff --name-only` includes every file you claim to have changed.
+   - Created files exist.
+   - Deleted files are absent and shown as deleted in the diff.
+   - Tests you claim to have run are listed with exact commands.
+   - Risky writes include enough before/after evidence for the Orchestrator or reviewer to reconstruct the state change.
+7. Commit with format: `type(scope): description` — one logical change per commit.
+8. If the task produced multiple logical changes (migration + service + tests), use multiple commits.
 
 ### Return Format
 
@@ -393,6 +399,8 @@ When done, return exactly:
 IMPLEMENTATION_RESULT: DONE
 New baseline: {N} passing tests
 Commits: {list of commit hashes and messages}
+Files changed: {created/modified/deleted paths}
+Verification: {exact commands run; diff/hash/file-existence evidence; unverified claims or "none"}
 Notes: {anything the orchestrator should know — surprises, deviations, decisions made}
 ```
 
@@ -404,6 +412,7 @@ Blocker: {exact description of what is blocking progress}
 Type: dependency | interface_mismatch | environment | ambiguity
 Recommended action: {what the orchestrator or human should do}
 Progress made: {what was completed before hitting the blocker}
+Verification: {what was verified before blocking, if anything}
 ```
 
 ### Commit Message Format

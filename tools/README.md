@@ -22,3 +22,14 @@ python3 tools/context_packet_builder.py \
 
 Packets are generated markdown. They cite canonical source files and should stay bounded to the role and scope.
 
+## Check Reference Integrity
+
+```bash
+python3 tools/integrity_check.py --root .
+```
+
+The checker is read-only. It verifies common playbook references such as
+`Context-Refs`, `docs/EVIDENCE_INDEX.md` artifact paths, cognition manifest
+paths, and generated context packet citations. Use `--strict-generated` when a
+project intentionally commits generated packets and wants missing packet
+references to fail CI.
