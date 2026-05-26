@@ -127,6 +127,52 @@ Packets should cite file paths and short excerpts. They should not paste entire 
 
 ---
 
+## Agent Entry Points Across Local and VPS Work
+
+Agents do not automatically know that a cognition vault exists. The operator,
+orchestrator, or task prompt must give the agent one of these entry points:
+
+- repo-local `docs/COGNITION_MANIFEST.md`
+- vault project map, such as `../engineering-cognition-vault/10-projects/<project>.md`
+- scoped packet, such as `../engineering-cognition-vault/90-context-packets/reviewer-<project>-<scope>.md`
+
+The recommended filesystem layout is:
+
+```text
+ai-stack/
+|-- projects/<repo>/
+`-- engineering-cognition-vault/
+```
+
+For local development, after committing project changes, refresh the vault with:
+
+```bash
+cd ../engineering-cognition-vault
+./scripts/sync_from_projects.sh --no-pull --commit --push
+```
+
+For VPS development, commit and push project artifacts from the VPS, then refresh
+the vault on the sync node:
+
+```bash
+cd ai-stack/engineering-cognition-vault
+git pull --ff-only
+./scripts/sync_from_projects.sh --commit --push
+```
+
+If an agent runs on the VPS, clone the vault beside `projects/` and pass packet
+paths explicitly in the task prompt. The vault is a context source, not runtime
+infrastructure.
+
+Canonical changes still belong in the project repo:
+
+- architecture changes in `docs/ARCHITECTURE.md`, `docs/DECISION_LOG.md`, or ADRs
+- eval changes in `docs/*_eval.md` and evidence indexes
+- handoff state in `docs/tasks.md`, `docs/CODEX_PROMPT.md`, and implementation journals
+- incidents in postmortems or audit/finding docs
+
+---
+
 ## Evidence Lineage Retrieval
 
 When investigating a regression or repeated finding, retrieve in this order:
@@ -174,4 +220,3 @@ Semantic retrieval is useful for discovery across large archives, but determinis
 | Semantic result has no source path | Exclude it |
 | Generated note contradicts ADR | Fix source or regenerate; ADR wins |
 | Packet exceeds role budget | Remove lower-priority archives and keep citations |
-

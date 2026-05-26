@@ -23,6 +23,48 @@ Git and markdown are the durable substrate. Obsidian, generated indexes, and vec
 
 ---
 
+## Local/VPS Operating Model
+
+The vault does not discover work by itself. It is refreshed from Git checkouts.
+
+Recommended layout on any machine that needs agent-readable packets:
+
+```text
+ai-stack/
+|-- projects/
+|   `-- <repo>/
+`-- engineering-cognition-vault/
+```
+
+Local machine workflow:
+
+1. Commit project code/docs/evals.
+2. Refresh the vault without pulling project repos:
+
+```bash
+cd engineering-cognition-vault
+./scripts/sync_from_projects.sh --no-pull --commit --push
+```
+
+VPS workflow:
+
+1. Commit and push project code/docs/evals from the VPS.
+2. Refresh the vault on the designated sync machine:
+
+```bash
+cd engineering-cognition-vault
+git pull --ff-only
+./scripts/sync_from_projects.sh --commit --push
+```
+
+If agents run on the VPS, clone the vault on the VPS and pass explicit packet
+paths in prompts. Do not make project runtime depend on the vault.
+
+Use one primary sync node where possible. Multiple machines may regenerate the
+vault, but only generated outputs should be auto-committed to avoid conflicts.
+
+---
+
 ## Repo-Local Files
 
 Recommended minimum in each project:
@@ -97,4 +139,3 @@ Cloud sync is optional:
 - encrypted backups are acceptable for disaster recovery
 
 None of these may become architectural dependencies. The system must function offline from local Git checkouts.
-

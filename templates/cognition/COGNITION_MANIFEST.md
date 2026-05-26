@@ -62,6 +62,51 @@ This file is a retrieval surface. It is not a replacement for canonical artifact
 
 ---
 
+## Local/VPS Agent Context Workflow
+
+Agents do not automatically discover the cognition vault. The operator or
+orchestrator must pass a repo-local manifest, project map, or generated context
+packet path into the agent task.
+
+Expected sibling layout:
+
+```text
+ai-stack/
+|-- projects/{{REPO_NAME}}/
+`-- engineering-cognition-vault/
+```
+
+Local project work:
+
+```bash
+cd ai-stack/engineering-cognition-vault
+./scripts/sync_from_projects.sh --no-pull --commit --push
+```
+
+VPS project work:
+
+1. Commit and push code, docs, evals, ADRs, findings, or postmortems in this repo.
+2. Refresh the vault on the machine that owns vault sync:
+
+```bash
+cd ai-stack/engineering-cognition-vault
+git pull --ff-only
+./scripts/sync_from_projects.sh --commit --push
+```
+
+If an agent runs on the VPS, clone the vault next to `projects/` and pass packet
+paths explicitly:
+
+```text
+../engineering-cognition-vault/10-projects/{{PROJECT_SLUG}}.md
+../engineering-cognition-vault/90-context-packets/<role>-{{PROJECT_SLUG}}-<scope>.md
+```
+
+Do not write canonical decisions, eval results, or findings directly into the
+vault. Write them into this repo first, then regenerate the vault.
+
+---
+
 ## Known Gaps
 
 | Gap | Impact | Migration step |
@@ -97,4 +142,3 @@ python3 tools/context_packet_builder.py \
   --scope "{{scope}}" \
   --output docs/context-packets/reviewer-{{scope_slug}}.md
 ```
-
