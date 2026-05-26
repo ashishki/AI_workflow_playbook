@@ -63,6 +63,16 @@ paths in prompts. Do not make project runtime depend on the vault.
 Use one primary sync node where possible. Multiple machines may regenerate the
 vault, but only generated outputs should be auto-committed to avoid conflicts.
 
+For review workflows, use the freshness gate before giving packets to an agent:
+
+```bash
+cd engineering-cognition-vault
+./scripts/ensure_fresh_for_project.sh <project-id> --commit --push
+```
+
+The gate compares project `HEAD` to the generated manifest's `git.head` and
+refreshes the vault when the index is stale.
+
 ---
 
 ## Repo-Local Files

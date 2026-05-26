@@ -15,6 +15,33 @@
     "root": {
       "type": "string"
     },
+    "git": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available"],
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "branch": {
+          "type": ["string", "null"]
+        },
+        "head": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "upstream": {
+          "type": ["string", "null"]
+        },
+        "upstream_head": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "dirty": {
+          "type": "boolean"
+        }
+      }
+    },
     "artifacts": {
       "type": "array",
       "items": {

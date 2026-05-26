@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -208,6 +209,37 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
 
 
+def git_value(root: Path, *args: str) -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "-C", root.as_posix(), *args],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+    return result.stdout.strip() or None
+
+
+def git_metadata(root: Path) -> dict[str, Any]:
+    inside_worktree = git_value(root, "rev-parse", "--is-inside-work-tree")
+    if inside_worktree != "true":
+        return {"available": False}
+
+    upstream = git_value(root, "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
+    status = git_value(root, "status", "--porcelain", "--untracked-files=no") or ""
+    return {
+        "available": True,
+        "branch": git_value(root, "branch", "--show-current"),
+        "head": git_value(root, "rev-parse", "HEAD"),
+        "upstream": upstream,
+        "upstream_head": git_value(root, "rev-parse", "@{u}") if upstream else None,
+        "dirty": bool(status),
+    }
+
+
 def build_manifest(root: Path, project_id: str, include_code: bool) -> dict[str, Any]:
     artifacts: list[dict[str, Any]] = []
     for path in candidate_paths(root, include_code):
@@ -235,6 +267,7 @@ def build_manifest(root: Path, project_id: str, include_code: bool) -> dict[str,
         "schema_version": SCHEMA_VERSION,
         "project_id": project_id,
         "root": root.as_posix(),
+        "git": git_metadata(root),
         "artifacts": artifacts,
     }
 

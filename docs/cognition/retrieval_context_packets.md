@@ -151,6 +151,13 @@ cd ../engineering-cognition-vault
 ./scripts/sync_from_projects.sh --no-pull --commit --push
 ```
 
+Before a review, prefer the project-specific freshness gate:
+
+```bash
+cd ../engineering-cognition-vault
+./scripts/ensure_fresh_for_project.sh <project-id> --no-pull --commit --push
+```
+
 For VPS development, commit and push project artifacts from the VPS, then refresh
 the vault on the sync node:
 
@@ -163,6 +170,10 @@ git pull --ff-only
 If an agent runs on the VPS, clone the vault beside `projects/` and pass packet
 paths explicitly in the task prompt. The vault is a context source, not runtime
 infrastructure.
+
+The freshness gate compares the current project `HEAD` to the `git.head` stored
+in `_generated/indexes/<project-id>.index.json`. If they differ, it regenerates
+the vault before the agent receives context.
 
 Canonical changes still belong in the project repo:
 
