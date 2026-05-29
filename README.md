@@ -98,6 +98,7 @@ making any external router mandatory:
 - [docs/provider_routing_policy.md](docs/provider_routing_policy.md) — optional multi-provider fallback policy
 - [docs/integrity_verification_jobs.md](docs/integrity_verification_jobs.md) — CI/runtime reference integrity checks
 - [docs/cognition_layer_integrity.md](docs/cognition_layer_integrity.md) — generated memory and Obsidian integrity rules
+- [docs/entropy_core_and_gensyn_reference_policy.md](docs/entropy_core_and_gensyn_reference_policy.md) — optional Entropy Core references and bounded Gensyn-inspired patterns
 
 ## Quick Start Cheat Sheet
 

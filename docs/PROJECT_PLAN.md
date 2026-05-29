@@ -33,6 +33,8 @@ verification, and cognition integrity.
   - `referee_review_record`
   - `risk_acceptance_record`
 - Keep receipts as artifacts, not infrastructure dependencies.
+- Use `docs/entropy_core_and_gensyn_reference_policy.md` to keep Entropy Core
+  references optional and Gensyn-inspired patterns bounded.
 - Add examples for implementation, review, provider fallback, and eval
   regression.
 
