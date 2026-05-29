@@ -80,6 +80,8 @@ This playbook is intentionally not "agent-everywhere" and not "VM-by-default". I
 For practical setup and adoption, use:
 
 - [docs/usage_guide.md](docs/usage_guide.md) — end-to-end usage for new and existing repositories
+- [docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md) — current portfolio role and roadmap
+- [docs/tasks.md](docs/tasks.md) — active framework task graph
 - [docs/project_fit_guide.md](docs/project_fit_guide.md) — problem-first entry points, adoption reality gate, and anti-patterns
 - [docs/architecture_layers.md](docs/architecture_layers.md) — concise layer map
 - [docs/heavy_task_mode.md](docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
