@@ -68,6 +68,18 @@ but that were deferred from the current task. Format:
 
 ---
 
+## Correction Budget
+
+- Max implementation correction turns: 2.
+- Max test-healing turns: 2 for normal tasks, 3 for heavy tasks.
+- Escalate after repeated failure output, increased failure count, out-of-scope
+  file need, budget exhaustion, or any proposal to weaken tests or acceptance
+  criteria.
+- Preserve the failed runtime verification record, relevant diff, and command
+  output before any correction turn.
+
+---
+
 ## Open Findings
 
 none

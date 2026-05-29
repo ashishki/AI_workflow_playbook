@@ -15,6 +15,7 @@ Output: 3 artifacts (see below).
 - PROMPT_2_CODE findings (current session)
 - docs/tasks.md
 - docs/CODEX_PROMPT.md
+- runtime verification record when the task declares `Runtime-Verification: required`
 
 ## Artifact A: docs/audit/REVIEW_REPORT.md (overwrite)
 
@@ -72,6 +73,8 @@ If no P0/P1 findings: write `─── Fix Queue ─── (empty — proceed to
 - Add new P2/P3 from this cycle
 - Update baseline and "Next task" line
 - Bump version (v3.N → v3.N+1)
+- If runtime verification failed or was missing for a required task, add a Fix
+  Queue item instead of marking the task complete.
 
 Do NOT touch: IMPLEMENTATION CONTRACT, MANDATORY PRE-TASK PROTOCOL, FORBIDDEN ACTIONS, GOVERNING DOCUMENTS.
 

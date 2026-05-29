@@ -46,6 +46,8 @@ tests run, and changed-file list.
 
 ## Runtime Verification Record
 
+Reusable template: `templates/RUNTIME_VERIFICATION_RECORD.md`.
+
 ```yaml
 type: runtime_verification
 task_id: T-123

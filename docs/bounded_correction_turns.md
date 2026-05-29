@@ -40,6 +40,13 @@ Escalate to the Orchestrator or human when:
 
 ## Correction Record
 
+Task schema shorthand:
+
+```yaml
+Runtime-Verification: required
+Correction-Budget: 2
+```
+
 ```yaml
 type: correction_turn
 task_id: T-123

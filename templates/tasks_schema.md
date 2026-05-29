@@ -80,6 +80,34 @@ Recommended uses:
 
 For normal tasks, omit these fields.
 
+### Optional runtime verification extension
+
+Use this field when a task is risky enough to require an explicit before/after
+record. The reusable template lives at `templates/RUNTIME_VERIFICATION_RECORD.md`.
+
+```
+Runtime-Verification: required
+Correction-Budget: 2
+```
+
+Recommended uses:
+
+- command surfaces, CI, package scripts, migrations, auth, secrets, retrieval
+  indexes, agent loops, tool schemas, compliance controls, or correction turns
+- tasks where changed-file claims may be hard to verify from a normal diff
+- any task with `Execution-Mode: heavy`
+
+If this field is present, task completion requires:
+
+- changed-file evidence: `git diff --stat` or equivalent
+- before/after hash evidence for high-risk claimed files
+- test/eval command evidence or an explicit "not run" reason
+- reviewer confirmation that claimed files exist or were intentionally deleted
+
+`Correction-Budget` defaults to `2` when omitted. Set it lower for dangerous
+work. Do not set it above `2` without a heavy-task rationale and explicit human
+approval.
+
 ---
 
 ## Tag Namespace

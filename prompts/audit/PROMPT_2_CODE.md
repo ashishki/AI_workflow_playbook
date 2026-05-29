@@ -35,8 +35,9 @@ GOV-3 Runtime-tier drift — code does not introduce shell/runtime mutation, pri
 GOV-4 Human approval boundaries — unsafe or high-blast-radius actions still require the declared approval path
 GOV-5 Continuity discipline — tasks that supersede decisions, close repeated findings, or depend on prior proof update the decision log / journal / evidence index as required; no silent drift
 GOV-6 Filesystem reality — implementation claims are backed by repo state: changed files exist or are deleted as claimed, tests/evals claimed were actually run, and CODEX_PROMPT state matches the task
-GOV-7 Runtime verification — risky writes, command-surface changes, heavy tasks, provider/tool changes, and correction turns include before/after diff or hash evidence sufficient for review
+GOV-7 Runtime verification — risky writes, command-surface changes, heavy tasks, provider/tool changes, and correction turns include before/after diff or hash evidence sufficient for review; use `templates/RUNTIME_VERIFICATION_RECORD.md` as the expected shape when the task declares `Runtime-Verification: required`
 GOV-8 Bounded correction — any self-repair loop has an explicit attempt count, stop condition, and escalation path; no unbounded fix/test loop
+GOV-9 Agent claim evidence — every material completion claim has evidence: claimed files exist, claimed tests include command/status, claimed decisions link to ADR/decision log/architecture updates, and claimed Context-Refs point to real files
 
 <!-- Run the following checks ONLY if RAG Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 RET-1  insufficient_evidence path — retrieval-backed handlers return `insufficient_evidence` when evidence is inadequate; no hallucinated fallback

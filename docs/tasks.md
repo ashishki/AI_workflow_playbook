@@ -18,7 +18,7 @@ server, or Mythos/Entropy clone.
 
 Owner: codex
 Type: docs template
-Status: planned
+Status: done 2026-05-29
 
 Objective: |
   Integrate runtime verification records into the default task/review flow for
@@ -35,11 +35,17 @@ Integration-Points:
   - `templates/`
   - `prompts/`
 
+Evidence:
+  - `templates/RUNTIME_VERIFICATION_RECORD.md`
+  - `templates/tasks_schema.md`
+  - `prompts/audit/PROMPT_2_CODE.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
+
 ### AWP-ZT-002: Agent Claim Verification Checklist
 
 Owner: codex
 Type: docs review
-Status: planned
+Status: done 2026-05-29
 
 Objective: |
   Add explicit reviewer checks for claimed files, claimed tests, claimed
@@ -55,11 +61,15 @@ Integration-Points:
   - `prompts/PROMPT_3_CONSOLIDATED.md`
   - `docs/integrity_verification_jobs.md`
 
+Evidence:
+  - `prompts/audit/PROMPT_2_CODE.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
+
 ### AWP-ZT-003: Bounded Correction Defaults
 
 Owner: codex
 Type: docs protocol
-Status: planned
+Status: done 2026-05-29
 
 Objective: |
   Make bounded correction turns the default for self-repair loops.
@@ -74,6 +84,12 @@ Integration-Points:
   - `docs/bounded_correction_turns.md`
   - `PLAYBOOK.md`
   - `prompts/`
+
+Evidence:
+  - `docs/bounded_correction_turns.md`
+  - `templates/CODEX_PROMPT.md`
+  - `templates/tasks_schema.md`
+  - `prompts/ORCHESTRATOR.md`
 
 ## Phase EL-1 - Evidence Layer
 
