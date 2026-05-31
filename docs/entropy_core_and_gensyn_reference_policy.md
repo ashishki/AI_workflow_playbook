@@ -10,6 +10,11 @@ protocols, references, receipts, and optional validators. Do not make Entropy
 Core, Gensyn, Obsidian, or any external swarm runtime mandatory for ordinary
 playbook adoption.
 
+For concrete product use, treat Entropy Core as a proof layer: product-local
+artifacts remain authoritative, while Core-compatible receipts, evidence refs,
+schema compatibility checks, and product bridge readiness checks make claims
+auditable. See `docs/entropy_core_proof_layer_protocol.md`.
+
 ## Entropy Core Reference Levels
 
 | Level | Meaning | Use when |

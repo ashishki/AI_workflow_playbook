@@ -48,6 +48,7 @@ Repo-local map for the playbook's cognition and operational memory extension. Th
 | Safeguards | `docs/cognition/anti_complexity_safeguards.md` | Complexity ceilings |
 | Mythos assessment | `docs/mythos_router_assessment.md` | Verification runtime reuse gate and comparison |
 | Hermes policy | `docs/hermes_agent_reference_policy.md` | Optional T3 runtime reuse gate |
+| Entropy proof layer | `docs/entropy_core_proof_layer_protocol.md` | Optional product proof layer protocol |
 | Entropy/Gensyn policy | `docs/entropy_core_and_gensyn_reference_policy.md` | Optional reference and OSS reuse policy |
 | Templates | `templates/`, `templates/cognition/` | Project scaffolding |
 | Schemas | `schemas/` | Metadata validation |
