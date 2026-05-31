@@ -54,6 +54,49 @@ Not adopted by default:
 - model weight training or RL loop;
 - mandatory external Gensyn dependency.
 
+## Gensyn Open-Source Reuse Gate
+
+Do not reimplement a Gensyn-shaped subsystem before checking whether an official
+Gensyn open-source project already solves the concrete problem.
+
+Current official discovery sources:
+
+- `https://github.com/gensyn-ai`
+- `https://github.com/gensyn-ai/rl-swarm`
+- `https://docs.gensyn.ai/testnet/rl-swarm/how-it-works`
+- `https://blog.gensyn.ai/codezero-extending-rl-swarm-toward-cooperative-coding-agents/`
+
+As of 2026-05-31, the official GitHub organization exposes relevant public
+repos including `rl-swarm`, `codeassist`, `rl-swarm-contracts`, `ree`, `axl`,
+and `dei`. This list is a starting point, not a frozen dependency registry;
+tasks must re-check the official organization before making a reuse decision.
+
+When a task touches any of these areas, it must run the reuse gate:
+
+- distributed or multi-agent evaluation loops;
+- proposer/solver/evaluator workflows;
+- reproducible execution environments;
+- P2P or encrypted agent/message routing;
+- quality-diversity search;
+- coding-agent training/evaluation harnesses;
+- prediction-market or referee/verdict infrastructure.
+
+Required decision order:
+
+1. Search official Gensyn repos/docs for an existing implementation.
+2. Classify each candidate as `direct_dependency`, `vendored_component`,
+   `adapted_code`, `pattern_only`, or `reject`.
+3. Prefer the highest-reuse option that passes fit, license, maintenance,
+   security, and complexity checks.
+4. If rejecting a usable Gensyn implementation, record why a local
+   implementation is still better.
+5. Pin any imported dependency or copied source to a repo URL, commit SHA, and
+   file path.
+
+Skipping this gate is allowed only when the task is documentation-only, the
+feature is unrelated to the areas above, or the existing project docs already
+contain a fresh reuse decision for the same component.
+
 ## Attribution Template
 
 Use this language in project docs when applying the pattern:
@@ -63,16 +106,23 @@ External Reference:
 - Gensyn RL Swarm, CodeZero, and DEI are design references only.
 - Adapted pattern: diverse candidates + evaluator/referee verdict + evidence receipt.
 - Not adopted: decentralized runtime, token incentives, model training, on-chain coordination.
+- OSS reuse check: official Gensyn repositories were checked before deciding
+  between dependency, vendored component, adapted code, pattern-only reuse, or
+  rejection.
 ```
 
 ## Code Reuse Rule
 
-Open-source code may be inspected. Copying code requires:
+Open-source code should be inspected when the reuse gate applies. Copying code,
+vendoring code, or adding a runtime dependency requires:
 
 - license check;
 - source repository and commit reference;
 - NOTICE/attribution if required;
-- explicit reason not to reimplement the small local pattern;
+- explicit fit analysis against project requirements;
+- explicit reason if a usable Gensyn implementation is not reused;
 - security review before introducing a runtime dependency.
 
-Prefer pattern reuse over code reuse.
+Prefer avoiding unnecessary dependencies for small local patterns, but do not
+rebuild a non-trivial Gensyn-shaped subsystem when an official open-source
+component passes the reuse gate.
