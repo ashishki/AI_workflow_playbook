@@ -46,6 +46,9 @@ Repo-local map for the playbook's cognition and operational memory extension. Th
 | Git integration | `docs/cognition/git_integration.md` | Sync and generated artifact policy |
 | Migration plan | `docs/cognition/migration_plan.md` | Staged rollout |
 | Safeguards | `docs/cognition/anti_complexity_safeguards.md` | Complexity ceilings |
+| Mythos assessment | `docs/mythos_router_assessment.md` | Verification runtime reuse gate and comparison |
+| Hermes policy | `docs/hermes_agent_reference_policy.md` | Optional T3 runtime reuse gate |
+| Entropy/Gensyn policy | `docs/entropy_core_and_gensyn_reference_policy.md` | Optional reference and OSS reuse policy |
 | Templates | `templates/`, `templates/cognition/` | Project scaffolding |
 | Schemas | `schemas/` | Metadata validation |
 | Tools | `tools/` | Deterministic manifest and packet builders |

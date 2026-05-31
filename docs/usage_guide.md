@@ -300,6 +300,7 @@ Set `SILENT=1` to suppress notification delivery for automated or cron-driven se
 
 When the playbook's Phase 1 architecture decision results in a higher-autonomy agent at T3, Hermes Agent (NousResearch) is a validated application-level runtime. The governance rules that apply to Hermes-based T3 deployments live in:
 
+- `docs/hermes_agent_reference_policy.md` — OSS reuse gate, official source checks, and adoption boundaries
 - `templates/ARCHITECTURE.md §T3 Reference Implementation` — required configuration table
 - `templates/IMPLEMENTATION_CONTRACT.md §Hermes Agent — T3 Reference Implementation` — AGENT-H1..H5 rules and P1/P2 thresholds
 

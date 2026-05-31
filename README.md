@@ -100,6 +100,7 @@ making any external router mandatory:
 - [docs/integrity_verification_jobs.md](docs/integrity_verification_jobs.md) — CI/runtime reference integrity checks
 - [docs/cognition_layer_integrity.md](docs/cognition_layer_integrity.md) — generated memory and Obsidian integrity rules
 - [docs/entropy_core_and_gensyn_reference_policy.md](docs/entropy_core_and_gensyn_reference_policy.md) — optional Entropy Core references and bounded Gensyn-inspired patterns
+- [docs/hermes_agent_reference_policy.md](docs/hermes_agent_reference_policy.md) — optional Hermes Agent T3 runtime reuse gate
 
 ## Quick Start Cheat Sheet
 

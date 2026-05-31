@@ -18,7 +18,9 @@ boundaries.
 ## Sources Inspected
 
 - Website protocol page: https://mythosrouter.com/protocol
+- Website product page: https://mythosrouter.com/
 - Official repository: https://github.com/thewaltero/mythos-router
+- NPM package: https://www.npmjs.com/package/mythos-router
 - README: `README.md`
 - Strict Write Discipline kernel: `src/swd.ts`
 - SWD receipts: `src/receipts.ts`
@@ -31,6 +33,50 @@ boundaries.
 - Security policy: `src/security-policy.ts`
 - Skills protocol: `docs/skills.md`
 - CI docs: `docs/CI.md`
+
+## Mythos Open-Source Reuse Gate
+
+Mythos Router is not only a conceptual reference. Before implementing a
+Mythos-shaped subsystem locally, check whether the official open-source runtime
+already provides the needed boundary.
+
+As of 2026-05-31, the official project exposes a local CLI/runtime, NPM
+package, MCP mode, SWD apply boundary, receipts, provider routing, skills,
+test-healing, CI verification, and MIT license. Re-check the official sources
+before making a reuse decision.
+
+Run this gate when a task touches:
+
+- Strict Write Discipline or verified file-apply logic;
+- before/after file hashes, write receipts, rollback, or drift verification;
+- MCP server tools for dry-run/apply/receipt inspection;
+- external-agent write boundaries;
+- provider routing, circuit breakers, stream watchdogs, or budget enforcement;
+- bounded correction turns or test-healing loops;
+- repo-local skills or learned project rules;
+- read-only CI verification for command-surface or sensitive-file risk.
+
+Required decision order:
+
+1. Search official Mythos sources for an existing implementation.
+2. Classify each candidate as `direct_dependency`, `mcp_adapter`,
+   `cli_boundary`, `vendored_component`, `adapted_code`, `pattern_only`, or
+   `reject`.
+3. Prefer the highest-reuse option that passes fit, license, maintenance,
+   security, operational complexity, and playbook-governance checks.
+4. If rejecting a usable Mythos component, record why a playbook-native local
+   implementation is still better.
+5. Pin any dependency, CLI usage, MCP adapter, or copied source to package
+   version, repo URL, commit SHA, and file path where applicable.
+
+Skipping this gate is allowed only when the task is documentation-only, the
+feature is unrelated to Mythos-shaped verification/runtime behavior, or the
+project already contains a fresh reuse decision for the same component.
+
+This gate does not make Mythos mandatory. It prevents rebuilding SWD, receipts,
+MCP apply boundaries, provider routing, or test-healing infrastructure without
+first checking whether the maintained OSS runtime can be used directly,
+adapted, or rejected with evidence.
 
 ## Research Summary
 
@@ -101,6 +147,8 @@ too narrow for the playbook's richer artifact graph.
 ## What Not To Take
 
 - Do not require Mythos Router as a runtime dependency.
+- Do not reimplement a non-trivial Mythos-shaped verification boundary before
+  running the Mythos Open-Source Reuse Gate.
 - Do not centralize playbook memory into `MEMORY.md`.
 - Do not allow automatic test-healing to replace review or phase gates.
 - Do not route architecture-grade reasoning through a generic provider fallback
@@ -179,6 +227,8 @@ Phase 5:
 - Run an optional Mythos comparison experiment on a non-critical repo.
 - Measure whether a runtime adapter reduces claim mismatch without increasing
   workflow friction too much.
+- If a project needs an actual verified apply boundary, evaluate `mythos mcp`
+  or `mythos swd apply` before building a local substitute.
 
 ## Evaluation Plan
 

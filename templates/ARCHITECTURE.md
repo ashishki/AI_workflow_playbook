@@ -109,6 +109,12 @@ When T3 is selected with a higher-autonomy agent shape, Hermes Agent (NousResear
 - Subagent delegation (depth-2, summary-passing, restricted child toolsets)
 - Six execution backends: local, Docker, SSH, Modal, Daytona, Singularity
 
+Before selecting Hermes or rebuilding any Hermes-shaped subsystem, run
+`docs/hermes_agent_reference_policy.md §Hermes Open-Source Reuse Gate`.
+Record whether the decision is `direct_runtime`, `runtime_adapter`,
+`vendored_component`, `adapted_code`, `pattern_only`, or `reject`, with source
+repo, release or commit SHA, and fit/security notes.
+
 **Required configuration for playbook compatibility:**
 
 | Rule | Setting | Rationale |

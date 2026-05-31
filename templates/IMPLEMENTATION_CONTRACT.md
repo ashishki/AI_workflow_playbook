@@ -183,6 +183,7 @@ Violation of network or credential rules: automatic P1.
 
 When the project is a **higher-autonomy agent** at runtime tier T3, Hermes Agent (NousResearch) is a validated candidate runtime. If Hermes is selected, the following rules apply in addition to the universal and T2/T3 rules above:
 
+- **AGENT-H0:** The project must run `docs/hermes_agent_reference_policy.md §Hermes Open-Source Reuse Gate` before selecting Hermes or rebuilding a Hermes-shaped subsystem. The selected Hermes release, commit SHA, adapter boundary, or rejection reason must be recorded in `docs/ARCHITECTURE.md` or an ADR. Missing source/version/reuse decision is a P2.
 - **AGENT-H1:** The learning loop (background memory daemon that autonomously creates skill files) must be explicitly evaluated in `docs/agent_eval.md §Learning Loop` before activation in production. Autonomous skill creation without this gate is a P1.
 - **AGENT-H2:** Community skills (external registry) must be treated as third-party dependencies: reviewed, pinned to a specific version, and listed in `docs/ARCHITECTURE.md §External Integrations`. Activating unreviewed community skills is a P2.
 - **AGENT-H3:** Cron jobs must run with `skip_memory=True` to prevent cross-session state contamination. Omitting this flag on scheduled jobs is a P1.
