@@ -3,6 +3,7 @@
 Start here:
 
 - `architecture.md` - core operating model and memory taxonomy
+- `vault_usage_protocol.md` - practical rules for local/VPS vault use
 - `obsidian_vault_architecture.md` - optional markdown vault structure
 - `retrieval_context_packets.md` - deterministic retrieval and role packet rules
 - `git_integration.md` - sync direction, generated artifact policy, CI considerations

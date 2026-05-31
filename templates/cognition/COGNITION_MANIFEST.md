@@ -19,6 +19,7 @@ This file is a retrieval surface. It is not a replacement for canonical artifact
 - Obsidian and generated indexes are navigation layers only.
 - If this manifest conflicts with architecture, contract, ADRs, evals, tests, or audit reports, the canonical artifact wins.
 - Generated context packets must cite canonical paths.
+- The cognition vault is used for navigation, context packets, and cross-project recall only. Project files remain authoritative.
 
 ---
 
@@ -111,6 +112,10 @@ paths explicitly:
 
 Do not write canonical decisions, eval results, or findings directly into the
 vault. Write them into this repo first, then regenerate the vault.
+
+Use the vault when starting an agent cold, preparing a review packet, comparing
+projects, or checking cross-project dependencies. Do not use it to close tasks,
+change project status, replace ADRs/evals/findings, or drive runtime behavior.
 
 ---
 

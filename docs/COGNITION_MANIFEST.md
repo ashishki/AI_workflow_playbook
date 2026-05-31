@@ -22,6 +22,7 @@ Repo-local map for the playbook's cognition and operational memory extension. Th
 - `PLAYBOOK.md`, templates, prompts, schemas, tools, and cognition docs are authoritative for this repository.
 - Generated manifests and context packets are convenience artifacts only.
 - Obsidian is an optional markdown UI and graph browser, not a backend.
+- The cognition vault is used for navigation, context packets, and cross-project recall only. Project files remain authoritative.
 
 ## Project Identity
 
@@ -39,6 +40,7 @@ Repo-local map for the playbook's cognition and operational memory extension. Th
 | Master workflow | `PLAYBOOK.md` | Workflow rules and layer model |
 | Readme | `README.md` | User-facing overview |
 | Cognition architecture | `docs/cognition/architecture.md` | Operating model |
+| Vault usage protocol | `docs/cognition/vault_usage_protocol.md` | When to use or ignore the vault |
 | Retrieval packets | `docs/cognition/retrieval_context_packets.md` | Retrieval and packet contract |
 | Obsidian vault | `docs/cognition/obsidian_vault_architecture.md` | Optional vault structure |
 | Git integration | `docs/cognition/git_integration.md` | Sync and generated artifact policy |
@@ -119,4 +121,3 @@ Do not write canonical decisions, eval results, or findings directly into the va
 |----------|------|--------|
 | Cognition index | `generated/cognition/index.json` | Optional generated artifact |
 | Context packets | `docs/context-packets/` | Commit only major design/review packets |
-

@@ -70,6 +70,7 @@ This playbook does not add a generic "memory layer" above the repo. It adds disc
 The cognition layer extension turns those retrieval surfaces into a portable markdown operating layer for long-lived engineering context. It remains repo-authoritative, Git-compatible, Obsidian-optional, and deterministic-first. Start with:
 
 - [docs/cognition/architecture.md](docs/cognition/architecture.md) — cognition and operational memory architecture
+- [docs/cognition/vault_usage_protocol.md](docs/cognition/vault_usage_protocol.md) — when the cognition vault should and should not be used
 - [docs/cognition/obsidian_vault_architecture.md](docs/cognition/obsidian_vault_architecture.md) — optional Obsidian vault structure
 - [docs/cognition/retrieval_context_packets.md](docs/cognition/retrieval_context_packets.md) — deterministic retrieval and context packet model
 - [docs/cognition/migration_plan.md](docs/cognition/migration_plan.md) — staged rollout across existing repositories
