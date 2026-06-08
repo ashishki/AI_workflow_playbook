@@ -28,6 +28,7 @@ This validator runs exactly once: after the Strategist produces Phase 1 delivera
 8. docs/IMPLEMENTATION_JOURNAL.md
 9. docs/EVIDENCE_INDEX.md (if present)
 10. docs/COGNITION_MANIFEST.md
+11. docs/README.md
 
 ---
 
@@ -137,6 +138,13 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A5c-04 Manifest defines at least strategist, orchestrator, implementer, and reviewer retrieval scopes
 - [ ] A5c-05 Manifest defines generated artifact policy for `generated/cognition/index.json` and context packets
 
+### A5d — README-first docs index
+
+- [ ] A5d-01 `docs/README.md` exists as the documentation index
+- [ ] A5d-02 `docs/README.md` links to `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION_CONTRACT.md`, `docs/tasks.md`, `docs/CODEX_PROMPT.md`, and `docs/COGNITION_MANIFEST.md`
+- [ ] A5d-03 `docs/README.md` states that it is a navigation index, not an authority over canonical artifacts
+- [ ] A5d-04 If the repo has substantial product/service/subsystem folders at Phase 1, docs or tasks identify whether local README indexes are required later
+
 ### A6 — .github/workflows/ci.yml
 
 - [ ] A6-01  File exists and is parseable YAML
@@ -208,6 +216,7 @@ Scan the following files for any remaining `{{...}}` patterns:
 2. `docs/IMPLEMENTATION_CONTRACT.md`
 3. `docs/CODEX_PROMPT.md`
 4. `docs/COGNITION_MANIFEST.md`
+5. `docs/README.md`
 
 Detection rule: any text matching `{{` followed by non-`}` characters followed by `}}` is an unresolved placeholder.
 

@@ -19,6 +19,7 @@ verification, and cognition integrity.
 ### P0 - Consolidate Zero-Trust Execution
 
 - Integrate Runtime Verification Protocol into default task templates.
+- Add README-first knowledge index as a phase-gate navigation artifact.
 - Add examples of `runtime_verification`, `decision_receipt`, and
   `risk_acceptance_record`.
 - Add CI example for `tools/integrity_check.py`.

@@ -228,6 +228,32 @@ Check `docs/audit/AUDIT_INDEX.md` Archive table for an entry belonging to **the 
 Example: all Phase 9 tasks done → look for a `PHASE9_REVIEW.md` (or equivalent) row in the Archive table.
 If absent → deep review required. If present → skip.
 
+**C1. README-first knowledge index check** — run only at a true phase boundary.
+
+Read `docs/readme_first_knowledge_index.md` if it exists in the project, or use
+the playbook rule directly:
+
+- changed repos, product workspaces, service folders, `docs/`, or substantial
+  subsystem folders should have a nearby `README.md` index;
+- README indexes must link to canonical artifacts, not replace them;
+- changed architecture/runtime/product/proof/eval/review boundaries require an
+  index update or an explicit phase-summary note explaining why no README update
+  was needed.
+
+If the completed phase changed a substantial boundary and no nearby README
+index was updated or justified, print:
+
+```
+README_INDEX_GAP
+Phase: [N]
+Changed boundary: [repo | docs | product workspace | service | subsystem]
+Missing: nearest README.md index update or justified omission
+Action required: update the README index using templates/README_INDEX.md or document why this phase did not need one before the phase gate closes.
+```
+
+Do not use README indexes as authority over architecture, contract, ADRs, evals,
+proof receipts, or review reports.
+
 **D. Review tier** — which review to run after the next implementation:
 - True phase boundary (C above, no archive entry for just-completed phase) → Deep review
 - Security-critical task (auth, middleware, RLS, secrets) → Deep review

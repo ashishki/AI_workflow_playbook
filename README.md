@@ -23,6 +23,8 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **Scoped continuity.** Prior decisions, implementation history, and proof are retrieved from explicit repo artifacts such as `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`, `docs/EVIDENCE_INDEX.md`, ADRs, and review archives. Retrieval is convenience, not authority.
 
+**README-first navigation.** Repo and folder `README.md` files are lightweight knowledge indexes. Before a phase closes, changed subsystems should have their nearest README updated with links to current canonical docs, decisions, tasks, proof, evals, and known gaps. README files route readers; they do not replace authoritative artifacts.
+
 **Immutable contract.** `IMPLEMENTATION_CONTRACT.md` is the unchanging floor of the project. It does not evolve without an explicit ADR. This prevents incremental erosion of quality standards across phases.
 
 **Structured task format.** Every task in `docs/tasks.md` follows a YAML-compatible block schema: `Owner`, `Phase`, `Type`, `Depends-On`, `Objective`, `Acceptance-Criteria` (each entry has `id`, `description`, and a `test:` field pointing to a specific test function), `Files`, `Notes`. The Orchestrator reads task fields directly without LLM parsing. A criterion without a test reference is a PHASE1_VALIDATOR blocker.
@@ -75,6 +77,12 @@ The cognition layer extension turns those retrieval surfaces into a portable mar
 - [docs/cognition/retrieval_context_packets.md](docs/cognition/retrieval_context_packets.md) — deterministic retrieval and context packet model
 - [docs/cognition/migration_plan.md](docs/cognition/migration_plan.md) — staged rollout across existing repositories
 - [docs/cognition/anti_complexity_safeguards.md](docs/cognition/anti_complexity_safeguards.md) — explicit boundaries and complexity ceilings
+
+The local README-first index protocol sits below the cognition vault and above
+ad hoc search:
+
+- [docs/readme_first_knowledge_index.md](docs/readme_first_knowledge_index.md) — README index rules and phase-gate check
+- [templates/README_INDEX.md](templates/README_INDEX.md) — folder/repo README index template
 
 This playbook is intentionally not "agent-everywhere" and not "VM-by-default". It is designed to help teams choose the minimum sufficient solution shape, runtime substrate, and governance level for the actual risk and autonomy of the system.
 

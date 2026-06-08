@@ -97,6 +97,7 @@ If you are using the command flow, `/bootstrap-new` performs this same entry ste
 The output should create the initial governance package:
 
 - `docs/ARCHITECTURE.md`
+- `docs/README.md` as the README-first index for project docs
 - `docs/spec.md`
 - `docs/tasks.md`
 - `docs/CODEX_PROMPT.md`
@@ -172,6 +173,8 @@ Copy:
 
 Generate:
 
+- `README.md` or update the existing root README as the repo entry index
+- `docs/README.md` as the docs index
 - `docs/ARCHITECTURE.md` from the system as it exists now
 - `docs/spec.md` for current supported behavior plus near-term intended scope
 - `docs/CODEX_PROMPT.md` with the real current baseline and next task
@@ -215,14 +218,15 @@ If you want to introduce the playbook gradually:
 3. implementation contract
 4. CODEX_PROMPT resumable state
 5. decision log + implementation journal
-6. task `Context-Refs` for history-sensitive work
-7. audit prompts
-8. orchestrator loop
-9. filesystem reality and runtime verification for risky writes
-10. hooks for codex-only code writes and phase-boundary guards
-11. integrity checks for Context-Refs, evidence, and cognition packets
-12. selective heavy-task mode + evidence index
-13. packaging
+6. README-first indexes for repo, docs, and substantial subsystem folders
+7. task `Context-Refs` for history-sensitive work
+8. audit prompts
+9. orchestrator loop
+10. filesystem reality and runtime verification for risky writes
+11. hooks for codex-only code writes and phase-boundary guards
+12. integrity checks for Context-Refs, evidence, README indexes, and cognition packets
+13. selective heavy-task mode + evidence index
+14. packaging
 
 This order preserves momentum while tightening governance over time.
 

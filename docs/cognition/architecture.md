@@ -22,6 +22,7 @@ Obsidian, vector stores, dashboards, and generated indexes are navigation surfac
 Canonical artifacts include:
 
 - code, tests, migrations, fixtures, and CI
+- `README.md`, `docs/README.md`, and folder README indexes
 - `docs/ARCHITECTURE.md`
 - `docs/IMPLEMENTATION_CONTRACT.md`
 - `docs/tasks.md`
@@ -52,6 +53,7 @@ Convenience artifacts must never override canonical artifacts.
 | Layer | Responsibility | Authority |
 |-------|----------------|-----------|
 | Repo truth | Code, docs, tests, ADRs, evals, reviews | Authoritative |
+| README-first indexes | Local navigation for repos, docs, product workspaces, services, and subsystems | Authoritative only as committed navigation; never overrides canonical artifacts |
 | Operational memory | Decision, evidence, journal, finding, hypothesis, postmortem surfaces | Authoritative only when they are the canonical artifact for that record |
 | Retrieval manifest | Deterministic map of important files, sections, tags, and graph edges | Generated or curated convenience |
 | Context packets | Bounded role-specific bundles for agents and reviewers | Convenience; cites canonical paths |
@@ -66,6 +68,7 @@ The system must work if Obsidian is closed, unavailable, or never installed.
 
 | Type | Stored as | Purpose | Required fields |
 |------|-----------|---------|-----------------|
+| README index | `README.md`, `docs/README.md`, folder READMEs | Route humans and agents to canonical artifacts after cold start or phase change | area, status, start-here links, key decisions, proof/eval refs, active tasks, gaps |
 | Decision | ADR + `DECISION_LOG.md` row | Preserve architectural tradeoffs and supersession | ID, status, date, decision, canonical source, supersedes |
 | Finding | Review report + `CODEX_PROMPT.md` open finding | Preserve defects, severity, lifecycle, and evidence | ID, severity, source review, status, owner, evidence |
 | Eval memory | `*_eval.md` and evidence index row | Track baselines, regressions, and experiment changes | profile, metric, baseline, current, source, date |
@@ -213,4 +216,3 @@ Do not ingest private secrets, `.env`, raw chat logs, build artifacts, dependenc
 - Findings remain lifecycle-managed by severity and age cap. Do not bury findings in graph notes.
 - Generated files must be clearly marked `generated: true` or stored under `generated/`.
 - Obsidian-specific configuration is optional and must not be required for CI, tests, or retrieval scripts.
-

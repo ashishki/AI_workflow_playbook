@@ -1,7 +1,7 @@
 # AI Workflow Playbook Tasks
 
 Status: active core framework task graph
-Last updated: 2026-05-29
+Last updated: 2026-06-08
 
 This file tracks framework work for the playbook itself. It is separate from
 project adoption tasks in downstream repositories.
@@ -13,6 +13,40 @@ engineering workflow. Do not turn it into a required runtime, orchestration
 server, or Mythos/Entropy clone.
 
 ## Phase ZT-1 - Zero-Trust Execution Consolidation
+
+### AWP-ZT-004: README-First Knowledge Index Gate
+
+Owner: codex
+Type: docs protocol
+Status: done 2026-06-08
+
+Objective: |
+  Add README-first knowledge indexes as lightweight navigation artifacts at
+  phase gates, without turning README files into authority or adding a new
+  memory runtime.
+
+Acceptance-Criteria:
+  - `docs/readme_first_knowledge_index.md` defines when README indexes are
+    required and how they relate to canonical artifacts.
+  - `templates/README_INDEX.md` provides a concise repo/folder index shape.
+  - Orchestrator and reviewer prompts check README index updates at phase
+    boundaries or changed subsystem boundaries.
+  - Cognition/vault docs state that README indexes are local navigation and the
+    vault remains cross-project convenience.
+
+Integration-Points:
+  - `docs/readme_first_knowledge_index.md`
+  - `templates/README_INDEX.md`
+  - `prompts/ORCHESTRATOR.md`
+  - `prompts/audit/PROMPT_2_CODE.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
+  - `docs/cognition/`
+
+Evidence:
+  - `docs/readme_first_knowledge_index.md`
+  - `templates/README_INDEX.md`
+  - `docs/usage_guide.md`
+  - `docs/cognition/vault_usage_protocol.md`
 
 ### AWP-ZT-001: Runtime Verification Template Integration
 

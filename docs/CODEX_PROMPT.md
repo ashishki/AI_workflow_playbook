@@ -1,7 +1,7 @@
 # AI Workflow Playbook - Compact Session State
 
-Version: 1.2
-Date: 2026-05-29
+Version: 1.3
+Date: 2026-06-08
 Status: active-core-framework
 
 ## Current State
@@ -10,7 +10,8 @@ Status: active-core-framework
   portfolio.
 - Active phase: EL-1, evidence layer.
 - Current task source: `docs/tasks.md`.
-- Latest completed tasks: `AWP-ZT-001`, `AWP-ZT-002`, `AWP-ZT-003`.
+- Latest completed tasks: `AWP-ZT-001`, `AWP-ZT-002`, `AWP-ZT-003`,
+  `AWP-ZT-004`.
 - Working rule: protocols must remain artifact-first and runtime-optional.
 
 ## Active Inputs
@@ -21,6 +22,7 @@ Status: active-core-framework
 - `docs/tasks.md`
 - `docs/runtime_verification_protocol.md`
 - `docs/filesystem_reality_principle.md`
+- `docs/readme_first_knowledge_index.md`
 - `prompts/ORCHESTRATOR.md`
 
 ## Next Task
@@ -45,16 +47,23 @@ Last verification:
 
 ```yaml
 type: runtime_verification
-task_id: AWP-ZT-001
-operation: docs_template_and_review_update
+task_id: AWP-ZT-004
+operation: readme_first_knowledge_index_protocol
 claimed_files:
   - docs/CODEX_PROMPT.md
-  - docs/bounded_correction_turns.md
-  - docs/runtime_verification_protocol.md
+  - docs/COGNITION_MANIFEST.md
+  - docs/PROJECT_PLAN.md
+  - docs/readme_first_knowledge_index.md
   - docs/tasks.md
-  - templates/RUNTIME_VERIFICATION_RECORD.md
-  - templates/CODEX_PROMPT.md
-  - templates/tasks_schema.md
+  - docs/usage_guide.md
+  - docs/cognition/architecture.md
+  - docs/cognition/retrieval_context_packets.md
+  - docs/cognition/vault_usage_protocol.md
+  - templates/ARCHITECTURE.md
+  - templates/README_INDEX.md
+  - templates/cognition/COGNITION_MANIFEST.md
+  - prompts/ORCHESTRATOR.md
+  - prompts/PHASE1_VALIDATOR.md
   - prompts/audit/PROMPT_2_CODE.md
   - prompts/audit/PROMPT_3_CONSOLIDATED.md
 tests_run:

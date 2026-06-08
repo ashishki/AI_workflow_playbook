@@ -23,6 +23,7 @@ The system optimizes for:
 
 | Mode | Source | Use first? | Notes |
 |------|--------|------------|-------|
+| README-first | `README.md`, `docs/README.md`, folder READMEs | Yes | Local navigation; routes to canonical artifacts |
 | Task scoped | `Context-Refs` in `docs/tasks.md` | Yes | Highest signal for implementation work |
 | State scoped | `docs/CODEX_PROMPT.md` | Yes | Current baseline, next task, open findings |
 | Decision scoped | `DECISION_LOG.md`, ADRs | Yes | Architecture and governance changes |

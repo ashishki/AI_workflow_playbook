@@ -616,6 +616,7 @@ Define how this project preserves and retrieves prior context without replacing 
 
 | Artifact | Purpose | Required? |
 |----------|---------|-----------|
+| `README.md`, folder `README.md` indexes | local navigation for repo, docs, product, service, and subsystem boundaries | Yes when the boundary is substantial |
 | `docs/COGNITION_MANIFEST.md` | repo-local map of canonical memory, retrieval scopes, generated artifact policy, and Obsidian optionality | Yes |
 | `docs/DECISION_LOG.md` | quick recall of why key decisions were made | Yes |
 | `docs/IMPLEMENTATION_JOURNAL.md` | cross-session implementation handoff | Yes |
@@ -626,6 +627,8 @@ Define how this project preserves and retrieves prior context without replacing 
 - Tasks that touch architecture, runtime, auth, retrieval semantics, compliance, migrations, or open findings must include `Context-Refs` in `docs/tasks.md`.
 - Agents read task `Context-Refs` first, then only the linked canonical documents.
 - Retrieval artifacts summarize and index. They do not overrule canonical files.
+- README indexes route agents to canonical files. They are updated at phase gates
+  when a repo, docs, product, service, proof/eval, or subsystem boundary changes.
 - Generated retrieval manifests and context packets are convenience artifacts. They must cite canonical paths before agents rely on them.
 - If this project omits `docs/EVIDENCE_INDEX.md`, explain why the current evidence volume does not justify it.
 

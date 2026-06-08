@@ -39,6 +39,7 @@ Repo-local map for the playbook's cognition and operational memory extension. Th
 |---------|------|-------|
 | Master workflow | `PLAYBOOK.md` | Workflow rules and layer model |
 | Readme | `README.md` | User-facing overview |
+| README-first protocol | `docs/readme_first_knowledge_index.md` | Local knowledge index and phase-gate rule |
 | Cognition architecture | `docs/cognition/architecture.md` | Operating model |
 | Vault usage protocol | `docs/cognition/vault_usage_protocol.md` | When to use or ignore the vault |
 | Retrieval packets | `docs/cognition/retrieval_context_packets.md` | Retrieval and packet contract |
@@ -59,6 +60,7 @@ Repo-local map for the playbook's cognition and operational memory extension. Th
 | Scope | Start here | Include next |
 |-------|------------|--------------|
 | Cognition architecture | `docs/cognition/architecture.md` | safeguards, git integration |
+| README-first indexes | `docs/readme_first_knowledge_index.md` | cognition architecture, vault usage |
 | Obsidian design | `docs/cognition/obsidian_vault_architecture.md` | vault template |
 | Context packet tooling | `docs/cognition/retrieval_context_packets.md` | tools and schemas |
 | Project migration | `docs/cognition/migration_plan.md` | current project assessment, manifest template |

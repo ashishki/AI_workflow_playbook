@@ -12,9 +12,11 @@ Use this order whenever surfaces disagree:
 
 1. Project repo canonical artifacts: task graph, ADRs, evals, findings,
    implementation journal, architecture docs, and review archives.
-2. Repo-local `docs/COGNITION_MANIFEST.md`.
-3. Vault project map and generated context packets.
-4. Chat memory.
+2. Local README indexes as navigation only: `README.md`, `docs/README.md`,
+   folder READMEs.
+3. Repo-local `docs/COGNITION_MANIFEST.md`.
+4. Vault project map and generated context packets.
+5. Chat memory.
 
 If the vault disagrees with the project repo, fix the project repo first, then
 refresh or update the vault.
@@ -46,9 +48,10 @@ Do not use the vault for:
 For a project task, the orchestrator may pass:
 
 ```text
-Read docs/CODEX_PROMPT.md, docs/tasks.md, docs/COGNITION_MANIFEST.md,
-and the vault project map if available. Treat project files as authority and
-use the vault only for navigation and cross-project context.
+Read README.md, docs/README.md if present, docs/CODEX_PROMPT.md, docs/tasks.md,
+docs/COGNITION_MANIFEST.md, and the vault project map if available. Treat
+project files as authority and use README files and the vault only for
+navigation and cross-project context.
 ```
 
 For a review task, also pass the scoped packet if one exists:

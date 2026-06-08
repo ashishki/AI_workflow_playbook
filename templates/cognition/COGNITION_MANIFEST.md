@@ -16,6 +16,8 @@ This file is a retrieval surface. It is not a replacement for canonical artifact
 ## Authority Rules
 
 - Repo artifacts are authoritative.
+- README files are local navigation indexes, not authority over canonical
+  architecture, contract, tasks, ADRs, evals, proof, or reviews.
 - Obsidian and generated indexes are navigation layers only.
 - If this manifest conflicts with architecture, contract, ADRs, evals, tests, or audit reports, the canonical artifact wins.
 - Generated context packets must cite canonical paths.
@@ -40,6 +42,7 @@ This file is a retrieval surface. It is not a replacement for canonical artifact
 
 | Surface | Path | Notes |
 |---------|------|-------|
+| README indexes | `README.md`, `docs/README.md`, folder READMEs | {{navigation only}} |
 | Architecture | `docs/ARCHITECTURE.md` | {{notes}} |
 | Contract | `docs/IMPLEMENTATION_CONTRACT.md` | {{notes}} |
 | Task graph | `docs/tasks.md` | {{notes}} |

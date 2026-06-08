@@ -16,6 +16,7 @@ Output: 3 artifacts (see below).
 - docs/tasks.md
 - docs/CODEX_PROMPT.md
 - runtime verification record when the task declares `Runtime-Verification: required`
+- nearest README indexes for changed repo/docs/product/service/subsystem boundaries
 
 ## Artifact A: docs/audit/REVIEW_REPORT.md (overwrite)
 
@@ -44,6 +45,11 @@ Same format.
 
 ## Stop-Ship Decision
 Yes/No — reason.
+
+## README-First Index Status
+| Changed boundary | README path | Status | Notes |
+|------------------|-------------|--------|-------|
+| repo/docs/product/service/subsystem | `README.md` | updated / justified / missing | canonical artifacts linked? |
 ---
 
 ## Artifact B: tasks.md patch
@@ -75,6 +81,8 @@ If no P0/P1 findings: write `─── Fix Queue ─── (empty — proceed to
 - Bump version (v3.N → v3.N+1)
 - If runtime verification failed or was missing for a required task, add a Fix
   Queue item instead of marking the task complete.
+- If a changed boundary lacks a README-first index update or justified
+  omission, add a P1/P2 finding depending on blast radius.
 
 Do NOT touch: IMPLEMENTATION CONTRACT, MANDATORY PRE-TASK PROTOCOL, FORBIDDEN ACTIONS, GOVERNING DOCUMENTS.
 
