@@ -1,6 +1,7 @@
-# Cognition Tools
+# Playbook Tools
 
-These tools are deterministic helpers for the markdown cognition layer. They do not require Obsidian, a vector database, or network access.
+These tools are deterministic helpers for cognition, integrity, and AI cost
+telemetry. They do not require Obsidian, a vector database, or network access.
 
 ## Build a Manifest
 
@@ -33,3 +34,17 @@ The checker is read-only. It verifies common playbook references such as
 paths, and generated context packet citations. Use `--strict-generated` when a
 project intentionally commits generated packets and wants missing packet
 references to fail CI.
+
+## Roll Up AI Cost Telemetry
+
+```bash
+python3 tools/cost_rollup.py \
+  --input docs/ai_cost_telemetry.jsonl \
+  --output reports/ai_cost_rollup.md \
+  --strict
+```
+
+The rollup reads provider-agnostic JSONL entries matching
+`schemas/cost_telemetry_entry.schema.json`, then summarizes cost by run, task,
+model, and agent role. Use `--max-total-cost`, `--max-run-cost`, and
+`--require-file` when `docs/COST_BUDGET.md` declares enforceable thresholds.

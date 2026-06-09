@@ -24,6 +24,9 @@ Never delete history from this file. Append; do not replace.
 - **Last updated:** {{DATE}}
 - **Session tokens (approx):** not yet tracked
 - **Cumulative phase tokens (approx):** not yet tracked
+- **Session cost (approx):** not yet tracked
+- **Cumulative phase cost (approx):** not yet tracked
+- **Budget status:** not applicable / within budget / warning / approval required
 
 ---
 
@@ -33,6 +36,7 @@ Never delete history from this file. Append; do not replace.
 - **Decision log:** `docs/DECISION_LOG.md`
 - **Implementation journal:** `docs/IMPLEMENTATION_JOURNAL.md`
 - **Evidence index:** `docs/EVIDENCE_INDEX.md` (if present)
+- **Cost budget:** `docs/COST_BUDGET.md` (if present; otherwise use inline project budget notes)
 - **Task-scoped context:** read `Context-Refs` in `docs/tasks.md` before broad searching
 - **Generated context packets:** `docs/context-packets/` (if present; convenience only, canonical paths win)
 
@@ -77,6 +81,23 @@ but that were deferred from the current task. Format:
   criteria.
 - Preserve the failed runtime verification record, relevant diff, and command
   output before any correction turn.
+
+---
+
+## Cost Budget State
+
+- Budget artifact: `docs/COST_BUDGET.md` / inline / not applicable
+- Telemetry source: `docs/ai_cost_telemetry.jsonl` / external gateway / provider export / not applicable
+- Last rollup: `reports/ai_cost_rollup.md` / not run
+- Per-task budget:
+- Per-run budget:
+- Monthly project budget:
+- Approval required before:
+- Last recorded AI/model cost:
+
+If the next task would exceed the declared budget, increase model class,
+increase retry/fan-out/tool-call limits, or add recurring AI usage, stop for
+approval before implementation.
 
 ---
 
@@ -354,7 +375,7 @@ Read these instructions every time you pick up a task. Do not skip steps.
 4. **Read Depends-On tasks, `Context-Refs`, and continuity artifacts only when required** — mandatory for architecture changes, risky boundaries, open findings, or tasks where prior interfaces / evidence materially constrain the implementation.
 5. **Run `pytest -q`** — capture the current baseline. Record: `N passing, M failed`. If M > 0, stop and report: you cannot add failures to an already-failing baseline.
 6. **Run `ruff check`** — must exit 0. If not, fix ruff issues first. Commit the ruff fix separately with message `chore(lint): resolve ruff issues`. Then re-run the pre-task protocol.
-7. **Write tests before or alongside implementation.** Every acceptance criterion has exactly one corresponding test (or more, never zero).
+7. **Write tests before or alongside implementation.** Every acceptance criterion has concrete verification evidence. Standard/Strict code-changing criteria use `test:` whenever practical; Lean may use a concrete `verify:` command or bounded manual check.
 
 ### During Implementation
 

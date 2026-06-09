@@ -31,11 +31,11 @@ Objective: |
 
 Acceptance-Criteria:
   - id: AC-1
-    description: "{{Specific, testable. A reviewer must be able to verify by running tests + reading code.}}"
+    description: "{{Specific, testable. A reviewer must be able to verify by running tests, a concrete command, or a bounded manual check.}}"
     test: "{{tests/path/test_file.py::test_function_name}}"
   - id: AC-2
     description: "{{...}}"
-    test: "{{...}}"
+    verify: "{{concrete command or manual check; Lean mode only unless no automated test is possible}}"
 
 Files:
   - {{path/to/file.py}}         # created or modified
@@ -108,6 +108,26 @@ If this field is present, task completion requires:
 work. Do not set it above `2` without a heavy-task rationale and explicit human
 approval.
 
+### Optional cost-budget extension
+
+Use this field when a task adds, changes, or materially depends on LLM calls,
+agent loops, dynamic workflows, model routing, eval generation, or multi-agent
+review.
+
+```
+Cost-Budget:
+  scope: {{task | run | workflow | phase}}
+  max_cost_usd: {{number or "TBD requires approval before execution"}}
+  max_model_calls: {{number}}
+  max_tool_calls: {{number | n/a}}
+  max_retries: {{number}}
+  approval_required_when: "{{model escalation | fan-out increase | retry expansion | budget overrun}}"
+```
+
+For Lean projects, this budget may live inline in the task or in
+`docs/CODEX_PROMPT.md`. For Standard/Strict projects, recurring AI usage should
+also be reflected in `docs/COST_BUDGET.md`.
+
 ---
 
 ## Tag Namespace
@@ -128,6 +148,7 @@ approval.
 | `compliance:control` | Implements a compliance control (auth, encryption, retention) | Compliance |
 | `compliance:audit` | Implements audit log infrastructure | Compliance |
 | `compliance:evidence` | Collects or updates compliance evidence artifact | Compliance |
+| `cost:telemetry` | Implements or modifies AI/model cost telemetry collection, rollup, or thresholds | Cost |
 
 Multiple tags are space-separated: `Type: compliance:control compliance:audit`
 
@@ -135,7 +156,9 @@ Multiple tags are space-separated: `Type: compliance:control compliance:audit`
 
 ## Acceptance Criteria Rules
 
-A criterion is acceptable if a review agent can verify it by running the tests and reading the code **without asking the implementer**. Apply these rules:
+A criterion is acceptable if a review agent can verify it by running tests,
+running a concrete command, or performing a bounded manual check **without
+asking the implementer**. Apply these rules:
 
 | ✓ Acceptable | ✗ Not acceptable |
 |-------------|-----------------|
@@ -143,6 +166,15 @@ A criterion is acceptable if a review agent can verify it by running the tests a
 | `DELETE on audit_log table raises PermissionDenied` | "Audit log is tamper-evident" |
 | `pytest tests/test_retention.py::test_ttl_boundary passes` | "Retention policy is implemented" |
 | `hit@3 ≥ 0.80 on the 10-query evaluation set` | "Retrieval quality is acceptable" |
+
+Verification field rules:
+
+- Standard/Strict code-changing criteria use `test:` whenever an automated
+  test is practical.
+- Lean criteria may use `verify:` when a real test would be heavier than the
+  change, but `verify:` must name a concrete command or manual observation.
+- Blank verifiers, "manual QA", "check it works", and "review the code" are
+  not acceptable verification fields.
 
 Forbidden phrases (automatic BLOCKER in PHASE1_VALIDATOR Part C):
 - "works correctly", "handles properly", "is implemented", "functions as expected",

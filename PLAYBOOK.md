@@ -227,23 +227,30 @@ The workflow has seven layers. Each layer has a defined purpose, defined outputs
 
 ## 2. Project Initialization (Phase 1)
 
-Phase 1 is not optional and is not abbreviated. Every project — regardless of size, scope, or timeline — begins here.
+Every project begins with a Phase 1 decision, but Phase 1 is mode-scoped. The
+first decision is the adoption mode: Lean, Standard, or Strict. Do not force a
+Lean project to produce Strict artifacts, and do not weaken Strict evidence
+requirements for a high-risk project.
+
+See `docs/adoption_modes.md` for the artifact matrix.
 
 ### Required Deliverables at End of Phase 1
 
-1. `docs/ARCHITECTURE.md` — system design document
-2. `docs/spec.md` — feature specification with acceptance criteria
-3. `docs/tasks.md` — complete task graph
-4. `docs/CODEX_PROMPT.md` — session handoff document, initialized
-5. `docs/IMPLEMENTATION_CONTRACT.md` — immutable rules, tailored to the project
-6. `docs/DECISION_LOG.md` — concise decision index pointing to canonical sources
-7. `docs/IMPLEMENTATION_JOURNAL.md` — append-only implementation continuity log
-8. `docs/COGNITION_MANIFEST.md` — repo-local map of canonical memory, retrieval scopes, eval/decision/finding surfaces
-9. Project skeleton (directories, `__init__.py`, entry points)
-10. First tests (at minimum: smoke tests proving the skeleton works)
-11. CI setup (`.github/workflows/ci.yml`) — passing on first commit
+| Artifact | Lean | Standard | Strict |
+|----------|------|----------|--------|
+| Problem fit note | Required | Required | Required |
+| `docs/tasks.md` | Required | Required | Required |
+| `docs/CODEX_PROMPT.md` or `AGENTS.md` | Required | Required | Required |
+| `docs/IMPLEMENTATION_CONTRACT.md` | Contract-lite | Required | Required |
+| CI or documented local verification command | Required | Required CI | Required CI with relevant gates |
+| `docs/ARCHITECTURE.md` and `docs/spec.md` | Optional unless architecture/scope is non-trivial | Required | Required |
+| `docs/DECISION_LOG.md` and `docs/IMPLEMENTATION_JOURNAL.md` | Optional | Required | Required |
+| `docs/COGNITION_MANIFEST.md` | Optional | Optional | Required when cognition/vault/context packets are used |
+| `docs/EVIDENCE_INDEX.md` | Optional | Optional unless recurring evidence exists | Required |
+| Capability eval artifacts | Only for active capability behavior | Only for active capability behavior | Required for active capability behavior |
 
-`docs/EVIDENCE_INDEX.md` is required when the project uses heavy-task mode, active evaluation artifacts, compliance evidence, or recurring cross-phase findings. Lean projects may add it later.
+Lean projects still need explicit tasks, verification evidence, and review at
+meaningful boundaries. They do not need fake cognition, proof, or eval artifacts.
 
 ### Continuity Artifacts
 
@@ -366,7 +373,11 @@ Governance intensity scales with risk and criticality:
 | **Standard** | Internal operational system, customer-facing but recoverable service | Full workflow, phase gates, stronger evaluation and audit trail |
 | **Strict** | Business-critical, high-blast-radius, compliance-heavy, or privileged autonomous system | Strong approval boundaries, stronger evidence, stronger runtime and recovery controls |
 
-Governance level changes how much control surface is justified. It does not weaken the workflow's hard invariants: no self-review, explicit artifacts, test discipline, and phase gates remain mandatory.
+Governance level changes how much control surface is justified. It does not
+weaken the workflow's hard invariants: no self-review, explicit task state, test
+or verification evidence, bounded correction, and human approval at meaningful
+risk boundaries. Phase gates are required at the cadence justified by the mode;
+Lean gates may be lightweight.
 
 ### 2b.4 Execution Substrate Selection
 
@@ -377,7 +388,7 @@ Runtime substrate is a proportional control, not the definition of the system.
 | **T0** | Deterministic or managed-service execution; no special isolated mutable runtime | Most app logic, validators, fixed workflows, managed integrations |
 | **T1** | Container, devcontainer, or bounded worker runtime | Standard services, bounded tool execution, normal CI/workers |
 | **T2** | Ephemeral microVM-class or similarly isolated mutable runtime | Risky autonomous tasks require shell/workspace/toolchain mutation with strong isolation and easy rollback |
-| **T3** | Persistent VM-class or privileged long-lived isolated worker | Long-running autonomous execution with persistence, broader privilege, or continuity requirements. Reference implementation: Hermes Agent — see `templates/ARCHITECTURE.md §T3 Reference Implementation`. |
+| **T3** | Persistent VM-class or privileged long-lived isolated worker | Long-running autonomous execution with persistence, broader privilege, or continuity requirements. See `reference/solution_references.md` and `docs/dynamic_workflow_reference_policy.md` before adopting external runtime references. |
 
 Select runtime tier by:
 - autonomy level
@@ -437,6 +448,30 @@ The Strategist should define:
 - which workloads can use a smaller / cheaper model
 - which workloads justify escalation to a stronger model
 - what metrics will prove the choice is still correct after implementation
+
+### 2b.8 Cost Budget Guardrails
+
+If a project uses LLM calls, agent loops, dynamic workflows, retrieval,
+evaluators, or multi-agent review, cost must be declared before execution.
+
+Rules:
+- Lean projects may keep the budget inline in `docs/CODEX_PROMPT.md`,
+  `AGENTS.md`, `docs/CONTRACT_LITE.md`, or task `Cost-Budget:` fields
+- Standard/Strict projects use `docs/COST_BUDGET.md` when AI usage is
+  recurring, multi-agent, dynamic-workflow based, multi-user, or materially
+  costly
+- budget gates must cover model calls, retries, tool calls, fan-out, model
+  escalation, and approval before overrun
+- cost attribution should include project, task/workflow, role/agent, model,
+  operator/user, feature/workload, and environment
+- cost reduction is valid only when quality/eval and latency remain within the
+  declared threshold
+- recurring or threshold-gated AI usage should emit provider-agnostic telemetry
+  to `docs/ai_cost_telemetry.jsonl` or an equivalent source and run
+  `tools/cost_rollup.py` in review/CI
+
+See `docs/cost_budget_guardrails.md`, `docs/cost_telemetry_protocol.md`,
+`templates/COST_BUDGET.md`, and `tools/cost_rollup.py`.
 
 ---
 
@@ -1211,6 +1246,12 @@ META and ARCH reviews can run as parallel subagents. Independent tasks within a 
 **Precise Codex prompts**
 The orchestrator prompt to a Codex agent must list exact files to read, exact files to modify, and the expected return format. Vague prompts cause agents to explore broadly, consuming tokens on files that are not relevant.
 
+**Budget-aware exploration**
+For AI/model tasks, broad repo reads, subagent fan-out, retry loops, and model
+escalation must stay within the declared budget boundary. If the next step would
+exceed the per-task or per-run budget, stop for approval instead of trying to
+"finish anyway."
+
 ---
 
 ## 9. Forbidden Actions
@@ -1235,18 +1276,21 @@ If any of these occur, they must be surfaced as P1 findings in the next review c
 
 ## 10. Documentation Set
 
-Every project using this playbook maintains the following documents. They are not optional.
+The documentation set is mode-scoped. Standard and Strict projects maintain the
+full set below. Lean projects keep the required Lean artifacts from
+`docs/adoption_modes.md` and add the rest only when the project risk or context
+volume justifies them.
 
 | Document | Path | Role | Mutability |
 |----------|------|------|------------|
-| Architecture | `docs/ARCHITECTURE.md` | Problem fit, adoption reality boundaries, system design, component table, data flows, runtime contract | Updated when architecture changes; changes need ADR if significant |
-| Specification | `docs/spec.md` | Feature specification and acceptance criteria | Updated when scope changes; changes need human approval |
+| Architecture | `docs/ARCHITECTURE.md` | Problem fit, adoption reality boundaries, system design, component table, data flows, runtime contract | Standard/Strict required; Lean required when architecture is non-trivial |
+| Specification | `docs/spec.md` | Feature specification and acceptance criteria | Standard/Strict required; Lean optional for small task sets |
 | Task graph | `docs/tasks.md` | Authoritative task contracts — the ground truth for what agents implement | Append-only for completed tasks; active tasks updated as needed |
-| Session handoff | `docs/CODEX_PROMPT.md` | Current baseline, Fix Queue, open findings, next task | Updated at every phase boundary and before every Codex spawn |
-| Implementation contract | `docs/IMPLEMENTATION_CONTRACT.md` | Immutable rules — requires ADR to change | Immutable (with ADR exception) |
-| Review cycle reports | `docs/audit/CYCLE{N}_REVIEW.md` | Phase-by-phase review findings | Append-only; never edited after creation |
-| ADRs | `docs/adr/ADR{NNN}.md` | Architectural Decision Records | Append-only |
-| Dev standards | `docs/dev-standards.md` | Code style, test strategy, observability conventions | Updated as team conventions evolve |
+| Session handoff | `docs/CODEX_PROMPT.md` or `AGENTS.md` | Current baseline, Fix Queue, open findings, next task | Required in all modes; updated before work resumes |
+| Implementation contract | `docs/IMPLEMENTATION_CONTRACT.md` | Implementation rules and boundaries | Contract-lite allowed in Lean; full immutable contract in Standard/Strict |
+| Review cycle reports | `docs/audit/CYCLE{N}_REVIEW.md` | Phase-by-phase review findings | Standard/Strict required at phase/risk boundaries |
+| ADRs | `docs/adr/ADR{NNN}.md` | Architectural Decision Records | Required when architectural decisions change |
+| Dev standards | `docs/dev-standards.md` | Code style, test strategy, observability conventions | Optional in Lean; useful when conventions are non-trivial |
 
 ### CODEX_PROMPT.md — Required Fields
 
@@ -1334,16 +1378,25 @@ Each gap includes: what is missing, what impact it has, and the minimum viable a
 
 ---
 
-### GAP-2: No Built-In Token / Cost Telemetry Pipeline
+### GAP-2: No Provider SDK Auto-Instrumentation
 
-**What is missing:** The playbook now includes model strategy and AI cost NFRs, but it still lacks built-in telemetry that automatically records token usage, cost per task, and phase-level spend trends.
+**What is missing:** The playbook now includes model strategy, cost budget
+guardrails, `templates/COST_BUDGET.md`, and Orchestrator/Validator checks for
+missing budgets and cost drift. It also includes a provider-agnostic JSONL
+telemetry contract and `tools/cost_rollup.py` for rollups and threshold checks.
+It still lacks built-in provider SDK adapters that automatically intercept
+OpenAI/Anthropic/etc. calls and write telemetry without application work.
 
-**Impact:** Low-Medium. Teams can define budgets and measure them manually, but the workflow does not yet emit this data by default.
+**Impact:** Low. Teams can define budgets, require approval, record telemetry,
+and run CI threshold checks. They still need provider/gateway instrumentation in
+their application repo to populate the JSONL file automatically.
 
 **v2 addition:**
-- log `input_tokens`, `output_tokens`, `cost_usd` in `CODEX_PROMPT.md` or a dedicated telemetry artifact per task
-- phase cost summary in CONSOLIDATED review output
-- optional budget gate in phase gate criteria (e.g. "if phase cost > $X, human reviews before proceeding")
+- provider SDK adapters that write `docs/ai_cost_telemetry.jsonl`
+- optional gateway exporters for Braintrust, Maxim, TrueFoundry, OpenTelemetry,
+  and provider usage APIs
+- phase cost summary in CONSOLIDATED review output sourced from
+  `reports/ai_cost_rollup.md`
 
 ---
 
@@ -1407,13 +1460,13 @@ Each gap includes: what is missing, what impact it has, and the minimum viable a
 | Gap | Severity | Effort to Close | Priority |
 |-----|----------|-----------------|----------|
 | GAP-1: Single-model dependency | Medium | High (orchestrator redesign) | v2 |
-| GAP-2: No cost tracking | Low-Medium | Low (add fields to CODEX_PROMPT) | v2 |
+| GAP-2: No provider SDK auto-instrumentation | Low | Medium (provider adapters/exporters) | v2 |
 | GAP-3: Security not formalized | High | Medium (new agent + threat model) | v2 priority |
 | GAP-4: No performance testing | Low→High | Medium (load test suite + gate) | Phase 6+ |
 | GAP-5: No production integration | High | Medium (incident template + hotfix path) | pre-launch |
 | GAP-6: No coverage/complexity metrics | Low | Low (pytest-cov + CI flag) | v2 |
 
-**v2 priority order:** GAP-3 (security formalization) → GAP-5 (production integration) → GAP-2 (cost tracking) → GAP-6 (coverage) → GAP-4 (performance testing) → GAP-1 (multi-model)
+**v2 priority order:** GAP-3 (security formalization) → GAP-5 (production integration) → GAP-2 (provider SDK auto-instrumentation) → GAP-6 (coverage) → GAP-4 (performance testing) → GAP-1 (multi-model)
 
 _This section is updated at each major version of the playbook. Gaps that are closed move to the changelog._
 

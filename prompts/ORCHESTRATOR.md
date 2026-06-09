@@ -12,13 +12,15 @@ The following steps are NEVER optional regardless of time pressure:
 | Step | When | If Skipped |
 |------|------|-----------|
 | Step 0 — Goals check + state | Every run | Forbidden — orchestrator is blind without it |
-| Step 4 Light review | After every task | Forbidden — no task is complete without review |
-| Step 4 Deep review | Every phase boundary | Forbidden — deep review is mandatory at phase boundary |
+| Step 4 Review decision | After every task | Forbidden — no task is complete without a review decision |
+| Step 4 Deep review | Every phase or risk boundary required by the selected mode | Forbidden when the mode/risk requires it |
 | Step 6 Archive | After every deep review | Forbidden — audit trail is broken without it |
 | Step 6.5 Doc update | After every phase | Forbidden — docs drift without it |
 | Runtime verification | After every implementation result | Forbidden — completion claims are not evidence |
 
-Skipping any of these is a violation of the Implementation Contract and must be surfaced as a P1 finding in the next review cycle.
+Skipping any required decision or required review is a violation of the
+Implementation Contract and must be surfaced as a P1 finding in the next review
+cycle.
 
 ---
 
@@ -63,7 +65,8 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 
 | Tier | When | Cost | Output |
 |---|---|---|---|
-| **Light** | After every 1-2 tasks within a phase | ~1 agent call | Pass / issues list → implementer fixes |
+| **Deterministic** | Docs-only navigation, test-only harness updates, dependency metadata, or Lean low-risk tasks | local checks | changed files + links/tests/state verified |
+| **Light** | Routine implementation, contract-relevant docs, behavior-changing tests, or any task where deterministic checks are insufficient | ~1 agent call | Pass / issues list → implementer fixes |
 | **Deep** | Phase boundary only (all phase tasks done) | 4 agent calls + archive | REVIEW_REPORT + tasks.md + CODEX_PROMPT patches |
 
 **Deep review also triggers if:**
@@ -80,12 +83,17 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 
 - Task changes retrieval semantics (when RAG = ON) — regardless of implementation mechanism: retrieval policy, chunking, index/metadata schema, evidence/citation format, corpus isolation, reindex/delete/lifecycle logic, or `insufficient_evidence` behavior (semantic ownership rule)
 - Task changes retrieval mode or modality scope (text-only vs multimodal, supported modalities, embedding model stability, fallback path)
+- Task changes model routing, model class, budget limits, agent fan-out, retry limits, tool-call breadth, or dynamic workflow execution policy
 
-**Skip all review for:** doc-only patches, test-only changes, dependency bumps.
+**Low-risk review rule:** doc-only navigation patches, test-only harness changes,
+and dependency metadata changes use deterministic review by default. If they
+change policy, behavior, security posture, runtime, CI semantics, evidence
+status, cost budget, model routing, or acceptance criteria, escalate to Light
+review.
 
-Even when review is skipped, runtime verification is not skipped. The
-Orchestrator still checks changed files, tests claimed, and state updates before
-accepting `IMPLEMENTATION_RESULT: DONE`.
+Runtime verification is never skipped. The Orchestrator still checks changed
+files, tests claimed, and state updates before accepting
+`IMPLEMENTATION_RESULT: DONE`.
 
 ---
 
@@ -113,6 +121,8 @@ Scan the following files for unresolved `{{...}}` patterns (any `{{` ... `}}` ou
 - `docs/IMPLEMENTATION_CONTRACT.md`
 - `docs/CODEX_PROMPT.md`
 - `docs/COGNITION_MANIFEST.md` if present
+- `docs/COST_BUDGET.md` if present
+- `docs/ai_cost_telemetry.jsonl` if present
 
 If any unresolved placeholder is found:
 
@@ -139,6 +149,8 @@ Read in full:
 3. `docs/COGNITION_MANIFEST.md` if it exists — canonical memory map and retrieval scopes
 4. `docs/DECISION_LOG.md` and `docs/IMPLEMENTATION_JOURNAL.md` if they exist
 5. `docs/EVIDENCE_INDEX.md` if it exists
+6. `docs/COST_BUDGET.md` if it exists
+7. `reports/ai_cost_rollup.md` if it exists
 
 **Compaction check.**
 
@@ -173,7 +185,7 @@ Action required: update docs/ARCHITECTURE.md before implementation proceeds.
 Check: does `docs/audit/PHASE1_AUDIT.md` exist?
 
 - **Yes** → validation already ran in a prior session. Skip to "Determine:" below.
-- **No** → check whether this is the start of Phase 1: does `docs/CODEX_PROMPT.md` show `Phase: 1`, `Next Task: T01`, and `Baseline: 0` or "pre-implementation"? If YES, run the Phase 1 Validator now.
+- **No** → check whether this is the start of Phase 1: does `docs/CODEX_PROMPT.md` or `AGENTS.md` show initial task state (`Phase: 1` or equivalent, first task, and `Baseline: 0` or "pre-implementation")? If YES, run the Phase 1 Validator now.
 
 If Phase 1 validation is needed:
 
@@ -183,7 +195,8 @@ You are the Phase 1 Validator for {{PROJECT_NAME}}.
 Project root: {{PROJECT_ROOT}}
 
 Read and execute prompts/PHASE1_VALIDATOR.md exactly as written.
-Inputs: docs/ARCHITECTURE.md, docs/spec.md, docs/tasks.md, docs/CODEX_PROMPT.md, docs/IMPLEMENTATION_CONTRACT.md, .github/workflows/ci.yml
+Mode: use Governance from ORCHESTRATOR STATE (`Lean`, `Standard`, or `Strict`; default Standard if absent and record a WARNING).
+Inputs: read the mode-required artifacts from prompts/PHASE1_VALIDATOR.md. Lean mode must not fail only because optional Standard/Strict artifacts are absent.
 Output: write docs/audit/PHASE1_AUDIT.md
 When done: "PHASE1_AUDIT.md written. Result: PASS | FAIL. Blockers: N."
 ```
@@ -257,6 +270,8 @@ proof receipts, or review reports.
 **D. Review tier** — which review to run after the next implementation:
 - True phase boundary (C above, no archive entry for just-completed phase) → Deep review
 - Security-critical task (auth, middleware, RLS, secrets) → Deep review
+- Cost-sensitive task (model routing/class, budget limits, agent fan-out, retry limits, tool-call breadth, dynamic workflow policy, or recurring AI budget) → at least Light review; Deep review if Strict or phase boundary
+- Docs-only navigation, dependency metadata, test harness only, or Lean low-risk task with no behavior/security/runtime change → Deterministic review
 - Otherwise → Light review
 
 **E. Capability tag check** — for the next task, compare each path in its `Files:` scope against the signal patterns below.
@@ -266,6 +281,7 @@ proof receipts, or review reports.
 | `retrieval/`, `embedding`, `chunk`, `index`, `corpus`, `ingestion`, `rerank` | RAG | HIGH |
 | `tools/`, `tool_schema`, `function_call`, `@tool`, `tool_catalog` | Tool-Use | HIGH |
 | `plan_schema`, `plan_graph`, `plan_valid` | Planning | HIGH |
+| `ai_cost_telemetry`, `cost_rollup`, `cost_telemetry`, `COST_BUDGET` | Cost | HIGH |
 | `agent/`, `loop`, `handoff`, `termination` (app code only) | Agentic | MEDIUM |
 
 If a HIGH-confidence pattern matches but the task has no `Type:` tag in that profile's namespace:
@@ -273,7 +289,7 @@ If a HIGH-confidence pattern matches but the task has no `Type:` tag in that pro
 TAG_WARNING
 Task: [T## — Title]
 Signal: [matched pattern] in [file path]
-Expected tag: Type: [rag:|tool:|plan:] (pick the matching namespace)
+Expected tag: Type: [rag:|tool:|plan:|cost:] (pick the matching namespace)
 Actual tag: [current Type: value, or "none"]
 Check: does semantic ownership apply? (PLAYBOOK §Capability Signal Patterns)
 ACTION REQUIRED: confirm or add the tag before the implementer runs.
@@ -299,7 +315,32 @@ Action required: update ARCHITECTURE.md and ADRs or reduce the task scope before
 
 If `docs/ARCHITECTURE.md §Deterministic vs LLM-Owned Subproblems` suggests a softer mismatch, print `DETERMINISM_WARNING` and continue. This is a reviewer signal, not a stop.
 
-If the task clearly increases model class, inference cost envelope, or escalation behavior relative to `docs/ARCHITECTURE.md §Inference / Model Strategy` without an architectural update, print `MODEL_STRATEGY_WARNING` and continue. This is drift, not an automatic stop.
+**F1. Cost budget pre-check** — compare the next task against
+`docs/COST_BUDGET.md`, task `Cost-Budget:` fields, `docs/CODEX_PROMPT.md`, or
+Lean contract-lite budget notes.
+
+Stop on the following:
+- Active AI/model work has no budget boundary in any mode
+- Standard/Strict recurring AI usage, agent loops, dynamic workflows, multi-user
+  AI features, or material inference cost has no `docs/COST_BUDGET.md`
+- The task introduces or increases agent fan-out, retry limits, model calls,
+  tool-call breadth, or model escalation without a matching budget update or
+  approval trigger
+- The task's projected execution requires exceeding the declared per-run or
+  per-task budget and no human approval is recorded
+- A declared CI/enforced cost threshold exists but no telemetry source or
+  rollup command is documented
+
+If stopped, print:
+
+```
+COST_BUDGET_GAP
+Task: [T## — Title]
+Missing or conflicting budget: [exact reason]
+Action required: add/update docs/COST_BUDGET.md, inline Lean budget, or record human approval before implementation.
+```
+
+If the task clearly increases model class, inference cost envelope, or escalation behavior relative to `docs/ARCHITECTURE.md §Inference / Model Strategy` without an architectural update, print `MODEL_STRATEGY_WARNING`. In Lean/Standard this is a warning unless it violates budget. In Strict it is a stop unless an ADR or budget approval exists.
 
 Print status block:
 ```
@@ -313,10 +354,11 @@ Runtime tier: [T0 | T1 | T2 | T3]
 Active Profiles: [RAG:ON/OFF | Tool-Use:ON/OFF | Agentic:ON/OFF | Planning:ON/OFF | Compliance:ON/OFF]
 Phase 1 Audit: [PASS (N warnings) | FAIL (N blockers) | skipped (mid-project) | not yet run]
 Phase boundary: [yes | no]
-Review tier: [light | deep] — [reason]
+Review tier: [deterministic | light | deep] — [reason]
 Continuity context: [none | N refs read | CONTINUITY_GAP]
 Tag check: [OK | WARNING: T## — [pattern] suggests [profile], verify Type: tag]
 Complexity check: [OK | DETERMINISM_WARNING: ... | MODEL_STRATEGY_WARNING: ... | STOPPED: ...]
+Cost budget: [OK | WARNING: ... | STOPPED: COST_BUDGET_GAP]
 Action: [what happens next]
 =========================
 ```
@@ -571,6 +613,22 @@ Choose tier based on Step 0 assessment.
 
 ---
 
+#### TIER 0: Deterministic Review (low-risk changes)
+
+No review agent. Verify the repository state directly:
+
+- changed files match the task scope and completion report
+- referenced paths and README links exist when changed
+- claimed tests or verification commands were run and recorded
+- docs-only changes did not alter policy, runtime, CI, evidence status, cost budget, model routing, or acceptance criteria
+- test-only changes did not weaken assertions or change product behavior without escalation
+- dependency metadata changes did not introduce runtime/security/cost policy changes without escalation
+
+If any item is uncertain, escalate to Light review. If deterministic review
+passes, continue to runtime verification and state updates.
+
+---
+
 #### TIER 1: Light Review (within-phase, non-security tasks)
 
 Single agent. Fast. No files produced.
@@ -585,6 +643,7 @@ Phase [N] — task [T##] was just implemented. Verify it doesn't break contracts
 
 Read:
 - docs/IMPLEMENTATION_CONTRACT.md (rules A–I + forbidden actions)
+- docs/COST_BUDGET.md if present, otherwise inline Lean budget notes in docs/CODEX_PROMPT.md, AGENTS.md, or docs/CONTRACT_LITE.md
 - docs/dev-standards.md
 - Every file listed in the implementer completion report as created or modified:
   [list files from Step 3 output]
@@ -602,6 +661,7 @@ CF     Contract: rules A–I from IMPLEMENTATION_CONTRACT.md — any violations?
 GOV-L1 Runtime-tier drift — no runtime mutation, privilege expansion, or persistent worker behavior above the declared tier
 GOV-L2 Claim verification — claimed files, tests, eval updates, and CODEX_PROMPT changes are backed by repo state or command evidence
 GOV-L3 Correction bounds — any self-repair loop stayed within the declared attempt limit and did not weaken tests or ACs
+GOV-L4 Cost budget — no model escalation, retry/fan-out/tool-call expansion, dynamic workflow execution, or recurring AI spend increase without a matching budget update and approval trigger
 
 <!-- Run the following checks ONLY if the completed task carries a capability-profile tag -->
 If task tag is `rag:ingestion` or `rag:query` → also check:
@@ -633,7 +693,7 @@ ISSUE_COUNT: [N]
 
 ISSUE_1:
 File: [path:line]
-Check: [SEC-N | CF | GOV-L1 | GOV-L2 | GOV-L3 | RAG-L1 | RAG-L2 | RAG-L3 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
+Check: [SEC-N | CF | GOV-L1 | GOV-L2 | GOV-L3 | GOV-L4 | RAG-L1 | RAG-L2 | RAG-L3 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
 Reviewer note: if you see a deterministic-vs-LLM mismatch, mention it as a warning in Description, but do not fail the task on that basis alone unless it also violates contract or runtime boundaries.
 Description: [what is wrong]
 Expected: [what it should be]
@@ -910,7 +970,7 @@ Last completed: [T## — Title] at [timestamp]
 Baseline: [N] pass / [N] skip
 Next task: [T## — Title]
 Phase: [current phase name]
-Review tier next: [light | deep]
+Review tier next: [deterministic | light | deep]
 Any blockers: [none | description]
 ```
 
@@ -953,7 +1013,7 @@ Stop when:
 Re-paste this file. Orchestrator picks up from current state in files.
 
 - Force re-review: reset tasks to `[ ]` in tasks.md
-- Skip review this run: start with "Run orchestrator, skip review this iteration."
+- Force deterministic-only review for eligible low-risk changes: start with "Run orchestrator, deterministic review only for eligible low-risk changes."
 - Force deep review: start with "Run orchestrator, force deep review."
 
 ---

@@ -8,9 +8,9 @@ Skills extend the workflow without modifying canonical artifacts (`PLAYBOOK.md`,
 `CODEX_PROMPT.md`). They produce retrieval surfaces, finding reports, or
 proposed task drafts. They never apply changes directly.
 
-The center of gravity remains the Strategist → Phase 1 Validator → Orchestrator
-→ Codex → review loop. A skill is rejected if it competes with those roles or
-relaxes any contract rule.
+The center of gravity remains the selected adoption mode's Strategist -> Phase
+1 Validator -> Orchestrator or Lean task/review loop -> Codex -> review path. A
+skill is rejected if it competes with those roles or relaxes any contract rule.
 
 ---
 
@@ -48,4 +48,4 @@ existing mechanisms instead:
 | New runtime mode | declare in `docs/ARCHITECTURE.md` Runtime tier and update `docs/IMPLEMENTATION_CONTRACT.md §Control Surface` |
 | New capability behavior (RAG / Tool-Use / Agentic / Planning / Compliance) | activate the corresponding profile in Phase 1 |
 | Hard rule for every project | propose an addition to `IMPLEMENTATION_CONTRACT.md §Universal Rules` via ADR |
-| Multi-step orchestration | extend `prompts/ORCHESTRATOR.md`, not a skill |
+| Multi-step orchestration | use `prompts/ORCHESTRATOR.md` for the base loop, or `docs/dynamic_workflow_reference_policy.md` for an optional executable workflow experiment |

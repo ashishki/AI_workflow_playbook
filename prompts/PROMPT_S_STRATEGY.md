@@ -12,6 +12,7 @@ Output: docs/audit/STRATEGY_NOTE.md (overwrite).
 
 - docs/ARCHITECTURE.md           — system design, Capability Profiles table
 - docs/CODEX_PROMPT.md           — current state: baseline, Fix Queue, open findings
+- docs/COST_BUDGET.md            — if present; otherwise inline Lean budget notes
 - docs/adr/                      — all ADRs (if any)
 - docs/tasks.md                  — upcoming phase tasks (next phase header + task list only)
 
@@ -48,14 +49,25 @@ state as reflected in CODEX_PROMPT.md and ARCHITECTURE.md?
 Verdict per ADR: HONOURED | VIOLATED | N/A
 
 **6. Capability Profile gate** (run only if any profile is ON)
-For each active profile (RAG / Tool-Use / Agentic / Planning):
+For each active profile (RAG / Tool-Use / Agentic / Planning / Compliance):
 - Does the upcoming phase include profile-tagged tasks where required?
 - Are profile-specific state blocks in CODEX_PROMPT.md up to date?
 - Any profile-specific risk that should be addressed before this phase?
 Verdict per active profile: READY | ATTENTION (describe)
 
-**7. Recommendation**
-Based on checks 1–6:
+**7. Cost budget gate**
+If the upcoming phase includes LLM calls, agent loops, dynamic workflows,
+retrieval/eval generation, model routing, multi-agent review, or cost-sensitive
+tool calls:
+- Is a per-run/task budget declared?
+- Is recurring/monthly usage budgeted where applicable?
+- Do model escalation, retry expansion, tool-call expansion, and fan-out have
+  approval triggers?
+- Would the upcoming phase require a `docs/COST_BUDGET.md` update before work begins?
+Verdict: READY | ATTENTION | BLOCKED
+
+**8. Recommendation**
+Based on checks 1–7:
 - Proceed: all checks pass or warnings only (no blockers)
 - Pause: any P0/P1 open, any ADR VIOLATED, or DRIFT severe enough to risk the phase
 
@@ -76,6 +88,7 @@ _Date: YYYY-MM-DD · Reviewing: Phase N (T##–T##)_
 | Solution shape / governance / runtime drift | | |
 | ADR compliance | | |
 | Capability Profile gate | N/A or per-profile | |
+| Cost budget gate | N/A / READY / ATTENTION / BLOCKED | |
 
 ## Findings / Blockers
 _List only if Pause. One bullet per blocker with exact reference (file:line or finding ID)._

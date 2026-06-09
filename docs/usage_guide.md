@@ -7,35 +7,50 @@ This guide explains how to use AI Workflow Playbook in practice for:
 
 ## Cheat Sheet
 
-### New Repository
+### 1. Choose Mode
 
-1. Check project fit with `docs/project_fit_guide.md`
-2. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`, `ci/ci.yml`
-3. Copy `templates/.claude/settings.json` -> `.claude/settings.json`
-4. Copy `templates/.claude/commands/bootstrap-new.md` -> `.claude/commands/bootstrap-new.md`
-5. Make `hooks/*.sh` executable
-6. Run `/bootstrap-new`
-7. Run the Phase 1 validator
-8. Start the orchestrator
+1. Check project fit with `docs/project_fit_guide.md`.
+2. Select Lean, Standard, or Strict using `docs/adoption_modes.md`.
+3. Declare the AI/model budget boundary if the project uses LLMs, agents,
+   dynamic workflows, recurring evals, or multi-agent review.
+4. Copy only the artifacts required by that mode.
+5. Run the Phase 1 validator in that mode.
+6. Start the orchestrator or the Lean task/review loop.
+
+### Lean Repository
+
+1. Create `docs/tasks.md`.
+2. Create a short `docs/CODEX_PROMPT.md` or `AGENTS.md`.
+3. Create a contract-lite implementation boundary.
+4. Add CI or a documented local verification command.
+5. Add an inline budget boundary for any AI/model work.
+6. Use deterministic or light review at meaningful boundaries.
+
+### Standard / Strict Repository
+
+1. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`, `ci/ci.yml`.
+2. Copy `templates/.claude/settings.json` -> `.claude/settings.json`.
+3. Copy the appropriate bootstrap command.
+4. Make `hooks/*.sh` executable.
+5. Run `/bootstrap-new` or `/bootstrap-retrofit`.
+6. Run the Phase 1 validator in Standard or Strict mode.
+7. Add `docs/COST_BUDGET.md` when recurring AI usage, agent loops, dynamic
+   workflows, multi-user AI features, or material inference cost exist.
+8. Start the orchestrator.
 
 ### Existing Repository
 
-1. Check project fit with `docs/project_fit_guide.md`
-2. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`
-3. Normalize `ci/ci.yml` if missing or weak
-4. Copy `templates/.claude/settings.json` -> `.claude/settings.json`
-5. Copy `templates/.claude/commands/bootstrap-retrofit.md` -> `.claude/commands/bootstrap-retrofit.md`
-6. Make `hooks/*.sh` executable
-7. Run `/bootstrap-retrofit`
-8. Run the Phase 1 validator
-9. Start the orchestrator from the first real incomplete task
+For an existing repository, do not fake a greenfield Phase 1. Select a mode,
+capture current state, and start from the first real incomplete task.
 
 ### Remember
 
 - project fit = problem-first gate
-- slash command = entrypoint
-- validator = gate
-- orchestrator = ongoing workflow
+- adoption mode = overhead budget
+- AI/model budget = cost guardrail before recurring agent work
+- slash command = optional entrypoint
+- validator = mode-aware gate
+- orchestrator = ongoing workflow when Standard/Strict is justified
 
 ## Before Bootstrap: Project Fit
 
@@ -50,17 +65,19 @@ Do not begin a full agentic build until the brief names:
 - the first user or operator
 - the first proof metric
 - which AI adoption claims are not allowed before evidence exists
+- AI/model cost exposure and approval threshold, when LLMs or agents are in scope
 
-If those answers are weak, start with discovery, measurement, a deterministic
-script, a CI gate, or a review checklist instead of the full playbook.
+If those answers are weak, use Lean mode or start with discovery, measurement,
+a deterministic script, a CI gate, or a review checklist instead of the full
+playbook.
 
 ## New Repository
 
-### Fastest Claude Code entrypoint
+### Fastest Claude Code entrypoint for Standard/Strict
 
 If you are using Claude Code, you do not need to replace the system prompt manually every time.
 
-Recommended setup:
+Recommended setup for Standard/Strict:
 
 1. read `docs/project_fit_guide.md`
 2. copy `templates/.claude/settings.json` to `.claude/settings.json`
@@ -74,9 +91,27 @@ Then in Claude Code you can run:
 
 This command works as a user-level entrypoint. It tells Claude which local files to read and how to bootstrap the Phase 1 package.
 
+Lean projects may skip the command flow and create the Lean package directly
+from `docs/adoption_modes.md`.
+
 ### 1. Prepare the kit
 
-Copy into the target repo:
+Copy only the selected mode's kit into the target repo.
+
+Lean:
+
+- `docs/project_fit_guide.md`
+- `templates/tasks_schema.md`
+- `docs/cost_budget_guardrails.md`
+- `docs/cost_telemetry_protocol.md`
+- a short `docs/CODEX_PROMPT.md` or `AGENTS.md`
+- a contract-lite implementation boundary
+- `templates/COST_BUDGET.md` when AI/model budget needs a dedicated artifact
+- `templates/COST_TELEMETRY_ADAPTER.md` when thresholds need a project-owned
+  provider boundary
+- CI or a documented local verification command
+
+Standard/Strict:
 
 - `PLAYBOOK.md`
 - `docs/project_fit_guide.md`
@@ -84,6 +119,10 @@ Copy into the target repo:
 - `templates/`
 - `hooks/`
 - `ci/ci.yml`
+- `docs/cost_budget_guardrails.md`
+- `docs/cost_telemetry_protocol.md`
+- `templates/COST_BUDGET.md`
+- `templates/COST_TELEMETRY_ADAPTER.md`
 
 ### 2. Run the Strategist
 
@@ -94,7 +133,21 @@ Use:
 
 If you are using the command flow, `/bootstrap-new` performs this same entry step without you manually pasting the strategist prompt first.
 
-The output should create the initial governance package:
+The output should create the initial governance package for the selected mode.
+
+Lean package:
+
+- `docs/tasks.md`
+- short `docs/CODEX_PROMPT.md` or `AGENTS.md`
+- contract-lite boundary
+- verification command
+- review checklist
+- inline AI/model budget, or `docs/COST_BUDGET.md` when budget needs a
+  dedicated artifact
+- `docs/ai_cost_telemetry.jsonl` and `reports/ai_cost_rollup.md` when recurring
+  AI usage needs telemetry evidence
+
+Standard/Strict package:
 
 - `docs/ARCHITECTURE.md`
 - `docs/README.md` as the README-first index for project docs
@@ -102,6 +155,9 @@ The output should create the initial governance package:
 - `docs/tasks.md`
 - `docs/CODEX_PROMPT.md`
 - `docs/IMPLEMENTATION_CONTRACT.md`
+- `docs/COST_BUDGET.md` when required by `docs/cost_budget_guardrails.md`
+- cost telemetry rollup setup from `docs/cost_telemetry_protocol.md` when
+  `docs/COST_BUDGET.md` declares thresholds
 - `docs/DECISION_LOG.md`
 - `docs/IMPLEMENTATION_JOURNAL.md`
 - `docs/EVIDENCE_INDEX.md` when the project warrants an evidence index
@@ -122,7 +178,8 @@ Recommended:
 
 Run the Phase 1 validator before any implementation task.
 
-Do not begin work until blockers are resolved.
+Set `Mode: Lean`, `Mode: Standard`, or `Mode: Strict`. Do not begin work until
+mode-relevant blockers are resolved.
 
 ### 5. Start the Orchestrator
 
@@ -143,9 +200,9 @@ Do not fake greenfield.
 
 Retrofit the playbook onto the current repo reality instead of pretending the project is starting from zero.
 
-### Fastest Claude Code entrypoint
+### Fastest Claude Code entrypoint for Standard/Strict
 
-If you are using Claude Code, copy:
+If you are using Claude Code for a Standard/Strict retrofit, copy:
 
 1. read `docs/project_fit_guide.md`
 2. `templates/.claude/settings.json` -> `.claude/settings.json`
@@ -164,6 +221,9 @@ Copy:
 
 - `PLAYBOOK.md`
 - `docs/project_fit_guide.md`
+- `docs/adoption_modes.md`
+- `docs/cost_budget_guardrails.md`
+- `docs/cost_telemetry_protocol.md`
 - `prompts/`
 - `templates/`
 - `hooks/`
@@ -182,6 +242,12 @@ Generate:
 - `docs/DECISION_LOG.md` seeded from the real architecture, ADRs, and unresolved tradeoffs
 - `docs/IMPLEMENTATION_JOURNAL.md` starting from the retrofit session and the next real task
 - `docs/EVIDENCE_INDEX.md` only if the repo already has heavy tasks, evaluation artifacts, compliance evidence, or recurring review churn
+- `docs/COST_BUDGET.md` when the existing repo has recurring AI usage,
+  agent loops, dynamic workflows, multi-user AI features, or material
+  inference cost. Lean retrofits may keep this budget inline if the scope is
+  small.
+- `docs/ai_cost_telemetry.jsonl` and a `tools/cost_rollup.py` CI step when
+  the repo already produces usage data or declares enforceable thresholds.
 
 ### 3. Build forward-looking tasks
 
@@ -200,6 +266,9 @@ Add:
 - `docs/prompts/ORCHESTRATOR.md`
 - audit prompts
 - `.claude/settings.json` if using Claude Code hooks
+
+For Lean retrofits, this step may be replaced by a short task/review loop and a
+documented verification command.
 
 ### 5. Use heavy tasks selectively
 
@@ -220,13 +289,15 @@ If you want to introduce the playbook gradually:
 5. decision log + implementation journal
 6. README-first indexes for repo, docs, and substantial subsystem folders
 7. task `Context-Refs` for history-sensitive work
-8. audit prompts
-9. orchestrator loop
-10. filesystem reality and runtime verification for risky writes
-11. hooks for codex-only code writes and phase-boundary guards
-12. integrity checks for Context-Refs, evidence, README indexes, and cognition packets
-13. selective heavy-task mode + evidence index
-14. packaging
+8. AI/model budget boundary for recurring or agentic usage
+9. cost telemetry rollup when usage is recurring or thresholds exist
+10. audit prompts
+11. orchestrator loop
+12. filesystem reality and runtime verification for risky writes
+13. hooks for codex-only code writes and phase-boundary guards
+14. integrity checks for Context-Refs, evidence, README indexes, and cognition packets
+15. selective heavy-task mode + evidence index
+16. packaging
 
 This order preserves momentum while tightening governance over time.
 
@@ -300,12 +371,19 @@ Session ended 2026-04-03T12:00:00Z. Active: T07 — implement auth middleware. F
 
 Set `SILENT=1` to suppress notification delivery for automated or cron-driven sessions. The checkpoint file is always written regardless.
 
-### T3 projects — Hermes as runtime
+### T3 projects — external runtime references
 
-When the playbook's Phase 1 architecture decision results in a higher-autonomy agent at T3, Hermes Agent (NousResearch) is a validated application-level runtime. The governance rules that apply to Hermes-based T3 deployments live in:
+When the playbook's Phase 1 architecture decision results in a higher-autonomy
+agent at T3, external runtimes such as Hermes may be evaluated as optional
+solution references. The governance rules that apply to Hermes-based T3
+deployments live in:
 
 - `docs/hermes_agent_reference_policy.md` — OSS reuse gate, official source checks, and adoption boundaries
-- `templates/ARCHITECTURE.md §T3 Reference Implementation` — required configuration table
-- `templates/IMPLEMENTATION_CONTRACT.md §Hermes Agent — T3 Reference Implementation` — AGENT-H1..H5 rules and P1/P2 thresholds
+- `reference/solution_references.md` — broader external reference catalog
+- `docs/dynamic_workflow_reference_policy.md` — optional executable workflow reference gate
+- `templates/ARCHITECTURE.md §T3 External Runtime Reference` — Hermes-specific configuration table when Hermes is selected
+- `templates/IMPLEMENTATION_CONTRACT.md §Hermes Agent — Optional T3 Runtime Reference` — AGENT-H1..H5 rules and P1/P2 thresholds
 
-The playbook governs the **development** of a Hermes-based application. Hermes is what gets built and deployed — not a replacement for the orchestrator or any governance layer.
+The playbook governs the **development** of a Hermes-based application. Hermes
+or any other runtime is what gets built and deployed — not a replacement for the
+orchestrator or any governance layer.

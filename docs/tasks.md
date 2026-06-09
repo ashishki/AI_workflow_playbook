@@ -1,7 +1,7 @@
 # AI Workflow Playbook Tasks
 
 Status: active core framework task graph
-Last updated: 2026-06-08
+Last updated: 2026-06-09
 
 This file tracks framework work for the playbook itself. It is separate from
 project adoption tasks in downstream repositories.
@@ -10,7 +10,7 @@ project adoption tasks in downstream repositories.
 
 Preserve the playbook as a governance-first, deterministic-first, artifact-first
 engineering workflow. Do not turn it into a required runtime, orchestration
-server, or Mythos/Entropy clone.
+server, dynamic workflow framework, or Mythos/Entropy clone.
 
 ## Phase ZT-1 - Zero-Trust Execution Consolidation
 
@@ -196,7 +196,7 @@ Integration-Points:
 
 Owner: codex
 Type: docs migration
-Status: planned
+Status: done 2026-06-09
 
 Objective: |
   Define a lighter adoption path for projects that only need task state,
@@ -211,3 +211,71 @@ Integration-Points:
   - `docs/usage_guide.md`
   - `docs/project_fit_guide.md`
   - `templates/`
+
+Implementation-Notes: |
+  Added `docs/adoption_modes.md` and updated README, PLAYBOOK, usage guide,
+  Orchestrator, and Phase 1 Validator to treat Lean / Standard / Strict as
+  real mode-specific paths rather than one full artifact set with softer
+  language.
+
+### AWP-PI-003: Solution Reference Catalog And Dynamic Workflow Policy
+
+Owner: codex
+Type: docs reference
+Status: done 2026-06-09
+
+Objective: |
+  Preserve useful external references such as Hermes, Mythos, Entropy, Gensyn,
+  Cybos, Claude dynamic workflows, and public workflow examples without making
+  them mandatory playbook dependencies.
+
+Acceptance-Criteria:
+  - Dynamic workflows are described as optional executable orchestration
+    references, not base-path requirements.
+  - External references are cataloged by problem solved, useful pattern,
+    authority level, and URL.
+  - Public workflows require review before adaptation.
+  - The playbook keeps generic principles in the base path and points advanced
+    runtime/proof/swarm patterns to the reference catalog.
+
+Integration-Points:
+  - `docs/dynamic_workflow_reference_policy.md`
+  - `reference/solution_references.md`
+  - `README.md`
+  - `reference/optional_skills.md`
+
+### AWP-PI-004: AI Cost Budget Guardrails
+
+Owner: codex
+Type: docs governance
+Status: done 2026-06-09
+
+Objective: |
+  Make AI/model cost a first-class workflow constraint across bootstrap,
+  validation, orchestration, review, and external research references.
+
+Acceptance-Criteria:
+  - Cost budget policy defines when inline budget is enough and when
+    `docs/COST_BUDGET.md` is required.
+  - Strategist and bootstrap commands collect AI/model budget before generating
+    the selected mode's starter package.
+  - Phase 1 Validator and Orchestrator flag missing budgets, model escalation,
+    retry/fan-out expansion, and dynamic workflow cost drift.
+  - Provider-agnostic telemetry has a JSONL entry contract and rollup command
+    for CI/review thresholds.
+  - Downstream projects have a provider-boundary adapter template and
+    `cost:telemetry` task type.
+  - External research sources are cited in the cost guardrails research file.
+
+Integration-Points:
+  - `docs/cost_budget_guardrails.md`
+  - `templates/COST_BUDGET.md`
+  - `templates/COST_TELEMETRY_ENTRY.json`
+  - `templates/COST_TELEMETRY_ADAPTER.md`
+  - `schemas/cost_telemetry_entry.schema.json`
+  - `tools/cost_rollup.py`
+  - `docs/cost_telemetry_protocol.md`
+  - `reference/cost_guardrails_research.md`
+  - `prompts/STRATEGIST.md`
+  - `prompts/PHASE1_VALIDATOR.md`
+  - `prompts/ORCHESTRATOR.md`

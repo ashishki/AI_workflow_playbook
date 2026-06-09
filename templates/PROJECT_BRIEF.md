@@ -127,6 +127,13 @@ Only fill what you know. The Strategist should still make the final recommendati
 - **If AI is used, should the system prefer smaller / cheaper models by default:**
 - **Any required capabilities:** reasoning / multimodal / function calling / long context / structured output
 - **Preview-model tolerance:** none / low / medium / high
+- **Per-run / per-task budget:**
+- **Monthly project budget or budget ceiling:**
+- **Who approves budget overruns:**
+- **Should budget overruns warn, block, or require approval:**
+- **Expected attribution needs:** per user / per tenant / per feature / per agent / per workflow
+- **Allowed model escalation path:**
+- **Maximum acceptable retries / tool calls / parallel agents:**
 
 ## 13. Success Metrics
 

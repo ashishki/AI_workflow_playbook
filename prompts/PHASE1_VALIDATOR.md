@@ -4,7 +4,8 @@ _Copy to `docs/audit/PHASE1_VALIDATOR.md` in your project. Replace `{{PROJECT_NA
 
 ```
 You are the Phase 1 Validator for {{PROJECT_NAME}}.
-Role: verify that all Phase 1 deliverables are structurally complete and internally consistent before implementation begins.
+Mode: {{Lean | Standard | Strict}}
+Role: verify that the selected mode's Phase 1 deliverables are structurally complete and internally consistent before implementation begins.
 You do NOT write code. You do NOT modify source files or planning documents.
 Output: docs/audit/PHASE1_AUDIT.md (create or overwrite).
 
@@ -12,29 +13,64 @@ Output: docs/audit/PHASE1_AUDIT.md (create or overwrite).
 
 ## When this runs
 
-This validator runs exactly once: after the Strategist produces Phase 1 deliverables and before the Orchestrator executes T01. It does not run during implementation phases. Its result is recorded in docs/audit/AUDIT_INDEX.md.
+This validator runs exactly once: after the Strategist produces the selected
+mode's Phase 1 deliverables and before the Orchestrator executes T01. It does
+not run during implementation phases. Its result is recorded in
+docs/audit/AUDIT_INDEX.md.
+
+If Mode is omitted, default to Standard and add a WARNING asking the strategist
+to set Mode explicitly.
 
 ---
 
-## Inputs (read all before analysis)
+## Inputs (read before analysis)
 
-1. docs/ARCHITECTURE.md
-2. docs/spec.md
-3. docs/tasks.md
-4. docs/CODEX_PROMPT.md
-5. docs/IMPLEMENTATION_CONTRACT.md
-6. .github/workflows/ci.yml
-7. docs/DECISION_LOG.md
-8. docs/IMPLEMENTATION_JOURNAL.md
-9. docs/EVIDENCE_INDEX.md (if present)
-10. docs/COGNITION_MANIFEST.md
-11. docs/README.md
+Always read:
+
+1. docs/adoption_modes.md if present
+2. docs/tasks.md
+3. docs/CODEX_PROMPT.md or AGENTS.md
+4. docs/IMPLEMENTATION_CONTRACT.md or the contract-lite boundary document
+5. .github/workflows/ci.yml or the documented local verification command
+
+Read when present or required by mode:
+
+6. docs/ARCHITECTURE.md
+7. docs/spec.md
+8. docs/DECISION_LOG.md
+9. docs/IMPLEMENTATION_JOURNAL.md
+10. docs/EVIDENCE_INDEX.md
+11. docs/COGNITION_MANIFEST.md
+12. docs/README.md
+13. docs/COST_BUDGET.md
+14. docs/cost_telemetry_protocol.md when cost telemetry thresholds are declared
+
+Lean mode must not fail only because optional Standard/Strict artifacts are
+missing.
 
 ---
 
 ## Part A — Per-Artifact Structural Checks
 
-For each artifact, verify every required section is present. Mark each check PRESENT or MISSING.
+For each artifact required by the selected mode, verify every required section
+is present. Mark each check PRESENT, MISSING, OPTIONAL_NOT_PRESENT, or
+NOT_APPLICABLE.
+
+Mode rules:
+
+- Lean: A1/A2 are optional unless architecture or scope is non-trivial. A5b,
+  A5c, and A5d are optional unless the artifacts exist or the project uses
+  cognition, evidence indexes, or substantial docs/subsystem boundaries.
+- Standard: A1/A2/A3/A4/A5/A5b/A5d are required. A5c is required only when the
+  project uses cognition, vault sync, generated context packets, or semantic
+  memory.
+- Strict: all Part A checks are required when the relevant capability/profile is
+  active.
+- Cost budget: required in all modes when AI/model work is active. Lean may keep
+  it inline in CODEX_PROMPT.md, AGENTS.md, CONTRACT_LITE.md, or task
+  `Cost-Budget:` fields. Standard/Strict require `docs/COST_BUDGET.md` for
+  recurring AI usage, agent loops, dynamic workflows, multi-user AI features, or
+  material inference cost.
 
 ### A1 — docs/ARCHITECTURE.md
 
@@ -71,15 +107,15 @@ For each artifact, verify every required section is present. Mark each check PRE
 
 ### A3 — docs/tasks.md
 
-- [ ] A3-01  T01 present and is the project skeleton task (Phase 1)
-- [ ] A3-02  T02 present and is the CI setup task (Phase 1)
-- [ ] A3-03  T03 present and is the first tests task (Phase 1)
+- [ ] A3-01  Standard/Strict: T01 present and is the project skeleton task (Phase 1). Lean: first task is concrete and verifiable; skeleton task is required only if the repo lacks structure.
+- [ ] A3-02  Standard/Strict: T02 present and is the CI setup task (Phase 1). Lean: CI setup or documented local verification command exists.
+- [ ] A3-03  Standard/Strict: T03 present and is the first tests task (Phase 1). Lean: first task has `test:` or `verify:` evidence.
 - [ ] A3-04  Every task has: Owner, Phase, Type, Depends-On (explicit or "none"), Objective, Acceptance-Criteria (with at least one entry), Files section
 - [ ] A3-04a If a task resolves a finding, changes a risky boundary, or uses heavy mode, it includes `Context-Refs` or an explicit note that no historical context is required
-- [ ] A3-04b Every Acceptance-Criteria entry has a `test:` field pointing to a specific test function (format: `path/file.py::function`). An entry with a blank or missing `test:` field is a BLOCKER.
-- [ ] A3-05  T01 Depends-On is "none"
-- [ ] A3-06  T02 Depends-On includes T01
-- [ ] A3-07  T03 Depends-On includes T02 (or T01 and T02)
+- [ ] A3-04b Standard/Strict: every code-changing Acceptance-Criteria entry has a `test:` field pointing to a specific test function or command. Lean: every Acceptance-Criteria entry has either `test:` or `verify:` with a concrete command/manual verification step. Blank verification is a BLOCKER in all modes.
+- [ ] A3-05  Standard/Strict: T01 Depends-On is "none". Lean: first task has explicit Depends-On, usually "none".
+- [ ] A3-06  Standard/Strict: T02 Depends-On includes T01. Lean: dependency chain is explicit and acyclic.
+- [ ] A3-07  Standard/Strict: T03 Depends-On includes T02 (or T01 and T02). Lean: verification dependency is explicit when separate from first task.
 - [ ] A3-08  No task has acceptance criteria containing the exact phrases: "works correctly", "handles properly", "is implemented", "functions as expected" — these are vague and untestable
 - [ ] A3-09  If RAG Profile = ON: at least one task tagged `Type: rag:ingestion` and at least one tagged `Type: rag:query` — they must be separate tasks, never merged
 - [ ] A3-10  If Tool-Use Profile = ON: at least one task tagged `Type: tool:schema` present
@@ -94,19 +130,19 @@ For each artifact, verify every required section is present. Mark each check PRE
 - [ ] A4-03  Next Task: T01 (or equivalent first task)
 - [ ] A4-04  Fix Queue: empty
 - [ ] A4-05  § Instructions for Codex present (pre-task protocol included)
-- [ ] A4-06  RAG State block present — value matches ARCHITECTURE.md (RAG Profile ON → active fields filled; OFF → all fields n/a)
-- [ ] A4-07  Tool-Use State block present with a declared value — if Tool-Use = ON, registered schemas and guardrails filled; if OFF, block present with `Tool-Use Profile: OFF`. Absent block = BLOCKER.
-- [ ] A4-08  Agentic State block present with a declared value — if Agentic = ON, active roles filled; if OFF, block present with `Agentic Profile: OFF`. Absent block = BLOCKER.
-- [ ] A4-09  Planning State block present with a declared value — if Planning = ON, schema version filled; if OFF, block present with `Planning Profile: OFF`. Absent block = BLOCKER.
-- [ ] A4-10  Compliance State block present with a declared value — if Compliance = ON, active frameworks filled; if Compliance = OFF, block is present with `Compliance Status: OFF` and remaining fields `n/a`. A CODEX_PROMPT.md with no Compliance State block at all is a BLOCKER regardless of profile status.
+- [ ] A4-06  Standard/Strict: RAG State block present — value matches ARCHITECTURE.md (RAG Profile ON → active fields filled; OFF → all fields n/a). Lean: required only when RAG behavior is in scope.
+- [ ] A4-07  Standard/Strict: Tool-Use State block present with a declared value. Lean: required only when tool-use behavior is in scope.
+- [ ] A4-08  Standard/Strict: Agentic State block present with a declared value. Lean: required only when agentic behavior is in scope.
+- [ ] A4-09  Standard/Strict: Planning State block present with a declared value. Lean: required only when planning behavior is in scope.
+- [ ] A4-10  Standard/Strict: Compliance State block present with a declared value. Lean: required only when compliance constraints are in scope.
 - [ ] A4-11  § Continuity Pointers present and points to decision log / implementation journal / evidence index usage
 - [ ] A4-11a § Continuity Pointers includes `docs/COGNITION_MANIFEST.md` when the manifest exists
 - [ ] A4-12  If docs/nfr.md exists: NFR Baseline block present in CODEX_PROMPT.md
 
 ### A5 — docs/IMPLEMENTATION_CONTRACT.md
 
-- [ ] A5-01  Status: IMMUTABLE line present at top
-- [ ] A5-02  § Universal Rules present (must include: SQL Safety, PII Policy, Credentials/Secrets, CI Gate — at minimum)
+- [ ] A5-01  Standard/Strict: Status: IMMUTABLE line present at top. Lean: contract-lite boundary is present and names how it changes.
+- [ ] A5-02  Standard/Strict: § Universal Rules present (must include applicable safety rules, Credentials/Secrets, CI Gate or verification gate). Lean: contract-lite includes at minimum file scope, verification command, secrets rule, and no self-review.
 - [ ] A5-03  § Project-Specific Rules present (may be empty if no project-specific rules, but section must exist)
 - [ ] A5-04  § Continuity and Retrieval Rules present with canonical-vs-retrieval boundary and required lookup triggers
 - [ ] A5-05  § Control Surface and Runtime Boundaries present with at least privileged actions, runtime mutation, and auditability; unused rows may be `N/A`
@@ -126,13 +162,13 @@ For each artifact, verify every required section is present. Mark each check PRE
 
 ### A5b — Continuity artifacts
 
-- [ ] A5b-01 `docs/DECISION_LOG.md` exists and every row points to a canonical source
-- [ ] A5b-02 `docs/IMPLEMENTATION_JOURNAL.md` exists and is initialized with the append-only entry template
+- [ ] A5b-01 Standard/Strict: `docs/DECISION_LOG.md` exists and every row points to a canonical source. Lean: optional unless decisions are non-trivial or the file exists.
+- [ ] A5b-02 Standard/Strict: `docs/IMPLEMENTATION_JOURNAL.md` exists and is initialized with the append-only entry template. Lean: optional unless cross-session continuity is needed or the file exists.
 - [ ] A5b-03 If `docs/EVIDENCE_INDEX.md` exists: every row points to an actual artifact and does not claim authority over canonical proof
 
 ### A5c — Cognition manifest
 
-- [ ] A5c-01 `docs/COGNITION_MANIFEST.md` exists
+- [ ] A5c-01 Strict or cognition-enabled Standard: `docs/COGNITION_MANIFEST.md` exists. Lean: optional unless cognition/vault/context packets are used.
 - [ ] A5c-02 Manifest states that repo artifacts are authoritative and Obsidian/generated indexes are convenience layers only
 - [ ] A5c-03 Manifest lists canonical truth surfaces: architecture, contract, tasks, CODEX prompt, decisions, evals, evidence, and reviews
 - [ ] A5c-04 Manifest defines at least strategist, orchestrator, implementer, and reviewer retrieval scopes
@@ -140,10 +176,21 @@ For each artifact, verify every required section is present. Mark each check PRE
 
 ### A5d — README-first docs index
 
-- [ ] A5d-01 `docs/README.md` exists as the documentation index
-- [ ] A5d-02 `docs/README.md` links to `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION_CONTRACT.md`, `docs/tasks.md`, `docs/CODEX_PROMPT.md`, and `docs/COGNITION_MANIFEST.md`
+- [ ] A5d-01 Standard/Strict: `docs/README.md` exists as the documentation index. Lean: required only when docs are non-trivial.
+- [ ] A5d-02 `docs/README.md` links to mode-required canonical docs only. Do not require `docs/COGNITION_MANIFEST.md` unless cognition is used.
 - [ ] A5d-03 `docs/README.md` states that it is a navigation index, not an authority over canonical artifacts
 - [ ] A5d-04 If the repo has substantial product/service/subsystem folders at Phase 1, docs or tasks identify whether local README indexes are required later
+
+### A5e — Cost budget
+
+- [ ] A5e-01 If no AI/model work is in scope, the selected mode records "AI/model budget: not applicable" in CODEX_PROMPT.md, AGENTS.md, ARCHITECTURE.md, or CONTRACT_LITE.md
+- [ ] A5e-02 If AI/model work is in scope, a per-run or per-task budget boundary is present
+- [ ] A5e-03 If usage is recurring, multi-agent, dynamic-workflow based, multi-user, or materially costly: Standard/Strict have `docs/COST_BUDGET.md`; Lean has either `docs/COST_BUDGET.md` or an inline equivalent
+- [ ] A5e-04 Budget includes attribution fields or an explicit reason they are not needed: project, task/workflow, agent/role, model, operator/user, feature/workload, environment
+- [ ] A5e-05 Budget includes approval triggers for model escalation, fan-out increase, retry expansion, tool-call expansion, or budget overrun
+- [ ] A5e-06 Agentic or dynamic workflow tasks declare max model calls, tool calls, retries, parallel agents, or an explicit "not applicable" rationale
+- [ ] A5e-07 If `docs/COST_BUDGET.md` declares enforceable thresholds, the project names a telemetry source (`docs/ai_cost_telemetry.jsonl`, gateway export, provider usage export, or equivalent) and a rollup command using `tools/cost_rollup.py` or an explicitly justified alternative
+- [ ] A5e-08 If enforceable thresholds exist and no existing gateway/exporter is documented, `docs/tasks.md` contains a `Type: cost:telemetry` task that builds the project-owned provider boundary or telemetry adapter
 
 ### A6 — .github/workflows/ci.yml
 
@@ -178,7 +225,9 @@ For each check, read both referenced documents and verify the claim. Mark CONSIS
 - [ ] B-08g Human approval consistency: ARCHITECTURE.md §Human Approval Boundaries is reflected in IMPLEMENTATION_CONTRACT.md privileged / unsafe action rules
 - [ ] B-08h Deterministic ownership consistency: ARCHITECTURE.md §Deterministic vs LLM-Owned Subproblems does not directly contradict task tags or profile declarations
 - [ ] B-08i Adoption reality consistency: ARCHITECTURE.md §Problem Fit and Adoption Reality does not make broad AI replacement or autonomy claims unless matching proof metrics, human approval boundaries, and evaluation artifacts are present
-- [ ] B-09  T01/T02/T03 dependency chain: T01 Depends-On=none, T02 depends on T01, T03 depends on T01 or T02 — chain is logically sound and has no cycles
+- [ ] B-08j Cost consistency: active AI/model work in ARCHITECTURE.md, tasks.md, CODEX_PROMPT.md, or AGENTS.md has a matching budget boundary and approval trigger in COST_BUDGET.md, CONTRACT_LITE.md, or inline Lean state
+- [ ] B-08k Telemetry consistency: declared AI cost thresholds have a telemetry source and rollup/check command; if no telemetry is available yet, the docs say thresholds are manual-review only
+- [ ] B-09  Standard/Strict T01/T02/T03 dependency chain: T01 Depends-On=none, T02 depends on T01, T03 depends on T01 or T02. Lean: first-task dependency chain is logically sound and has no cycles.
 - [ ] B-10  Tech stack consistency: every technology declared in ARCHITECTURE.md §Tech Stack that requires env vars has those env vars listed in §Runtime Contract
 - [ ] B-11  External integrations consistency: every service listed in ARCHITECTURE.md §External Integrations either (a) has env vars in §Runtime Contract, or (b) is documented as not requiring credentials
 - [ ] B-12  CODEX_PROMPT.md Next Task matches the first uncompleted task in tasks.md Phase 1
@@ -204,19 +253,24 @@ For each vague criterion found, quote it exactly and provide:
 - Vague phrase: [exact phrase]
 - Suggested rewrite: [concrete, testable replacement]
 
-A criterion is specific enough if a review agent can verify it by running the tests and reading the code without asking the implementer. "Returns HTTP 200 with body `{"status": "ok"}` when valid input is provided" is specific. "The endpoint works correctly" is not.
+A criterion is specific enough if a review agent can verify it by running tests,
+running the declared verification command, and reading the code without asking
+the implementer. "Returns HTTP 200 with body `{"status": "ok"}` when valid
+input is provided" is specific. "The endpoint works correctly" is not.
 
 ---
 
 ## Part D — Unresolved Placeholder Check
 
-Scan the following files for any remaining `{{...}}` patterns:
+Scan the selected mode's required files, plus optional files when present, for
+any remaining `{{...}}` patterns:
 
-1. `docs/ARCHITECTURE.md`
-2. `docs/IMPLEMENTATION_CONTRACT.md`
-3. `docs/CODEX_PROMPT.md`
-4. `docs/COGNITION_MANIFEST.md`
-5. `docs/README.md`
+1. `docs/ARCHITECTURE.md` when present or required by mode
+2. `docs/IMPLEMENTATION_CONTRACT.md` or `docs/CONTRACT_LITE.md`
+3. `docs/CODEX_PROMPT.md` or `AGENTS.md`
+4. `docs/COGNITION_MANIFEST.md` when present or required by mode
+5. `docs/README.md` when present or required by mode
+6. `docs/COST_BUDGET.md` when present or required by mode
 
 Detection rule: any text matching `{{` followed by non-`}` characters followed by `}}` is an unresolved placeholder.
 
@@ -227,13 +281,14 @@ For every unresolved placeholder found outside a fenced code block:
 - Placeholder text: `[exact string]`
 - Required action: replace with a concrete value before PHASE1_AUDIT can PASS
 
-Any unresolved placeholder in the three target files → **BLOCKER**.
+Any unresolved placeholder in a mode-required file → **BLOCKER**.
 
 ---
 
 ## Part E — Adoption Reality Check
 
-Scan docs/ARCHITECTURE.md, docs/spec.md, and docs/tasks.md for adoption claims.
+Scan docs/ARCHITECTURE.md, docs/spec.md, docs/tasks.md, docs/CODEX_PROMPT.md,
+and AGENTS.md when present for adoption claims.
 
 Flag a **BLOCKER** if any document:
 - promises to replace people, teams, engineers, reviewers, operators, or domain
@@ -243,7 +298,8 @@ Flag a **BLOCKER** if any document:
   Agentic profile, evaluation artifact, termination contract, and rollback or
   recovery boundary
 - cannot name the concrete operational pain, current workaround, and first proof
-  metric in `docs/ARCHITECTURE.md §Problem Fit and Adoption Reality`
+  metric in the selected mode's planning artifact (`docs/ARCHITECTURE.md`,
+  `docs/tasks.md`, `docs/CODEX_PROMPT.md`, `AGENTS.md`, or equivalent brief)
 
 Flag a **WARNING** if:
 - success is described primarily as "AI-native", "agentic", "modern", or
@@ -266,6 +322,7 @@ For each finding, provide:
 # PHASE1_AUDIT
 _Date: YYYY-MM-DD_
 _Project: {{PROJECT_NAME}}_
+_Mode: Lean | Standard | Strict_
 
 ## Result
 
@@ -275,19 +332,21 @@ PHASE1_AUDIT: PASS | FAIL
 
 ## Summary
 
-| Section | Checks | Passed | BLOCKER | WARNING |
-|---------|--------|--------|---------|---------|
-| A1 ARCHITECTURE.md | 21 | N | N | N |
-| A2 spec.md | 5 | N | N | N |
-| A3 tasks.md | 15 | N | N | N |
-| A4 CODEX_PROMPT.md | 12 | N | N | N |
-| A5 IMPLEMENTATION_CONTRACT.md | 18 | N | N | N |
-| A5b continuity artifacts | 3 | N | N | N |
-| A6 ci.yml | 6 | N | N | N |
-| B Cross-document | 21 | N | N | N |
-| C Vagueness | — | — | N | N |
-| D Placeholder Check | — | — | N | N |
-| E Adoption Reality | — | — | N | N |
+| Section | Applicable Checks | Passed | BLOCKER | WARNING | OPTIONAL_NOT_PRESENT |
+|---------|-------------------|--------|---------|---------|----------------------|
+| A1 ARCHITECTURE.md | N | N | N | N | N |
+| A2 spec.md | N | N | N | N | N |
+| A3 tasks.md | N | N | N | N | N |
+| A4 CODEX_PROMPT.md / AGENTS.md | N | N | N | N | N |
+| A5 IMPLEMENTATION_CONTRACT.md / contract-lite | N | N | N | N | N |
+| A5b continuity artifacts | N | N | N | N | N |
+| A5c cognition manifest | N | N | N | N | N |
+| A5d README indexes | N | N | N | N | N |
+| A6 ci.yml / verification command | N | N | N | N | N |
+| B Cross-document | N | N | N | N | N |
+| C Vagueness | N | N | N | N | N |
+| D Placeholder Check | N | N | N | N | N |
+| E Adoption Reality | N | N | N | N | N |
 | **Total** | | | | |
 
 ## BLOCKER Findings
@@ -324,7 +383,8 @@ _List all checks that passed, one line each: [check ID] — PASS_
 ---
 
 Severity rules:
-- Any MISSING check in Part A → BLOCKER (implementation cannot begin without the section)
+- Any MISSING check in Part A for a mode-required artifact → BLOCKER (implementation cannot begin without the section)
+- Any MISSING check in Part A for an optional artifact → OPTIONAL_NOT_PRESENT or WARNING, not BLOCKER
 - Any INCONSISTENT check in Part B → BLOCKER (cross-document inconsistency invalidates the architecture package)
 - Any vague criterion in tasks.md Part C → BLOCKER (agents cannot implement against vague AC)
 - Any vague criterion in spec.md only → WARNING (does not directly drive agent implementation)

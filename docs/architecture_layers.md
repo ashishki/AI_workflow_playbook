@@ -53,7 +53,7 @@ These patterns help execution but are not the center of the system:
 - isolated worktrees
 - runtime tier selection
 
-**T3 runtime reference.** When Phase 1 selects `Higher-autonomy agent` + `T3`, Hermes Agent (NousResearch) is a validated application-level runtime substrate. It provides persistent memory, multi-platform messaging gateway, cron scheduling, subagent delegation, and multiple execution backends. Before rebuilding any Hermes-shaped runtime subsystem, run the reuse gate in `docs/hermes_agent_reference_policy.md`. Governance rules for Hermes-based T3 deployments are defined in `templates/IMPLEMENTATION_CONTRACT.md §Hermes Agent — T3 Reference Implementation` and referenced in `templates/ARCHITECTURE.md §T3 Reference Implementation`.
+**T3 runtime references.** When Phase 1 selects `Higher-autonomy agent` + `T3`, external runtimes such as Hermes Agent may be useful candidates. Treat them as optional solution references, not base-path dependencies. Before selecting Hermes or rebuilding a Hermes-shaped runtime subsystem, run the reuse gate in `docs/hermes_agent_reference_policy.md` and record the decision. See `reference/solution_references.md` and `docs/dynamic_workflow_reference_policy.md`.
 
 Useful, but secondary.
 

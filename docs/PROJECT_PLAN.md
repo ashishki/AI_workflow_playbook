@@ -20,6 +20,8 @@ verification, and cognition integrity.
 
 - Integrate Runtime Verification Protocol into default task templates.
 - Add README-first knowledge index as a phase-gate navigation artifact.
+- Keep AI/model cost guardrails first-class in bootstrap, validator,
+  orchestrator, and review prompts.
 - Add examples of `runtime_verification`, `decision_receipt`, and
   `risk_acceptance_record`.
 - Add CI example for `tools/integrity_check.py`.
@@ -50,7 +52,21 @@ verification, and cognition integrity.
 
 - Add a portfolio operating guide showing how Playbook, Entropy Core, Workflow
   Studio, Training OS, Radar, and Telegram Intelligence fit together.
-- Add migration notes for projects that only need a lightweight version.
+- Keep migration/adoption modes current for projects that only need the Lean
+  path (`docs/adoption_modes.md`, `docs/usage_guide.md`).
+
+### Completed Baseline Decisions
+
+- Lean / Standard / Strict are real adoption modes, not softer wording for the
+  same full artifact set.
+- External runtimes and dynamic workflows are reference patterns, not mandatory
+  playbook dependencies.
+- AI/model budget boundaries are mandatory for active AI work. Dedicated
+  `docs/COST_BUDGET.md` is required for recurring, multi-agent,
+  dynamic-workflow, multi-user, or materially costly AI usage in Standard/Strict
+  projects.
+- Provider-agnostic AI cost telemetry now has a JSONL entry contract and rollup
+  tool. Provider SDK auto-instrumentation remains optional v2 adapter work.
 
 ## AI-Development Tasks
 

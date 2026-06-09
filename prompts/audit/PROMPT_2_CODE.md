@@ -39,6 +39,7 @@ GOV-7 Runtime verification — risky writes, command-surface changes, heavy task
 GOV-8 Bounded correction — any self-repair loop has an explicit attempt count, stop condition, and escalation path; no unbounded fix/test loop
 GOV-9 Agent claim evidence — every material completion claim has evidence: claimed files exist, claimed tests include command/status, claimed decisions link to ADR/decision log/architecture updates, and claimed Context-Refs point to real files
 GOV-10 README-first index — if the task or phase changed a repo, docs, product, service, proof/eval, or subsystem boundary, the nearest README index was updated or the omission is justified; README summaries link to canonical artifacts and do not replace them
+GOV-11 Cost budget — model escalation, retry expansion, tool-call expansion, agent fan-out, dynamic workflow execution, or recurring AI usage has a matching budget update and approval trigger in docs/COST_BUDGET.md or the selected mode's inline budget. Missing active budget = P1; unapproved material overrun risk = P0.
 
 <!-- Run the following checks ONLY if RAG Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 RET-1  insufficient_evidence path — retrieval-backed handlers return `insufficient_evidence` when evidence is inadequate; no hallucinated fallback

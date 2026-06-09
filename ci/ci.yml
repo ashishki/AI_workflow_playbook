@@ -182,6 +182,22 @@ jobs:
       #   run: python tools/integrity_check.py --root .
 
       # -----------------------------------------------------------------------
+      # AI COST TELEMETRY
+      # Uncomment when docs/COST_BUDGET.md declares AI/model budget thresholds
+      # and docs/ai_cost_telemetry.jsonl is produced by tests, gateway logs, or
+      # provider usage export.
+      # -----------------------------------------------------------------------
+      # - name: AI cost telemetry rollup
+      #   run: |
+      #     python tools/cost_rollup.py \
+      #       --input docs/ai_cost_telemetry.jsonl \
+      #       --output reports/ai_cost_rollup.md \
+      #       --strict \
+      #       --require-file \
+      #       --max-total-cost {{MAX_TOTAL_COST_USD}} \
+      #       --max-run-cost {{MAX_RUN_COST_USD}}
+
+      # -----------------------------------------------------------------------
       # NFR LOAD TESTS (uncomment when docs/nfr.md exists with CI gate thresholds)
       # Runs locust in headless mode against a locally started server.
       # Fails CI if any metric in docs/nfr.md with a CI gate threshold is breached.
@@ -214,7 +230,8 @@ jobs:
 # 6. For secrets, use GitHub Actions secrets — never hardcode real credentials.
 # 7. Uncomment capability evaluation steps for active profiles (RAG, Agentic, Tool-Use, Planning, Compliance).
 # 8. Uncomment Playbook integrity checks when using Context-Refs, evidence indexes, or cognition packets.
-# 9. Uncomment the NFR load test step if docs/nfr.md defines CI gate thresholds.
+# 9. Uncomment AI cost telemetry rollup when docs/COST_BUDGET.md defines thresholds and telemetry is produced.
+# 10. Uncomment the NFR load test step if docs/nfr.md defines CI gate thresholds.
 #
 # IMPORTANT: CI is set up in Phase 1 alongside the first tests. Every commit
 # after Phase 1 must pass CI before being merged. This is enforced by

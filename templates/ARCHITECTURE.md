@@ -94,14 +94,16 @@ For T0/T1 projects, keep this section concise. For T2/T3 projects, fill every ro
 
 State explicitly why a lower runtime tier is insufficient if selecting T2 or T3.
 
-#### T3 Reference Implementation: Hermes Agent
+#### T3 External Runtime Reference: Hermes Agent
 
 <!--
-Include this sub-section only when Runtime tier = T3 AND Solution shape = Higher-autonomy agent.
-Delete if T0, T1, or T2, or if the T3 runtime is not Hermes-based.
+Include this sub-section only when Runtime tier = T3, Solution shape =
+Higher-autonomy agent, and Hermes is being evaluated or selected. Delete if T0,
+T1, T2, or if the T3 runtime is not Hermes-based.
 -->
 
-When T3 is selected with a higher-autonomy agent shape, Hermes Agent (NousResearch) is a validated candidate runtime. It provides:
+When T3 is selected with a higher-autonomy agent shape, Hermes Agent
+(NousResearch) may be evaluated as an external candidate runtime. It provides:
 
 - Persistent server-resident execution with SQLite-backed session history
 - Messaging gateway (Telegram, Slack, Discord, and 12+ other platforms) for push notifications and human-in-the-loop interactions
@@ -114,6 +116,10 @@ Before selecting Hermes or rebuilding any Hermes-shaped subsystem, run
 Record whether the decision is `direct_runtime`, `runtime_adapter`,
 `vendored_component`, `adapted_code`, `pattern_only`, or `reject`, with source
 repo, release or commit SHA, and fit/security notes.
+
+For non-Hermes runtime or workflow references, use
+`reference/solution_references.md` and
+`docs/dynamic_workflow_reference_policy.md`.
 
 **Required configuration for playbook compatibility:**
 
@@ -144,6 +150,25 @@ Rules:
 - record deterministic alternatives considered
 - justify stronger models by quality, latency, context, or capability needs
 - keep price-source notes in project docs or NFR history with date if cost is an explicit constraint
+
+---
+
+## Cost Budget and Attribution
+
+Include this section when the system uses LLM inference, agents, dynamic
+workflows, retrieval, eval generation, or multi-agent review.
+
+| Budget Scope | Limit | Approval Trigger | Attribution Fields | Evidence Location |
+|--------------|-------|------------------|--------------------|-------------------|
+| Per run/task | {{e.g., $X/run or max tokens/calls}} | {{who approves overrun}} | {{project, task/workflow, agent/role, model, user/operator, feature, environment}} | {{docs/COST_BUDGET.md or inline}} |
+| Monthly | {{e.g., $X/month}} | {{threshold}} | {{...}} | {{...}} |
+
+Rules:
+- Standard/Strict projects with recurring or materially costly AI usage keep a
+  dedicated `docs/COST_BUDGET.md`
+- model escalation, retry expansion, tool-call expansion, fan-out, or dynamic
+  workflow changes require a matching budget update or approval
+- cost reductions must preserve quality/eval and latency thresholds
 
 ---
 
@@ -617,9 +642,9 @@ Define how this project preserves and retrieves prior context without replacing 
 | Artifact | Purpose | Required? |
 |----------|---------|-----------|
 | `README.md`, folder `README.md` indexes | local navigation for repo, docs, product, service, and subsystem boundaries | Yes when the boundary is substantial |
-| `docs/COGNITION_MANIFEST.md` | repo-local map of canonical memory, retrieval scopes, generated artifact policy, and Obsidian optionality | Yes |
-| `docs/DECISION_LOG.md` | quick recall of why key decisions were made | Yes |
-| `docs/IMPLEMENTATION_JOURNAL.md` | cross-session implementation handoff | Yes |
+| `docs/COGNITION_MANIFEST.md` | repo-local map of canonical memory, retrieval scopes, generated artifact policy, and Obsidian optionality | Required in Strict when cognition/vault/context packets are used; optional otherwise |
+| `docs/DECISION_LOG.md` | quick recall of why key decisions were made | Standard/Strict required; Lean optional |
+| `docs/IMPLEMENTATION_JOURNAL.md` | cross-session implementation handoff | Standard/Strict required; Lean optional |
 | `docs/EVIDENCE_INDEX.md` | proof lookup across reviews / evals / heavy tasks | {{Yes \| No}} |
 
 ### Scoped Retrieval Rules

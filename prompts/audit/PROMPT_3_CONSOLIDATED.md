@@ -15,6 +15,8 @@ Output: 3 artifacts (see below).
 - PROMPT_2_CODE findings (current session)
 - docs/tasks.md
 - docs/CODEX_PROMPT.md
+- docs/COST_BUDGET.md if present, or inline Lean budget notes
+- reports/ai_cost_rollup.md if present
 - runtime verification record when the task declares `Runtime-Verification: required`
 - nearest README indexes for changed repo/docs/product/service/subsystem boundaries
 
@@ -50,6 +52,12 @@ Yes/No — reason.
 | Changed boundary | README path | Status | Notes |
 |------------------|-------------|--------|-------|
 | repo/docs/product/service/subsystem | `README.md` | updated / justified / missing | canonical artifacts linked? |
+
+## Cost Budget Status
+| Scope | Status | Notes |
+|-------|--------|-------|
+| AI/model budget | not applicable / within budget / warning / approval required / missing | model escalation, retries, fan-out, tool-call breadth, and recurring usage checked? |
+| Telemetry rollup | not applicable / current / stale / missing | required only when thresholds are enforceable |
 ---
 
 ## Artifact B: tasks.md patch
@@ -83,6 +91,8 @@ If no P0/P1 findings: write `─── Fix Queue ─── (empty — proceed to
   Queue item instead of marking the task complete.
 - If a changed boundary lacks a README-first index update or justified
   omission, add a P1/P2 finding depending on blast radius.
+- If AI/model cost changed, update `## Cost Budget State` in CODEX_PROMPT.md
+  and add a Fix Queue item for missing budget/approval evidence.
 
 Do NOT touch: IMPLEMENTATION CONTRACT, MANDATORY PRE-TASK PROTOCOL, FORBIDDEN ACTIONS, GOVERNING DOCUMENTS.
 
@@ -100,6 +110,7 @@ Cycle N complete.
 - REVIEW_REPORT.md: N findings (P0: X, P1: Y, P2: Z)
 - tasks.md: N tasks added
 - CODEX_PROMPT.md: bumped to vX.Y, baseline updated
+- Cost budget: OK / warning / approval required / missing
 - Stop-ship: Yes/No
 
 Next: move REVIEW_REPORT.md to archive/PHASE{N}_REVIEW.md before Cycle N+1.

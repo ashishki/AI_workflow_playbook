@@ -179,9 +179,12 @@ Network and credentials:
 
 Violation of network or credential rules: automatic P1.
 
-#### Hermes Agent — T3 Reference Implementation
+#### Hermes Agent — Optional T3 Runtime Reference
 
-When the project is a **higher-autonomy agent** at runtime tier T3, Hermes Agent (NousResearch) is a validated candidate runtime. If Hermes is selected, the following rules apply in addition to the universal and T2/T3 rules above:
+When the project is a **higher-autonomy agent** at runtime tier T3, Hermes Agent
+(NousResearch) may be evaluated as an external candidate runtime. If Hermes is
+selected, the following rules apply in addition to the universal and T2/T3 rules
+above:
 
 - **AGENT-H0:** The project must run `docs/hermes_agent_reference_policy.md §Hermes Open-Source Reuse Gate` before selecting Hermes or rebuilding a Hermes-shaped subsystem. The selected Hermes release, commit SHA, adapter boundary, or rejection reason must be recorded in `docs/ARCHITECTURE.md` or an ADR. Missing source/version/reuse decision is a P2.
 - **AGENT-H1:** The learning loop (background memory daemon that autonomously creates skill files) must be explicitly evaluated in `docs/agent_eval.md §Learning Loop` before activation in production. Autonomous skill creation without this gate is a P1.
@@ -191,6 +194,32 @@ When the project is a **higher-autonomy agent** at runtime tier T3, Hermes Agent
 - **AGENT-H5:** Self-evolution pipelines (automated prompt or skill optimization) that submit code changes must have an explicit human review gate before any change is applied. Fully automated application of self-evolution output is a P1.
 
 These rules are scoped to Hermes-based T3 deployments. They do not apply to T0/T1/T2 projects.
+
+---
+
+## Cost Budget Rules
+
+Use this section when the project has LLM calls, agents, dynamic workflows,
+retrieval, eval generation, or multi-agent review. If no AI/model work exists,
+state `Not applicable`.
+
+- Recurring, multi-agent, dynamic-workflow, multi-user, or materially costly AI
+  usage must have `docs/COST_BUDGET.md`.
+- Every AI/model task must have a per-run or per-task budget boundary in
+  `docs/COST_BUDGET.md`, `docs/CODEX_PROMPT.md`, or the task `Cost-Budget:`
+  field.
+- Model escalation, retry expansion, tool-call expansion, parallel-agent
+  fan-out, or dynamic workflow changes require a matching budget update or
+  human approval.
+- Cost-saving changes must preserve the declared eval/quality and latency
+  thresholds.
+- Enforceable thresholds must name a telemetry source and rollup/check command,
+  such as `docs/ai_cost_telemetry.jsonl` plus `tools/cost_rollup.py`.
+- Provider dashboard usage limits are not a substitute for per-workflow budget
+  attribution.
+
+Violation: P1 for missing budget on active AI/model work; P0 if unapproved
+overrun creates production/customer/billing risk.
 
 ---
 
@@ -479,6 +508,7 @@ The following actions are never permitted. Violating these generates a P1 findin
 | Merging a PR with failing CI | The CI gate is non-negotiable |
 | Committing credentials or secrets of any kind | Irreversible exposure |
 | Expanding runtime tier or privilege surface without updating ARCHITECTURE.md / ADRs | Runtime escalation is a governance change |
+| Increasing model class, retry/fan-out/tool-call ceilings, or recurring AI usage without budget update or approval | Cost escalation is a governance change |
 | Treating `DECISION_LOG.md`, `IMPLEMENTATION_JOURNAL.md`, or `EVIDENCE_INDEX.md` as authority over canonical docs | Retrieval surfaces are convenience, not source of truth |
 | Leaving commented-out code in a commit | Dead code degrades readability; delete it |
 | Adding a TODO without a task reference | Orphaned TODOs accumulate and are never addressed |
