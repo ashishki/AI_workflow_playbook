@@ -110,6 +110,9 @@ For practical setup and adoption, use:
 - [docs/cache_context_layout.md](docs/cache_context_layout.md) — prompt cache stable-prefix / volatile-suffix layout rules
 - [docs/cost_telemetry_protocol.md](docs/cost_telemetry_protocol.md) — provider-agnostic AI cost telemetry JSONL and rollup protocol
 - [docs/external_skill_security_policy.md](docs/external_skill_security_policy.md) — external agent skill trust gate, scan/signature policy, and approval rules
+- [tools/init_playbook_project.py](tools/init_playbook_project.py) — deterministic Lean / Standard / Strict project initializer
+- [tools/skill_security_gate.py](tools/skill_security_gate.py) — CI-friendly external skill trust-record and SkillSpector wrapper
+- [templates/cost_adapters/](templates/cost_adapters/) — provider-neutral starter adapter for writing AI cost telemetry
 
 The zero-trust execution extension strengthens the runtime/CI side without
 making any external router mandatory:

@@ -3,6 +3,12 @@
 Use this template inside a downstream project when `docs/COST_BUDGET.md`
 declares enforceable AI/model cost thresholds.
 
+Starter code lives at:
+
+```text
+templates/cost_adapters/python/telemetry_adapter.py
+```
+
 ## Build Pattern
 
 All provider calls must pass through one project-owned boundary:
@@ -33,6 +39,10 @@ The adapter must:
   export the same JSON shape to the selected gateway/observability backend
 - expose a test seam using a fake provider response
 - fail or request approval when a run would exceed the declared budget
+
+Copy the starter adapter into the project-owned boundary, then adapt pricing
+and provider calls locally. Do not rely on hidden SDK monkey-patching for the
+base path.
 
 ## Required Test Shape
 

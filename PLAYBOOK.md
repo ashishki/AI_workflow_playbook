@@ -483,6 +483,9 @@ Rules:
 - recurring or threshold-gated AI usage should emit provider-agnostic telemetry
   to `docs/ai_cost_telemetry.jsonl` or an equivalent source and run
   `tools/cost_rollup.py` in review/CI
+- downstream projects can start from
+  `templates/cost_adapters/python/telemetry_adapter.py`; this is an explicit
+  provider boundary, not hidden SDK monkey-patching
 
 See `docs/cost_budget_guardrails.md`, `docs/cost_telemetry_protocol.md`,
 `docs/ai_cost_architecture.md`, `docs/cache_context_layout.md`,
@@ -519,7 +522,8 @@ Rules:
 
 Use `docs/external_skill_security_policy.md`,
 `templates/EXTERNAL_SKILL_TRUST_RECORD.md`, and
-`templates/skills/external_skill_security_skill.md`.
+`templates/skills/external_skill_security_skill.md`. Use
+`tools/skill_security_gate.py` in CI or review when skills are present.
 
 ---
 
@@ -986,12 +990,16 @@ Templates for all five are in the `prompts/audit/` directory of this playbook.
 
 If a project already has code but lacks the workflow scaffolding:
 
-1. Create `docs/CODEX_PROMPT.md` with current baseline and open findings
-2. Create `docs/IMPLEMENTATION_CONTRACT.md` with project-specific rules
-3. Add `.github/workflows/ci.yml`
-4. Copy and fill `docs/prompts/ORCHESTRATOR.md`
-5. Copy audit prompt templates to `docs/audit/`
-6. Create `docs/audit/AUDIT_INDEX.md` (start at Cycle 1)
+1. Prefer
+   `python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py <repo> --mode standard`
+   to copy the starter kit without overwriting existing files.
+2. Create or update `docs/CODEX_PROMPT.md` with current baseline and open
+   findings.
+3. Create `docs/IMPLEMENTATION_CONTRACT.md` with project-specific rules.
+4. Add `.github/workflows/ci.yml`.
+5. Copy and fill `docs/prompts/ORCHESTRATOR.md`.
+6. Copy audit prompt templates to `docs/audit/`.
+7. Create `docs/audit/AUDIT_INDEX.md` (start at Cycle 1).
 
 After retrofit, paste ORCHESTRATOR.md and the loop runs identically to a greenfield project.
 
@@ -1431,28 +1439,31 @@ Each gap includes: what is missing, what impact it has, and the minimum viable a
 
 ---
 
-### GAP-2: No Provider SDK Auto-Instrumentation
+### GAP-2: No Zero-Config Provider SDK Auto-Instrumentation
 
-**What is missing:** The playbook now includes model strategy, cost budget
+**Current status:** The playbook now includes model strategy, cost budget
 guardrails, AI cost architecture, router/cascade eval gates, prompt-cache layout
 rules, `templates/COST_BUDGET.md`, `templates/COST_ARCHITECTURE.md`,
 `templates/ROUTER_EVAL.md`, and Orchestrator/Validator checks for missing
 budgets, missing architecture, router eval gaps, and cost drift. It also
 includes a provider-agnostic JSONL telemetry contract and `tools/cost_rollup.py`
-for rollups and threshold checks. It still lacks built-in provider SDK adapters
-that automatically intercept OpenAI/Anthropic/etc. calls and write telemetry
-without application work.
+for rollups and threshold checks. `templates/cost_adapters/python/telemetry_adapter.py`
+now provides a provider-neutral starter adapter that downstream projects can
+place at their provider boundary.
 
 **Impact:** Low. Teams can define budgets, require approval, record telemetry,
-and run CI threshold checks. They still need provider/gateway instrumentation in
-their application repo to populate the JSONL file automatically.
+and run CI threshold checks. They still need to route provider/gateway calls
+through a project-owned module.
 
-**v2 addition:**
-- provider SDK adapters that write `docs/ai_cost_telemetry.jsonl`
+**Remaining optional addition:**
+- provider-specific wrappers for a known runtime/provider layer
 - optional gateway exporters for Braintrust, Maxim, TrueFoundry, OpenTelemetry,
   and provider usage APIs
 - phase cost summary in CONSOLIDATED review output sourced from
   `reports/ai_cost_rollup.md`
+
+Do not add hidden monkey-patching as the default. Explicit provider boundaries
+are easier to test, review, and cost-gate.
 
 ---
 
@@ -1516,13 +1527,13 @@ their application repo to populate the JSONL file automatically.
 | Gap | Severity | Effort to Close | Priority |
 |-----|----------|-----------------|----------|
 | GAP-1: Single-model dependency | Medium | High (orchestrator redesign) | v2 |
-| GAP-2: No provider SDK auto-instrumentation | Low | Medium (provider adapters/exporters) | v2 |
+| GAP-2: No zero-config provider SDK auto-instrumentation | Low | Low/Medium (provider-specific wrappers/exporters) | optional |
 | GAP-3: Security not formalized | High | Medium (new agent + threat model) | v2 priority |
 | GAP-4: No performance testing | Low→High | Medium (load test suite + gate) | Phase 6+ |
 | GAP-5: No production integration | High | Medium (incident template + hotfix path) | pre-launch |
 | GAP-6: No coverage/complexity metrics | Low | Low (pytest-cov + CI flag) | v2 |
 
-**v2 priority order:** GAP-3 (security formalization) → GAP-5 (production integration) → GAP-2 (provider SDK auto-instrumentation) → GAP-6 (coverage) → GAP-4 (performance testing) → GAP-1 (multi-model)
+**v2 priority order:** GAP-3 (security formalization) → GAP-5 (production integration) → GAP-6 (coverage) → GAP-4 (performance testing) → GAP-1 (multi-model). GAP-2 is now optional provider-specific work, not a base playbook blocker.
 
 _This section is updated at each major version of the playbook. Gaps that are closed move to the changelog._
 

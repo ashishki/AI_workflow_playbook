@@ -27,6 +27,8 @@ verification, and cognition integrity.
 - Treat external agent skills as supply-chain artifacts with trust records,
   scan/provenance/signature evidence, and explicit install scope before they
   enter project or global agent context.
+- Keep the project initializer and external skill security gate as deterministic
+  helpers so bootstrap and skill review are not only procedural instructions.
 - Add examples of `runtime_verification`, `decision_receipt`, and
   `risk_acceptance_record`.
 - Add CI example for `tools/integrity_check.py`.
@@ -77,12 +79,18 @@ verification, and cognition integrity.
 - Dynamic routing and cascades require `docs/router_eval.md`; generic routers
   remain disallowed until evaluated against project traffic, quality floors,
   latency, cache-hit impact, and stale-router policy.
-- Provider-agnostic AI cost telemetry now has a JSONL entry contract and rollup
-  tool. Provider SDK auto-instrumentation remains optional v2 adapter work.
+- Provider-agnostic AI cost telemetry now has a JSONL entry contract, rollup
+  tool, and provider-neutral starter adapter template. Provider-specific SDK
+  wrappers remain optional downstream work when the runtime/provider layer is
+  known.
 - External skill security now has a policy and trust-record template. Third-
   party or cross-project skills require source pin/signature/hash, capability
   declaration, SkillSpector or equivalent scan evidence, finding triage, install
   scope, and human approval for global install or high-risk acceptance.
+- `tools/init_playbook_project.py` now creates a proportional Lean / Standard /
+  Strict starter kit without overwriting existing downstream files by default.
+- `tools/skill_security_gate.py` now provides a CI-friendly trust-record and
+  SkillSpector wrapper for external skills.
 
 ## AI-Development Tasks
 

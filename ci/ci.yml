@@ -182,6 +182,20 @@ jobs:
       #   run: python tools/integrity_check.py --root .
 
       # -----------------------------------------------------------------------
+      # EXTERNAL AGENT SKILL SECURITY
+      # This step is cheap when no external skills are present. If skills are
+      # discovered under .codex/skills, .claude/skills, or skills, it requires
+      # trust records and SkillSpector (or a compatible scanner on PATH).
+      # -----------------------------------------------------------------------
+      - name: External skill security gate
+        run: |
+          python tools/skill_security_gate.py \
+            --root . \
+            --discover-agent-skills \
+            --require-scanner \
+            --sarif
+
+      # -----------------------------------------------------------------------
       # AI COST TELEMETRY
       # Uncomment when docs/COST_BUDGET.md declares AI/model budget thresholds
       # and docs/ai_cost_telemetry.jsonl is produced by tests, gateway logs, or
@@ -231,7 +245,9 @@ jobs:
 # 7. Uncomment capability evaluation steps for active profiles (RAG, Agentic, Tool-Use, Planning, Compliance).
 # 8. Uncomment Playbook integrity checks when using Context-Refs, evidence indexes, or cognition packets.
 # 9. Uncomment AI cost telemetry rollup when docs/COST_BUDGET.md defines thresholds and telemetry is produced.
-# 10. Uncomment the NFR load test step if docs/nfr.md defines CI gate thresholds.
+# 10. Install SkillSpector or a compatible scanner if the repo contains external
+#     skills under .codex/skills, .claude/skills, or skills.
+# 11. Uncomment the NFR load test step if docs/nfr.md defines CI gate thresholds.
 #
 # IMPORTANT: CI is set up in Phase 1 alongside the first tests. Every commit
 # after Phase 1 must pass CI before being merged. This is enforced by

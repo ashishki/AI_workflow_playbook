@@ -109,6 +109,24 @@ For CI/code-scanning integration, SARIF is preferred:
 skillspector scan ./skill-name --no-llm --format sarif --output reports/skills/skill-name.sarif
 ```
 
+The playbook wrapper can enforce the trust record and scanner result together:
+
+```bash
+python3 tools/skill_security_gate.py \
+  --root . \
+  --discover-agent-skills \
+  --require-scanner \
+  --sarif
+```
+
+The wrapper exits 0 when no external skills are discovered. When skills are
+present, it requires `docs/security/skills/{skill-name}/TRUST_RECORD.md`, runs
+SkillSpector JSON output for policy parsing, optionally writes SARIF, and fails
+on missing trust records, unapproved trust records, missing source pin/signature
+evidence, risk scores above threshold, `DO_NOT_INSTALL`, or unresolved
+CRITICAL/HIGH findings unless the trust record explicitly records
+`Critical/high risk acceptance: yes`.
+
 If SkillSpector is unavailable, the trust record must say which alternative
 checks were run and why the missing scanner is acceptable. A missing scanner is
 not acceptable for high-risk executable skills.

@@ -3,6 +3,21 @@
 These tools are deterministic helpers for cognition, integrity, and AI cost
 telemetry. They do not require Obsidian, a vector database, or network access.
 
+## Initialize a Project
+
+```bash
+python3 tools/init_playbook_project.py ../my-project \
+  --mode standard \
+  --project-name "My Project" \
+  --with-cost-architecture \
+  --with-cost-adapter
+```
+
+The initializer copies a proportional Lean / Standard / Strict kit into a
+downstream repository. It does not overwrite existing files unless `--force` is
+passed. Use `--external-skill NAME` to create a trust-record stub before any
+third-party skill is installed or enabled.
+
 ## Build a Manifest
 
 ```bash
@@ -48,3 +63,18 @@ The rollup reads provider-agnostic JSONL entries matching
 `schemas/cost_telemetry_entry.schema.json`, then summarizes cost by run, task,
 model, and agent role. Use `--max-total-cost`, `--max-run-cost`, and
 `--require-file` when `docs/COST_BUDGET.md` declares enforceable thresholds.
+
+## Check External Skill Security
+
+```bash
+python3 tools/skill_security_gate.py \
+  --root . \
+  --discover-agent-skills \
+  --require-scanner \
+  --sarif
+```
+
+The gate discovers skills under `.codex/skills`, `.claude/skills`, and
+`skills`, requires `docs/security/skills/{skill-name}/TRUST_RECORD.md`, and
+runs `skillspector scan` when skills are present. Repositories with no external
+skills pass without requiring SkillSpector.

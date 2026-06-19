@@ -18,6 +18,10 @@ artifacts only to satisfy a checklist.
 
 ## Required Artifacts
 
+Use `tools/init_playbook_project.py` to create the selected kit when starting a
+new or retrofit repository. The table below still defines authority; the tool is
+only the copier/scaffolder.
+
 | Artifact | Lean | Standard | Strict |
 |----------|------|----------|--------|
 | Problem fit note | Required | Required | Required |

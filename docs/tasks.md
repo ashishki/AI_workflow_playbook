@@ -369,3 +369,40 @@ Integration-Points:
   - `prompts/ORCHESTRATOR.md`
   - `prompts/audit/PROMPT_2_CODE.md`
   - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
+
+### AWP-PI-007: Bootstrap And Guardrail Automation
+
+Owner: codex
+Type: tools automation
+Status: done 2026-06-19
+
+Objective: |
+  Close the remaining procedural gaps by adding deterministic helpers for
+  project bootstrap, external skill security CI enforcement, and provider-
+  neutral AI cost telemetry adapter scaffolding.
+
+Acceptance-Criteria:
+  - `tools/init_playbook_project.py` initializes Lean / Standard / Strict
+    downstream projects without overwriting existing files by default.
+  - `tools/skill_security_gate.py` discovers agent skill directories, requires
+    trust records, invokes SkillSpector when skills are present, parses JSON
+    scan output, writes optional SARIF, and blocks unresolved high-risk findings.
+  - `templates/cost_adapters/python/telemetry_adapter.py` provides a concrete
+    provider-neutral adapter for writing cost telemetry JSONL entries from
+    common provider/gateway usage objects.
+  - CI template and playbook repo workflow run the new deterministic checks.
+  - Usage docs, tools docs, roadmap, and known-gaps sections describe the new
+    practical path and remaining optional provider-specific work.
+
+Integration-Points:
+  - `tools/init_playbook_project.py`
+  - `tools/skill_security_gate.py`
+  - `templates/TASKS.md`
+  - `templates/cost_adapters/`
+  - `.github/workflows/playbook-checks.yml`
+  - `ci/ci.yml`
+  - `docs/usage_guide.md`
+  - `docs/external_skill_security_policy.md`
+  - `docs/cost_telemetry_protocol.md`
+  - `tools/README.md`
+  - `PLAYBOOK.md`

@@ -36,11 +36,13 @@ This guide explains how to use AI Workflow Playbook in practice for:
 
 ### Standard / Strict Repository
 
-1. Copy `PLAYBOOK.md`, `prompts/`, `templates/`, `hooks/`, `ci/ci.yml`.
-2. Copy `templates/.claude/settings.json` -> `.claude/settings.json`.
-3. Copy the appropriate bootstrap command.
+1. Prefer the initializer:
+   `python3 AI_workflow_playbook/tools/init_playbook_project.py <target> --mode standard`.
+2. If bootstrapping manually, copy `PLAYBOOK.md`, `prompts/`, `templates/`,
+   `hooks/`, `ci/ci.yml`, `tools/`, and `schemas/`.
+3. Copy the appropriate Claude/Codex entrypoint if your agent surface uses one.
 4. Make `hooks/*.sh` executable.
-5. Run `/bootstrap-new` or `/bootstrap-retrofit`.
+5. Run `/bootstrap-new`, `/bootstrap-retrofit`, or the Codex equivalent prompt.
 6. Run the Phase 1 validator in Standard or Strict mode.
 7. Add `docs/COST_BUDGET.md` when recurring AI usage, agent loops, dynamic
    workflows, multi-user AI features, or material inference cost exist.
@@ -117,7 +119,23 @@ from `docs/adoption_modes.md`.
 
 ### 1. Prepare the kit
 
-Copy only the selected mode's kit into the target repo.
+Prefer the deterministic initializer:
+
+```bash
+python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py \
+  /path/to/target-project \
+  --mode standard \
+  --project-name "Target Project" \
+  --with-cost-architecture \
+  --with-cost-adapter
+```
+
+Add `--external-skill NAME` before installing a third-party skill. Add
+`--with-router-eval` before dynamic routing or cascades. The initializer skips
+existing files by default; use `--force` only when you intentionally want to
+replace generated artifacts.
+
+Manual path: copy only the selected mode's kit into the target repo.
 
 Lean:
 
@@ -136,6 +154,9 @@ Lean:
 - `templates/EXTERNAL_SKILL_TRUST_RECORD.md` when external skills are planned
 - `templates/COST_TELEMETRY_ADAPTER.md` when thresholds need a project-owned
   provider boundary
+- `templates/cost_adapters/` when the project wants a starter telemetry adapter
+- `tools/cost_rollup.py`, `tools/integrity_check.py`, and
+  `tools/skill_security_gate.py` when CI/review should enforce artifacts
 - CI or a documented local verification command
 
 Standard/Strict:
@@ -155,6 +176,9 @@ Standard/Strict:
 - `templates/ROUTER_EVAL.md`
 - `templates/EXTERNAL_SKILL_TRUST_RECORD.md`
 - `templates/COST_TELEMETRY_ADAPTER.md`
+- `templates/cost_adapters/`
+- `tools/`
+- `schemas/`
 
 ### 2. Run the Strategist
 

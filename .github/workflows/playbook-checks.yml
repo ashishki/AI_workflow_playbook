@@ -1,0 +1,49 @@
+name: Playbook Checks
+
+on:
+  push:
+    branches: ["master", "main"]
+  pull_request:
+    branches: ["master", "main"]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile Python helpers
+        run: |
+          python -m py_compile tools/*.py
+          python -m py_compile templates/cost_adapters/python/telemetry_adapter.py
+
+      - name: Validate JSON artifacts
+        run: |
+          python -m json.tool schemas/cost_telemetry_entry.schema.json >/dev/null
+          python -m json.tool templates/COST_TELEMETRY_ENTRY.json >/dev/null
+
+      - name: Smoke-test project initializer
+        run: |
+          python tools/init_playbook_project.py "$RUNNER_TEMP/playbook-smoke" \
+            --mode strict \
+            --project-name "Playbook Smoke" \
+            --with-cost-architecture \
+            --with-router-eval \
+            --with-cost-adapter \
+            --external-skill smoke-skill
+
+      - name: External skill security gate
+        run: python tools/skill_security_gate.py --root . --discover-agent-skills
+
+      - name: Cost rollup smoke test
+        run: |
+          python tools/cost_rollup.py \
+            --input "$RUNNER_TEMP/missing-cost.jsonl" \
+            --output "$RUNNER_TEMP/ai_cost_rollup.md"
+
+      - name: Integrity check
+        run: python tools/integrity_check.py --root .

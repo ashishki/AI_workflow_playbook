@@ -151,10 +151,25 @@ Use this as a cheap CI gate before adopting a vendor platform:
 
 Set thresholds from `docs/COST_BUDGET.md`.
 
+## Adapter Template
+
+Downstream projects can start from:
+
+```text
+templates/cost_adapters/python/telemetry_adapter.py
+```
+
+The adapter is provider-neutral. It extracts common OpenAI/Anthropic/gateway
+usage fields from dict-like or object-like responses and writes entries in the
+playbook JSONL shape. Projects still own pricing, budget approval, and the
+provider boundary.
+
 ## Known Limits
 
-- The tool does not automatically intercept provider SDK calls.
+- The rollup tool does not automatically intercept provider SDK calls.
+- `templates/cost_adapters/python/telemetry_adapter.py` provides a project-owned
+  adapter template, not zero-config monkey-patching of provider SDKs.
 - Pricing tables are not embedded; projects should log `estimated_cost_usd`
   from the gateway/provider/tooling they trust.
-- Provider-specific auto-instrumentation can be added later, but the required
-  v1 path is the project-owned provider boundary described above.
+- Provider-specific SDK wrappers can be added inside downstream projects when
+  their runtime/provider layer is known.

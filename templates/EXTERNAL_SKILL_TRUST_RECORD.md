@@ -59,6 +59,8 @@ skillspector scan ./skill-name --no-llm --format markdown --output docs/security
 
 ## Findings Triage
 
+- Critical/high risk acceptance: no
+
 | Finding | Severity | Decision | Owner | Mitigation / Risk Acceptance |
 |---------|----------|----------|-------|------------------------------|
 | | | fixed / accepted / rejected | | |
