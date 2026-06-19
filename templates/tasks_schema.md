@@ -148,7 +148,10 @@ also be reflected in `docs/COST_BUDGET.md`.
 | `compliance:control` | Implements a compliance control (auth, encryption, retention) | Compliance |
 | `compliance:audit` | Implements audit log infrastructure | Compliance |
 | `compliance:evidence` | Collects or updates compliance evidence artifact | Compliance |
+| `cost:architecture` | Defines workload classes, cache/batch/routing maturity, cost equation, and escalation boundaries | Cost |
 | `cost:telemetry` | Implements or modifies AI/model cost telemetry collection, rollup, or thresholds | Cost |
+| `cost:routing` | Implements or evaluates dynamic routing, cascades, cache-aware routing, or router thresholds | Cost |
+| `skill:security` | Reviews, scans, signs, pins, approves, or rejects external agent skills before install/update | External Skill Security |
 
 Multiple tags are space-separated: `Type: compliance:control compliance:audit`
 

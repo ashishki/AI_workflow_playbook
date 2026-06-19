@@ -16,7 +16,11 @@ Output: 3 artifacts (see below).
 - docs/tasks.md
 - docs/CODEX_PROMPT.md
 - docs/COST_BUDGET.md if present, or inline Lean budget notes
+- docs/ai_cost_architecture.md if present
+- docs/router_eval.md if present
 - reports/ai_cost_rollup.md if present
+- docs/external_skill_security_policy.md if present
+- docs/security/skills/**/TRUST_RECORD.md if present
 - runtime verification record when the task declares `Runtime-Verification: required`
 - nearest README indexes for changed repo/docs/product/service/subsystem boundaries
 
@@ -58,6 +62,13 @@ Yes/No — reason.
 |-------|--------|-------|
 | AI/model budget | not applicable / within budget / warning / approval required / missing | model escalation, retries, fan-out, tool-call breadth, and recurring usage checked? |
 | Telemetry rollup | not applicable / current / stale / missing | required only when thresholds are enforceable |
+| Cost architecture | not applicable / current / stale / missing | workload classes, cache, batch, routing maturity, cascades checked? |
+| Router eval | not applicable / current / stale / missing | required for L5/L6 routing or cascades |
+
+## External Skill Security Status
+| Skill | Status | Notes |
+|-------|--------|-------|
+| name / n/a | not applicable / approved / rejected / missing trust record / scan required / signature required | source pinned? SkillSpector/equivalent scan? critical/high findings triaged? install scope approved? |
 ---
 
 ## Artifact B: tasks.md patch
@@ -93,6 +104,9 @@ If no P0/P1 findings: write `─── Fix Queue ─── (empty — proceed to
   omission, add a P1/P2 finding depending on blast radius.
 - If AI/model cost changed, update `## Cost Budget State` in CODEX_PROMPT.md
   and add a Fix Queue item for missing budget/approval evidence.
+- If external skills changed, add/update a Fix Queue item for missing trust
+  record, missing scan/signature/hash evidence, untriaged CRITICAL/HIGH
+  findings, or unapproved global install.
 
 Do NOT touch: IMPLEMENTATION CONTRACT, MANDATORY PRE-TASK PROTOCOL, FORBIDDEN ACTIONS, GOVERNING DOCUMENTS.
 

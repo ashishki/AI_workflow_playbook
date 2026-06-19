@@ -279,3 +279,93 @@ Integration-Points:
   - `prompts/STRATEGIST.md`
   - `prompts/PHASE1_VALIDATOR.md`
   - `prompts/ORCHESTRATOR.md`
+
+### AWP-PI-005: AI Cost Architecture And Router Evaluation
+
+Owner: codex
+Type: docs governance
+Status: done 2026-06-19
+
+Objective: |
+  Move cost controls beyond budget policy by adding an enforceable AI cost
+  architecture artifact for workload classes, cache layout, batch lanes,
+  routing maturity, cascades, and cost-per-successful-task.
+
+Acceptance-Criteria:
+  - `docs/ai_cost_architecture.md` defines when cost architecture is required
+    and separates architecture boundaries from provider/model routing details.
+  - `docs/cache_context_layout.md` defines stable-prefix and volatile-suffix
+    prompt caching rules.
+  - `templates/COST_ARCHITECTURE.md` and `templates/ROUTER_EVAL.md` provide
+    downstream project artifacts.
+  - Provider routing policy includes a maturity ladder and gates dynamic
+    routing/cascades behind project eval evidence.
+  - Strategist, Phase 1 Validator, Orchestrator, strategy review, code review,
+    and consolidated review prompts check cost architecture and router eval
+    requirements.
+  - Usage docs and templates expose the new artifacts during new-project and
+    retrofit setup.
+
+Integration-Points:
+  - `docs/ai_cost_architecture.md`
+  - `docs/cache_context_layout.md`
+  - `docs/provider_routing_policy.md`
+  - `docs/cost_budget_guardrails.md`
+  - `templates/COST_ARCHITECTURE.md`
+  - `templates/ROUTER_EVAL.md`
+  - `templates/ARCHITECTURE.md`
+  - `templates/IMPLEMENTATION_CONTRACT.md`
+  - `templates/COST_BUDGET.md`
+  - `templates/tasks_schema.md`
+  - `docs/usage_guide.md`
+  - `reference/cost_guardrails_research.md`
+  - `prompts/STRATEGIST.md`
+  - `prompts/PHASE1_VALIDATOR.md`
+  - `prompts/ORCHESTRATOR.md`
+  - `prompts/PROMPT_S_STRATEGY.md`
+  - `prompts/audit/PROMPT_2_CODE.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
+
+### AWP-PI-006: External Skill Security Gate
+
+Owner: codex
+Type: docs governance
+Status: done 2026-06-19
+
+Objective: |
+  Add a bounded security gate for third-party and cross-project agent skills so
+  skills cannot enter project or global agent context without source,
+  capability, scan, signature/hash, install-scope, and risk-triage evidence.
+
+Acceptance-Criteria:
+  - `docs/external_skill_security_policy.md` defines the external skill trust
+    gate and maps SkillSpector/NVIDIA trust-pipeline patterns into playbook
+    artifacts.
+  - `templates/EXTERNAL_SKILL_TRUST_RECORD.md` provides a downstream evidence
+    artifact for source pin/signature/hash, capabilities, scan evidence,
+    findings triage, install scope, architecture impact, and approval.
+  - Optional skill registry includes an External Skill Security Gate descriptor.
+  - Task schema includes `Type: skill:security`.
+  - Orchestrator, Phase 1 Validator, CODE review, consolidated review,
+    Strategist, adoption docs, and templates check external skill trust records
+    before install/update/enablement.
+  - External references cite SkillSpector, NVIDIA skill trust docs, and the
+    Agent Skills in the Wild paper as evidence for mandatory vetting.
+
+Integration-Points:
+  - `docs/external_skill_security_policy.md`
+  - `templates/EXTERNAL_SKILL_TRUST_RECORD.md`
+  - `templates/skills/external_skill_security_skill.md`
+  - `reference/optional_skills.md`
+  - `reference/solution_references.md`
+  - `templates/IMPLEMENTATION_CONTRACT.md`
+  - `templates/tasks_schema.md`
+  - `templates/PROJECT_BRIEF.md`
+  - `docs/adoption_modes.md`
+  - `docs/usage_guide.md`
+  - `README.md`
+  - `prompts/STRATEGIST.md`
+  - `prompts/PHASE1_VALIDATOR.md`
+  - `prompts/ORCHESTRATOR.md`
+  - `prompts/audit/PROMPT_2_CODE.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`

@@ -33,7 +33,10 @@ When uncertain about how to structure a document or define a task, consult the t
 - `docs/project_fit_guide.md` — problem-first entry points, adoption reality gate, and anti-patterns
 - `docs/adoption_modes.md` — Lean / Standard / Strict artifact requirements
 - `docs/cost_budget_guardrails.md` — cost attribution, budget gates, and approval rules for AI/model work
+- `docs/ai_cost_architecture.md` — workload classes, cost levers, cache/batch/routing/cascade architecture
+- `docs/cache_context_layout.md` — stable-prefix / volatile-suffix prompt cache layout rules
 - `docs/cost_telemetry_protocol.md` — provider-agnostic AI cost telemetry entry and rollup contract
+- `docs/external_skill_security_policy.md` — external skill supply-chain gate, trust records, scan/signature policy
 - `templates/ARCHITECTURE.md` — architecture document format
 - `templates/CODEX_PROMPT.md` — session handoff format
 - `templates/LEAN_CODEX_PROMPT.md` — Lean mode session handoff format
@@ -41,6 +44,9 @@ When uncertain about how to structure a document or define a task, consult the t
 - `templates/IMPLEMENTATION_CONTRACT.md` — immutable rules format
 - `templates/CONTRACT_LITE.md` — Lean mode implementation boundary
 - `templates/COST_BUDGET.md` — budget artifact for recurring AI usage or agent loops
+- `templates/COST_ARCHITECTURE.md` — cost architecture artifact for recurring/material AI usage
+- `templates/ROUTER_EVAL.md` — dynamic router and cascade evaluation artifact
+- `templates/EXTERNAL_SKILL_TRUST_RECORD.md` — trust record for third-party/cross-project skills
 - `templates/COST_TELEMETRY_ENTRY.json` — one JSONL telemetry entry shape
 - `templates/COST_TELEMETRY_ADAPTER.md` — downstream project adapter task pattern
 - `templates/cognition/COGNITION_MANIFEST.md` — repo-local cognition and retrieval map
@@ -96,6 +102,7 @@ First produce a concise **Mode Decision**:
 - why this mode is sufficient
 - why the next-heavier mode is not required yet
 - whether `docs/COST_BUDGET.md` is required now or whether an inline Lean budget is enough
+- whether external skills are in scope and whether a trust record is required now
 
 Then produce only the artifacts required by the selected mode.
 
@@ -106,7 +113,10 @@ Lean output package:
 - `docs/CONTRACT_LITE.md` or equivalent contract-lite boundary
 - documented local verification command or minimal CI
 - `docs/COST_BUDGET.md` only when AI use is recurring, multi-agent, dynamic-workflow based, or materially costly
+- inline cost architecture notes, or `docs/ai_cost_architecture.md` when AI
+  usage is recurring/material or routing/cache/batch strategy is non-trivial
 - cost telemetry rollup setup when AI usage is recurring or budget thresholds are enforceable
+- inline external-skill trust notes, or `docs/security/skills/{skill-name}/TRUST_RECORD.md` when any third-party/cross-project skill is planned
 - optional `docs/ARCHITECTURE.md` only when the system has non-trivial architecture, risky runtime, or durable product boundaries
 
 Standard / Strict output package:
@@ -128,6 +138,9 @@ System architecture document. Include:
 - **Minimum Viable Control Surface** — the smallest set of controls justified for this system
 - **Model Strategy** — per-workload model choice, fallback path, and what will be measured
 - **Cost Budget and Attribution** — per-run/task budget, monthly budget if recurring, model escalation approval, and cost attribution fields
+- **AI Cost Architecture** — workload classes, model tiers, cache layout,
+  output/effort caps, batch lane, routing maturity, and cascade policy when
+  AI/model usage is recurring or material
 - **Retrieval / Embedding Strategy** — if retrieval exists: no retrieval vs text-only vs multimodal, modality scope, why multimodal is or is not justified, fallback path, and what will be measured
 - **Component Table** — every significant component: name, file/directory, responsibility
 - **Data Flow** — numbered steps for the primary request path (happy path, end to end)
@@ -187,7 +200,7 @@ Notes: |
 ```
 
 **Tag Namespace** (use in `Type:` field; multiple tags are space-separated):
-`none` | `rag:ingestion` | `rag:query` | `tool:schema` | `tool:unsafe` | `tool:call` | `agent:loop` | `agent:handoff` | `agent:termination` | `plan:schema` | `plan:validation` | `compliance:control` | `compliance:audit` | `compliance:evidence`
+`none` | `rag:ingestion` | `rag:query` | `tool:schema` | `tool:unsafe` | `tool:call` | `agent:loop` | `agent:handoff` | `agent:termination` | `plan:schema` | `plan:validation` | `compliance:control` | `compliance:audit` | `compliance:evidence` | `cost:architecture` | `cost:telemetry` | `cost:routing` | `skill:security`
 
 Rules for the task graph:
 - Standard/Strict: T01 is always the project skeleton (directories, entry points, pyproject.toml or equivalent)
@@ -311,6 +324,55 @@ Use `templates/COST_BUDGET.md` and fill:
 - if thresholds are enforceable, add a `Type: cost:telemetry` task using
   `templates/COST_TELEMETRY_ADAPTER.md` unless an equivalent gateway/exporter
   already exists
+
+### 5aa. `docs/ai_cost_architecture.md`
+
+Create this file when AI/model usage is recurring, materially costly, agentic,
+dynamic-workflow based, multi-agent-review based, cache-dependent, batch-based,
+or router/cascade-dependent. Lean projects may keep the same content inline if
+the scope is small.
+
+Use `templates/COST_ARCHITECTURE.md` and fill:
+- workload classes and default model/class per workload
+- cost levers: prompt cache, batch lane, output caps, effort caps, escalation,
+  dynamic router, cascades
+- stable-prefix / volatile-suffix cache layout when prompt caching is used
+- batch/async lane for evals, reports, enrichment, or nightly checks
+- routing maturity level from `docs/provider_routing_policy.md`
+- cascade policy and calibration/eval source
+- cost equation and links to budget, telemetry, rollup, and router eval
+
+If dynamic routing or cascades are proposed:
+- add `docs/router_eval.md` from `templates/ROUTER_EVAL.md`
+- add at least one `Type: cost:routing` task
+- do not approve L5/L6 routing without an eval set, stale-router policy,
+  quality floor, latency SLO, cost target, cache-hit guard, and escalation cap
+
+### 5ab. `docs/security/skills/{skill-name}/TRUST_RECORD.md`
+
+Create this file when a third-party, marketplace, vendor, GitHub, zip, or
+cross-project skill is planned for installation, enablement, update, global
+exposure, or broad reuse. Lean projects may keep equivalent inline evidence
+only for instruction-only, project-local, low-risk skills.
+
+Use `templates/EXTERNAL_SKILL_TRUST_RECORD.md` and fill:
+- source URL, owner/maintainer, license/terms, exact version, commit SHA,
+  artifact hash, install scope, and update policy
+- intended agent(s) and whether install is project-local or global
+- capability declaration: shell, network, file read/write, environment/secrets,
+  MCP/tools, dependency installation, persistent state, external APIs
+- SkillSpector or equivalent scan command and report path
+- CRITICAL/HIGH/MEDIUM finding triage
+- signature verification command if `skill.oms.sig` exists, otherwise hash or
+  commit pin
+- architecture impact: Tool-Use, Agentic, Compliance, runtime tier, cost, Tool
+  Catalog, contract, or task implications
+
+If an external skill is executable, networked, MCP/tool-enabled, or uses
+environment/file access:
+- add at least one `Type: skill:security` task before any install/use task
+- do not approve unpinned branch installs in Standard/Strict
+- do not approve global install without explicit human approval
 
 ### 5b. Continuity Artifacts
 
@@ -522,6 +584,23 @@ Before drafting the documents, reason explicitly and concisely through the follo
    - attribution fields: project, task/workflow, role/agent, model, operator/user, feature, environment
    - approval threshold for model escalation, retry expansion, fan-out, or dynamic workflow changes
    - whether budget evidence is inline or in `docs/COST_BUDGET.md`
+13. **AI Cost Architecture**
+   For recurring/material AI usage, define:
+   - workload classes
+   - cache layout and cache-hit target if caching is used
+   - output/effort caps
+   - batch/async lane
+   - routing maturity level
+   - cascade/evaluator policy
+   - `docs/router_eval.md` requirement if dynamic routing or cascades are proposed
+14. **External Skill Security**
+   If third-party, marketplace, vendor, GitHub, zip, or cross-project skills are proposed, define:
+   - skill source and exact version/pin/hash/signature expectation
+   - install scope: project-local or global
+   - declared capabilities: shell, network, file, env/secrets, MCP/tool, dependencies, persistence
+   - whether SkillSpector/equivalent scan is required
+   - trust record path under `docs/security/skills/{skill-name}/TRUST_RECORD.md`
+   - whether the skill implies Tool-Use, Agentic, Compliance, runtime-tier, or cost artifacts
 
 Be sharp. Do not produce long essays. If a lower-complexity option is sufficient, choose it. If the brief cannot identify a concrete pain, current workaround, and first proof metric after clarification, recommend a discovery / measurement phase instead of a full agentic build.
 

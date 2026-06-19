@@ -44,6 +44,9 @@ Read when present or required by mode:
 12. docs/README.md
 13. docs/COST_BUDGET.md
 14. docs/cost_telemetry_protocol.md when cost telemetry thresholds are declared
+15. docs/ai_cost_architecture.md when AI/model usage is recurring/material or routing/cache/batch/cascade controls are declared
+16. docs/router_eval.md when dynamic routing or cascades are declared
+17. docs/external_skill_security_policy.md and docs/security/skills/**/TRUST_RECORD.md when external skills are installed, enabled, or planned
 
 Lean mode must not fail only because optional Standard/Strict artifacts are
 missing.
@@ -71,6 +74,14 @@ Mode rules:
   `Cost-Budget:` fields. Standard/Strict require `docs/COST_BUDGET.md` for
   recurring AI usage, agent loops, dynamic workflows, multi-user AI features, or
   material inference cost.
+- Cost architecture: required for Standard/Strict when AI/model usage is
+  recurring/material or when prompt caching, batch lanes, dynamic routing, or
+  cascades are declared. Lean may keep equivalent notes inline for small
+  one-off projects.
+- External skill security: required when any third-party, marketplace, vendor,
+  GitHub, zip, or cross-project skill is installed, enabled, updated, or planned.
+  Lean may keep inline evidence only for project-local instruction-only skills
+  with no scripts, tools, network, file writes, environment access, or MCP access.
 
 ### A1 — docs/ARCHITECTURE.md
 
@@ -88,6 +99,7 @@ Mode rules:
 - [ ] A1-11  § Tech Stack — table present with technology choices and rationale column (not blank)
 - [ ] A1-12  § Security Boundaries — present and non-empty (authentication mechanism described)
 - [ ] A1-13  § External Integrations — present (may be empty table if no integrations; cannot be missing)
+- [ ] A1-13a § External Agent Skills — present when external skills are installed/planned; every row links to a trust record or says `None in v1`
 - [ ] A1-14  § File Layout — directory tree present
 - [ ] A1-15  § Runtime Contract — env vars table present (may be empty if no env vars required)
 - [ ] A1-16  § Continuity and Retrieval Model — canonical truth, retrieval convenience, and scoped retrieval rules declared
@@ -191,6 +203,24 @@ Mode rules:
 - [ ] A5e-06 Agentic or dynamic workflow tasks declare max model calls, tool calls, retries, parallel agents, or an explicit "not applicable" rationale
 - [ ] A5e-07 If `docs/COST_BUDGET.md` declares enforceable thresholds, the project names a telemetry source (`docs/ai_cost_telemetry.jsonl`, gateway export, provider usage export, or equivalent) and a rollup command using `tools/cost_rollup.py` or an explicitly justified alternative
 - [ ] A5e-08 If enforceable thresholds exist and no existing gateway/exporter is documented, `docs/tasks.md` contains a `Type: cost:telemetry` task that builds the project-owned provider boundary or telemetry adapter
+- [ ] A5e-09 If AI/model usage is recurring/material or uses agent loops, dynamic workflows, multi-agent review, prompt caching, batch lanes, dynamic routing, or cascades: Standard/Strict have `docs/ai_cost_architecture.md`; Lean has either `docs/ai_cost_architecture.md` or inline equivalent notes
+- [ ] A5e-10 Cost architecture includes workload classes, model tiers, output/effort caps, cache/batch policy, routing maturity, cascade policy, and artifact links, or marks each non-applicable section as `N/A`
+- [ ] A5e-11 If prompt caching is declared, stable prefix / volatile suffix boundaries are present and volatile fields such as timestamps, run IDs, current diff, and test output are excluded from the stable prefix
+- [ ] A5e-12 If dynamic routing or cascades are declared, `docs/router_eval.md` exists and `docs/tasks.md` includes a `Type: cost:routing` task unless the router is already implemented and evaluated
+- [ ] A5e-13 If cascades are declared, cheap model self-judgment is forbidden unless calibrated on the project eval set; failed cheap attempts and verifier cost are included in the cost equation
+
+### A5f — External skill security
+
+- [ ] A5f-01 If no external skills are used or planned, the selected mode records "external skills: not applicable" in CODEX_PROMPT.md, AGENTS.md, ARCHITECTURE.md, or CONTRACT_LITE.md
+- [ ] A5f-02 If external skills are used or planned, `docs/external_skill_security_policy.md` is available or copied into the project governance kit
+- [ ] A5f-03 Every external skill has a trust record at `docs/security/skills/{skill-name}/TRUST_RECORD.md` or a justified Lean inline equivalent for instruction-only low-risk use
+- [ ] A5f-04 Trust records include source URL, owner/maintainer, license/terms, exact version/commit/hash, install scope, update policy, and intended agent(s)
+- [ ] A5f-05 Trust records declare shell, network, file, environment/secrets, MCP/tool, dependency-installation, persistent-state, and external-API capabilities or mark them `N/A`
+- [ ] A5f-06 Executable, networked, MCP/tool-enabled, or env/file-accessing external skills have SkillSpector scan evidence or a documented equivalent scanner/manual review rationale
+- [ ] A5f-07 CRITICAL/HIGH findings, hidden instructions, tool poisoning, credential harvesting, broad filesystem access, remote script execution, description-behavior mismatch, or unpinned executable dependencies are fixed, rejected, or linked to explicit risk acceptance
+- [ ] A5f-08 Signed skills have signature verification evidence; unsigned skills are pinned by commit/hash. Standard/Strict must not rely on an unpinned branch
+- [ ] A5f-09 Global skill install is absent or has explicit human approval and justification
+- [ ] A5f-10 Any skill that adds external tools, MCP access, agentic behavior, compliance impact, runtime mutation, or material AI cost is reflected in ARCHITECTURE.md, tasks.md, contract rules, and relevant capability/cost artifacts
 
 ### A6 — .github/workflows/ci.yml
 
@@ -227,6 +257,9 @@ For each check, read both referenced documents and verify the claim. Mark CONSIS
 - [ ] B-08i Adoption reality consistency: ARCHITECTURE.md §Problem Fit and Adoption Reality does not make broad AI replacement or autonomy claims unless matching proof metrics, human approval boundaries, and evaluation artifacts are present
 - [ ] B-08j Cost consistency: active AI/model work in ARCHITECTURE.md, tasks.md, CODEX_PROMPT.md, or AGENTS.md has a matching budget boundary and approval trigger in COST_BUDGET.md, CONTRACT_LITE.md, or inline Lean state
 - [ ] B-08k Telemetry consistency: declared AI cost thresholds have a telemetry source and rollup/check command; if no telemetry is available yet, the docs say thresholds are manual-review only
+- [ ] B-08l Cost architecture consistency: model strategy, COST_BUDGET.md, ai_cost_architecture.md, provider_routing_policy.md, and tasks.md do not contradict workload classes, routing maturity, cache requirements, or escalation/cascade rules
+- [ ] B-08m Router eval consistency: if routing maturity is L5 or L6, router_eval.md includes traffic sample, candidate models, quality floor, latency target, cost target, cache-hit guard, escalation cap, unsupported language/domain handling, and stale-router policy
+- [ ] B-08n External skill consistency: installed/planned external skills have trust records; declared capabilities match ARCHITECTURE.md, tasks.md tags, Tool Catalog rows, runtime tier, and contract boundaries
 - [ ] B-09  Standard/Strict T01/T02/T03 dependency chain: T01 Depends-On=none, T02 depends on T01, T03 depends on T01 or T02. Lean: first-task dependency chain is logically sound and has no cycles.
 - [ ] B-10  Tech stack consistency: every technology declared in ARCHITECTURE.md §Tech Stack that requires env vars has those env vars listed in §Runtime Contract
 - [ ] B-11  External integrations consistency: every service listed in ARCHITECTURE.md §External Integrations either (a) has env vars in §Runtime Contract, or (b) is documented as not requiring credentials
@@ -271,6 +304,9 @@ any remaining `{{...}}` patterns:
 4. `docs/COGNITION_MANIFEST.md` when present or required by mode
 5. `docs/README.md` when present or required by mode
 6. `docs/COST_BUDGET.md` when present or required by mode
+7. `docs/ai_cost_architecture.md` when present or required by mode
+8. `docs/router_eval.md` when present or required by mode
+9. `docs/security/skills/**/TRUST_RECORD.md` when present or required by mode
 
 Detection rule: any text matching `{{` followed by non-`}` characters followed by `}}` is an unresolved placeholder.
 

@@ -170,6 +170,35 @@ Rules:
   workflow changes require a matching budget update or approval
 - cost reductions must preserve quality/eval and latency thresholds
 
+## AI Cost Architecture
+
+Include this section when AI spend is recurring/material, prompt caching or
+batch lanes are used, or routing/cascades affect cost and quality. Use
+`docs/ai_cost_architecture.md` for the full artifact when the table below is
+not enough.
+
+| Area | Decision | Evidence |
+|------|----------|----------|
+| Workload classes | {{e.g., architecture_review, implementation_fix, summarization_packet}} | {{docs/ai_cost_architecture.md or inline}} |
+| Model tiers | {{Allowed model class per workload; escalation rule}} | {{COST_BUDGET / eval / ADR}} |
+| Output and effort caps | {{max output tokens, reasoning/effort limits where available}} | {{budget or task policy}} |
+| Prompt cache layout | {{stable prefix, cache breakpoint, volatile suffix, or N/A}} | {{docs/cache_context_layout.md / telemetry}} |
+| Batch / async lane | {{evals, enrichment, reports, nightly checks, or N/A}} | {{workflow docs}} |
+| Routing maturity | {{L0-L6 from provider routing policy}} | {{docs/provider_routing_policy.md}} |
+| Dynamic router | {{not used / planned / active}} | {{docs/router_eval.md when active}} |
+| Cascade policy | {{not used / calibrated verifier / independent judge}} | {{docs/router_eval.md when active}} |
+
+Rules:
+- Routing is a policy execution detail inside architecture boundaries. It may
+  choose only among approved model tiers, budget limits, data boundaries, and
+  escalation rules.
+- Dynamic routing and cascades require `docs/router_eval.md` before production
+  use.
+- A cheap model must not self-certify high-risk outputs without calibration
+  evidence.
+- Prompt caching must keep stable context above the cache boundary and volatile
+  task state below it.
+
 ---
 
 ## Capability Profiles
@@ -557,6 +586,27 @@ Profile-specific metric requirements are defined in IMPLEMENTATION_CONTRACT.md Â
 <!--
 If there are no external integrations, write: "None in v1."
 -->
+
+---
+
+## External Agent Skills
+
+Include this section when the project installs, enables, updates, vendors,
+globally exposes, or depends on third-party/cross-project agent skills. If no
+external skills are used, write `None in v1`.
+
+| Skill | Source / version | Install scope | Capabilities | Trust record | Status |
+|-------|------------------|---------------|--------------|--------------|--------|
+| {{SKILL_NAME}} | {{URL + tag/commit/hash/signature}} | project-local / global | shell/network/file/env/MCP/tool/persistence/none | `docs/security/skills/{{skill}}/TRUST_RECORD.md` | approved / planned / rejected |
+
+Rules:
+- External skills are untrusted until the trust record is approved.
+- Global install requires explicit human approval.
+- Executable, networked, MCP/tool-enabled, file/env-accessing, persistent, or
+  third-party skills require scan evidence and source pin/signature/hash.
+- If a skill adds tools, update Â§Tool Catalog and Tool-Use profile artifacts.
+- If a skill changes runtime tier, cost, compliance, or agentic behavior, update
+  the corresponding architecture section and tasks before implementation.
 
 ---
 

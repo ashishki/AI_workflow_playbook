@@ -57,7 +57,14 @@ Profiles are activated in Phase 1 and treated as architectural constraints. Eval
 
 **Three-layer observability.** (1) Process level: Claude Code hooks block writes to immutable files; log every Bash command with `[TASK:T##]` tagging (set `CURRENT_TASK` env var in the orchestrator's Execute block); write a session checkpoint on stop with optional push notification (set `NOTIFICATION_TOKEN` + `NOTIFICATION_TARGET`, use `SILENT=1` to suppress for automated sessions). (2) Production level: OBS-1..3 rules in `IMPLEMENTATION_CONTRACT.md` (spans, metrics, health endpoint) enforced by CODE review checks. (3) AI quality level: capability evaluation artifacts, Step 3.5 regression detection (>5% → P1, >15% → P0 Stop-Ship), optional CI eval gates. See `PLAYBOOK.md §12`.
 
-**Cost budget guardrails.** AI/model work must declare a budget boundary before it runs. Lean projects can keep the budget inline; Standard/Strict projects use `docs/COST_BUDGET.md` for recurring AI usage, agent loops, dynamic workflows, multi-user AI features, or material inference cost. Orchestrator and reviewer prompts flag missing budgets, model escalation, fan-out/retry expansion, and cost-saving changes without eval/latency evidence.
+**Cost budget guardrails.** AI/model work must declare a budget boundary before it runs. Lean projects can keep the budget inline; Standard/Strict projects use `docs/COST_BUDGET.md` for recurring AI usage, agent loops, dynamic workflows, multi-user AI features, or material inference cost. Cost architecture is separate from budget: `docs/ai_cost_architecture.md` explains workload classes, cache layout, batch lanes, routing maturity, cascades, and cost-per-successful-task. Orchestrator and reviewer prompts flag missing budgets, missing cost architecture, model escalation, fan-out/retry expansion, dynamic routing, cascades, and cost-saving changes without eval/latency evidence.
+
+**External skill security.** Third-party or cross-project agent skills are
+treated as supply-chain artifacts. Before install, enablement, update, or
+global exposure, projects create a trust record with source pin/signature/hash,
+declared capabilities, SkillSpector or equivalent scan evidence, finding triage,
+install scope, and risk acceptance. Clean scans and signatures are evidence, not
+proof of safety.
 
 **Codex-only code writing.** Claude-side direct edits to application code can be blocked with hooks so implementation goes only through `Bash -> codex exec`, preserving the implementer/reviewer split. A separate phase-boundary hook can block `CODEX_PROMPT.md` phase advancement until the completed phase has an archived review entry.
 
@@ -99,7 +106,10 @@ For practical setup and adoption, use:
 - [docs/workflow_continuity_retrofit.md](docs/workflow_continuity_retrofit.md) — MemPalace assessment and the playbook-native continuity retrofit
 - [docs/coverage_experiment_report_ru.md](docs/coverage_experiment_report_ru.md) — Russian coverage experiment report: project-fit zones, heavy-task boundaries, and execution-substrate line
 - [docs/cost_budget_guardrails.md](docs/cost_budget_guardrails.md) — AI/model cost attribution, budget gates, and approval rules
+- [docs/ai_cost_architecture.md](docs/ai_cost_architecture.md) — workload classes, cache/batch/routing strategy, cascades, and cost-per-successful-task rules
+- [docs/cache_context_layout.md](docs/cache_context_layout.md) — prompt cache stable-prefix / volatile-suffix layout rules
 - [docs/cost_telemetry_protocol.md](docs/cost_telemetry_protocol.md) — provider-agnostic AI cost telemetry JSONL and rollup protocol
+- [docs/external_skill_security_policy.md](docs/external_skill_security_policy.md) — external agent skill trust gate, scan/signature policy, and approval rules
 
 The zero-trust execution extension strengthens the runtime/CI side without
 making any external router mandatory:
@@ -135,7 +145,7 @@ Read `docs/project_fit_guide.md`, then select a mode from
 
 1. Choose Lean, Standard, or Strict.
 2. Copy only the kit required by that mode.
-3. Declare AI/model budget boundaries if the project uses LLMs, agents, dynamic workflows, or recurring eval/review calls.
+3. Declare AI/model budget boundaries if the project uses LLMs, agents, dynamic workflows, or recurring eval/review calls. Add cost architecture when usage is recurring/material or uses prompt caching, batch lanes, dynamic routing, or cascades.
 4. If using Claude Code and Standard/Strict, copy `.claude` settings/commands and hooks.
 5. Run `/bootstrap-new` or produce the mode's starter artifacts manually.
 6. Run the Phase 1 validator in the selected mode.
@@ -146,7 +156,7 @@ Read `docs/project_fit_guide.md`, then select a mode from
 1. Choose Lean, Standard, or Strict.
 2. Copy only the kit required by that mode.
 3. Normalize CI or document the local verification command.
-4. Declare AI/model budget boundaries for recurring or material AI usage.
+4. Declare AI/model budget boundaries for recurring or material AI usage. Add cost architecture when the existing system already has prompt caching, batch lanes, dynamic routing, cascades, or provider/model tiering.
 5. Run `/bootstrap-retrofit` only if the repo needs the full bootstrap flow.
 6. Run the Phase 1 validator in the selected mode.
 7. Start from the first real incomplete task.
@@ -219,7 +229,7 @@ Project description
   Produces the selected mode's starter artifacts:
             Lean / Standard / Strict artifact set
             + profile-specific artifacts only when active
-            + cost budget when AI/model work requires it
+            + cost budget / cost architecture when AI/model work requires it
         |
         v
   [Phase 1 Validator]
@@ -258,7 +268,10 @@ AI_workflow_playbook/
 │   ├── project_fit_guide.md          — problem-first entry points, adoption reality gate, and anti-patterns
 │   ├── adoption_modes.md             — Lean / Standard / Strict artifact matrix
 │   ├── cost_budget_guardrails.md      — AI/model budget gates and cost attribution policy
+│   ├── ai_cost_architecture.md        — workload class, cache, batch, routing, cascade, and cost architecture protocol
+│   ├── cache_context_layout.md        — prompt cache stable-prefix and volatile-suffix layout protocol
 │   ├── cost_telemetry_protocol.md     — provider-agnostic AI cost telemetry JSONL + rollup protocol
+│   ├── external_skill_security_policy.md — external skill supply-chain gate and trust record policy
 │   ├── usage_guide.md                — end-to-end usage for new and existing repositories
 │   ├── architecture_layers.md        — concise layer map
 │   └── ...                           — focused reports and operational guides
@@ -288,6 +301,9 @@ AI_workflow_playbook/
 │   ├── IMPLEMENTATION_CONTRACT.md   — immutable rules template (universal + profile rules)
 │   ├── CONTRACT_LITE.md             — Lean mode implementation boundary
 │   ├── COST_BUDGET.md               — AI/model cost budget template
+│   ├── COST_ARCHITECTURE.md          — AI/model cost architecture template
+│   ├── ROUTER_EVAL.md                — dynamic routing / cascade evaluation template
+│   ├── EXTERNAL_SKILL_TRUST_RECORD.md — external agent skill trust record template
 │   ├── COST_TELEMETRY_ENTRY.json    — one-line JSON telemetry entry template
 │   ├── COST_TELEMETRY_ADAPTER.md    — project-owned provider boundary task template
 │   ├── EVIDENCE_INDEX.md            — index of durable proof, review findings, and evaluation artifacts
@@ -300,6 +316,7 @@ AI_workflow_playbook/
 │   ├── skills/
 │   │   ├── SKILL_INTERFACE.md       — descriptor format for optional skills
 │   │   ├── external_tools_skill.md  — descriptor for the External Tools / MCP skill
+│   │   ├── external_skill_security_skill.md — descriptor for external skill security gate
 │   │   ├── research_skill.md        — EXPERIMENTAL descriptor for the Research Companion skill
 │   │   └── simplification_skill.md  — EXPERIMENTAL descriptor for the Simplification Pass skill
 │   ├── research/
@@ -353,6 +370,15 @@ It also supports optional `Context-Refs` and heavy-task extension fields so risk
 
 **templates/PROJECT_BRIEF.md** is the recommended input template before running the Strategist. It helps you describe concrete pain, current workaround, adoption proof, goals, workflows, risks, AI scope, deterministic candidates, human approval boundaries, constraints, and success metrics without pre-deciding the architecture.
 
+**templates/COST_ARCHITECTURE.md** turns AI cost from a policy note into an architecture artifact: workload classes, model tiers, prompt-cache layout, batch lanes, routing maturity, cascade rules, and cost-per-successful-task. Use it for recurring/material AI usage or any dynamic routing/cascade plan.
+
+**templates/ROUTER_EVAL.md** is required when a project wants evaluated dynamic routing or cascades. It records the traffic sample, baseline, candidate models, quality floor, cost target, cache-hit impact, escalation rate, and stale-router policy.
+
+**templates/EXTERNAL_SKILL_TRUST_RECORD.md** records source, pin/signature/hash,
+declared capabilities, scan evidence, finding triage, install scope, and
+approval for a third-party or cross-project agent skill before it enters the
+agent context.
+
 **templates/domains/healthcare.md** is the HIPAA domain skeleton. It provides four production-ready tasks with complete acceptance criteria (including specific test function references), a starter `docs/compliance_eval.md` table with HIPAA control rows, and ARCHITECTURE.md snippets. The Strategist includes it verbatim when Compliance=ON and HIPAA is the active framework.
 
 **templates/NFR.md** tracks non-functional SLAs: target, measurement method, CI gate threshold, and a phase-by-phase baseline history. Included when the project has explicit latency, throughput, or error rate requirements.
@@ -390,11 +416,14 @@ from `docs/adoption_modes.md` directly.
 2. Set `prompts/STRATEGIST.md` as the system prompt.
 3. Fill `templates/PROJECT_BRIEF.md` or describe the same fields in chat: concrete pain, current workaround, adoption proof metric, domain, workflows, AI scope, deterministic candidates, expected scale, constraints, risk boundaries, AI/model budget, and compliance requirements.
 4. The Strategist asks clarifying questions, then produces the starter package for the selected mode:
-   - Lean: `docs/tasks.md`, short `docs/CODEX_PROMPT.md` or `AGENTS.md`, contract-lite, CI/local verification command, review checklist, and inline budget or `docs/COST_BUDGET.md` when AI/model work needs it
+   - Lean: `docs/tasks.md`, short `docs/CODEX_PROMPT.md` or `AGENTS.md`, contract-lite, CI/local verification command, review checklist, inline budget/cost architecture notes, and inline external-skill trust notes or dedicated artifacts when needed
    - Standard/Strict:
      - `docs/ARCHITECTURE.md`, `docs/spec.md`, `docs/tasks.md`
      - `docs/CODEX_PROMPT.md`, `docs/IMPLEMENTATION_CONTRACT.md`
      - `docs/COST_BUDGET.md` when recurring AI usage, agent loops, dynamic workflows, multi-user AI features, or material inference cost are present
+     - `docs/ai_cost_architecture.md` when AI spend is recurring/material, prompt caching or batch lanes are used, or model routing/cascades affect quality/cost
+     - `docs/router_eval.md` when dynamic routing or cascades are used
+     - `docs/security/skills/{skill-name}/TRUST_RECORD.md` before external skill install/update/enablement
      - `.github/workflows/ci.yml`
      - Review prompts: `docs/audit/PROMPT_0_META.md` through `PROMPT_3_CONSOLIDATED.md`, `docs/audit/AUDIT_INDEX.md`
      - If Compliance=ON: `docs/compliance_eval.md` (with framework-specific control rows)

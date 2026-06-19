@@ -19,6 +19,7 @@ skill is rejected if it competes with those roles or relaxes any contract rule.
 | Skill | Status | Allowed Role | Output | Descriptor |
 |-------|--------|--------------|--------|------------|
 | External Tools / MCP | optional | Strategist, Reviewer, Human | Proposed Tool Catalog rows; audit-log shape; env-var entries; tool-task drafts | [`templates/skills/external_tools_skill.md`](../templates/skills/external_tools_skill.md) — guide: [`reference/external_tools_mcp_companion.md`](external_tools_mcp_companion.md) |
+| External Skill Security Gate | optional | Strategist, Orchestrator, Reviewer, Human | External skill trust records; scan/signature/provenance findings; `skill:security` task drafts | [`templates/skills/external_skill_security_skill.md`](../templates/skills/external_skill_security_skill.md) — policy: [`docs/external_skill_security_policy.md`](../docs/external_skill_security_policy.md) |
 | Research Companion | EXPERIMENTAL | Strategist, Reviewer, Human | `docs/research/{slug}.md` source-grounded notes consumed by ADRs and `docs/DECISION_LOG.md` | [`templates/skills/research_skill.md`](../templates/skills/research_skill.md) — guide: [`reference/research_companion.md`](research_companion.md) |
 | Simplification Pass | EXPERIMENTAL | Reviewer (specialized), Human | `docs/audit/SIMPLIFICATION_REPORT.md`; approved findings become normal Codex tasks | [`templates/skills/simplification_skill.md`](../templates/skills/simplification_skill.md) — prompt: [`prompts/audit/PROMPT_SIMPLIFY.md`](../prompts/audit/PROMPT_SIMPLIFY.md) |
 
@@ -35,6 +36,12 @@ skill is rejected if it competes with those roles or relaxes any contract rule.
 5. Skills do not require an ADR to add or remove. They are documentation
    surfaces, not contract changes.
 
+External skills have an additional gate: before a third-party or cross-project
+skill is installed, enabled, updated, or shared broadly, apply
+`docs/external_skill_security_policy.md` and create a trust record from
+`templates/EXTERNAL_SKILL_TRUST_RECORD.md` unless the skill is instruction-only,
+project-local, and low-risk.
+
 ---
 
 ## Out of Scope for Skills
@@ -49,3 +56,4 @@ existing mechanisms instead:
 | New capability behavior (RAG / Tool-Use / Agentic / Planning / Compliance) | activate the corresponding profile in Phase 1 |
 | Hard rule for every project | propose an addition to `IMPLEMENTATION_CONTRACT.md §Universal Rules` via ADR |
 | Multi-step orchestration | use `prompts/ORCHESTRATOR.md` for the base loop, or `docs/dynamic_workflow_reference_policy.md` for an optional executable workflow experiment |
+| Third-party skill installation | use `docs/external_skill_security_policy.md`; do not treat a skill descriptor as installation approval |

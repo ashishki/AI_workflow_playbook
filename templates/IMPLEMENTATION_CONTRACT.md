@@ -86,6 +86,33 @@ _Applies only if {{PROJECT_NAME}} is multi-tenant. Delete this section if single
 - Closing P1/P2 findings, changing eval baselines, changing runtime tier, or superseding ADRs requires updates to canonical repo artifacts, not only vault notes.
 - Violation: P1 when a convenience memory surface overrides or contradicts canonical repo truth.
 
+### External Skill Security
+
+External or cross-project agent skills are untrusted until reviewed. This
+includes marketplace skills, GitHub skills, vendor skills, zip skills, MCP skill
+bundles, and any skill-like package containing prompts plus scripts, references,
+assets, tool schemas, or executable code.
+
+- Do not install, enable, update, or globally expose an external skill without a
+  trust record under `docs/security/skills/{skill-name}/TRUST_RECORD.md` or a
+  documented Lean inline equivalent for instruction-only low-risk skills.
+- Use `docs/external_skill_security_policy.md` and
+  `templates/EXTERNAL_SKILL_TRUST_RECORD.md` for source, version, capability,
+  scan, signature/hash, install-scope, and risk-acceptance evidence.
+- CRITICAL/HIGH SkillSpector findings, hidden instructions, tool poisoning,
+  credential harvesting, broad filesystem access, remote script execution,
+  description-behavior mismatch, or unpinned executable dependencies block
+  installation unless formally accepted by a human owner.
+- Project-local install is the default. Global install requires explicit human
+  approval and a reason that project-local scope is insufficient.
+- Any changed skill source, version, dependency, permission, trigger,
+  executable file, or signature/hash mismatch reruns the external skill gate.
+- A clean scanner report is not proof of safety. A signature is not proof of
+  safety. Approval requires scan/provenance evidence plus human review.
+- Violation: P1 for missing trust record or unpinned external executable skill;
+  P0 for installing or enabling a skill with unresolved critical/high risk or
+  credential/tool-poisoning behavior.
+
 ### Observability
 
 These rules ensure the system is observable in production. They apply to all projects and all profiles.
@@ -205,14 +232,33 @@ state `Not applicable`.
 
 - Recurring, multi-agent, dynamic-workflow, multi-user, or materially costly AI
   usage must have `docs/COST_BUDGET.md`.
+- Recurring/material AI usage, prompt caching, batch lanes, dynamic routing,
+  cascades, or non-trivial model tiering must have cost architecture in
+  `docs/ai_cost_architecture.md` or, for Lean projects, an explicit inline
+  equivalent.
 - Every AI/model task must have a per-run or per-task budget boundary in
   `docs/COST_BUDGET.md`, `docs/CODEX_PROMPT.md`, or the task `Cost-Budget:`
   field.
+- Every AI/model workload class must declare output caps, retry/fan-out caps,
+  model tier, fallback/escalation rules, and quality/eval floor or state why a
+  field is not applicable.
+- Prompt caching requires a documented stable-prefix / volatile-suffix layout.
+  Timestamps, run IDs, random IDs, current diffs, latest test output, and
+  temporary diagnostics must not be placed before the cache boundary.
 - Model escalation, retry expansion, tool-call expansion, parallel-agent
   fan-out, or dynamic workflow changes require a matching budget update or
   human approval.
+- Dynamic routing requires `docs/router_eval.md` with baseline quality,
+  candidate models, cost reduction target, latency impact, cache-hit impact,
+  escalation rate, and stale-router policy.
+- Cascades require either an independently evaluated escalation judge or a
+  project-calibrated confidence threshold. A cheap model must not self-certify
+  high-risk outputs without calibration evidence.
 - Cost-saving changes must preserve the declared eval/quality and latency
   thresholds.
+- Cost optimization must be measured as cost per successful task, not only cost
+  per call. Failed cheap attempts, verifier calls, retries, tool costs, and
+  estimated human rework count toward total cost.
 - Enforceable thresholds must name a telemetry source and rollup/check command,
   such as `docs/ai_cost_telemetry.jsonl` plus `tools/cost_rollup.py`.
 - Provider dashboard usage limits are not a substitute for per-workflow budget

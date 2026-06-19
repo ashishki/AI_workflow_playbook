@@ -35,6 +35,9 @@ artifacts only to satisfy a checklist.
 | Capability eval artifacts | Only for active capability behavior | Only for active capability behavior | Required for active capability behavior |
 | Runtime verification record | Risky edits only | Risky edits and phase boundaries | Required for privileged/risky writes |
 | Cost budget | Inline for AI tasks | Required for recurring AI use | Required |
+| AI cost architecture | Inline when recurring/material AI, caching, routing, batch, or cascades are used | Required when recurring/material AI, caching, routing, batch, or cascades are used | Required when AI/model work is active |
+| Router eval | Optional; only if dynamic routing/cascades are used | Required before dynamic routing/cascades | Required before dynamic routing/cascades |
+| External skill trust record | Inline only for project-local instruction-only low-risk skills | Required before external skill install/update/enablement | Required before external skill install/update/enablement |
 | Deep multi-agent review | Optional | Phase/risk boundary | Phase/risk boundary and high-risk changes |
 
 ## Validator Scope
@@ -44,13 +47,20 @@ The Phase 1 validator must run in the selected mode:
 - Lean: block only on missing task state, missing verification command, vague
   acceptance criteria, missing implementation boundaries, or unresolved
   placeholders in required artifacts. For AI tasks, missing budget boundary is
-  also a blocker.
+  also a blocker. For recurring/material AI, caching, routing, batch, or
+  cascades, missing inline cost architecture notes are a blocker.
+  For external skills, missing inline trust evidence is a blocker unless the
+  skill is not installed/enabled and is not needed for the first task.
 - Standard: run the normal structural and cross-document checks, but treat
   cognition/evidence artifacts as required only when the project uses them. A
   recurring AI workload requires `docs/COST_BUDGET.md` or equivalent budget
-  section.
+  section. Recurring/material AI, prompt caching, batch lanes, dynamic routing,
+  or cascades require `docs/ai_cost_architecture.md`; dynamic routing/cascades
+  require `docs/router_eval.md`.
+  External skills require a trust record before installation, update, or
+  enablement.
 - Strict: run the full artifact, evidence, cognition, evaluation, runtime, and
-  review checks, including cost gates.
+  review checks, including cost gates and external skill trust records.
 
 ## Review Scope
 
@@ -72,6 +82,10 @@ All modes keep these invariants:
 - test or verification evidence before completion
 - bounded correction loops
 - declared budget boundary for AI/model work
+- declared cost architecture boundary for recurring/material AI, caching,
+  routing, batch, or cascades
+- no external skill is installed, enabled, updated, or globally exposed without
+  trust evidence
 - human approval at meaningful risk boundaries
 
 Mode selection changes overhead. It does not permit unsupported claims.

@@ -11,6 +11,8 @@ Date: {{DATE}}
 - Verification command:
 - Last verification:
 - Cost budget:
+- Cost architecture:
+- External skills:
 
 ## Next Task
 
@@ -36,7 +38,9 @@ none
 6. Add or update tests when behavior changes.
 7. Run the task's `test:` or `verify:` command.
 8. Record changed files, verification output, and any budget/cost issue.
-9. Return `IMPLEMENTATION_RESULT: DONE` only when repository state supports the
+9. Stop before installing/enabling/updating external skills unless trust
+   evidence is already present or the task is explicitly creating it.
+10. Return `IMPLEMENTATION_RESULT: DONE` only when repository state supports the
    claim.
 
 ## Cost / Budget Notes
@@ -46,3 +50,15 @@ none
 - Stop before exceeding the declared per-task budget.
 - Escalate if a loop, retry storm, or broad file search starts consuming budget
   without new evidence.
+- For recurring/material AI usage, write the workload class, output cap,
+  retry/fan-out cap, cache/batch/routing decision, and escalation rule here or
+  in `docs/ai_cost_architecture.md`.
+- Dynamic routing or cascades require `docs/router_eval.md`; do not rely on a
+  cheap model's self-confidence as the only escalation judge.
+
+## External Skill Notes
+
+- Instruction-only, project-local skills may record trust evidence inline.
+- Third-party/cross-project, executable, networked, MCP/tool-enabled,
+  file/env-accessing, persistent, or global skills require
+  `docs/security/skills/{skill-name}/TRUST_RECORD.md`.

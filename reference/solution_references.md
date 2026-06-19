@@ -21,6 +21,8 @@ Do not treat any source here as a dependency.
 | Cline Memory Bank | You need repo-local markdown memory patterns | Structured markdown project memory | Product docs | https://docs.cline.bot/best-practices/memory-bank |
 | GitMark Memory Bank | You need simple markdown/git knowledge-base patterns | README index, Markdown notes, git-native memory | Public source | https://github.com/vakovalskii/gitmark-memory-bank/blob/main/README.md |
 | Aider lint/test | You need post-edit deterministic verification | Auto lint/test after AI edits | Product docs | https://aider.chat/docs/usage/lint-test.html |
+| NVIDIA SkillSpector | You need to vet third-party or cross-project agent skills before installation | Static + optional semantic skill scanning, SARIF/Markdown reports, risk scoring across prompt injection, exfiltration, supply chain, MCP poisoning, and dangerous code patterns | Official repo/docs | https://github.com/NVIDIA/SkillSpector |
+| NVIDIA skill trust pipeline | You need release-gate structure for external skills | Scan report + skill card + detached signature/integrity verification before install | Official docs | https://docs.nvidia.com/skills/agent-skill-trust-pipeline |
 
 ## Adoption Rules
 

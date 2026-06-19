@@ -13,6 +13,10 @@ Output: docs/audit/STRATEGY_NOTE.md (overwrite).
 - docs/ARCHITECTURE.md           — system design, Capability Profiles table
 - docs/CODEX_PROMPT.md           — current state: baseline, Fix Queue, open findings
 - docs/COST_BUDGET.md            — if present; otherwise inline Lean budget notes
+- docs/ai_cost_architecture.md   — if present or required by active AI/model cost architecture
+- docs/router_eval.md            — if dynamic routing or cascades are proposed
+- docs/external_skill_security_policy.md — if external skills are proposed
+- docs/security/skills/**/TRUST_RECORD.md — if external skills are proposed/installed
 - docs/adr/                      — all ADRs (if any)
 - docs/tasks.md                  — upcoming phase tasks (next phase header + task list only)
 
@@ -66,8 +70,31 @@ tool calls:
 - Would the upcoming phase require a `docs/COST_BUDGET.md` update before work begins?
 Verdict: READY | ATTENTION | BLOCKED
 
-**8. Recommendation**
-Based on checks 1–7:
+**8. Cost architecture gate**
+If the upcoming phase includes recurring/material AI usage, prompt caching,
+batch lanes, dynamic routing, cascades, output/effort cap changes, or model-tier
+changes:
+- Does `docs/ai_cost_architecture.md` define workload classes, model tiers,
+  cache layout, batch lane, routing maturity, cascade policy, and artifact links?
+- If prompt caching is used, are stable-prefix and volatile-suffix boundaries
+  declared?
+- If routing maturity is L5/L6, does `docs/router_eval.md` exist with quality,
+  latency, cost, cache-hit, escalation, and stale-router checks?
+Verdict: READY | ATTENTION | BLOCKED
+
+**9. External skill security gate**
+If the upcoming phase installs, enables, updates, vendors, globally exposes, or
+depends on third-party/cross-project agent skills:
+- Does each skill have a trust record with source pin/signature/hash, declared
+  capabilities, scan evidence, finding triage, install scope, update policy,
+  and approval state?
+- Are CRITICAL/HIGH findings fixed, rejected, or formally accepted?
+- Do skill capabilities imply Tool-Use, Agentic, Compliance, runtime-tier, or
+  cost-architecture changes that need tasks before implementation?
+Verdict: READY | ATTENTION | BLOCKED
+
+**10. Recommendation**
+Based on checks 1–9:
 - Proceed: all checks pass or warnings only (no blockers)
 - Pause: any P0/P1 open, any ADR VIOLATED, or DRIFT severe enough to risk the phase
 
@@ -89,6 +116,8 @@ _Date: YYYY-MM-DD · Reviewing: Phase N (T##–T##)_
 | ADR compliance | | |
 | Capability Profile gate | N/A or per-profile | |
 | Cost budget gate | N/A / READY / ATTENTION / BLOCKED | |
+| Cost architecture gate | N/A / READY / ATTENTION / BLOCKED | |
+| External skill security gate | N/A / READY / ATTENTION / BLOCKED | |
 
 ## Findings / Blockers
 _List only if Pause. One bullet per blocker with exact reference (file:line or finding ID)._

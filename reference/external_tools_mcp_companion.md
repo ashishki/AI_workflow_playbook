@@ -14,6 +14,11 @@ actions, schema versioning, and side-effect documentation:
 `templates/IMPLEMENTATION_CONTRACT.md §Profile Rules: Tool-Use`,
 `prompts/audit/PROMPT_2_CODE.md` TOOL-1..6.
 
+If the MCP/tool capability arrives as a third-party or cross-project agent
+skill bundle, also apply `docs/external_skill_security_policy.md` before
+installing or enabling it. Tool Catalog review checks runtime behavior;
+external skill security checks supply-chain entry into the agent context.
+
 ---
 
 ## When to use this guide
@@ -306,5 +311,6 @@ Tests required:
 - `templates/IMPLEMENTATION_CONTRACT.md §Profile Rules: Tool-Use`
 - `prompts/audit/PROMPT_2_CODE.md` TOOL-1..6
 - `templates/tasks_schema.md` (tag namespace: `tool:schema`, `tool:unsafe`,
-  `tool:call`)
+  `tool:call`, `skill:security`)
 - `templates/skills/external_tools_skill.md` (skill descriptor for this guide)
+- `docs/external_skill_security_policy.md` (trust gate for third-party skills)

@@ -37,6 +37,9 @@ Never delete history from this file. Append; do not replace.
 - **Implementation journal:** `docs/IMPLEMENTATION_JOURNAL.md`
 - **Evidence index:** `docs/EVIDENCE_INDEX.md` (if present)
 - **Cost budget:** `docs/COST_BUDGET.md` (if present; otherwise use inline project budget notes)
+- **AI cost architecture:** `docs/ai_cost_architecture.md` (if present; otherwise use inline project cost architecture notes)
+- **Router eval:** `docs/router_eval.md` (required for dynamic routing or cascades)
+- **External skill trust:** `docs/security/skills/**/TRUST_RECORD.md` (required for external skills unless Lean inline evidence is justified)
 - **Task-scoped context:** read `Context-Refs` in `docs/tasks.md` before broad searching
 - **Generated context packets:** `docs/context-packets/` (if present; convenience only, canonical paths win)
 
@@ -87,17 +90,42 @@ but that were deferred from the current task. Format:
 ## Cost Budget State
 
 - Budget artifact: `docs/COST_BUDGET.md` / inline / not applicable
+- Cost architecture artifact: `docs/ai_cost_architecture.md` / inline / not applicable
+- Router eval artifact: `docs/router_eval.md` / not applicable
 - Telemetry source: `docs/ai_cost_telemetry.jsonl` / external gateway / provider export / not applicable
 - Last rollup: `reports/ai_cost_rollup.md` / not run
 - Per-task budget:
 - Per-run budget:
 - Monthly project budget:
+- Routing maturity: L0 / L1 / L2 / L3 / L4 / L5 / L6 / not applicable
+- Cache layout: stable-prefix documented / not used / missing
 - Approval required before:
 - Last recorded AI/model cost:
 
 If the next task would exceed the declared budget, increase model class,
 increase retry/fan-out/tool-call limits, or add recurring AI usage, stop for
 approval before implementation.
+
+If the next task introduces prompt caching, batch lanes, dynamic routing,
+cascades, or recurring/material AI workload classes, stop unless the cost
+architecture and router-eval requirements are already satisfied or explicitly
+approved for creation in this task.
+
+---
+
+## External Skill State
+
+- External skills: none / planned / installed / enabled
+- Trust records: `docs/security/skills/**/TRUST_RECORD.md` / inline / not applicable
+- Skill install scope: project-local / global / not applicable
+- Last SkillSpector or equivalent scan:
+- Signature/hash/pin status:
+- Human approval required before:
+
+If the next task installs, enables, updates, vendors, or globally exposes an
+external skill, stop unless the trust record, scan/provenance/signature/hash
+evidence, finding triage, and install-scope approval are already satisfied or
+explicitly approved for creation in this task.
 
 ---
 

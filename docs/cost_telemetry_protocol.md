@@ -42,9 +42,16 @@ Recommended attribution fields:
 - workflow
 - user_or_operator
 - feature
+- workload_class
+- routing_maturity_level
 - retry_count
 - tool_call_count
 - latency_ms
+- cache_hit
+- cache_read_tokens
+- cache_write_tokens
+- router_decision
+- escalation_reason
 - quality_result
 
 ## Source Priority
@@ -78,6 +85,11 @@ Required pattern when thresholds are enforceable:
    backend in production.
 6. Run `tools/cost_rollup.py` in review/CI using thresholds from
    `docs/COST_BUDGET.md`.
+
+When `docs/ai_cost_architecture.md` declares prompt caching, dynamic routing,
+or cascades, telemetry should also expose cache-hit data, router decisions,
+escalation reasons, and workload class so reviewers can evaluate cost per
+successful task instead of cost per isolated call.
 
 Use `templates/COST_TELEMETRY_ADAPTER.md` to create the implementation task.
 
@@ -121,6 +133,8 @@ Use telemetry rollup when:
 - Strict mode is selected
 - a task changes model routing, retry/fan-out limits, or tool-call breadth
 - a cost-saving change claims lower cost
+- `docs/ai_cost_architecture.md` declares cache-hit, routing, cascade, or
+  escalation thresholds
 
 Lean projects may skip persistent telemetry for one-off tasks, but must still
 record the budget boundary and any budget issue in `docs/CODEX_PROMPT.md`,

@@ -122,6 +122,10 @@ Scan the following files for unresolved `{{...}}` patterns (any `{{` ... `}}` ou
 - `docs/CODEX_PROMPT.md`
 - `docs/COGNITION_MANIFEST.md` if present
 - `docs/COST_BUDGET.md` if present
+- `docs/ai_cost_architecture.md` if present
+- `docs/router_eval.md` if present
+- `docs/external_skill_security_policy.md` if present
+- `docs/security/skills/**/TRUST_RECORD.md` if present
 - `docs/ai_cost_telemetry.jsonl` if present
 
 If any unresolved placeholder is found:
@@ -150,7 +154,11 @@ Read in full:
 4. `docs/DECISION_LOG.md` and `docs/IMPLEMENTATION_JOURNAL.md` if they exist
 5. `docs/EVIDENCE_INDEX.md` if it exists
 6. `docs/COST_BUDGET.md` if it exists
-7. `reports/ai_cost_rollup.md` if it exists
+7. `docs/ai_cost_architecture.md` if it exists
+8. `docs/router_eval.md` if it exists
+9. `docs/external_skill_security_policy.md` if it exists
+10. `docs/security/skills/**/TRUST_RECORD.md` if present
+11. `reports/ai_cost_rollup.md` if it exists
 
 **Compaction check.**
 
@@ -270,6 +278,9 @@ proof receipts, or review reports.
 **D. Review tier** — which review to run after the next implementation:
 - True phase boundary (C above, no archive entry for just-completed phase) → Deep review
 - Security-critical task (auth, middleware, RLS, secrets) → Deep review
+- External skill install/update/enablement, skill registry changes, or agent
+  skill directory changes → at least Light review; Deep review if executable,
+  networked, MCP/tool-enabled, global, or Strict
 - Cost-sensitive task (model routing/class, budget limits, agent fan-out, retry limits, tool-call breadth, dynamic workflow policy, or recurring AI budget) → at least Light review; Deep review if Strict or phase boundary
 - Docs-only navigation, dependency metadata, test harness only, or Lean low-risk task with no behavior/security/runtime change → Deterministic review
 - Otherwise → Light review
@@ -281,7 +292,8 @@ proof receipts, or review reports.
 | `retrieval/`, `embedding`, `chunk`, `index`, `corpus`, `ingestion`, `rerank` | RAG | HIGH |
 | `tools/`, `tool_schema`, `function_call`, `@tool`, `tool_catalog` | Tool-Use | HIGH |
 | `plan_schema`, `plan_graph`, `plan_valid` | Planning | HIGH |
-| `ai_cost_telemetry`, `cost_rollup`, `cost_telemetry`, `COST_BUDGET` | Cost | HIGH |
+| `ai_cost_telemetry`, `cost_rollup`, `cost_telemetry`, `COST_BUDGET`, `ai_cost_architecture`, `router_eval`, `dynamic_router`, `cascade`, `prompt_cache` | Cost | HIGH |
+| `.codex/skills`, `.claude/skills`, `skills/`, `SKILL.md`, `skill-card`, `skill.oms.sig`, `skillspector`, `TRUST_RECORD`, `external_skill_security` | External Skill Security | HIGH |
 | `agent/`, `loop`, `handoff`, `termination` (app code only) | Agentic | MEDIUM |
 
 If a HIGH-confidence pattern matches but the task has no `Type:` tag in that profile's namespace:
@@ -289,7 +301,7 @@ If a HIGH-confidence pattern matches but the task has no `Type:` tag in that pro
 TAG_WARNING
 Task: [T## — Title]
 Signal: [matched pattern] in [file path]
-Expected tag: Type: [rag:|tool:|plan:|cost:] (pick the matching namespace)
+Expected tag: Type: [rag:|tool:|plan:|cost:|skill:security] (pick the matching namespace)
 Actual tag: [current Type: value, or "none"]
 Check: does semantic ownership apply? (PLAYBOOK §Capability Signal Patterns)
 ACTION REQUIRED: confirm or add the tag before the implementer runs.
@@ -330,17 +342,53 @@ Stop on the following:
   per-task budget and no human approval is recorded
 - A declared CI/enforced cost threshold exists but no telemetry source or
   rollup command is documented
+- The task introduces prompt caching, batch lanes, dynamic routing, cascades,
+  or recurring/material AI workload classes without `docs/ai_cost_architecture.md`
+  or an inline Lean equivalent
+- The task introduces dynamic routing or cascades without `docs/router_eval.md`
+  and a `Type: cost:routing` task or documented existing evaluation
 
 If stopped, print:
 
 ```
 COST_BUDGET_GAP
 Task: [T## — Title]
-Missing or conflicting budget: [exact reason]
-Action required: add/update docs/COST_BUDGET.md, inline Lean budget, or record human approval before implementation.
+Missing or conflicting budget/architecture/eval: [exact reason]
+Action required: add/update docs/COST_BUDGET.md, docs/ai_cost_architecture.md, docs/router_eval.md, inline Lean budget, or record human approval before implementation.
 ```
 
 If the task clearly increases model class, inference cost envelope, or escalation behavior relative to `docs/ARCHITECTURE.md §Inference / Model Strategy` without an architectural update, print `MODEL_STRATEGY_WARNING`. In Lean/Standard this is a warning unless it violates budget. In Strict it is a stop unless an ADR or budget approval exists.
+
+**F2. External skill security pre-check** — compare the next task against
+`docs/external_skill_security_policy.md`,
+`docs/security/skills/**/TRUST_RECORD.md`, task tags, and declared install
+scope.
+
+Stop on the following:
+- The task installs, enables, updates, imports, links, vendors, or globally
+  exposes an external skill with no trust record or justified Lean inline
+  equivalent.
+- The task changes `.codex/skills`, `.claude/skills`, `SKILL.md`,
+  `skill-card`, `skill.oms.sig`, skill registry files, or equivalent external
+  skill locations without `Type: skill:security` or a documented reason the
+  file is not an agent skill.
+- The skill has executable scripts, network/tool/MCP access, env/file access,
+  package installation, persistent state, or global install scope with no scan
+  evidence and no human approval.
+- A CRITICAL/HIGH scanner finding, hidden instruction, tool poisoning,
+  credential harvesting, remote script execution, description-behavior mismatch,
+  or unpinned executable dependency is present without risk acceptance.
+- A signed skill changed after verification or an unsigned skill is not pinned
+  by commit/hash in Standard/Strict.
+
+If stopped, print:
+
+```
+EXTERNAL_SKILL_SECURITY_GAP
+Task: [T## — Title]
+Missing or conflicting skill evidence: [exact reason]
+Action required: create/update docs/security/skills/{skill-name}/TRUST_RECORD.md, run SkillSpector or equivalent scan, pin/verify source, or record human approval before implementation.
+```
 
 Print status block:
 ```
@@ -359,6 +407,7 @@ Continuity context: [none | N refs read | CONTINUITY_GAP]
 Tag check: [OK | WARNING: T## — [pattern] suggests [profile], verify Type: tag]
 Complexity check: [OK | DETERMINISM_WARNING: ... | MODEL_STRATEGY_WARNING: ... | STOPPED: ...]
 Cost budget: [OK | WARNING: ... | STOPPED: COST_BUDGET_GAP]
+External skill security: [OK | WARNING: ... | STOPPED: EXTERNAL_SKILL_SECURITY_GAP]
 Action: [what happens next]
 =========================
 ```
@@ -644,6 +693,10 @@ Phase [N] — task [T##] was just implemented. Verify it doesn't break contracts
 Read:
 - docs/IMPLEMENTATION_CONTRACT.md (rules A–I + forbidden actions)
 - docs/COST_BUDGET.md if present, otherwise inline Lean budget notes in docs/CODEX_PROMPT.md, AGENTS.md, or docs/CONTRACT_LITE.md
+- docs/ai_cost_architecture.md if present
+- docs/router_eval.md if present
+- docs/external_skill_security_policy.md if present
+- docs/security/skills/**/TRUST_RECORD.md if present
 - docs/dev-standards.md
 - Every file listed in the implementer completion report as created or modified:
   [list files from Step 3 output]
@@ -662,6 +715,8 @@ GOV-L1 Runtime-tier drift — no runtime mutation, privilege expansion, or persi
 GOV-L2 Claim verification — claimed files, tests, eval updates, and CODEX_PROMPT changes are backed by repo state or command evidence
 GOV-L3 Correction bounds — any self-repair loop stayed within the declared attempt limit and did not weaken tests or ACs
 GOV-L4 Cost budget — no model escalation, retry/fan-out/tool-call expansion, dynamic workflow execution, or recurring AI spend increase without a matching budget update and approval trigger
+GOV-L5 Cost architecture — no prompt cache, batch lane, dynamic router, cascade, output/effort cap, or model-tier change without matching cost architecture and router eval when required
+GOV-L6 External skill security — no external skill install/update/enablement, global skill scope, skill registry change, or agent skill directory change without trust record, scan/provenance/signature/hash evidence, and CRITICAL/HIGH finding triage
 
 <!-- Run the following checks ONLY if the completed task carries a capability-profile tag -->
 If task tag is `rag:ingestion` or `rag:query` → also check:
@@ -693,7 +748,7 @@ ISSUE_COUNT: [N]
 
 ISSUE_1:
 File: [path:line]
-Check: [SEC-N | CF | GOV-L1 | GOV-L2 | GOV-L3 | GOV-L4 | RAG-L1 | RAG-L2 | RAG-L3 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
+Check: [SEC-N | CF | GOV-L1 | GOV-L2 | GOV-L3 | GOV-L4 | GOV-L5 | GOV-L6 | RAG-L1 | RAG-L2 | RAG-L3 | TOOL-L1 | AGENT-L1 | PLAN-L1 — exact item]
 Reviewer note: if you see a deterministic-vs-LLM mismatch, mention it as a warning in Description, but do not fail the task on that basis alone unless it also violates contract or runtime boundaries.
 Description: [what is wrong]
 Expected: [what it should be]

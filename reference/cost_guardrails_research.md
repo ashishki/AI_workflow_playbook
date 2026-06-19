@@ -1,6 +1,6 @@
 # Cost Guardrails Research
 
-Last verified: 2026-06-09
+Last verified: 2026-06-19
 
 ## Signal
 
@@ -23,8 +23,10 @@ conditions.
 | OpenAI Agents SDK usage docs | Agents SDK tracks token usage per run and per request, enabling cost monitoring and context-window monitoring. | https://openai.github.io/openai-agents-python/usage/ |
 | OpenAI API rate and usage limits | Provider-level rate/usage limits exist, but they are organization/project-level and should not replace per-user/workflow application budgets. | https://developers.openai.com/api/docs/guides/rate-limits#usage-tiers |
 | Claude Agent SDK cost docs | Claude SDK exposes per-step and per-model usage/cost; parallel tool calls must be deduplicated by message ID to avoid double-counting. | https://code.claude.com/docs/en/agent-sdk/cost-tracking |
+| Anthropic prompt caching docs | Prompt caching resumes from reusable prompt prefixes, caches prompt content up to a cache breakpoint, and recommends placing static content before volatile request content. This supports a stable-prefix / volatile-suffix layout rule. | https://platform.claude.com/docs/en/build-with-claude/prompt-caching |
 | Arxiv: Token Budgets, 2026 | Budget overruns are a documented production failure class; retry loops and delegation fan-out need non-bypassable budget controls. | https://arxiv.org/abs/2606.04056 |
 | Arxiv: coding-agent token consumption, 2026 | Agentic coding tasks can consume far more tokens than code chat/reasoning; token use is highly variable and higher spend does not guarantee higher accuracy. | https://arxiv.org/abs/2604.22750 |
+| Arxiv: LLM overconfidence, 2026 | Instruction-tuned/chat LLMs can be overconfident in their own responses. Cheap-model self-judgment should not gate escalation unless calibrated on the project eval set or checked by an independent verifier. | https://arxiv.org/abs/2606.03437 |
 | Reddit practitioner threads | Practitioners ask for per-agent, per-task, per-customer cost tracking, hard caps, alerts, and approval before expensive operations. Treat as weak evidence but useful demand signal. | https://www.reddit.com/r/AI_Agents/comments/1rgfe7f/how_are_you_tracking_cost_per_agent_in_production/ |
 
 ## Implications For The Playbook
@@ -39,6 +41,11 @@ conditions.
   are not cheaper if they increase retries or rework.
 - Per-run attribution is more useful than monthly totals for debugging agentic
   waste.
+- Prompt caching should be designed as prompt layout, not only provider
+  configuration: stable reusable context must be kept separate from volatile
+  run state.
+- Dynamic routing and cascades need project eval evidence; self-reported cheap
+  model confidence is not enough for correctness-sensitive escalation.
 
 ## Recommended Minimum
 
@@ -54,6 +61,8 @@ Standard:
 - `docs/COST_BUDGET.md`
 - per-run, per-agent, per-feature attribution
 - model routing table
+- AI cost architecture when prompt caching, batch lanes, routing, or cascades
+  are used
 - `tools/cost_rollup.py` rollup when telemetry data exists
 - reviewer check for cost drift
 
@@ -65,6 +74,8 @@ Strict:
 - max calls / retries / fan-out
 - cost summary at phase gate
 - evidence that cost-saving changes preserved quality and latency
+- `docs/router_eval.md` before dynamic routing or cascades
+- cache-hit telemetry before claiming prompt-cache savings
 
 ## Anti-Patterns
 
@@ -75,3 +86,7 @@ Strict:
 - unbounded parallel agents
 - treating eval, latency, and cost as separate decisions
 - adopting observability tooling without enforcement thresholds
+- using a dynamic router before static routing, output caps, prompt caching, and
+  batch lanes are implemented or explicitly rejected
+- letting a cheap model self-certify its own answer as the cascade stop
+  condition without project calibration

@@ -24,6 +24,17 @@ and the human approves phase gates. A skill never displaces those roles.
 
 Who owns the skill. A skill without a maintainer is not registered.
 
+### Source and Trust
+
+For any third-party, marketplace, vendor, or cross-project skill, link the
+external skill trust record or state why the skill is project-local and
+instruction-only. Use `docs/external_skill_security_policy.md` and
+`templates/EXTERNAL_SKILL_TRUST_RECORD.md`.
+
+External executable skills, skills with network/tool/MCP/file/env access, and
+skills intended for broad reuse are rejected until scan/provenance/signature or
+hash evidence is recorded.
+
 ### Purpose
 
 One paragraph. The narrow problem this skill solves and why an existing playbook

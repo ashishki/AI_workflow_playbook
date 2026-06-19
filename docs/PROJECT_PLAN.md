@@ -22,6 +22,11 @@ verification, and cognition integrity.
 - Add README-first knowledge index as a phase-gate navigation artifact.
 - Keep AI/model cost guardrails first-class in bootstrap, validator,
   orchestrator, and review prompts.
+- Keep AI cost architecture first-class where spend is recurring/material or
+  uses prompt caching, batch lanes, dynamic routing, or cascades.
+- Treat external agent skills as supply-chain artifacts with trust records,
+  scan/provenance/signature evidence, and explicit install scope before they
+  enter project or global agent context.
 - Add examples of `runtime_verification`, `decision_receipt`, and
   `risk_acceptance_record`.
 - Add CI example for `tools/integrity_check.py`.
@@ -65,8 +70,19 @@ verification, and cognition integrity.
   `docs/COST_BUDGET.md` is required for recurring, multi-agent,
   dynamic-workflow, multi-user, or materially costly AI usage in Standard/Strict
   projects.
+- AI cost architecture is now separate from budget policy. Standard/Strict
+  projects use `docs/ai_cost_architecture.md` for workload classes, cache
+  layout, batch lanes, routing maturity, cascades, and cost-per-successful-task
+  when AI spend is recurring/material or routing/caching is part of the design.
+- Dynamic routing and cascades require `docs/router_eval.md`; generic routers
+  remain disallowed until evaluated against project traffic, quality floors,
+  latency, cache-hit impact, and stale-router policy.
 - Provider-agnostic AI cost telemetry now has a JSONL entry contract and rollup
   tool. Provider SDK auto-instrumentation remains optional v2 adapter work.
+- External skill security now has a policy and trust-record template. Third-
+  party or cross-project skills require source pin/signature/hash, capability
+  declaration, SkillSpector or equivalent scan evidence, finding triage, install
+  scope, and human approval for global install or high-risk acceptance.
 
 ## AI-Development Tasks
 

@@ -460,18 +460,66 @@ Rules:
 - Standard/Strict projects use `docs/COST_BUDGET.md` when AI usage is
   recurring, multi-agent, dynamic-workflow based, multi-user, or materially
   costly
+- recurring/material AI usage, prompt caching, batch lanes, dynamic routing,
+  cascades, or non-trivial model tiering also require cost architecture in
+  `docs/ai_cost_architecture.md` or an explicit Lean inline equivalent
+- prompt caching requires a stable-prefix / volatile-suffix layout; volatile
+  run state such as timestamps, current diffs, latest test output, and
+  temporary diagnostics stays below the cache boundary
+- dynamic routing and cascades require `docs/router_eval.md` before recurring
+  or production use
 - budget gates must cover model calls, retries, tool calls, fan-out, model
   escalation, and approval before overrun
 - cost attribution should include project, task/workflow, role/agent, model,
   operator/user, feature/workload, and environment
 - cost reduction is valid only when quality/eval and latency remain within the
   declared threshold
+- measure cost per successful task, not only cost per call; failed cheap
+  attempts, verifier calls, retries, tools, and estimated human rework count
+  toward total cost
+- a cheap model must not self-certify high-risk outputs in a cascade unless its
+  confidence has been calibrated on the project eval set or an independent
+  verifier gates escalation
 - recurring or threshold-gated AI usage should emit provider-agnostic telemetry
   to `docs/ai_cost_telemetry.jsonl` or an equivalent source and run
   `tools/cost_rollup.py` in review/CI
 
 See `docs/cost_budget_guardrails.md`, `docs/cost_telemetry_protocol.md`,
-`templates/COST_BUDGET.md`, and `tools/cost_rollup.py`.
+`docs/ai_cost_architecture.md`, `docs/cache_context_layout.md`,
+`docs/provider_routing_policy.md`, `templates/COST_BUDGET.md`,
+`templates/COST_ARCHITECTURE.md`, `templates/ROUTER_EVAL.md`, and
+`tools/cost_rollup.py`.
+
+### 2b.9 External Skill Security
+
+External agent skills are supply-chain artifacts. They can package
+instructions, code, scripts, references, assets, tool schemas, and metadata
+that influence an agent with the agent's permissions. They are not installed or
+enabled by default.
+
+Rules:
+- third-party, marketplace, vendor, GitHub, zip, or cross-project skills require
+  trust evidence before install, update, enablement, or global exposure
+- Standard/Strict projects use
+  `docs/security/skills/{skill-name}/TRUST_RECORD.md` from
+  `templates/EXTERNAL_SKILL_TRUST_RECORD.md`
+- Lean projects may keep inline evidence only for instruction-only,
+  project-local, low-risk skills with no scripts, tools, network, file writes,
+  environment access, or MCP access
+- executable, networked, MCP/tool-enabled, file/env-accessing, persistent, or
+  global skills require source pin/signature/hash, declared capabilities,
+  SkillSpector or equivalent scan evidence, finding triage, install scope, and
+  human approval where needed
+- CRITICAL/HIGH scan findings, hidden instructions, tool poisoning, credential
+  harvesting, remote script execution, description-behavior mismatch, or
+  unpinned executable dependencies block install unless formally accepted by a
+  human owner
+- a clean scanner report is evidence, not proof of safety; a signature proves
+  reviewed-artifact integrity, not safety
+
+Use `docs/external_skill_security_policy.md`,
+`templates/EXTERNAL_SKILL_TRUST_RECORD.md`, and
+`templates/skills/external_skill_security_skill.md`.
 
 ---
 
@@ -1355,6 +1403,11 @@ and review channels. A skill never overrides this section,
 `IMPLEMENTATION_CONTRACT.md`, ADRs, `ARCHITECTURE.md`, `spec.md`, `tasks.md`,
 or `CODEX_PROMPT.md`.
 
+External skills have an additional trust gate. Before a third-party or
+cross-project skill enters the agent context, use
+`docs/external_skill_security_policy.md` and record trust evidence unless the
+skill is instruction-only, project-local, and low-risk.
+
 ---
 
 ## 11. Known Gaps — v2 Roadmap
@@ -1381,11 +1434,14 @@ Each gap includes: what is missing, what impact it has, and the minimum viable a
 ### GAP-2: No Provider SDK Auto-Instrumentation
 
 **What is missing:** The playbook now includes model strategy, cost budget
-guardrails, `templates/COST_BUDGET.md`, and Orchestrator/Validator checks for
-missing budgets and cost drift. It also includes a provider-agnostic JSONL
-telemetry contract and `tools/cost_rollup.py` for rollups and threshold checks.
-It still lacks built-in provider SDK adapters that automatically intercept
-OpenAI/Anthropic/etc. calls and write telemetry without application work.
+guardrails, AI cost architecture, router/cascade eval gates, prompt-cache layout
+rules, `templates/COST_BUDGET.md`, `templates/COST_ARCHITECTURE.md`,
+`templates/ROUTER_EVAL.md`, and Orchestrator/Validator checks for missing
+budgets, missing architecture, router eval gaps, and cost drift. It also
+includes a provider-agnostic JSONL telemetry contract and `tools/cost_rollup.py`
+for rollups and threshold checks. It still lacks built-in provider SDK adapters
+that automatically intercept OpenAI/Anthropic/etc. calls and write telemetry
+without application work.
 
 **Impact:** Low. Teams can define budgets, require approval, record telemetry,
 and run CI threshold checks. They still need provider/gateway instrumentation in

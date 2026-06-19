@@ -50,6 +50,9 @@ demo-only need.
 
 - **Where AI may be needed:**
 - **Where AI is explicitly not wanted:**
+- **External agent skills planned:** none / marketplace / GitHub / vendor / cross-project / unknown
+- **If external skills are planned, source and install scope:**
+- **External skill capabilities expected:** shell / network / file read-write / env secrets / MCP tools / persistent state / none / unknown
 - **Possible retrieval / RAG need:**
 - **If retrieval is needed, is text-only likely sufficient or is multimodal evidence truly required:**
 - **If multimodal may be needed, which modalities and why:**
@@ -134,6 +137,12 @@ Only fill what you know. The Strategist should still make the final recommendati
 - **Expected attribution needs:** per user / per tenant / per feature / per agent / per workflow
 - **Allowed model escalation path:**
 - **Maximum acceptable retries / tool calls / parallel agents:**
+- **Expected workload classes:** architecture review / implementation fix / summarization / user-facing generation / evaluation / other
+- **Prompt caching likely useful:** yes / no / unknown
+- **Batch or async lane acceptable for any workload:** yes / no / unknown
+- **Dynamic routing or cascades expected:** no / maybe / yes
+- **If routing/cascades are expected, what quality floor must hold:**
+- **What cost metric matters most:** cost per call / cost per successful task / monthly ceiling / per-user margin
 
 ## 13. Success Metrics
 

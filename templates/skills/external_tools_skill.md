@@ -12,6 +12,13 @@ project activates Tool-Use=ON but has no worked example for catalog rows,
 unsafe-action shape, secret handling, audit log fields, schema versioning,
 and rollback policy.
 
+## Source and Trust
+
+This is a playbook-maintained descriptor. If a downstream project installs a
+third-party MCP skill bundle, marketplace skill, or external tool skill package,
+it must also satisfy `docs/external_skill_security_policy.md` and record a trust
+record from `templates/EXTERNAL_SKILL_TRUST_RECORD.md`.
+
 ## Trigger
 
 - The Strategist consults this skill when Tool-Use Profile = ON and at least

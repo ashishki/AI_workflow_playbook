@@ -56,6 +56,14 @@
     "feature": {
       "type": "string"
     },
+    "workload_class": {
+      "type": "string",
+      "description": "Cost architecture workload class, e.g. architecture_review or summarization_packet."
+    },
+    "routing_maturity_level": {
+      "type": "string",
+      "description": "Routing maturity level L0-L6 when relevant."
+    },
     "environment": {
       "type": "string"
     },
@@ -74,6 +82,17 @@
     "cached_input_tokens": {
       "type": "integer",
       "minimum": 0
+    },
+    "cache_read_tokens": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "cache_write_tokens": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "cache_hit": {
+      "type": "boolean"
     },
     "reasoning_tokens": {
       "type": "integer",
@@ -94,6 +113,14 @@
     "tool_call_count": {
       "type": "integer",
       "minimum": 0
+    },
+    "router_decision": {
+      "type": "string",
+      "description": "Model/provider/workload route chosen by a router, if any."
+    },
+    "escalation_reason": {
+      "type": "string",
+      "description": "Reason a call escalated model tier, provider, or verifier path."
     },
     "quality_result": {
       "type": "string",

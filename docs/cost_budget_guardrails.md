@@ -31,6 +31,21 @@ Lean projects may keep the budget inline in `docs/CODEX_PROMPT.md` or
 `docs/CONTRACT_LITE.md`. Standard/Strict projects should keep a dedicated
 `docs/COST_BUDGET.md`.
 
+## Required Cost Architecture Artifact
+
+Use `templates/COST_ARCHITECTURE.md` to create
+`docs/ai_cost_architecture.md` when any of these are true:
+
+- AI/model usage is recurring or materially costly
+- the project uses agent loops, dynamic workflows, or multi-agent review
+- the project declares enforceable cost thresholds
+- prompt caching, batch execution, dynamic routing, or cascades are part of the
+  cost-control strategy
+- Strict mode is selected and AI/model work is active
+
+Lean projects may keep this inline when AI usage is one-off and low-risk. Do
+not create placeholder cost architecture files only to satisfy a checklist.
+
 ## Minimum Telemetry Automation
 
 Use `docs/cost_telemetry_protocol.md` when AI/model usage is recurring,
@@ -113,13 +128,33 @@ Stop or request approval when:
 - Use deterministic prefilters before LLM review.
 - Route easy subtasks to cheaper models only after eval shows quality holds.
 - Compare cost per successful task, not only cost per call.
+- Use the full cost equation from `templates/COST_BUDGET.md`; failed cheap
+  attempts, verifier calls, retries, tools, and human rework are part of cost.
 - Track retries and rework; a cheap model that fails more often may be more
   expensive end-to-end.
 - Avoid sending full histories or broad file contexts when scoped retrieval is
   enough.
 - Cache stable context and reuse deterministic indexes where safe.
+- Keep stable prompt/cache prefixes separate from volatile task suffixes. See
+  `docs/cache_context_layout.md`.
+- Apply output-token and reasoning/effort caps before adopting dynamic routing.
 - Use dynamic workflows only when executable orchestration reduces waste or risk
   enough to justify the extra agent calls.
+- Use dynamic routers only after cheaper controls are implemented and
+  `docs/router_eval.md` proves cost reduction without quality/latency regressions.
+
+## Cascade Rules
+
+A cascade is allowed only when:
+
+- the escalation judge is independent from the cheap model, or the cheap
+  model's confidence is calibrated on the project eval set
+- the escalation threshold comes from a measured cost/quality curve
+- failed cheap attempts are included in `cost_per_successful_task`
+- verifier cost is included in `cost_per_successful_task`
+- the workload's risk level permits the observed false-negative rate
+
+Cheap self-judgment is not enough for high-risk or correctness-sensitive work.
 
 ## Review Requirements
 
@@ -130,6 +165,9 @@ Reviewer prompts and workflow policies should flag:
 - missing per-run/per-agent budget for agent loops
 - unbounded retries, fan-out, or tool calls
 - cost-saving change without eval/latency comparison
+- cost architecture missing for recurring/material AI work
+- cache-required workload with no cache-hit telemetry or unstable prefix layout
+- dynamic router or cascade without `docs/router_eval.md`
 - cost regressions not reflected in `docs/CODEX_PROMPT.md` or
   `docs/COST_BUDGET.md`
 
