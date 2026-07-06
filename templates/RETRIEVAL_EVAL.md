@@ -35,7 +35,9 @@ answer. Evaluating only the final answer masks retrieval failures.
 **Retrieval evaluation measures what was retrieved, not what was said.**
 
 - Retrieval quality: did the system surface the right evidence? (this file)
-- Answer quality: did the system reason correctly over that evidence? (separate concern)
+- Generation quality: did the system reason correctly over that evidence?
+- E2E quality: did the user-facing workflow meet success, latency, cost, and
+  human-review targets?
 
 A passing answer-quality check with declining retrieval metrics is a warning sign, not a green light.
 
@@ -44,6 +46,27 @@ A passing answer-quality check with declining retrieval metrics is a warning sig
 Version: {{N}}
 Last updated: {{DATE}}
 Changed by: {{TASK_ID}} — {{TASK_TITLE}}
+
+## Data Readiness Gate
+
+<!--
+Complete before treating retrieval metrics as meaningful. Use
+templates/RAG_DATA_READINESS.md for the full artifact when corpus risk is
+material.
+-->
+
+| Readiness check | Evidence | Status |
+|-----------------|----------|--------|
+| Source inventory and owners known | {{path or note}} | pass / fail / n/a |
+| Parser coverage measured by format | {{path or note}} | pass / fail / n/a |
+| Empty / duplicate / stale docs handled | {{path or note}} | pass / fail / n/a |
+| Required metadata complete enough for filtering/citation | {{path or note}} | pass / fail / n/a |
+| ACL metadata present for restricted data | {{path or note}} | pass / fail / n/a |
+| PII/regulated data classified and redacted as required | {{path or note}} | pass / fail / n/a |
+| Gold query-to-document/span evidence seeded | {{path or note}} | pass / fail / n/a |
+
+If a required data readiness check fails, retrieval eval can be recorded only as
+diagnostic evidence. It is not a production readiness signal.
 
 ## Retrieval Mode Declaration
 
@@ -84,7 +107,7 @@ Keep the dataset append-only. Add new queries; do not remove old ones.
 
 ---
 
-## Baseline Metrics
+## Retrieval Baseline Metrics
 
 _Recorded at: {{DATE}} after {{TASK_ID}}_
 
@@ -139,7 +162,7 @@ If no text-only baseline exists for a multimodal system, explain why that compar
 ## Answer Quality Metrics
 
 <!--
-Tracks end-to-end answer quality — a separate dimension from retrieval quality.
+Tracks generation quality — a separate dimension from retrieval quality.
 Retrieval metrics measure what was found. Answer quality metrics measure what was said about it.
 These two dimensions can diverge: retrieval can regress while answer quality holds (easy queries mask retrieval failures),
 or retrieval can be stable while answer quality regresses (prompt or model change degrades reasoning).
@@ -158,15 +181,39 @@ _Corpus version: {{CORPUS_VERSION_TAG_OR_DATE}}_
 | Faithfulness | Answer contains only claims supported by the retrieved context | — | — | — | — | — |
 | Answer Completeness | Answer addresses the full question given the retrieved context | — | — | — | — | — |
 | Answer Relevance | Answer is on-topic and appropriately scoped to the query | — | — | — | — | — |
+| Citation Correctness | Cited source supports the specific answer claim | — | — | — | — | — |
+| Unsafe Answer Rate | Unsafe or policy-violating answers over evaluated cases | — | — | — | — | — |
 
 Scoring: 0.0–1.0 per metric, averaged across the evaluation query set.
 Judge: {{LLM_JUDGE_MODEL_AND_PROMPT_REF}}
+Judge calibration: {{docs/judge_calibration.md or "advisory only / n/a"}}
 
 <!--
 Security note: this file contains ground-truth query→document mappings.
 If answer quality evaluation is automated, keep expected answers in a separate file not accessible to the implementation agent.
 Exposing expected answers in the same file the agent reads during implementation creates a contamination risk.
 -->
+
+---
+
+## End-to-End Workflow Metrics
+
+<!--
+Use this section to connect retrieval and generation quality to the actual
+workflow. E2E eval is useful but can hide root causes, so keep data/retrieval/
+generation metrics above current.
+-->
+
+| Metric | Baseline | Current | Target | Evidence |
+|--------|----------|---------|--------|----------|
+| Task success rate | | | | |
+| Human correction rate | | | | |
+| No-answer accepted by operator | | | | |
+| Cost per successful answer | | | | |
+| p95 end-to-end latency | | | | |
+| Operator trust / acceptance | | | | |
+
+E2E decision: {{release / block / diagnostic only / needs more data}}
 
 ---
 

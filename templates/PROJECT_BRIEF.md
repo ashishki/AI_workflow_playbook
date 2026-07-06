@@ -33,6 +33,28 @@ demo-only need.
   engineer", "fully autonomous", "production-ready agent swarm".
 - **Work AI will not replace:** Which judgment, approval, accountability, or
   domain-expert work remains human-owned?
+- **Service delta:** What improves besides FTE savings — cycle time, SLA,
+  error rate, throughput, coverage, operator correction time, or customer
+  experience?
+
+## 1c. Evidence Plan From Day 1
+
+Fill this before proposing architecture. If unknown, write `unknown` and let the
+Strategist design a discovery task.
+
+- **First proof metric:**
+- **Evaluation dataset source:** production sample / human labels / synthetic
+  seed set / replay logs / manual fixture / unknown
+- **Minimum eval set size for v1:**
+- **Known failure slices:** ambiguity / no-answer / stale data / permission
+  boundary / tool failure / long context / unsafe output / other
+- **Human review owner and budget:** role, sample size, expected minutes per
+  item
+- **Can an LLM judge be used:** no / advisory only / maybe after calibration /
+  unknown
+- **Judge calibration requirement:** none / required before release / unknown
+- **Cost boundary for evaluation:** per run / per release / monthly / unknown
+- **Release gate:** manual approval / CI eval gate / advisory report / unknown
 
 ## 2. Users and Workflows
 
@@ -50,6 +72,10 @@ demo-only need.
 
 - **Where AI may be needed:**
 - **Where AI is explicitly not wanted:**
+- **Minimum sufficient shape expected:** deterministic / workflow / bounded
+  tool-use / bounded agent / autonomous routine / hybrid / unknown
+- **Why deterministic may be insufficient:**
+- **Why fixed workflow may be insufficient:**
 - **External agent skills planned:** none / marketplace / GitHub / vendor / cross-project / unknown
 - **If external skills are planned, source and install scope:**
 - **External skill capabilities expected:** shell / network / file read-write / env secrets / MCP tools / persistent state / none / unknown
@@ -58,6 +84,10 @@ demo-only need.
 - **If multimodal may be needed, which modalities and why:**
 - **Possible tool-use need:**
 - **Possible planning / agentic behavior need:**
+- **If tool-use or agentic behavior is likely, is a harness card required:**
+  yes / no / unknown
+- **Harness concerns already known:** tools / memory / retries / recovery /
+  permissions / trace / human handoff / cost / latency / unknown
 
 ## 5. Deterministic Candidates
 
@@ -89,6 +119,23 @@ List the parts that probably should stay deterministic unless the Strategist pro
 - **Does data change frequently:**
 - **Sensitive / regulated data present:**
 - **Retention / deletion expectations:**
+
+## 8a. Data Readiness
+
+Use this section for RAG, extraction, analytics, or any AI behavior that depends
+on external knowledge.
+
+- **Source owners known:**
+- **Formats involved:** PDF / DOCX / HTML / tickets / chats / database rows /
+  spreadsheets / images / audio / other
+- **Parser/OCR quality known:**
+- **Duplicate or stale data risk:**
+- **Required metadata:** source ID / date / owner / ACL / version / language /
+  document type / other
+- **Access-control boundary:**
+- **PII or regulated fields requiring redaction:**
+- **Gold evidence available:** query-to-document, input-to-output, or
+  human-labeled examples
 
 ## 8b. Continuity and Evidence
 
@@ -132,6 +179,11 @@ Only fill what you know. The Strategist should still make the final recommendati
 - **Preview-model tolerance:** none / low / medium / high
 - **Per-run / per-task budget:**
 - **Monthly project budget or budget ceiling:**
+- **Evaluation budget:** per PR / per release / monthly / unknown
+- **Expected judge cost:** none / advisory judge / calibrated judge / unknown
+- **Expected human review cost:** minutes per item and sample size / unknown
+- **Latency class:** interactive / human-blocking async / background batch /
+  scheduled routine / unknown
 - **Who approves budget overruns:**
 - **Should budget overruns warn, block, or require approval:**
 - **Expected attribution needs:** per user / per tenant / per feature / per agent / per workflow
@@ -151,6 +203,8 @@ Only fill what you know. The Strategist should still make the final recommendati
 - **Latency metric:**
 - **Cost metric:**
 - **Operational metric:**
+- **Service delta metric:** cycle time / SLA / error rate / throughput /
+  coverage / operator correction rate / other
 
 ---
 
