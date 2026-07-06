@@ -35,6 +35,10 @@ When uncertain about how to structure a document or define a task, consult the t
 - `docs/cost_budget_guardrails.md` — cost attribution, budget gates, and approval rules for AI/model work
 - `docs/ai_cost_architecture.md` — workload classes, cost levers, cache/batch/routing/cascade architecture
 - `docs/cache_context_layout.md` — stable-prefix / volatile-suffix prompt cache layout rules
+- `docs/evaluation/EVAL_FIRST_DEVELOPMENT.md` — proof metric, eval dataset, thresholds, judge calibration, human review, and cost gates
+- `docs/rag/RAG_DATA_READINESS.md` — corpus/source readiness before retrieval eval
+- `docs/agent_harness/AGENT_HARNESS_DESIGN.md` — model + prompt + tools + memory/state + recovery + permissions + trace + HITL boundary
+- `docs/autonomous_workflows/AUTONOMOUS_WORKFLOW_DEPLOYMENT.md` — trigger/runtime/secrets/fallback contract for bounded routines
 - `docs/cost_telemetry_protocol.md` — provider-agnostic AI cost telemetry entry and rollup contract
 - `docs/external_skill_security_policy.md` — external skill supply-chain gate, trust records, scan/signature policy
 - `templates/ARCHITECTURE.md` — architecture document format
@@ -45,6 +49,13 @@ When uncertain about how to structure a document or define a task, consult the t
 - `templates/CONTRACT_LITE.md` — Lean mode implementation boundary
 - `templates/COST_BUDGET.md` — budget artifact for recurring AI usage or agent loops
 - `templates/COST_ARCHITECTURE.md` — cost architecture artifact for recurring/material AI usage
+- `templates/AGENT_HARNESS_DESIGN.md` — harness card for Tool-Use/Agentic systems
+- `templates/HARNESS_BENCHMARK_CARD.md` — baseline/candidate harness comparison
+- `templates/JUDGE_CALIBRATION_PROTOCOL.md` — human-vs-judge calibration report
+- `templates/RAG_DATA_READINESS.md` — RAG corpus readiness artifact
+- `templates/RETRIEVAL_EVAL_PLAN.md` — retrieval query set and metrics
+- `templates/AUTONOMOUS_WORKFLOW_DEPLOYMENT.md` — bounded routine deployment card
+- `templates/USE_CASE_CARD.md` — workflow candidate/use-case scoring card
 - `templates/ROUTER_EVAL.md` — dynamic router and cascade evaluation artifact
 - `templates/EXTERNAL_SKILL_TRUST_RECORD.md` — trust record for third-party/cross-project skills
 - `templates/COST_TELEMETRY_ENTRY.json` — one JSONL telemetry entry shape
@@ -68,6 +79,11 @@ You receive a project description. It should include (ask if missing):
 - **Concrete operational pain** — what currently breaks, stalls, costs too much, or depends on fragile human effort?
 - **Current workaround** — how is the team solving this today without the new system?
 - **Adoption proof metric** — what measurable signal proves the system is useful in practice?
+- **Evaluation dataset/source** — human labels, replay logs, production sample, synthetic seed set, or unknown
+- **Data readiness** — source owners, formats, parser/OCR quality, freshness, metadata, ACL, and gold evidence if RAG/data-grounded behavior is in scope
+- **Harness concerns** — model, prompt, tools, memory/state, retries, recovery, permissions, trace, HITL if Tool-Use/Agentic behavior is in scope
+- **Human review budget** — reviewer role, sample size, minutes per item, escalation path when evaluation needs judgment
+- **Service delta** — cycle time, SLA, error rate, throughput, coverage, or operator correction improvement
 - **Stack preferences** — language, framework, database, cache, message queue, external APIs
 - **Scale** — expected request volume, data volume, number of concurrent users
 - **Team size** — how many humans will work on this codebase?
@@ -89,6 +105,10 @@ You must also establish:
 - **Privilege and isolation needs** — network egress, secrets access, privileged actions, persistence
 - **Cost of error / variance** — what breaks if the system is wrong, inconsistent, or slow
 - **Cost of inference / agent work** — per-run budget, recurring monthly budget if applicable, attribution fields, escalation approval threshold
+- **Cost of evaluation / judge / human review** — budget for eval inference, judge calls, and review minutes
+- **Data readiness status** — whether source inventory, parsing, freshness, metadata, ACL, and gold evidence exist
+- **Harness boundary status** — whether agent/tool behavior has a harness card, trace schema, permission policy, recovery policy, and HITL boundary
+- **Autonomous routine fit** — whether any work should run on cron/webhook/event triggers, and what trigger/runtime/secrets/fallback contract is needed
 - **Heavy-task candidates** — which planned tasks should use a proof-first path because tests + ordinary review are not enough evidence
 - **Continuity needs** — which decisions, findings, or proof future sessions must retrieve without re-reading the whole repo
 
@@ -102,6 +122,8 @@ First produce a concise **Mode Decision**:
 - why this mode is sufficient
 - why the next-heavier mode is not required yet
 - whether `docs/COST_BUDGET.md` is required now or whether an inline Lean budget is enough
+- whether RAG data readiness, harness card, judge calibration, or autonomous
+  workflow contract is required now or can stay inline/advisory
 - whether external skills are in scope and whether a trust record is required now
 
 Then produce only the artifacts required by the selected mode.
@@ -115,6 +137,8 @@ Lean output package:
 - `docs/COST_BUDGET.md` only when AI use is recurring, multi-agent, dynamic-workflow based, or materially costly
 - inline cost architecture notes, or `docs/ai_cost_architecture.md` when AI
   usage is recurring/material or routing/cache/batch strategy is non-trivial
+- inline eval/data/harness notes, or dedicated artifacts when AI behavior is
+  recurring, user-facing, privileged, or profile-governed
 - cost telemetry rollup setup when AI usage is recurring or budget thresholds are enforceable
 - inline external-skill trust notes, or `docs/security/skills/{skill-name}/TRUST_RECORD.md` when any third-party/cross-project skill is planned
 - optional `docs/ARCHITECTURE.md` only when the system has non-trivial architecture, risky runtime, or durable product boundaries
@@ -138,10 +162,19 @@ System architecture document. Include:
 - **Minimum Viable Control Surface** — the smallest set of controls justified for this system
 - **Model Strategy** — per-workload model choice, fallback path, and what will be measured
 - **Cost Budget and Attribution** — per-run/task budget, monthly budget if recurring, model escalation approval, and cost attribution fields
+- **Evaluation-First Plan** — first proof metric, dataset/source, thresholds,
+  failure slices, human review budget, judge status, eval cost boundary, and
+  release gate
 - **AI Cost Architecture** — workload classes, model tiers, cache layout,
   output/effort caps, batch lane, routing maturity, and cascade policy when
   AI/model usage is recurring or material
+- **Harness Boundary** — when Tool-Use or Agentic is active: model, prompt,
+  tools, memory/state, retry/recovery, permissions, trace schema, HITL, and
+  termination
 - **Retrieval / Embedding Strategy** — if retrieval exists: no retrieval vs text-only vs multimodal, modality scope, why multimodal is or is not justified, fallback path, and what will be measured
+- **RAG Data Readiness** — if retrieval exists: source inventory, parser
+  coverage, duplicates/staleness, metadata, ACL, PII/regulated data, and gold
+  evidence seed
 - **Component Table** — every significant component: name, file/directory, responsibility
 - **Data Flow** — numbered steps for the primary request path (happy path, end to end)
 - **Tech Stack** — table with: component, technology choice, rationale for the choice
@@ -200,7 +233,7 @@ Notes: |
 ```
 
 **Tag Namespace** (use in `Type:` field; multiple tags are space-separated):
-`none` | `rag:ingestion` | `rag:query` | `tool:schema` | `tool:unsafe` | `tool:call` | `agent:loop` | `agent:handoff` | `agent:termination` | `plan:schema` | `plan:validation` | `compliance:control` | `compliance:audit` | `compliance:evidence` | `cost:architecture` | `cost:telemetry` | `cost:routing` | `skill:security`
+`none` | `rag:data-readiness` | `rag:ingestion` | `rag:query` | `rag:generation` | `tool:schema` | `tool:unsafe` | `tool:call` | `agent:harness` | `agent:trace` | `agent:recovery` | `agent:loop` | `agent:handoff` | `agent:termination` | `plan:schema` | `plan:validation` | `compliance:control` | `compliance:audit` | `compliance:evidence` | `eval:judge` | `eval:gate` | `workflow:autonomous` | `cost:architecture` | `cost:telemetry` | `cost:routing` | `skill:security`
 
 Rules for the task graph:
 - Standard/Strict: T01 is always the project skeleton (directories, entry points, pyproject.toml or equivalent)
@@ -347,6 +380,45 @@ If dynamic routing or cascades are proposed:
 - add at least one `Type: cost:routing` task
 - do not approve L5/L6 routing without an eval set, stale-router policy,
   quality floor, latency SLO, cost target, cache-hit guard, and escalation cap
+
+### 5aaa. Evaluation, judge, RAG readiness, harness, and routine artifacts
+
+Create these only when triggered; keep Lean projects inline when the risk is
+small and the behavior is diagnostic only.
+
+Create `docs/evaluation/judge_calibration.md` from
+`templates/JUDGE_CALIBRATION_PROTOCOL.md` when:
+- an LLM judge affects release, approval, scoring, or regression gates
+- the project wants a judge to be more than advisory
+- human-vs-judge agreement must be tracked
+
+Create `docs/rag_data_readiness.md` from `templates/RAG_DATA_READINESS.md`
+or an equivalent section when:
+- RAG Profile is ON
+- retrieval, extraction, analytics, or answer quality depends on external
+  source data
+- source freshness, parsing, duplicates, metadata, ACL, or PII risk is unknown
+
+Create `docs/agent_harness.md` from `templates/AGENT_HARNESS_DESIGN.md` when:
+- Tool-Use or Agentic Profile is ON and behavior is material
+- the system compares models, prompts, tools, memory, retries, or recovery
+- the project needs trace/recovery/permission/HITL evidence
+
+Create `docs/harness_benchmark.md` from `templates/HARNESS_BENCHMARK_CARD.md`
+when comparing baseline and candidate harnesses.
+
+Create `docs/autonomous_workflow_deployment.md` from
+`templates/AUTONOMOUS_WORKFLOW_DEPLOYMENT.md` when:
+- work will run on cron, webhook, event, or manual trigger as a bounded routine
+- the routine has retries, secrets, fallback, or monitoring requirements
+
+Add matching task tags:
+- `rag:data-readiness` before `rag:query` when data quality is not proven
+- `agent:harness` before `agent:loop` when harness boundary is not complete
+- `agent:trace` when trace schema or trace completeness is introduced
+- `eval:judge` when judge calibration is introduced
+- `eval:gate` when CI/release eval gates are introduced
+- `workflow:autonomous` when a bounded routine is deployed
 
 ### 5ab. `docs/security/skills/{skill-name}/TRUST_RECORD.md`
 
@@ -587,13 +659,45 @@ Before drafting the documents, reason explicitly and concisely through the follo
 13. **AI Cost Architecture**
    For recurring/material AI usage, define:
    - workload classes
+   - API-first vs self-hosted vs hybrid inference posture
    - cache layout and cache-hit target if caching is used
    - output/effort caps
    - batch/async lane
    - routing maturity level
    - cascade/evaluator policy
    - `docs/router_eval.md` requirement if dynamic routing or cascades are proposed
-14. **External Skill Security**
+14. **Evaluation-First Plan**
+   For every AI-owned workload, define:
+   - first proof metric
+   - eval dataset/source
+   - threshold or manual review rule
+   - failure slices
+   - eval cost budget
+   - human review budget
+   - judge status: none, disabled, advisory, calibrated, or human-confirmed
+15. **RAG Data Readiness**
+   If RAG or data-grounded AI is in scope, define:
+   - source inventory and owners
+   - parser/OCR coverage
+   - duplicate, stale, and empty document handling
+   - required metadata and ACL metadata
+   - PII/regulated data handling
+   - gold evidence seed
+16. **Harness Boundary**
+   If Tool-Use or Agentic is in scope, define:
+   - model and prompt boundary
+   - tool registry and permission classes
+   - memory/state policy
+   - retry/recovery policy
+   - trace schema and trace completeness
+   - human handoff and termination rules
+17. **Autonomous Routine Fit**
+   If cron/webhook/event/manual routines are in scope, define:
+   - trigger contract
+   - idempotency key
+   - secret source
+   - timeout, retry, fallback, monitoring, budget, and disable switch
+18. **External Skill Security**
    If third-party, marketplace, vendor, GitHub, zip, or cross-project skills are proposed, define:
    - skill source and exact version/pin/hash/signature expectation
    - install scope: project-local or global
@@ -651,6 +755,11 @@ Ask these if the project description does not answer them:
 10. What actions, if any, may modify shell state, packages, services, filesystems, or credentials at runtime?
 11. What human work, approval, accountability, or domain judgment must the AI explicitly not replace?
 12. What must remain human-approved because the error cost, audit need, or blast radius is high?
+13. What dataset, replay sample, human labels, or manual fixtures can prove the first AI behavior?
+14. If retrieval/data-grounded AI is plausible: who owns the sources, what formats exist, how fresh are they, and is ACL/PII metadata available?
+15. If Tool-Use or Agentic is plausible: what tools, memory/state, retries, recovery, permissions, trace events, and human handoff triggers are required?
+16. If a judge is plausible: is it advisory only, or must it be calibrated against human labels before it can block?
+17. If automation is plausible: should it be manual, cron, webhook, event-driven, or left as an assistant workflow for now?
 
 Ask all questions at once, not one at a time. Wait for answers before producing the architecture package.
 
@@ -707,15 +816,20 @@ If you declare RAG Status ON, you must produce these **additional sections and a
   - Ingestion: extract → normalize → chunk → embed → index
   - Query-time: query analyze → retrieve → rerank/filter → assemble evidence → answer | insufficient_evidence
 - `#### Corpus Description` — what documents are indexed, update frequency, expected size
+- `#### Data Readiness Gate` — source owners, parser coverage, empty/duplicate/stale handling, metadata, ACL, PII/regulated data, and gold evidence seed
 - `#### Index Strategy` — embedding model choice (with rationale), chunking strategy, index schema version policy
 - `#### Risks (RAG-specific)` — fill in all five RAG-specific risks from the playbook (hallucination, schema drift, stale index, corpus isolation, latency regression)
+
+**Additional artifact when corpus quality is not already proven:**
+- `docs/rag_data_readiness.md` — copy from `templates/RAG_DATA_READINESS.md`
 
 **In `docs/spec.md`:**
 - `§ Retrieval` — what sources are indexed, query types supported, citation format, `insufficient_evidence` behavior
 
 **In `docs/tasks.md`:**
+- Add a data readiness task before ingestion/query tasks when source quality is unknown
 - Add separate tasks for ingestion pipeline and query-time retrieval (never merged into one task)
-- Tag each with `Type: rag:ingestion` or `Type: rag:query` (profile task type namespace)
+- Tag each with `Type: rag:data-readiness`, `Type: rag:ingestion`, or `Type: rag:query` (profile task type namespace)
 - Include retrieval-specific acceptance criteria: recall targets, latency bounds, `insufficient_evidence` path test
 
 **In `docs/IMPLEMENTATION_CONTRACT.md`:**
@@ -726,6 +840,7 @@ If you declare RAG Status ON, you must produce these **additional sections and a
 
 **Evaluation artifact:**
 - `docs/retrieval_eval.md` — copy from `templates/RETRIEVAL_EVAL.md`. This file has its own lifecycle: it is updated whenever retrieval logic changes, independent of code quality reviews.
+  It separates data readiness, retrieval metrics, generation/answer metrics, and E2E workflow metrics.
 
 **Additional clarifying questions when RAG is plausible:**
 
@@ -834,11 +949,16 @@ Justification: The system handles no regulated data. Standard security practices
 **Tool-Use Profile = ON — additional artifacts:**
 
 In `docs/ARCHITECTURE.md`:
+- `§ Harness Boundary` — model, prompt, tool registry, memory/state if any,
+  retry/recovery, permissions, trace, HITL, and termination if a loop exists
 - `§ Tool Catalog` — table of every tool: name, function signature, side-effect classification (read/write/destructive), idempotency guarantee, permission required, retry policy
 - `§ Unsafe-Action Policy` — which tool calls are destructive, what confirmation is required, what the rollback path is
 
+Additional artifact when tool-use is material, side-effecting, or compared:
+- `docs/agent_harness.md` — copy from `templates/AGENT_HARNESS_DESIGN.md`
+
 In `docs/tasks.md`:
-- Tag tool-related tasks with `Type: tool:schema` (schema/registration tasks) or `Type: tool:unsafe` (tasks involving unsafe-action controls)
+- Tag tool-related tasks with `Type: agent:harness`, `Type: tool:schema` (schema/registration tasks) or `Type: tool:unsafe` (tasks involving unsafe-action controls)
 - Include tool-specific acceptance criteria: schema validation tests, idempotency tests, unsafe-action confirmation tests
 
 In `docs/IMPLEMENTATION_CONTRACT.md`:
@@ -847,13 +967,24 @@ In `docs/IMPLEMENTATION_CONTRACT.md`:
 **Agentic Profile = ON — additional artifacts:**
 
 In `docs/ARCHITECTURE.md`:
+- `§ Harness Boundary` — model, prompt, tools, memory/state, retries,
+  recovery, permissions, trace schema, HITL, and termination
 - `§ Agent Roles` — table of every agent role: name, authority scope, inputs, outputs, termination conditions
 - `§ Loop Termination Contract` — maximum iterations, termination conditions, behavior on non-termination (fallback or error)
 - `§ Agent Handoff Protocol` — how state is transferred between agents or across loop iterations
 
+Additional artifacts:
+- `docs/agent_harness.md` — copy from `templates/AGENT_HARNESS_DESIGN.md`
+- `docs/agent_trace_schema.md` — copy from `templates/AGENT_TRACE_SCHEMA.md` when traces are a review/eval artifact
+- `docs/harness_benchmark.md` — copy from `templates/HARNESS_BENCHMARK_CARD.md` when comparing harnesses or models
+
 In `docs/tasks.md`:
-- Tag agentic tasks with `Type: agent:loop`, `Type: agent:handoff`, or `Type: agent:termination`
-- Include agentic acceptance criteria: loop termination test, handoff integrity test, authority boundary test
+- Tag agentic tasks with `Type: agent:harness`, `Type: agent:trace`,
+  `Type: agent:recovery`, `Type: agent:loop`, `Type: agent:handoff`, or
+  `Type: agent:termination`
+- Include agentic acceptance criteria: harness completeness, trace
+  completeness, no-silent-workaround behavior, recovery caps, loop termination
+  test, handoff integrity test, authority boundary test
 
 In `docs/IMPLEMENTATION_CONTRACT.md`:
 - Add `§ Agentic Rules`: loop termination contract version, authority boundary enforcement requirement, cross-iteration state management policy

@@ -57,9 +57,20 @@ These patterns help execution but are not the center of the system:
 
 Useful, but secondary.
 
-## 4. Harness / Packaging
+## 4. Harness Design / Packaging
 
-This makes the playbook reusable:
+Harness design makes agentic systems auditable:
+
+- model + prompt boundary
+- tool registry and permission classes
+- memory/state, retries, recovery, and termination
+- trace schema and runtime evidence
+- human handoff contract
+- harness eval and benchmark cards
+
+This is an architecture contract, not a runtime framework.
+
+Packaging makes the playbook reusable:
 
 - hooks
 - Claude Code settings

@@ -53,6 +53,8 @@ RET-6  Ingestion/query-time separation — ingestion pipeline code and query-tim
 RET-7  Answer quality tracking — if Phase ≥ 2, does `docs/retrieval_eval.md §Answer Quality Metrics` contain at least one completed evaluation run (Faithfulness, Completeness, Relevance scores recorded)? Absent after Phase 2 = P2. Also verify Evaluation History rows include a Corpus Version entry.
 RET-8  Retrieval mode discipline — no silent shift from text-only to multimodal retrieval, no unjustified modality-scope expansion, and no preview-model adoption without documented fallback / migration note
 RET-9  Multimodal proportionality — if multimodal retrieval is active, does `docs/retrieval_eval.md` compare against a text-only baseline or explain why that baseline is not feasible?
+RET-10 Data readiness — if task is `rag:data-readiness`, `rag:ingestion`, or changes corpus/source/parser/metadata/ACL/freshness behavior, is data readiness evidence present before retrieval-readiness claims? Missing source inventory, parser coverage, duplicate/stale handling, metadata, ACL, or gold evidence = P1.
+RET-11 Generation vs retrieval separation — if task changes answer prompts/models/judges over retrieved context, are generation metrics separated from retrieval metrics and E2E workflow metrics? Single final-answer score only = P2; release claim based on E2E-only eval = P1.
 
 <!-- Run the following checks ONLY if Tool-Use Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 TOOL-1 Tool Catalog completeness — every LLM-callable tool is listed in ARCHITECTURE.md §Tool Catalog with side-effect class (read/write/destructive), idempotency, and permission level; missing entry = P1
@@ -68,6 +70,23 @@ AGENT-2 Termination contract — every loop has an explicit exit at max_iteratio
 AGENT-3 Handoff integrity — every handoff produces a structured output that the receiving role validates; silent field drop or untyped handoff = P1
 AGENT-4 Cross-iteration state — state persisting across iterations follows the declared schema (ARCHITECTURE.md §Agent Handoff Protocol); ad-hoc shared mutable state = P1
 AGENT-5 Agent eval artifact — if task tagged `agent:loop` or `agent:handoff`, is `docs/agent_eval.md` updated with Eval Source and Date for this task? Missing = P2
+AGENT-6 Harness boundary — if task is `agent:harness`, `agent:loop`, `agent:trace`, `agent:recovery`, or compares models/prompts/tools, does ARCHITECTURE.md §Harness Boundary or `docs/agent_harness.md`/equivalent define model, prompt, tools, memory/state, retry/recovery, permissions, trace, HITL, and termination? Missing = P1.
+AGENT-7 Trace completeness — required agent events are emitted or documented: run_start, model_call, tool_call, tool_observation, permission_decision, retry, recovery, human_handoff, run_end. Missing trace for agent eval evidence = P1.
+AGENT-8 No silent workaround — agent code does not bypass missing data, failed tools, missing approval, permission denial, or budget gaps by fabricating evidence, downgrading security, or claiming partial completion as success. Violation = P0/P1 depending on blast radius.
+AGENT-9 Recovery caps — retry/recovery paths have explicit caps, idempotency requirements, and terminal behavior. Unbounded retry/recovery = P0 for side-effecting tools, P1 otherwise.
+AGENT-10 Harness benchmark discipline — model or prompt comparisons record harness version, dataset/scorer, environment, budget, trace completeness, and failure taxonomy. Model-only comparison for agent behavior = P1.
+
+<!-- Run the following checks when task is `eval:judge`, when an LLM judge changes, or when a judge is used for release/eval authority -->
+JUDGE-1 Calibration status — LLM judge is disabled/advisory/blocking_allowed/human_confirmed_blocking with evidence. Blocking judge without calibration = P1; high-risk blocking judge without human authority = P0.
+JUDGE-2 Human alignment — judge report includes human sample, rubric version, agreement metric, false-pass/false-fail analysis, and disagreement slices. Missing human comparison = P1 when judge affects release.
+JUDGE-3 Staleness — judge calibration is rerun or downgraded after model, prompt, rubric, data distribution, or risk-class change. Stale blocking calibration = P1.
+JUDGE-4 Cost — judge cost is included in eval cost budget and cost per successful task. Missing cost for material judge use = P2.
+
+<!-- Run the following checks when task is `workflow:autonomous` or introduces cron/webhook/event/manual routines -->
+AUTO-1 Trigger contract — routine declares trigger type, input schema, idempotency key, auth/signature or operator role, replay protection, timeout, retry, fallback, and owner. Missing = P1.
+AUTO-2 Secrets boundary — routine references secrets by source/scope, redacts payloads/traces, and avoids passing raw secrets through prompts or logs. Violation = P0/P1.
+AUTO-3 Reliability signals — routine defines success, retry, timeout, DLQ, cost per completed job, p95 queue delay, and p95 runtime metrics or justified Lean equivalent. Missing = P2.
+AUTO-4 Disable/fallback — routine has a disable switch and fallback/rollback or compensation path. Missing for customer-impacting routine = P1.
 
 <!-- Run the following checks ONLY if Planning Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 PLAN-1 Schema validation gate — every plan passes schema validation before leaving the system boundary (API response, file write, downstream handoff); post-boundary validation = P1

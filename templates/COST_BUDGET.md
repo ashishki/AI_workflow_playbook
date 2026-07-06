@@ -12,6 +12,8 @@ Last updated:
 | Per user / operator | | | warn / block / approval |
 | Per project / month | | | warn / block / approval |
 | Per agent / workflow | | | warn / block / approval |
+| Per eval run / release | | | warn / block / approval |
+| Human review minutes | | | warn / block / approval |
 
 ## Attribution Tags
 
@@ -56,6 +58,8 @@ cost_per_successful_task =
 | retry_cost | telemetry/rollup | yes/no | |
 | verifier_cost | telemetry/rollup | yes/no | |
 | human_rework_cost_estimate | review/ops estimate | yes/no | |
+| eval_dataset_generation_cost | telemetry/manual estimate | yes/no | |
+| human_review_minutes | review/ops estimate | yes/no | |
 | successful_completion_rate | eval/review outcome | yes/no | |
 
 ## Guardrails
@@ -68,6 +72,9 @@ cost_per_successful_task =
 - Max reasoning/effort level per workload:
 - Target cache hit rate:
 - Max escalation rate:
+- Max eval inference cost per release:
+- Max judge calls per release:
+- Max human review minutes per release:
 - Stop condition for repeated equivalent failures:
 - Human approval threshold:
 

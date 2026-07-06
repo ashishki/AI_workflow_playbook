@@ -21,10 +21,26 @@ Before selecting phases, capability profiles, or runtime tier, answer:
 | First user / operator | The role or team that will feel the improvement first |
 | Adoption failure condition | What would make v1 not worth using |
 | First proof metric | The smallest measurable signal that proves practical value |
+| First service delta | Cycle time, SLA, error rate, throughput, operator load, or service coverage change |
 
 If the answer is mostly "we want to use agents" or "AI should make this better",
 do not start a full playbook build. Start with discovery, measurement, or a
 small deterministic improvement.
+
+## Minimum Sufficient Shape Gate
+
+Choose the smallest shape that can satisfy the proof metric.
+
+| Question | If yes | If no |
+|----------|--------|-------|
+| Can rules, thresholds, schemas, or scripts solve it? | Use a deterministic subsystem | Continue |
+| Are the steps known, ordered, and reviewable? | Use workflow orchestration | Continue |
+| Does the system need bounded tool choice or short iteration? | Use bounded Tool-Use / Agentic profile with a harness card | Continue |
+| Does it need scheduled or event-driven execution? | Use autonomous workflow deployment templates with trigger/runtime contracts | Keep manual or assistant-driven |
+| Does it require broad autonomy, privileged mutation, or long-lived workers? | Escalate governance/runtime tier and record why lower tiers fail | Do not imply autonomy |
+
+Every agentic or routine decision should answer "why not deterministic?" and
+"why not workflow?" before adding a loop or scheduler.
 
 ---
 
@@ -37,6 +53,7 @@ AI adoption claims are allowed only when they are scoped and measurable.
 | Work AI improves | Name the specific workflow, task, or decision support surface |
 | Work AI does not replace | Name the human judgment, approval, accountability, or domain expertise that remains human-owned |
 | Demo-to-production evidence | Define the eval, test, operator review, or production metric needed before trust increases |
+| Service delta | Define the non-FTE value: faster SLA, lower error rate, higher throughput, better coverage, or reduced operator correction |
 | Forbidden pre-evidence claims | List claims that must not be used in sales, planning, or demos until evidence exists |
 
 Treat broad claims like "replaces engineers", "fully autonomous team",
@@ -53,9 +70,12 @@ could falsify the claim.
 | Retrofit governance | Existing repo has drift, weak task contracts, unclear review gates, or lost context | Standard playbook |
 | Risky migration | Auth, RLS, data migration, deletion, security boundary, or rollback risk dominates | Heavy-task mode |
 | RAG / eval discipline | Retrieval quality, citations, insufficient-evidence behavior, or corpus drift must be measured | RAG profile |
+| Data readiness | Source quality, parsing, freshness, metadata, ACL, or duplicate risk dominates RAG reliability | RAG data readiness module |
 | Tool safety | LLM-directed tools can mutate external state, spend money, or call unsafe actions | Tool-Use profile |
 | Agent loop control | The system really needs bounded iteration, handoff, or termination logic | Agentic profile |
+| Harness design | Model, prompt, tools, memory, recovery, permissions, trace, and HITL must be compared as one unit | Agent harness module |
 | Planning handoff | The system's primary output is a structured plan consumed by humans or downstream execution | Planning profile |
+| Autonomous routine | A bounded workflow should run on cron, webhook, or event triggers with retries and fallback | Autonomous workflow module |
 | Bootstrap kit | A new repo needs repeatable contracts, CI, Codex handoff, and phase gates from day one | Lean or Standard |
 
 ---
@@ -90,5 +110,5 @@ Use this short verdict before bootstrapping:
 | Use as-is | Concrete pain, measurable proof, bounded workflow, and playbook governance directly apply |
 | Use with heavy-task mode | The project fits, but false confidence or rollback cost is high |
 | Use as governance overlay | External runtime or scheduler is needed; playbook governs contracts, proof, and review |
+| Measure first | Pain exists, but data readiness, eval readiness, or service delta is not yet known |
 | Do not use yet | Pain, owner, current workaround, or proof metric is unclear |
-

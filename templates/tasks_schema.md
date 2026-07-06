@@ -137,9 +137,14 @@ also be reflected in `docs/COST_BUDGET.md`.
 | `none` | No capability tag — standard task | — |
 | `rag:ingestion` | Builds or modifies the ingestion pipeline | RAG |
 | `rag:query` | Builds or modifies query-time retrieval | RAG |
+| `rag:data-readiness` | Inventories corpus sources, parser coverage, metadata, freshness, ACL, or gold evidence before retrieval eval | RAG |
+| `rag:generation` | Evaluates or modifies answer generation over retrieved evidence | RAG |
 | `tool:schema` | Defines or modifies a tool schema | Tool-Use |
 | `tool:unsafe` | Implements unsafe-action controls | Tool-Use |
 | `tool:call` | Adds or modifies a tool call site | Tool-Use |
+| `agent:harness` | Defines model + prompt + tools + memory/state + recovery + permission harness boundary | Agentic |
+| `agent:trace` | Defines or modifies agent trace schema or trace completeness checks | Agentic |
+| `agent:recovery` | Defines or modifies retry, recovery, fallback, or no-silent-workaround behavior | Agentic |
 | `agent:loop` | Implements the agent decision loop | Agentic |
 | `agent:handoff` | Implements an agent handoff | Agentic |
 | `agent:termination` | Implements loop termination contract | Agentic |
@@ -148,6 +153,9 @@ also be reflected in `docs/COST_BUDGET.md`.
 | `compliance:control` | Implements a compliance control (auth, encryption, retention) | Compliance |
 | `compliance:audit` | Implements audit log infrastructure | Compliance |
 | `compliance:evidence` | Collects or updates compliance evidence artifact | Compliance |
+| `eval:judge` | Calibrates or changes an LLM judge, rubric, human labels, or judge authority | Evaluation |
+| `eval:gate` | Adds or changes CI/release eval gates, seeded regressions, thresholds, or eval cost policy | Evaluation |
+| `workflow:autonomous` | Defines or deploys a cron/webhook/event/manual bounded routine with trigger/runtime/fallback contract | Autonomous Workflow |
 | `cost:architecture` | Defines workload classes, cache/batch/routing maturity, cost equation, and escalation boundaries | Cost |
 | `cost:telemetry` | Implements or modifies AI/model cost telemetry collection, rollup, or thresholds | Cost |
 | `cost:routing` | Implements or evaluates dynamic routing, cascades, cache-aware routing, or router thresholds | Cost |

@@ -23,15 +23,31 @@ Architecture decides:
 - workload classes and role boundaries
 - model tiers allowed for each workload
 - budget limits and approval thresholds
+- API-first vs self-hosted vs hybrid inference posture
 - cache layout and cache-hit targets
 - output-token, effort, retry, and fan-out caps
 - batch/async lanes
+- eval cost and human-review cost boundaries
+- latency class and SLA target
 - eval floors and stale-router policy
 - cascade and escalation rules
 
 A router may choose only within those declared boundaries. If the router changes
 quality, risk, data exposure, budget, or human approval boundaries, that is an
 architecture change and requires an ADR or equivalent decision record.
+
+## API vs Self-Hosted vs Hybrid
+
+Use `docs/cost/INFERENCE_DECISION_TREE.md` for the full guide. The short rule:
+
+| Path | Prefer when | Avoid when |
+|------|-------------|------------|
+| API-first | Fast delivery, broad model capability, low ops burden, uncertain workload | Data boundary or serving control requirements cannot be met |
+| Self-hosted | Local-only data, custom weights/kernels, stable high-volume workload, owned serving team | Workload/eval/cost is not measurable yet |
+| Hybrid | Different workloads have different data, latency, or cost needs | Route boundaries cannot be audited |
+
+Self-hosting is justified by measured workload, eval, latency, and
+cost-per-successful-task evidence, not by theoretical token price alone.
 
 ## Required Sections
 
@@ -78,6 +94,34 @@ cost_levers:
   cascades: calibrated_verifier_required
 ```
 
+### Eval and Human Review Cost
+
+Declare evaluation and review separately from production inference:
+
+| Cost area | Required when | Evidence |
+|-----------|---------------|----------|
+| Eval inference | Any capability eval, seeded regression, harness comparison | eval run telemetry or estimate |
+| Judge cost | LLM judge scores cases | judge report and budget |
+| Human review | Human labels, disagreement review, high-risk approvals | sample size and minutes per item |
+| Rework cost | Outputs require operator correction | human correction rate or estimate |
+
+Evaluation savings are valid only if quality, latency, and stop-ship failure
+coverage remain within threshold.
+
+### Latency Class
+
+Each workload should declare a latency class:
+
+| Class | Typical use | Cost implication |
+|-------|-------------|------------------|
+| interactive | User is waiting | Smaller/faster models, tight retry caps |
+| human-blocking async | Human workflow waits but not live chat | Moderate batch/retry allowed |
+| background batch | Reports, evals, enrichment | Batch lanes and lower-cost models preferred |
+| scheduled routine | Cron/event automation | Budget, timeout, fallback, and monitoring required |
+
+Use `docs/cost/LATENCY_SLA_TEMPLATE.md` when latency affects adoption or
+runtime design.
+
 ### Cache Context Layout
 
 If prompt caching is used, the project must declare stable-prefix and
@@ -119,14 +163,19 @@ Cost architecture is enforceable only when connected to artifacts:
 - `docs/ai_cost_telemetry.jsonl` or an equivalent telemetry source
 - `reports/ai_cost_rollup.md` for actual rollups
 - `docs/router_eval.md` when dynamic routing or cascades are used
+- `docs/evaluation/EVAL_COST_BUDGET.md` or equivalent when eval spend is material
+- `docs/evaluation/HUMAN_REVIEW_COST_MODEL.md` or equivalent when humans label or approve cases
 - capability eval artifacts when routing affects RAG/tool/agent/planning outputs
 
 ## Review Questions
 
+- Is the project API-first, self-hosted, or hybrid, and why?
 - Does every AI workload have a declared model class and output cap?
+- Does every workload declare latency class and p95 target when user-facing?
 - Are cacheable prompts structured with stable prefixes and volatile suffixes?
 - Are model escalation and router changes approval-gated?
 - Does cost telemetry measure cost per successful task, not only cost per call?
+- Are eval inference, judge cost, and human review cost included?
 - Does any dynamic router have an eval set, stale-router policy, and quality
   floor?
 - Does any cascade include failed cheap attempts and verifier cost in the total?

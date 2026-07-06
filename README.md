@@ -7,7 +7,7 @@ The current playbook is strongest when read as a layered system:
 1. Policy / Governance
 2. Proof / Evidence
 3. Optional Execution Patterns
-4. Harness / Packaging
+4. Harness Design / Packaging
 
 This repository is not trying to become a generic orchestration framework. Its center of gravity remains governance, contracts, reviews, and auditable repo artifacts.
 
@@ -50,6 +50,14 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 | **Compliance** | Regulated industries (HIPAA, SOC 2, PCI-DSS, GDPR): PHI enforcement, audit log, retention policy, evidence collection | COMP-1..5 | `compliance_eval.md` |
 
 Profiles are activated in Phase 1 and treated as architectural constraints. Evaluation is enforced at Step 3.5: any task with a capability tag is not complete until the evaluation artifact is updated and compared against its baseline. A regression is a P1 finding.
+
+**Harness layer for agentic systems.** For Tool-Use and Agentic projects, the
+evaluated unit is `model + prompt + tools + memory/state + retries + recovery +
+permissions + trace + HITL + eval`, not the base model alone. Use
+`templates/AGENT_HARNESS_DESIGN.md` and
+`templates/HARNESS_BENCHMARK_CARD.md` to keep harness configuration visible
+when comparing models, prompts, or runtime behavior. This is an architecture
+contract, not a new orchestration framework.
 
 **Capability auto-detection.** Pre-implementation: the Orchestrator matches the task's file scope against capability signal patterns — `retrieval/`, `embedding` → RAG; `tools/`, `@tool` → Tool-Use; `compliance/`, `audit/`, `hipaa/` → Compliance. A HIGH-confidence match with no matching `Type:` tag stops the session with a `TAG_WARNING` before any code is written. Post-implementation: file-vs-tag mismatches surface a `SEMANTIC_MISMATCH` to the reviewer.
 
@@ -101,12 +109,16 @@ For practical setup and adoption, use:
 - [docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md) — current portfolio role and roadmap
 - [docs/tasks.md](docs/tasks.md) — active framework task graph
 - [docs/project_fit_guide.md](docs/project_fit_guide.md) — problem-first entry points, adoption reality gate, and anti-patterns
+- [docs/evaluation/EVAL_FIRST_DEVELOPMENT.md](docs/evaluation/EVAL_FIRST_DEVELOPMENT.md) — eval dataset, thresholds, judge calibration, human review, and cost gates from Phase 1
+- [docs/rag/RAG_DATA_READINESS.md](docs/rag/RAG_DATA_READINESS.md) — source inventory and data-quality gate before embeddings/retrieval eval
+- [docs/agent_harness/AGENT_HARNESS_DESIGN.md](docs/agent_harness/AGENT_HARNESS_DESIGN.md) — model+harness boundary for tool-using and agentic systems
 - [docs/architecture_layers.md](docs/architecture_layers.md) — concise layer map
 - [docs/heavy_task_mode.md](docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
 - [docs/workflow_continuity_retrofit.md](docs/workflow_continuity_retrofit.md) — MemPalace assessment and the playbook-native continuity retrofit
 - [docs/coverage_experiment_report_ru.md](docs/coverage_experiment_report_ru.md) — Russian coverage experiment report: project-fit zones, heavy-task boundaries, and execution-substrate line
 - [docs/cost_budget_guardrails.md](docs/cost_budget_guardrails.md) — AI/model cost attribution, budget gates, and approval rules
 - [docs/ai_cost_architecture.md](docs/ai_cost_architecture.md) — workload classes, cache/batch/routing strategy, cascades, and cost-per-successful-task rules
+- [docs/cost/INFERENCE_DECISION_TREE.md](docs/cost/INFERENCE_DECISION_TREE.md) — API-first vs self-hosted vs hybrid inference decision guide
 - [docs/cache_context_layout.md](docs/cache_context_layout.md) — prompt cache stable-prefix / volatile-suffix layout rules
 - [docs/cost_telemetry_protocol.md](docs/cost_telemetry_protocol.md) — provider-agnostic AI cost telemetry JSONL and rollup protocol
 - [docs/external_skill_security_policy.md](docs/external_skill_security_policy.md) — external agent skill trust gate, scan/signature policy, and approval rules
@@ -243,6 +255,7 @@ Project description
   [Orchestrator session]
   Reads CODEX_PROMPT.md before every task
   Step 0-E: capability signal detection → TAG_WARNING + STOP if mismatch
+  Step 0-F3: harness/data/eval readiness → HARNESS_WARNING / DATA_READINESS_WARNING / EVAL_READINESS_WARNING
   Spawns Codex for implementation
   Step 3: semantic mismatch check (non-blocking)
   Step 3.5: evaluation gate (if capability tag) — regression → P1
@@ -269,6 +282,12 @@ AI_workflow_playbook/
 ├── PLAYBOOK.md                      — master workflow document (read this first)
 ├── docs/
 │   ├── project_fit_guide.md          — problem-first entry points, adoption reality gate, and anti-patterns
+│   ├── evaluation/                   — eval-first development, judge calibration, CI gates, human review cost
+│   ├── rag/                          — data readiness, data quality, retrieval/generation eval, RAG acceptance
+│   ├── agent_harness/                — harness design, trace schema, recovery, permissions, HITL policy
+│   ├── cost/                         — inference decision tree, model routing, latency SLA, eval cost tradeoff
+│   ├── autonomous_workflows/         — bounded routine deployment contracts and runbooks
+│   ├── business_value/               — service delta, TCO/ROI proxy, workflow scoring
 │   ├── adoption_modes.md             — Lean / Standard / Strict artifact matrix
 │   ├── cost_budget_guardrails.md      — AI/model budget gates and cost attribution policy
 │   ├── ai_cost_architecture.md        — workload class, cache, batch, routing, cascade, and cost architecture protocol
@@ -311,6 +330,14 @@ AI_workflow_playbook/
 │   ├── COST_TELEMETRY_ADAPTER.md    — project-owned provider boundary task template
 │   ├── EVIDENCE_INDEX.md            — index of durable proof, review findings, and evaluation artifacts
 │   ├── PROJECT_BRIEF.md             — input template for the Strategist
+│   ├── AGENT_HARNESS_DESIGN.md       — model+harness architecture contract
+│   ├── HARNESS_BENCHMARK_CARD.md     — baseline/candidate harness comparison card
+│   ├── AGENT_TRACE_SCHEMA.md         — JSONL trace schema for agent runs
+│   ├── JUDGE_CALIBRATION_PROTOCOL.md — human-vs-judge calibration report template
+│   ├── RAG_DATA_READINESS.md         — corpus readiness template before retrieval eval
+│   ├── RETRIEVAL_EVAL_PLAN.md        — retrieval query set and metric plan
+│   ├── AUTONOMOUS_WORKFLOW_DEPLOYMENT.md — bounded routine deployment template
+│   ├── USE_CASE_CARD.md              — workflow/use-case scoring card
 │   ├── RETRIEVAL_EVAL.md            — RAG evaluation artifact template
 │   ├── NFR.md                       — non-functional requirements template (SLA table + history)
 │   ├── tasks_schema.md              — YAML-compatible task block schema, tag namespace, AC rules
@@ -372,6 +399,16 @@ It also supports optional `Context-Refs` and heavy-task extension fields so risk
 **templates/EVIDENCE_INDEX.md** indexes tests, evaluation runs, review findings, and manual proof so agents can retrieve prior evidence without treating summaries as truth.
 
 **templates/PROJECT_BRIEF.md** is the recommended input template before running the Strategist. It helps you describe concrete pain, current workaround, adoption proof, goals, workflows, risks, AI scope, deterministic candidates, human approval boundaries, constraints, and success metrics without pre-deciding the architecture.
+
+**templates/AGENT_HARNESS_DESIGN.md** defines the harness boundary for
+tool-using and agentic systems: model, prompt, tools, memory/state, loop,
+retry/recovery, permissions, trace, HITL, and eval. Use it before comparing
+models or claiming agent reliability.
+
+**templates/RAG_DATA_READINESS.md** and **templates/RETRIEVAL_EVAL_PLAN.md**
+separate corpus readiness from retrieval metrics and downstream answer quality.
+RAG failures should be localized to data, retrieval, generation, or E2E workflow
+rather than hidden behind one final answer score.
 
 **templates/COST_ARCHITECTURE.md** turns AI cost from a policy note into an architecture artifact: workload classes, model tiers, prompt-cache layout, batch lanes, routing maturity, cascade rules, and cost-per-successful-task. Use it for recurring/material AI usage or any dynamic routing/cascade plan.
 

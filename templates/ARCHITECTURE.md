@@ -233,6 +233,36 @@ Compatibility notes:
   compliance:control, compliance:audit, compliance:evidence.
 -->
 
+## Harness Boundary
+
+<!--
+Include this section when Tool-Use or Agentic is ON, or when the system compares
+models/prompts/tools for the same workflow. Delete for fully deterministic
+systems with no LLM-directed tool calls or loops.
+
+The harness is the evaluated unit: model + prompt + tools + memory/state +
+retries + recovery + permissions + traces + human handoff + eval. Use
+templates/AGENT_HARNESS_DESIGN.md for the full card when this table is not
+enough.
+-->
+
+| Harness area | Decision | Evidence / artifact |
+|--------------|----------|---------------------|
+| Model boundary | {{model class, fallback, escalation rule}} | {{eval/cost reference}} |
+| Prompt boundary | {{system policy, task prompt, output schema, cache boundary}} | {{prompt/schema reference}} |
+| Tool registry | {{LLM-callable tools, side effects, idempotency}} | {{Tool Catalog / tool eval}} |
+| Memory/state | {{what persists, schema, owner, retention, reset rule}} | {{state schema / ADR}} |
+| Retry policy | {{retryable errors, caps, idempotency requirement}} | {{recovery tests}} |
+| Recovery policy | {{fallback, partial result, dead-letter, human handoff}} | {{ERROR_RECOVERY_PLAYBOOK / eval cases}} |
+| Permission policy | {{allowed, ask, sandbox, escalate, blocked}} | {{AGENTS.md / tool policy}} |
+| Trace schema | {{required events and artifacts}} | {{AGENT_TRACE_SCHEMA / logs}} |
+| Human handoff | {{when the agent must ask, stop, or request approval}} | {{HITL policy}} |
+| Termination | {{max iterations, timeout, stop conditions}} | {{agent eval}} |
+
+Rule: do not compare model A vs model B without recording the harness version.
+Rule: no silent workaround when data, permission, credentials, approval, or
+evidence is missing.
+
 ### Profile: RAG
 
 <!--
@@ -278,6 +308,23 @@ The `insufficient_evidence` path is **not optional**. When retrieved evidence do
 | Update frequency | {{How often the corpus changes}} |
 | Estimated size | {{Number of documents / chunks / tokens at index time}} |
 | Access control | {{Who/what can query which corpus segments}} |
+
+#### Data Readiness Gate
+
+Before embeddings or retrieval eval, complete `templates/RAG_DATA_READINESS.md`
+or an equivalent project section.
+
+| Readiness area | Decision / evidence |
+|----------------|---------------------|
+| Source inventory and owners | {{sources, owners, approval}} |
+| Parser coverage by format | {{parse success report}} |
+| Empty/duplicate/stale docs | {{counts and handling rule}} |
+| Required metadata | {{source_id, date, ACL, version, language, type}} |
+| Access-control metadata | {{ACL source and enforcement plan}} |
+| PII/regulated data | {{classification, redaction, retention}} |
+| Gold evidence seed | {{query-to-document/span examples}} |
+
+Do not treat retrieval metrics as valid if data readiness is unknown.
 
 #### Retrieval / Embedding Strategy
 

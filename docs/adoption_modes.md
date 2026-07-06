@@ -37,6 +37,10 @@ only the copier/scaffolder.
 | `docs/COGNITION_MANIFEST.md` | Optional | Optional | Required when context packets/vault are used |
 | `docs/EVIDENCE_INDEX.md` | Optional | Optional unless recurring evidence exists | Required |
 | Capability eval artifacts | Only for active capability behavior | Only for active capability behavior | Required for active capability behavior |
+| RAG data readiness | Inline when RAG/data risk exists | Required when RAG Profile is ON or corpus quality is unknown | Required before retrieval metrics support release |
+| Agent harness card | Inline when Tool-Use/Agentic is simple | Required when Tool-Use/Agentic behavior is material or compared | Required for privileged/high-autonomy agent behavior |
+| Judge calibration | Advisory-only unless calibrated | Required before judge can block release | Required before any release-significant judge authority |
+| Autonomous workflow contract | Optional for manual work | Required before cron/webhook/event routine deployment | Required with reliability, fallback, and monitoring evidence |
 | Runtime verification record | Risky edits only | Risky edits and phase boundaries | Required for privileged/risky writes |
 | Cost budget | Inline for AI tasks | Required for recurring AI use | Required |
 | AI cost architecture | Inline when recurring/material AI, caching, routing, batch, or cascades are used | Required when recurring/material AI, caching, routing, batch, or cascades are used | Required when AI/model work is active |
@@ -62,9 +66,12 @@ The Phase 1 validator must run in the selected mode:
   or cascades require `docs/ai_cost_architecture.md`; dynamic routing/cascades
   require `docs/router_eval.md`.
   External skills require a trust record before installation, update, or
-  enablement.
+  enablement. Eval/data/harness artifacts are required when behavior is
+  recurring, user-facing, privileged, or profile-governed.
 - Strict: run the full artifact, evidence, cognition, evaluation, runtime, and
-  review checks, including cost gates and external skill trust records.
+  review checks, including cost gates, judge calibration, RAG data readiness,
+  harness trace evidence, autonomous routine contracts, and external skill trust
+  records.
 
 ## Review Scope
 
@@ -90,6 +97,9 @@ All modes keep these invariants:
   routing, batch, or cascades
 - no external skill is installed, enabled, updated, or globally exposed without
   trust evidence
+- no RAG release claim without data readiness and retrieval/generation eval
+- no agent reliability claim without harness boundary and trace evidence
+- no blocking LLM judge without calibration against human labels
 - human approval at meaningful risk boundaries
 
 Mode selection changes overhead. It does not permit unsupported claims.

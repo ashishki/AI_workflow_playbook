@@ -290,8 +290,12 @@ proof receipts, or review reports.
 | File path pattern (substring match) | Profile | Confidence |
 |--------------------------------------|---------|------------|
 | `retrieval/`, `embedding`, `chunk`, `index`, `corpus`, `ingestion`, `rerank` | RAG | HIGH |
+| `RAG_DATA_READINESS`, `DATA_QUALITY_CHECKLIST`, `data_readiness`, `data_quality`, `gold_evidence` | RAG | HIGH |
 | `tools/`, `tool_schema`, `function_call`, `@tool`, `tool_catalog` | Tool-Use | HIGH |
 | `plan_schema`, `plan_graph`, `plan_valid` | Planning | HIGH |
+| `agent_harness`, `AGENT_HARNESS`, `HARNESS_BENCHMARK`, `trace_schema`, `AGENT_TRACE`, `recovery_playbook`, `permission_policy`, `human_handoff` | Agentic | HIGH |
+| `judge_calibration`, `JUDGE_CALIBRATION`, `eval_gate`, `seeded_regression`, `human_review` | Evaluation | HIGH |
+| `autonomous_workflows`, `TRIGGER_CONTRACT`, `routine`, `webhook`, `cron` | Autonomous Workflow | HIGH |
 | `ai_cost_telemetry`, `cost_rollup`, `cost_telemetry`, `COST_BUDGET`, `ai_cost_architecture`, `router_eval`, `dynamic_router`, `cascade`, `prompt_cache` | Cost | HIGH |
 | `.codex/skills`, `.claude/skills`, `skills/`, `SKILL.md`, `skill-card`, `skill.oms.sig`, `skillspector`, `TRUST_RECORD`, `external_skill_security` | External Skill Security | HIGH |
 | `agent/`, `loop`, `handoff`, `termination` (app code only) | Agentic | MEDIUM |
@@ -301,7 +305,7 @@ If a HIGH-confidence pattern matches but the task has no `Type:` tag in that pro
 TAG_WARNING
 Task: [T## — Title]
 Signal: [matched pattern] in [file path]
-Expected tag: Type: [rag:|tool:|plan:|cost:|skill:security] (pick the matching namespace)
+Expected tag: Type: [rag:|tool:|agent:|plan:|eval:|workflow:autonomous|cost:|skill:security] (pick the matching namespace)
 Actual tag: [current Type: value, or "none"]
 Check: does semantic ownership apply? (PLAYBOOK §Capability Signal Patterns)
 ACTION REQUIRED: confirm or add the tag before the implementer runs.
@@ -390,6 +394,52 @@ Missing or conflicting skill evidence: [exact reason]
 Action required: create/update docs/security/skills/{skill-name}/TRUST_RECORD.md, run SkillSpector or equivalent scan, pin/verify source, or record human approval before implementation.
 ```
 
+**F3. Harness / data / eval readiness pre-check** — run before implementation
+when the task touches AI behavior, retrieval, tool-use, agent loops, autonomous
+routines, model routing, or judge/eval artifacts.
+
+Stop on the following:
+- RAG Profile = ON, or task is `rag:*`, and there is no data readiness evidence
+  for source inventory, parser coverage, freshness, metadata, ACL, and gold
+  evidence seed before retrieval-quality claims are made.
+- Tool-Use or Agentic Profile = ON and the task changes model, prompt, tools,
+  memory/state, retry/recovery, permissions, traces, HITL, or termination
+  without a harness card or architecture harness boundary.
+- The task compares models or prompts for agent behavior without recording the
+  harness version, scorer, dataset, environment, and budget.
+- An LLM judge is used as a blocking authority without judge calibration
+  evidence or an explicit "advisory only" status.
+- An autonomous routine is introduced without trigger contract, idempotency key,
+  timeout, retry/fallback, secret source, monitoring, and budget.
+
+If stopped, print one of:
+
+```
+DATA_READINESS_WARNING
+Task: [T## — Title]
+Missing: [source inventory | parser coverage | freshness | metadata | ACL | gold evidence]
+Action required: add/update RAG data readiness before claiming retrieval readiness.
+```
+
+```
+HARNESS_WARNING
+Task: [T## — Title]
+Missing: [harness card | trace schema | permission policy | recovery policy | HITL boundary | harness benchmark fields]
+Action required: add/update the harness boundary before implementation or comparison proceeds.
+```
+
+```
+EVAL_READINESS_WARNING
+Task: [T## — Title]
+Missing: [dataset | threshold | judge calibration | eval cost | human review budget]
+Action required: add/update eval readiness before using the result as release evidence.
+```
+
+These warnings are STOP conditions in Strict mode and for high-risk actions
+(destructive tools, regulated data, payments, auth/secrets, customer-impacting
+automation). In Lean/Standard low-risk discovery they may be downgraded to an
+Action-line warning if the task explicitly says it is diagnostic only.
+
 Print status block:
 ```
 === ORCHESTRATOR STATE ===
@@ -408,6 +458,7 @@ Tag check: [OK | WARNING: T## — [pattern] suggests [profile], verify Type: tag
 Complexity check: [OK | DETERMINISM_WARNING: ... | MODEL_STRATEGY_WARNING: ... | STOPPED: ...]
 Cost budget: [OK | WARNING: ... | STOPPED: COST_BUDGET_GAP]
 External skill security: [OK | WARNING: ... | STOPPED: EXTERNAL_SKILL_SECURITY_GAP]
+Harness/data/eval readiness: [OK | WARNING: DATA_READINESS_WARNING/HARNESS_WARNING/EVAL_READINESS_WARNING | STOPPED: ...]
 Action: [what happens next]
 =========================
 ```
@@ -611,10 +662,12 @@ Evaluation trigger tags (check the `Type:` field of the current task in `docs/ta
 
 | Profile | Tags that require evaluation |
 |---------|------------------------------|
-| RAG | `rag:ingestion`, `rag:query` |
+| RAG | `rag:data-readiness`, `rag:ingestion`, `rag:query`, `rag:generation` |
 | Tool-Use | `tool:schema`, `tool:unsafe`, `tool:call` |
-| Agentic | `agent:loop`, `agent:handoff`, `agent:termination` |
+| Agentic | `agent:harness`, `agent:trace`, `agent:recovery`, `agent:loop`, `agent:handoff`, `agent:termination` |
 | Planning | `plan:schema`, `plan:validation` |
+| Evaluation | `eval:judge`, `eval:gate` |
+| Autonomous Workflow | `workflow:autonomous` |
 
 **No matching tag** → skip this step, go to Step 4.
 

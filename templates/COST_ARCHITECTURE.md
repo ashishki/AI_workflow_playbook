@@ -11,6 +11,18 @@ Last updated:
 - Architecture artifact required: yes | no
 - Reason if not required:
 
+## Inference Posture
+
+| Option | Decision | Evidence |
+|--------|----------|----------|
+| API-first | selected / rejected / hybrid | workload, data boundary, SLA, eval evidence |
+| Self-hosted | selected / rejected / hybrid | TCO, serving benchmark, ops owner |
+| Hybrid | selected / rejected | route boundary, data boundary, fallback |
+
+Rule: self-hosted inference requires a measurable workload, eval set, latency
+target, and cost-per-successful-task comparison. Do not select it only because
+raw token price appears lower.
+
 ## Workload Classes
 
 | Workload | Default model/class | Fallback allowed | Cache required | Batch allowed | Max output tokens | Max cost per run/task | Quality floor |
@@ -18,6 +30,12 @@ Last updated:
 | architecture_review | | yes/no | yes/no | yes/no | | | |
 | implementation_fix | | yes/no | yes/no | yes/no | | | |
 | summarization_packet | | yes/no | yes/no | yes/no | | | |
+
+## Latency Class and SLA
+
+| Workload | Latency class | p50 target | p95 target | Timeout | Fallback |
+|----------|---------------|------------|------------|---------|----------|
+| | interactive / human-blocking async / background batch / scheduled routine | | | | |
 
 ## Cost Levers
 
@@ -30,6 +48,15 @@ Last updated:
 | Model escalation | approval required / automatic / forbidden | approval rule |
 | Dynamic router | eval required / forbidden / n/a | `docs/router_eval.md` |
 | Cascades | calibrated verifier required / forbidden / n/a | router/cascade eval |
+
+## Eval and Human Review Cost
+
+| Cost area | Budget | Measurement source | Included in cost_per_successful_task? |
+|-----------|--------|--------------------|---------------------------------------|
+| Eval inference | | | yes/no |
+| Judge inference | | | yes/no |
+| Human labeling/review | | | yes/no |
+| Rework/correction | | | yes/no |
 
 ## Cache Context Layout
 

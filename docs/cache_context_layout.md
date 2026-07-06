@@ -14,6 +14,12 @@ Source: https://platform.claude.com/docs/en/build-with-claude/prompt-caching
 This playbook treats that as a design rule: cacheable context must be separated
 from volatile task context.
 
+Recent cache-efficiency research for long-horizon agents, such as TokenPilot,
+also highlights the trade-off between reducing text and preserving prompt-cache
+alignment: context compaction or eviction that mutates sequence layout can save
+tokens while causing cache misses. Treat those claims as external research, not
+as guaranteed provider savings. Source: https://arxiv.org/html/2606.17016v1
+
 ## Stable Prefix
 
 Put long-lived, reused material here:
@@ -48,6 +54,11 @@ Put per-run or frequently changing material here:
 
 - Do not put timestamps, run IDs, random IDs, current date, current diff, latest
   test output, or temporary diagnostics in the stable prefix.
+- Do not put volatile tool observations, retry logs, current failure output, or
+  per-run recovery traces above the cache boundary.
+- Do not rewrite, summarize, or reorder stable context differently on every
+  turn. Non-canonical compaction can break prefix stability even when the
+  resulting prompt is shorter.
 - Do not reorder tool schemas casually; schema order can affect prefix
   stability.
 - Do not combine stable policy and volatile state into one monolithic prompt
@@ -77,6 +88,9 @@ cache_context_layout:
     - timestamp
     - run_id
     - random_id
+    - current tool observations
+    - retry logs
+    - recovery traces
     - transient diagnostics
   telemetry:
     cache_hit_metric:
@@ -90,6 +104,8 @@ cache_context_layout:
 Reviewer should flag:
 
 - volatile fields above the cache boundary
+- retry/tool traces in stable prefix
+- non-canonical context compaction that changes stable block order or wording
 - cache-required workloads with no cache-hit telemetry
 - dynamic router changes that lower cache hit rate beyond the declared threshold
 - broad context packet insertion before the cache boundary

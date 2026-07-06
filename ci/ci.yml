@@ -148,11 +148,24 @@ jobs:
       #   # Fails CI if retrieval precision, MRR, or answer quality drops below baseline.
       #   # Baseline stored in docs/retrieval_eval.md §Evaluation History.
       #
+      # - name: RAG data readiness lint     # Profile: RAG
+      #   if: always()
+      #   run: python -m pytest tests/eval/test_rag_data_readiness.py -v
+      #   # Verifies source inventory, parser coverage, metadata/ACL readiness,
+      #   # duplicate/stale handling, and gold evidence seed before retrieval
+      #   # metrics are treated as release evidence.
+      #
       # - name: Run Agent evaluation        # Profile: Agentic
       #   if: always()
       #   run: python -m pytest tests/eval/test_agent.py -v
       #   # Fails CI if loop termination rate or handoff integrity rate drops below baseline.
       #   # Baseline stored in docs/agent_eval.md.
+      #
+      # - name: Agent harness trace check   # Profile: Agentic / Tool-Use
+      #   if: always()
+      #   run: python -m pytest tests/eval/test_agent_trace_schema.py -v
+      #   # Fails CI if required trace events, permission decisions, retry/recovery
+      #   # records, or human handoff records are missing from harness eval fixtures.
       #
       # - name: Run Tool-Use evaluation     # Profile: Tool-Use
       #   if: always()
@@ -172,6 +185,19 @@ jobs:
       #   # Verifies: audit log format contract, PHI field non-appearance in logs,
       #   # append-only enforcement, retention policy boundary.
       #   # Baseline stored in docs/compliance_eval.md.
+      #
+      # - name: Judge calibration check     # Cross-cutting eval gate
+      #   if: always()
+      #   run: python -m pytest tests/eval/test_judge_calibration.py -v
+      #   # Required when an LLM judge is blocking or release-significant.
+      #   # Verifies rubric version, human sample, agreement metrics,
+      #   # disagreement slices, and non-stale calibration.
+      #
+      # - name: Seeded unsafe regressions   # Cross-cutting eval gate
+      #   if: always()
+      #   run: python -m pytest tests/eval/test_seeded_regressions.py -v
+      #   # Fails CI if known unsafe, no-answer, permission, or recovery
+      #   # regressions pass silently.
 
       # -----------------------------------------------------------------------
       # PLAYBOOK INTEGRITY CHECKS
@@ -210,6 +236,15 @@ jobs:
       #       --require-file \
       #       --max-total-cost {{MAX_TOTAL_COST_USD}} \
       #       --max-run-cost {{MAX_RUN_COST_USD}}
+      #
+      # - name: Eval cost budget rollup
+      #   run: |
+      #     python tools/cost_rollup.py \
+      #       --input reports/eval_cost_telemetry.jsonl \
+      #       --output reports/eval_cost_rollup.md \
+      #       --strict \
+      #       --require-file \
+      #       --max-total-cost {{MAX_EVAL_COST_USD}}
 
       # -----------------------------------------------------------------------
       # NFR LOAD TESTS (uncomment when docs/nfr.md exists with CI gate thresholds)

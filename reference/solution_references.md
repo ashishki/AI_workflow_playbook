@@ -24,6 +24,21 @@ Do not treat any source here as a dependency.
 | NVIDIA SkillSpector | You need to vet third-party or cross-project agent skills before installation | Static + optional semantic skill scanning, SARIF/Markdown reports, risk scoring across prompt injection, exfiltration, supply chain, MCP poisoning, and dangerous code patterns | Official repo/docs | https://github.com/NVIDIA/SkillSpector |
 | NVIDIA skill trust pipeline | You need release-gate structure for external skills | Scan report + skill card + detached signature/integrity verification before install | Official docs | https://docs.nvidia.com/skills/agent-skill-trust-pipeline |
 
+## Harness, Eval, and RAG Research References
+
+These are reference-only inputs. They should inspire artifacts and decision
+rules, not become mandatory dependencies.
+
+| Reference | Applicable pattern | Not applicable / boundary | Hype risk | URL |
+|-----------|--------------------|---------------------------|-----------|-----|
+| Harness-Bench | Evaluate model + harness + environment + scorer, not base model alone | Do not import benchmark machinery into core playbook by default | Low | https://arxiv.org/html/2605.27922v1 |
+| HarnessX / AEGIS | Trace -> retrospective -> proposed harness change -> gated eval | No autonomous prompt/code mutation or auto-merge in v1 | Medium/high | https://arxiv.org/html/2606.14249v1 |
+| Skill-MAS | Human-approved reusable procedures / meta-skills without fine-tuning | No uncontrolled self-improving agent loop | Medium | https://arxiv.org/abs/2606.18837 |
+| TokenPilot | Cache-aware context layout for long agent sessions | Do not promise provider-specific savings without telemetry | Low/medium | https://arxiv.org/html/2606.17016v1 |
+| RAG evaluation survey | Separate retrieval, generation, and system-level evaluation | Survey guidance is not a project-specific threshold | Low | https://arxiv.org/html/2405.07437v2 |
+| eRAG retrieval-quality paper | Retrieval metrics may misalign with downstream generation; choose task-aware retrieval eval | Do not replace local gold evidence and no-answer tests | Low | https://ciir-publications.cs.umass.edu/pub/web/getpdf.php?id=1494 |
+| Judge capability / human agreement | Calibrate LLM judges against human labels; correlation alone is insufficient | Do not treat generic judge rankings as project calibration | Low/medium | https://arxiv.org/html/2510.09738v1 |
+
 ## Adoption Rules
 
 - Adapt patterns, not whole external systems.

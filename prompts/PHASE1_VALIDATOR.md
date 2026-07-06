@@ -47,6 +47,9 @@ Read when present or required by mode:
 15. docs/ai_cost_architecture.md when AI/model usage is recurring/material or routing/cache/batch/cascade controls are declared
 16. docs/router_eval.md when dynamic routing or cascades are declared
 17. docs/external_skill_security_policy.md and docs/security/skills/**/TRUST_RECORD.md when external skills are installed, enabled, or planned
+18. docs/evaluation/** when eval gates, judge calibration, human review, or material eval cost are declared
+19. docs/rag/** or docs/retrieval_eval.md when RAG/data readiness is declared or RAG Profile is ON
+20. docs/agent_harness/** or equivalent harness card when Tool-Use/Agentic behavior is declared
 
 Lean mode must not fail only because optional Standard/Strict artifacts are
 missing.
@@ -82,6 +85,15 @@ Mode rules:
   GitHub, zip, or cross-project skill is installed, enabled, updated, or planned.
   Lean may keep inline evidence only for project-local instruction-only skills
   with no scripts, tools, network, file writes, environment access, or MCP access.
+- Evaluation-first: AI/model behavior needs a proof metric, dataset/eval source,
+  threshold or review rule, and cost boundary. Lean may keep this inline.
+  Standard/Strict should use project eval artifacts when behavior is recurring,
+  user-facing, or capability-profile governed.
+- RAG data readiness: RAG Profile ON requires data readiness evidence before
+  retrieval-readiness claims. Lean may keep a short checklist inline.
+- Agent harness: Tool-Use or Agentic behavior needs a harness boundary covering
+  model, prompt, tools, memory/state, retry/recovery, permissions, trace, HITL,
+  and termination. Lean may keep it in ARCHITECTURE.md or AGENTS.md.
 
 ### A1 — docs/ARCHITECTURE.md
 
@@ -94,6 +106,7 @@ Mode rules:
 - [ ] A1-06  § Deterministic vs LLM-Owned Subproblems — present and non-empty
 - [ ] A1-07  § Runtime and Isolation Model — present with at least isolation boundary, runtime mutation boundary, and rollback/recovery
 - [ ] A1-08  § Capability Profiles table — present with all five profiles declared ON or OFF (RAG, Tool-Use, Agentic, Planning, Compliance)
+- [ ] A1-08a § Harness Boundary — present when Tool-Use or Agentic is ON; covers model, prompt, tools, memory/state, retry/recovery, permissions, trace, HITL, and termination
 - [ ] A1-09  § Component Table — at least one row with name, file/directory, responsibility
 - [ ] A1-10  § Data Flow — numbered steps for primary request path
 - [ ] A1-11  § Tech Stack — table present with technology choices and rationale column (not blank)
@@ -106,6 +119,7 @@ Mode rules:
 - [ ] A1-16a § Cognition Layer — if present, declares repo authority, generated retrieval policy, context packet rules, and Obsidian optionality
 - [ ] A1-17  § Non-Goals — explicit list present (at minimum one item, including over-architecture non-goal)
 - [ ] A1-18  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Retrieval / Embedding Strategy, §Index Strategy, §Risks all present
+- [ ] A1-18a If RAG Profile = ON: data readiness gate present with source inventory, parser coverage, duplicate/stale handling, metadata, ACL, PII/regulated data, and gold evidence seed
 - [ ] A1-19  For each active profile declared ON: a justification paragraph is present below the Capability Profiles table
 - [ ] A1-20  Compliance Profile declared ON or OFF — if ON, §Applicable Frameworks, §Data Classification, §Audit Log Requirements, §Risks all present
 
@@ -130,8 +144,10 @@ Mode rules:
 - [ ] A3-07  Standard/Strict: T03 Depends-On includes T02 (or T01 and T02). Lean: verification dependency is explicit when separate from first task.
 - [ ] A3-08  No task has acceptance criteria containing the exact phrases: "works correctly", "handles properly", "is implemented", "functions as expected" — these are vague and untestable
 - [ ] A3-09  If RAG Profile = ON: at least one task tagged `Type: rag:ingestion` and at least one tagged `Type: rag:query` — they must be separate tasks, never merged
+- [ ] A3-09a If RAG Profile = ON and the corpus is not already production-proven: at least one task tagged `Type: rag:data-readiness` or an explicit architecture note that data readiness is complete
 - [ ] A3-10  If Tool-Use Profile = ON: at least one task tagged `Type: tool:schema` present
 - [ ] A3-11  If Agentic Profile = ON: at least one task tagged `Type: agent:loop` or `Type: agent:termination` present
+- [ ] A3-11a If Tool-Use or Agentic Profile = ON: at least one task or architecture section covers `agent:harness`, `agent:trace`, or equivalent harness boundary unless a complete harness card already exists
 - [ ] A3-12  If Planning Profile = ON: at least one task tagged `Type: plan:schema` present
 - [ ] A3-13  If Compliance Profile = ON: at least one task tagged `Type: compliance:control` and at least one tagged `Type: compliance:audit` present
 
@@ -171,6 +187,8 @@ Mode rules:
 - [ ] A5-16  If Agentic Profile = ON: `docs/agent_eval.md` file present and initialized
 - [ ] A5-17  If Planning Profile = ON: `docs/plan_eval.md` file present and initialized
 - [ ] A5-18  If Compliance Profile = ON: `docs/compliance_eval.md` file present and contains at least one control row with framework, description, and status fields
+- [ ] A5-19  If Tool-Use or Agentic Profile = ON: harness card or architecture harness boundary exists and includes trace, recovery, permissions, HITL, and eval contract
+- [ ] A5-20  If an LLM judge is used for release/eval authority: judge calibration artifact exists or judge is explicitly advisory-only
 
 ### A5b — Continuity artifacts
 
@@ -222,6 +240,15 @@ Mode rules:
 - [ ] A5f-09 Global skill install is absent or has explicit human approval and justification
 - [ ] A5f-10 Any skill that adds external tools, MCP access, agentic behavior, compliance impact, runtime mutation, or material AI cost is reflected in ARCHITECTURE.md, tasks.md, contract rules, and relevant capability/cost artifacts
 
+### A5g — Evaluation, RAG readiness, and harness artifacts
+
+- [ ] A5g-01 AI/model behavior has a first proof metric, dataset/eval source, and threshold or manual review rule
+- [ ] A5g-02 Evaluation cost, judge cost, and human-review budget are declared or explicitly not applicable
+- [ ] A5g-03 If RAG is active: data readiness evidence exists before retrieval metrics are treated as release evidence
+- [ ] A5g-04 If an LLM judge is used: status is disabled, advisory, blocking_allowed, or human_confirmed_blocking with evidence
+- [ ] A5g-05 If Tool-Use/Agentic is active: harness boundary and trace requirements are declared
+- [ ] A5g-06 If an autonomous routine is planned: trigger, idempotency, secret source, timeout, retry/fallback, monitoring, and budget are declared
+
 ### A6 — .github/workflows/ci.yml
 
 - [ ] A6-01  File exists and is parseable YAML
@@ -260,6 +287,11 @@ For each check, read both referenced documents and verify the claim. Mark CONSIS
 - [ ] B-08l Cost architecture consistency: model strategy, COST_BUDGET.md, ai_cost_architecture.md, provider_routing_policy.md, and tasks.md do not contradict workload classes, routing maturity, cache requirements, or escalation/cascade rules
 - [ ] B-08m Router eval consistency: if routing maturity is L5 or L6, router_eval.md includes traffic sample, candidate models, quality floor, latency target, cost target, cache-hit guard, escalation cap, unsupported language/domain handling, and stale-router policy
 - [ ] B-08n External skill consistency: installed/planned external skills have trust records; declared capabilities match ARCHITECTURE.md, tasks.md tags, Tool Catalog rows, runtime tier, and contract boundaries
+- [ ] B-08o Eval-first consistency: PROJECT_BRIEF/ARCHITECTURE/tasks/CODEX_PROMPT do not claim AI value without proof metric, eval dataset/source, threshold or manual review rule, and cost boundary
+- [ ] B-08p Judge consistency: any blocking judge has calibration evidence; advisory judges are not described as release authority
+- [ ] B-08q RAG data consistency: RAG Profile ON links data readiness, retrieval eval, generation eval, no-answer behavior, and acceptance criteria without treating E2E-only results as root-cause proof
+- [ ] B-08r Harness consistency: Tool-Use/Agentic tasks, architecture, AGENTS.md, eval artifacts, and trace schema agree on tools, permissions, retry/recovery, HITL, termination, and trace fields
+- [ ] B-08s Autonomous workflow consistency: routine tasks declare trigger/runtime/secrets/fallback/monitoring/budget and do not require a higher runtime tier than ARCHITECTURE.md declares
 - [ ] B-09  Standard/Strict T01/T02/T03 dependency chain: T01 Depends-On=none, T02 depends on T01, T03 depends on T01 or T02. Lean: first-task dependency chain is logically sound and has no cycles.
 - [ ] B-10  Tech stack consistency: every technology declared in ARCHITECTURE.md §Tech Stack that requires env vars has those env vars listed in §Runtime Contract
 - [ ] B-11  External integrations consistency: every service listed in ARCHITECTURE.md §External Integrations either (a) has env vars in §Runtime Contract, or (b) is documented as not requiring credentials
