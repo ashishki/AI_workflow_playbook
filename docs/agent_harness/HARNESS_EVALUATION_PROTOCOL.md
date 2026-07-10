@@ -31,7 +31,8 @@ Every Tool-Use or Agentic project should make these boundaries explicit:
 
 ## Versioned Contracts
 
-- `schemas/harness_eval_unit.schema.json`
+- `schemas/harness_eval_unit.schema.json` (draft planning contract until a
+  producer emits eval-unit artifacts)
 - `schemas/command_receipt.schema.json`
 - `schemas/failure_record.schema.json`
 - `schemas/run_result.schema.json`
@@ -88,6 +89,13 @@ An agent may produce output and trace, but it must not assign final `passed`,
 - independent scorers
 - a separate human-review receipt when human judgment is required
 
+For command adapters, the process exit code is part of the evidence. Non-zero
+adapter exits, missing commands, timeouts, scorer exceptions, and invalid bundle
+references create failure records and can fail the CLI with
+`--fail-on-invalid-run`. If a task requires a verification command, the harness
+runs it after the adapter and records a separate receipt; an agent's own prose
+claim is not treated as proof that tests passed.
+
 ## Companion Implementation
 
 The minimal runnable evaluation mechanism is implemented in:
@@ -99,9 +107,11 @@ The companion package:
 - consumes Playbook schemas and task files;
 - materializes a fresh workspace for every trial;
 - runs scripted or command adapters;
+- propagates adapter exit codes and required verification receipts;
 - executes independent scorers after the adapter;
 - writes EvidenceBundles;
-- compares baseline and candidate conditions from raw bundles.
+- validates bundles before comparing baseline and candidate conditions from raw
+  evidence.
 
 It is intentionally not a database, Web UI, Docker platform, provider gateway,
 or required dependency for ordinary Playbook adoption.

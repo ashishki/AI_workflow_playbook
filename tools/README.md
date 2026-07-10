@@ -9,13 +9,19 @@ telemetry. They do not require Obsidian, a vector database, or network access.
 python3 tools/init_playbook_project.py ../my-project \
   --mode lean-core \
   --project-name "My Project" \
+  --operational-pain "Agents need a reproducible verification scaffold." \
+  --current-workaround "Manual copying of playbook files." \
+  --first-proof-metric "Generated project verification exits zero." \
   --install-claude-hooks
 ```
 
 The initializer copies a proportional Lean-Core / Standard / Strict kit into a
 downstream repository. It does not overwrite existing files unless `--force` is
-passed. Use `--install-claude-hooks` to safely merge `.claude/settings.json`,
-copy hook scripts, set executable permissions, and run a hook smoke test.
+passed. The initializer requires concrete `--operational-pain`,
+`--current-workaround`, and `--first-proof-metric` values; `unknown`, `TBD`,
+`TODO`, and empty values are blocked. Use `--install-claude-hooks` to safely
+merge `.claude/settings.json`, copy hook scripts, set executable permissions,
+and run a hook smoke test. A failed hook smoke test returns a non-zero exit.
 Without that flag hooks are available but not claimed as active enforcement.
 Use `--external-skill NAME` to create a trust-record stub before any third-party
 skill is installed or enabled.

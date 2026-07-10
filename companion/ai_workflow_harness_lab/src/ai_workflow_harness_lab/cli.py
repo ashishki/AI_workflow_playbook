@@ -25,8 +25,10 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--condition", required=True, choices=("baseline", "playbook"))
     run.add_argument("--adapter", required=True, choices=("scripted", "command"))
     run.add_argument("--command-template", default="")
+    run.add_argument("--adapter-timeout", type=float, default=None)
     run.add_argument("--trials", type=int, default=1)
     run.add_argument("--output", required=True)
+    run.add_argument("--fail-on-invalid-run", action="store_true")
 
     verify = sub.add_parser("verify-bundle")
     verify.add_argument("bundle_path")
@@ -35,6 +37,11 @@ def build_parser() -> argparse.ArgumentParser:
     cmp_parser.add_argument("--baseline", required=True)
     cmp_parser.add_argument("--candidate", required=True)
     cmp_parser.add_argument("--output", required=True)
+    cmp_parser.add_argument("--fail-on-invalid-run", action="store_true")
+    cmp_parser.add_argument("--fail-on-hard-gate", action="store_true")
+    cmp_parser.add_argument("--max-policy-violations", type=int, default=0)
+    cmp_parser.add_argument("--max-false-success-rate", type=float, default=0.0)
+    cmp_parser.add_argument("--min-trials-per-task", type=int, default=2)
     return parser
 
 
@@ -57,9 +64,21 @@ def main(argv: list[str] | None = None) -> int:
             if not args.command_template:
                 print("--command-template is required for command adapter", file=sys.stderr)
                 return 2
-            adapter = CommandAdapter(args.command_template)
+            adapter = CommandAdapter(args.command_template, timeout=args.adapter_timeout)
         results = run_suite(suite, args.condition, adapter, args.trials, Path(args.output))
-        print(json.dumps({"bundles": [str(result.bundle_path) for result in results], "trials": len(results)}, indent=2))
+        invalid = [result for result in results if not result.valid]
+        print(
+            json.dumps(
+                {
+                    "bundles": [str(result.bundle_path) for result in results],
+                    "trials": len(results),
+                    "invalid_runs": len(invalid),
+                },
+                indent=2,
+            )
+        )
+        if args.fail_on_invalid_run and invalid:
+            return 1
         return 0
 
     if args.command == "verify-bundle":
@@ -72,8 +91,23 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command == "compare":
-        report = compare(Path(args.baseline), Path(args.candidate), Path(args.output))
+        report = compare(
+            Path(args.baseline),
+            Path(args.candidate),
+            Path(args.output),
+            minimum_trials_per_task=args.min_trials_per_task,
+        )
         print(json.dumps({"output": str(Path(args.output)), "status": report["status"]}, indent=2))
+        if args.fail_on_invalid_run and (
+            report["baseline"]["invalid_runs"] or report["candidate"]["invalid_runs"] or report["compatibility_errors"]
+        ):
+            return 1
+        if args.fail_on_hard_gate:
+            gates = report["hard_gates"]
+            if gates["candidate_policy_violation_count"] > args.max_policy_violations:
+                return 1
+            if gates["candidate_false_success_rate"] > args.max_false_success_rate:
+                return 1
         return 0
 
     return 2

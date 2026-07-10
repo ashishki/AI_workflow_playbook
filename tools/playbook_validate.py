@@ -17,6 +17,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+try:
+    from jsonschema import Draft202012Validator
+except ImportError:  # pragma: no cover - exercised by environments without dev deps.
+    Draft202012Validator = None  # type: ignore[assignment]
+
 
 FIELD_RE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):(?:\s*(.*))?$")
 TASK_HEADING_RE = re.compile(r"^###\s+([A-Za-z][A-Za-z0-9._-]*):\s*(.+?)\s*$")
@@ -322,30 +327,9 @@ def parse_task_blocks(path: Path) -> list[TaskBlock]:
     return tasks
 
 
-def validate_task_record(task: TaskBlock, root: Path) -> list[Finding]:
+def validate_task_record(task: TaskBlock, root: Path, schema_validator: Any | None = None) -> list[Finding]:
     findings: list[Finding] = []
     record = task.to_record()
-    required = [
-        "task_id",
-        "title",
-        "owner",
-        "phase",
-        "type_tags",
-        "objective",
-        "acceptance_criteria",
-    ]
-    for field_name in required:
-        value = record.get(field_name)
-        if value in ("", [], None):
-            findings.append(
-                Finding(
-                    "error",
-                    relative(root, task.path),
-                    task.field_lines.get(field_name, task.line),
-                    "TASK_REQUIRED_FIELD",
-                    f"task {task.task_id} missing required field `{field_name}`",
-                )
-            )
     if not record.get("verify") and not record.get("test"):
         findings.append(
             Finding(
@@ -356,28 +340,30 @@ def validate_task_record(task: TaskBlock, root: Path) -> list[Finding]:
                 f"task {task.task_id} must declare Verification/Verify or Test",
             )
         )
-    if "correction_budget" in record and not isinstance(record["correction_budget"], int):
-        findings.append(
-            Finding(
-                "error",
-                relative(root, task.path),
-                task.field_lines.get("correction_budget", task.line),
-                "TASK_CORRECTION_BUDGET",
-                f"task {task.task_id} correction budget must be an integer",
+    if schema_validator is not None:
+        for error in sorted(schema_validator.iter_errors(record), key=lambda item: list(item.path)):
+            field_path = ".".join(str(part) for part in error.path)
+            field_name = field_path.split(".", 1)[0] if field_path else ""
+            findings.append(
+                Finding(
+                    "error",
+                    relative(root, task.path),
+                    task.field_lines.get(field_name, task.line),
+                    "TASK_SCHEMA",
+                    f"task {task.task_id} schema violation: {error.message}",
+                )
             )
+        return findings
+    findings.append(
+        Finding(
+            "error",
+            relative(root, task.path),
+            task.line,
+            "SCHEMA_VALIDATOR_MISSING",
+            "jsonschema is required to validate task.schema.json",
         )
-    if isinstance(record.get("correction_budget"), int) and record["correction_budget"] > 10:
-        findings.append(
-            Finding(
-                "error",
-                relative(root, task.path),
-                task.field_lines.get("correction_budget", task.line),
-                "TASK_CORRECTION_BUDGET",
-                f"task {task.task_id} correction budget exceeds maximum 10",
-            )
-        )
+    )
     return findings
-
 
 def validate_dependency_graph(tasks: list[TaskBlock], root: Path) -> list[Finding]:
     findings: list[Finding] = []
@@ -490,11 +476,22 @@ def validate_tasks(root: Path) -> tuple[list[Finding], list[dict[str, Any]]]:
         findings.append(
             Finding("error", "docs/tasks.md", 1, "TASK_NONE_FOUND", "no task blocks found")
         )
+    schema_validator = task_schema_validator(root)
     for task in tasks:
-        findings.extend(validate_task_record(task, root))
+        findings.extend(validate_task_record(task, root, schema_validator))
     findings.extend(validate_dependency_graph(tasks, root))
     findings.extend(validate_context_refs(tasks, root))
     return findings, [task.to_record() for task in tasks]
+
+
+def task_schema_validator(root: Path) -> Any | None:
+    if Draft202012Validator is None:
+        return None
+    schema_path = root / "schemas" / "task.schema.json"
+    if not schema_path.exists():
+        schema_path = Path(__file__).resolve().parents[1] / "schemas" / "task.schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    return Draft202012Validator(schema)
 
 
 def should_skip_path(path: Path) -> bool:
@@ -575,6 +572,30 @@ def validate_json_schemas(root: Path) -> list[Finding]:
                     "schema file must contain a $schema field",
                 )
             )
+            continue
+        if Draft202012Validator is None:
+            findings.append(
+                Finding(
+                    "error",
+                    relative(root, path),
+                    1,
+                    "SCHEMA_VALIDATOR_MISSING",
+                    "jsonschema is required to validate JSON Schema contracts",
+                )
+            )
+            continue
+        try:
+            Draft202012Validator.check_schema(data)
+        except Exception as exc:
+            findings.append(
+                Finding(
+                    "error",
+                    relative(root, path),
+                    1,
+                    "SCHEMA_META_INVALID",
+                    str(exc),
+                )
+            )
     return findings
 
 
@@ -649,6 +670,12 @@ def validate_modes(root: Path) -> list[Finding]:
                 f"Mode {mode}",
                 "--verify-command",
                 f"{sys.executable} tools/verify_project.py --root .",
+                "--operational-pain",
+                f"Mode {mode} smoke validation needs reproducible project bootstrap.",
+                "--current-workaround",
+                "Manual fixture generation during validator tests.",
+                "--first-proof-metric",
+                "Generated project validator exits zero.",
             ]
             result = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             if result.returncode != 0:

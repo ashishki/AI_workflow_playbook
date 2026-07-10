@@ -89,6 +89,12 @@ def generated_project_checks(root: Path, output_dir: Path) -> list[CheckResult]:
                 f"Verify {mode}",
                 "--verify-command",
                 f"{sys.executable} tools/verify_project.py --root .",
+                "--operational-pain",
+                f"Verify {mode} smoke project bootstrap.",
+                "--current-workaround",
+                "Manual verification of generated artifacts.",
+                "--first-proof-metric",
+                "Generated project verification exits zero.",
             ]
             if mode == "strict":
                 init_cmd.append("--install-claude-hooks")
@@ -173,15 +179,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".")
     parser.add_argument("--output", default=None, help="Verification report path.")
+    parser.add_argument("--artifact-dir", default=None, help="Directory for raw verification artifacts.")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = Path(args.root).resolve()
-    run_dir = root / "reports" / "verification" / utc_stamp()
+    artifact_root = Path(args.artifact_dir) if args.artifact_dir else root / ".playbook-artifacts"
+    if not artifact_root.is_absolute():
+        artifact_root = root / artifact_root
+    run_dir = artifact_root / "verification" / utc_stamp()
     run_dir.mkdir(parents=True, exist_ok=True)
-    output = Path(args.output) if args.output else root / "reports/playbook_verification.json"
+    output = Path(args.output) if args.output else artifact_root / "playbook_verification.json"
     if not output.is_absolute():
         output = root / output
 
@@ -197,7 +207,7 @@ def main(argv: list[str] | None = None) -> int:
                 "--root",
                 str(root),
                 "--json",
-                "reports/playbook_validation.json",
+                str(artifact_root / "playbook_validation.json"),
             ],
         )
     )
@@ -218,7 +228,7 @@ def main(argv: list[str] | None = None) -> int:
                 "tools/validate_harness_evidence.py",
                 "tests/fixtures/evidence/valid_bundle/bundle.json",
                 "--json",
-                "reports/evidence_fixture_validation.json",
+                str(artifact_root / "evidence_fixture_validation.json"),
             ],
         )
     )

@@ -22,7 +22,19 @@ def run_init(target: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
     target = tmp_path / "lean-core"
-    result = run_init(target, "--mode", "lean-core", "--project-name", "Lean Smoke")
+    result = run_init(
+        target,
+        "--mode",
+        "lean-core",
+        "--project-name",
+        "Lean Smoke",
+        "--operational-pain",
+        "Agents need a small verified project scaffold.",
+        "--current-workaround",
+        "Manual copying of playbook files.",
+        "--first-proof-metric",
+        "Generated project verifier exits zero.",
+    )
 
     assert result.returncode == 0, result.stderr
     assert (target / "AGENTS.md").exists()
@@ -70,6 +82,12 @@ def test_install_claude_hooks_merges_settings(tmp_path: Path) -> None:
         "standard",
         "--project-name",
         "Hook Smoke",
+        "--operational-pain",
+        "Hook installation must preserve user settings.",
+        "--current-workaround",
+        "Manual hook copying.",
+        "--first-proof-metric",
+        "Hook smoke test passes.",
         "--install-claude-hooks",
     )
 
@@ -80,3 +98,23 @@ def test_install_claude_hooks_merges_settings(tmp_path: Path) -> None:
     assert (target / "hooks/guard_files.sh").exists()
     assert (target / "hooks/guard_files.sh").stat().st_mode & 0o111
     assert "hook smoke test passed" in result.stdout
+
+
+def test_initializer_rejects_unknown_readiness_values(tmp_path: Path) -> None:
+    target = tmp_path / "bad-readiness"
+    result = run_init(
+        target,
+        "--mode",
+        "lean-core",
+        "--project-name",
+        "Bad Readiness",
+        "--operational-pain",
+        "unknown",
+        "--current-workaround",
+        "Manual process.",
+        "--first-proof-metric",
+        "Verifier exits zero.",
+    )
+
+    assert result.returncode == 2
+    assert "--operational-pain is required" in result.stderr

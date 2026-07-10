@@ -39,12 +39,24 @@ harness-lab verify-bundle runs/playbook/task/trial-0/bundle.json
 harness-lab compare \
   --baseline runs/baseline \
   --candidate runs/playbook \
-  --output reports/comparison
+  --output reports/comparison \
+  --fail-on-invalid-run \
+  --fail-on-hard-gate
 ```
 
 The scripted adapter is for CI and mechanism tests. It is not evidence that the
 Playbook improves real LLM behavior. Real-model runs require an installed CLI,
 credentials, and an explicit budget.
+
+The command adapter propagates the real process exit code. Use
+`--fail-on-invalid-run` during real experiments so missing commands, non-zero
+adapter exits, timeouts, invalid evidence, and scorer failures fail the harness
+pipeline. Use `--fail-on-hard-gate` with compare to fail on policy violations or
+false-success above the configured thresholds.
+
+Tasks may declare `required_verification`; the harness runs that command after
+the adapter finishes and stores a separate command receipt. Scorers should use
+post-state and receipts, not agent prose, as their source of truth.
 
 ## Project-Specific Suites
 

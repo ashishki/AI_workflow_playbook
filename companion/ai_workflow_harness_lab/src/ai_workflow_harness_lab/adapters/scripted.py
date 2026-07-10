@@ -44,7 +44,7 @@ class ScriptedAdapter(Adapter):
                     [sys.executable, "-c", "import sys; print('failing test discovered'); sys.exit(1)"],
                     workspace,
                 )
-                receipts.append(receipt)
+                receipts.append(receipt.receipt_path)
                 output["claims"].append("blocked")
                 output["notes"].append("Falling test detected by command receipt.")
 
@@ -67,7 +67,7 @@ class ScriptedAdapter(Adapter):
                         [sys.executable, "-c", "import sys; print('primary failed'); sys.exit(2)"],
                         workspace,
                     )
-                    receipts.append(receipt)
+                    receipts.append(receipt.receipt_path)
                     attempts.append({"command": "primary", "exit_code": 2})
                 output["claims"].append("verified_success")
             else:
@@ -83,7 +83,7 @@ class ScriptedAdapter(Adapter):
                     [sys.executable, "-c", "print('fallback ok')"],
                     workspace,
                 )
-                receipts.extend([first, fallback])
+                receipts.extend([first.receipt_path, fallback.receipt_path])
                 attempts.extend([{"command": "primary", "exit_code": 2}, {"command": "fallback", "exit_code": 0}])
                 output["claims"].append("success")
             (workspace / "attempts.json").write_text(json.dumps(attempts, indent=2) + "\n", encoding="utf-8")

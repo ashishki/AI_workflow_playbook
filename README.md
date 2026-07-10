@@ -30,7 +30,7 @@ consumer when enforcement exists.
 | Lean-Core stays lighter than Standard/Strict | `tools/init_playbook_project.py`, `docs/adoption_modes.md` | generated-project matrix in `tools/verify_playbook.py` | initializer tests | pending | Tested |
 | Claude hooks are active only when installed | `templates/.claude/settings.json`, `hooks/*.sh` | `--install-claude-hooks` merge + smoke test | hook and initializer tests | pending | Tested |
 | Agent command claims need machine receipts | `schemas/command_receipt.schema.json` | `tools/receipt_run.py` | receipt success/failure/timeout tests | pending | Tested |
-| Evidence bundles are independently validated | `schemas/evidence_bundle.schema.json` | `tools/validate_harness_evidence.py` | hash tamper and mismatch tests | pending | Tested |
+| Evidence bundles are locally integrity-validated | `schemas/evidence_bundle.schema.json` | `tools/validate_harness_evidence.py` | hash tamper, path escape, schema mismatch tests | pending external attestation | Tested |
 | Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare` | scripted demonstration run | real-model run pending | Formalized / Tested for mechanism |
 | Project-specific harness claims require project-specific fixtures | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, `docs/adoption_modes.md` | companion suite with project fixtures, traps, scorers | suite validation + EvidenceBundles | pending per project | Formalized |
 | Role separation and review duties | `prompts/ORCHESTRATOR.md`, audit prompts | prompt protocol and optional hooks | review prompt checks | pending | Documented / Formalized |
@@ -42,7 +42,10 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **Strict role separation.** The Orchestrator never writes code. The implementation agent never reviews its own output. Review agents never write code. Today this is formalized in prompts and strengthened by optional hooks where the toolchain supports them.
 
-**Resumable state.** `docs/CODEX_PROMPT.md` is the single source of truth for live session state. Any agent, any session, any machine can resume exactly where the last one stopped. Nothing operational is held in conversational memory.
+**Resumable state.** `docs/CODEX_PROMPT.md`, `docs/tasks.md`, receipts, and
+project state artifacts are the source of truth for live session state. A new
+session can resume from those artifacts when they are current; conversational
+memory is never treated as authority.
 
 **Scoped continuity.** Prior decisions, implementation history, and proof are retrieved from explicit repo artifacts such as `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`, `docs/EVIDENCE_INDEX.md`, ADRs, and review archives. Retrieval is convenience, not authority.
 
@@ -50,15 +53,27 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 
 **Immutable contract.** `IMPLEMENTATION_CONTRACT.md` is the unchanging floor of the project. It does not evolve without an explicit ADR. This prevents incremental erosion of quality standards across phases.
 
-**Structured task format.** Every task in `docs/tasks.md` follows a YAML-compatible block schema: `Owner`, `Phase`, `Type`, `Depends-On`, `Objective`, `Acceptance-Criteria` (each entry has `id`, `description`, and a mode-appropriate `test:` or `verify:` field), `Files`, `Notes`. The Orchestrator reads task fields directly without LLM parsing. A criterion without concrete verification evidence is a PHASE1_VALIDATOR blocker.
+**Structured task format.** Tasks in `docs/tasks.md` are parsed into
+`schemas/task.schema.json` records by `tools/playbook_validate.py`. The parser
+supports Markdown task blocks while enforcing required owner, phase, tags,
+objective, acceptance criteria, verifier/test, dependencies, runtime
+verification, and correction-budget fields without LLM parsing.
 
 **Two-tier review.** Every task gets a lightweight 6-check security/contract review immediately after implementation. Every phase gets a deep four-agent review cycle: META → ARCH → CODE → CONSOLIDATED. The two tiers serve different purposes and neither replaces the other.
 
-**Baseline tracking with enforcement.** After Phase 1, the passing test count is recorded as the baseline. Every subsequent session must not decrease it. A session that breaks tests must not commit — this is a hard rule.
+**Baseline tracking.** After Phase 1, projects should record the passing test
+count and verification command as the baseline. It becomes enforceable when the
+project wires the verification command into CI, receipts, or a deterministic
+validator gate.
 
-**Finding lifecycle enforcement.** P2 findings that survive three review cycles without resolution are escalated, closed with justification, or deferred to v2. Findings cannot accumulate indefinitely.
+**Finding lifecycle.** P2 findings that survive three review cycles without
+resolution must be escalated, closed with justification, or deferred to v2. This
+is formalized in review protocol and becomes deterministic only when a project
+adds a finding index validator.
 
-**CI in Phase 1.** CI is mandatory in Phase 1. There is never a moment in this workflow when "tests pass locally but CI is unknown."
+**CI in Phase 1.** CI configuration is a Phase 1 requirement for Standard and
+Strict adoption. Until a current CI run or equivalent receipt exists, release
+readiness and empirical comparison claims must say CI status is unknown.
 
 **Problem-first adoption gate.** Before choosing agent shape or runtime, Phase 1 must name the concrete operational pain, current workaround, first proof metric, and claims that are out of bounds before evidence exists. This keeps the playbook attached to real workflow problems instead of demo-driven AI adoption.
 

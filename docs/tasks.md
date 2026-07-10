@@ -1,7 +1,7 @@
 # AI Workflow Playbook Tasks
 
 Status: active core framework task graph
-Last updated: 2026-06-09
+Last updated: 2026-07-10
 
 This file tracks framework work for the playbook itself. It is separate from
 project adoption tasks in downstream repositories.
@@ -131,25 +131,70 @@ Evidence:
 
 Owner: codex
 Type: docs protocol
-Status: planned
+Status: done 2026-07-10
 
 Objective: |
-  Define portable receipt examples for agent actions, decisions, referee reviews,
-  and risk acceptance without depending on Entropy Core at runtime.
+  Define and enforce portable receipt and evidence contracts for command
+  execution, failures, run results, and EvidenceBundles without depending on an
+  external runtime.
 
 Acceptance-Criteria:
-  - Receipt examples are YAML/JSON friendly.
-  - Each receipt names actor, claim/action, evidence, verifier, status, and
-    failure handling.
-  - Docs state that Entropy Core may later validate receipts optionally.
+  - CommandReceipt, FailureRecord, RunResult, HarnessEvalUnit, and
+    EvidenceBundle schemas exist under `schemas/`.
+  - `tools/receipt_run.py` creates real command receipts with stdout/stderr
+    artifacts, hashes, exit code, Git state, and no self-assigned verdict.
+  - `tools/validate_harness_evidence.py` validates schemas, hashes, references,
+    path containment, failure taxonomy, and policy-gate conflicts.
 
 Integration-Points:
   - `docs/runtime_verification_protocol.md`
-  - `docs/provider_routing_policy.md`
-  - `docs/cognition_layer_integrity.md`
+  - `templates/RUNTIME_VERIFICATION_RECORD.md`
+  - `schemas/command_receipt.schema.json`
+  - `schemas/failure_record.schema.json`
+  - `schemas/run_result.schema.json`
+  - `schemas/evidence_bundle.schema.json`
+  - `tools/receipt_run.py`
+  - `tools/validate_harness_evidence.py`
 
 Verification:
   - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/verify_playbook.py --root .`
+
+### AWP-EL-003: Real Command Evaluation Integrity
+
+Owner: codex
+Type: tools evaluation
+Status: done 2026-07-10
+
+Objective: |
+  Harden the companion harness so real command adapter failures, required
+  verification failures, invalid bundles, and hard gates cannot be silently
+  treated as valid benchmark data.
+
+Acceptance-Criteria:
+  - Command adapter result exit code matches the command receipt exit code.
+  - Runner creates failure records for non-zero adapter exits, timeouts, scorer
+    exceptions, required verification failures, and invalid infrastructure runs.
+  - Tasks can declare `required_verification`; the harness runs it after the
+    adapter and records a separate receipt.
+  - Comparison validates every bundle before reading scorer outputs, computes
+    evidence correctness, checks paired compatibility, and warns per task when
+    trial count is too low.
+  - CLI exposes `--fail-on-invalid-run`, `--fail-on-hard-gate`,
+    `--max-policy-violations`, and `--max-false-success-rate`.
+  - Evidence artifact refs reject absolute paths and `..` escapes.
+
+Integration-Points:
+  - `companion/ai_workflow_harness_lab/src/ai_workflow_harness_lab/receipts.py`
+  - `companion/ai_workflow_harness_lab/src/ai_workflow_harness_lab/adapters/command.py`
+  - `companion/ai_workflow_harness_lab/src/ai_workflow_harness_lab/runner.py`
+  - `companion/ai_workflow_harness_lab/src/ai_workflow_harness_lab/comparison.py`
+  - `companion/ai_workflow_harness_lab/src/ai_workflow_harness_lab/evidence.py`
+  - `tools/validate_harness_evidence.py`
+
+Verification:
+  - `python3 -m pytest companion/ai_workflow_harness_lab/tests/test_cli.py -q`
+  - `python3 -m pytest tests/unit/test_receipt_and_evidence.py -q`
   - `python3 tools/verify_playbook.py --root .`
 
 ### AWP-EL-002: Diverse Review Principle

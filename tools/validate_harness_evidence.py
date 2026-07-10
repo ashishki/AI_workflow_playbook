@@ -12,6 +12,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from jsonschema import Draft202012Validator
+except ImportError:  # pragma: no cover - covered by CI dependency installation.
+    Draft202012Validator = None  # type: ignore[assignment]
+
 
 FORBIDDEN_AGENT_VERDICT_FIELDS = {
     "passed",
@@ -85,6 +90,14 @@ FAILURE_REQUIRED = {
     "invalid_run",
 }
 
+SCHEMA_ROOT = Path(__file__).resolve().parents[1] / "schemas"
+SCHEMA_FILES = {
+    "bundle": "evidence_bundle.schema.json",
+    "receipt": "command_receipt.schema.json",
+    "failure": "failure_record.schema.json",
+    "run_result": "run_result.schema.json",
+}
+
 
 @dataclass
 class Finding:
@@ -127,18 +140,56 @@ def load_json(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     return data, []
 
 
+def schema_validator(name: str) -> Any | None:
+    if Draft202012Validator is None:
+        return None
+    schema = json.loads((SCHEMA_ROOT / SCHEMA_FILES[name]).read_text(encoding="utf-8"))
+    return Draft202012Validator(schema)
+
+
+def validate_schema(data: dict[str, Any], name: str, path: Path) -> list[Finding]:
+    validator = schema_validator(name)
+    if validator is None:
+        return [
+            Finding(
+                "error",
+                "SCHEMA_VALIDATOR_MISSING",
+                "jsonschema is required to validate evidence contracts",
+                str(path),
+            )
+        ]
+    findings: list[Finding] = []
+    for error in sorted(validator.iter_errors(data), key=lambda item: list(item.path)):
+        location = ".".join(str(part) for part in error.path)
+        suffix = f" at {location}" if location else ""
+        findings.append(
+            Finding(
+                "error",
+                f"{name.upper()}_SCHEMA",
+                f"{error.message}{suffix}",
+                str(path),
+            )
+        )
+    return findings
+
+
 def resolve_ref(bundle_dir: Path, artifact_ref: dict[str, Any]) -> Path:
     path = Path(str(artifact_ref.get("path", "")))
-    if not path.is_absolute():
-        path = bundle_dir / path
-    return path.resolve()
+    if path.is_absolute() or ".." in path.parts:
+        raise ValueError(f"path escape forbidden: {path}")
+    resolved = (bundle_dir / path).resolve()
+    resolved.relative_to(bundle_dir.resolve())
+    return resolved
 
 
 def validate_artifact_ref(bundle_dir: Path, artifact_ref: dict[str, Any], check_id: str) -> list[Finding]:
     findings: list[Finding] = []
     if not isinstance(artifact_ref, dict):
         return [Finding("error", check_id, "artifact ref must be an object")]
-    path = resolve_ref(bundle_dir, artifact_ref)
+    try:
+        path = resolve_ref(bundle_dir, artifact_ref)
+    except ValueError as exc:
+        return [Finding("error", "ARTIFACT_PATH_ESCAPE", str(exc))]
     expected = artifact_ref.get("sha256")
     if not path.exists():
         findings.append(Finding("error", check_id, f"referenced artifact missing: {path}", str(path)))
@@ -182,14 +233,15 @@ def validate_no_forbidden_verdict(data: dict[str, Any], path: Path, *, allow_fin
 
 def validate_receipt(bundle_dir: Path, ref: dict[str, Any], bundle_task_id: str) -> tuple[list[Finding], dict[str, Any] | None]:
     findings = validate_artifact_ref(bundle_dir, ref, "ARTIFACT_HASH")
-    path = resolve_ref(bundle_dir, ref)
     if findings:
         return findings, None
+    path = resolve_ref(bundle_dir, ref)
     receipt, load_findings = load_json(path)
     findings.extend(load_findings)
     if receipt is None:
         return findings, None
     findings.extend(validate_required(receipt, RECEIPT_REQUIRED, "RECEIPT_SCHEMA", path))
+    findings.extend(validate_schema(receipt, "receipt", path))
     findings.extend(validate_no_forbidden_verdict(receipt, path))
     if receipt.get("schema_version") != "playbook.command_receipt.v1":
         findings.append(Finding("error", "RECEIPT_SCHEMA", "unsupported receipt schema_version", str(path)))
@@ -208,8 +260,29 @@ def validate_receipt(bundle_dir: Path, ref: dict[str, Any], bundle_task_id: str)
         ("diff_stat_artifact_path", "diff_stat_sha256"),
     ):
         artifact_path = Path(str(receipt.get(artifact_path_key, "")))
-        if not artifact_path.is_absolute():
-            artifact_path = path.parent / artifact_path
+        if artifact_path.is_absolute() or ".." in artifact_path.parts:
+            findings.append(
+                Finding(
+                    "error",
+                    "RECEIPT_ARTIFACT_PATH_ESCAPE",
+                    f"receipt artifact path escapes receipt directory: {artifact_path}",
+                    str(path),
+                )
+            )
+            continue
+        artifact_path = (path.parent / artifact_path).resolve()
+        try:
+            artifact_path.relative_to(path.parent.resolve())
+        except ValueError:
+            findings.append(
+                Finding(
+                    "error",
+                    "RECEIPT_ARTIFACT_PATH_ESCAPE",
+                    f"receipt artifact path escapes receipt directory: {artifact_path}",
+                    str(path),
+                )
+            )
+            continue
         if not artifact_path.exists():
             findings.append(
                 Finding("error", "RECEIPT_ARTIFACT_MISSING", f"receipt artifact missing: {artifact_path}", str(path))
@@ -234,6 +307,7 @@ def validate_failure_record(record: dict[str, Any], bundle_task_id: str, source:
     if missing:
         findings.append(Finding("error", "FAILURE_RECORD_SCHEMA", "missing required fields: " + ", ".join(missing), source))
         return findings
+    findings.extend(validate_schema(record, "failure", Path(source)))
     if record.get("task_id") != bundle_task_id:
         findings.append(
             Finding(
@@ -301,6 +375,7 @@ def validate_bundle(bundle_path: Path, baseline_path: Path | None = None) -> dic
         return report(bundle_path, findings, receipts)
 
     findings.extend(validate_required(bundle, BUNDLE_REQUIRED, "BUNDLE_SCHEMA", bundle_path))
+    findings.extend(validate_schema(bundle, "bundle", bundle_path))
     findings.extend(validate_no_forbidden_verdict(bundle, bundle_path))
     if bundle.get("schema_version") != "playbook.evidence_bundle.v1":
         findings.append(Finding("error", "BUNDLE_SCHEMA", "unsupported evidence bundle schema_version", str(bundle_path)))
@@ -331,8 +406,16 @@ def validate_bundle(bundle_path: Path, baseline_path: Path | None = None) -> dic
             findings.append(Finding("error", "BUNDLE_SCHEMA", f"{key} must be a list", str(bundle_path)))
             continue
         for ref in refs:
-            findings.extend(validate_artifact_ref(bundle_dir, ref, "ARTIFACT_HASH"))
-            if key == "scorer_outputs" and isinstance(ref, dict):
+            ref_findings = validate_artifact_ref(bundle_dir, ref, "ARTIFACT_HASH")
+            findings.extend(ref_findings)
+            if key == "trace_refs" and isinstance(ref, dict) and not ref_findings:
+                trace_path = resolve_ref(bundle_dir, ref)
+                if trace_path.name == "run_result.json":
+                    run_result, load = load_json(trace_path)
+                    findings.extend(load)
+                    if run_result is not None:
+                        findings.extend(validate_schema(run_result, "run_result", trace_path))
+            if key == "scorer_outputs" and isinstance(ref, dict) and not ref_findings:
                 scorer_findings, scorer_data = validate_scorer_output(resolve_ref(bundle_dir, ref))
                 findings.extend(scorer_findings)
                 if scorer_data is not None:
@@ -351,7 +434,10 @@ def validate_bundle(bundle_path: Path, baseline_path: Path | None = None) -> dic
 
     for item in bundle.get("failure_records", []) if isinstance(bundle.get("failure_records"), list) else []:
         if isinstance(item, dict) and "path" in item and "sha256" in item:
-            findings.extend(validate_artifact_ref(bundle_dir, item, "ARTIFACT_HASH"))
+            ref_findings = validate_artifact_ref(bundle_dir, item, "ARTIFACT_HASH")
+            findings.extend(ref_findings)
+            if ref_findings:
+                continue
             data, load = load_json(resolve_ref(bundle_dir, item))
             findings.extend(load)
             if data is not None:

@@ -194,6 +194,26 @@ def test_bundle_without_environment_digest_breaks_validation(tmp_path: Path) -> 
     assert "BUNDLE_ENVIRONMENT_DIGEST" in result.stderr
 
 
+def test_bundle_path_escape_breaks_validation(tmp_path: Path) -> None:
+    bundle_dir = tmp_path / "bundle"
+    shutil.copytree(VALID_BUNDLE, bundle_dir)
+    bundle_path = bundle_dir / "bundle.json"
+    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+    bundle["command_receipts"][0]["path"] = "../../secret.json"
+    rewrite_bundle(bundle_path, bundle)
+
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "tools/validate_harness_evidence.py"), str(bundle_path)],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "ARTIFACT_PATH_ESCAPE" in result.stderr
+
+
 def test_manual_verdict_in_bundle_breaks_validation(tmp_path: Path) -> None:
     bundle_dir = tmp_path / "bundle"
     shutil.copytree(VALID_BUNDLE, bundle_dir)

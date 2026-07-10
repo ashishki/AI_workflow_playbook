@@ -12,8 +12,9 @@ class CommandAdapter(Adapter):
     adapter_id = "command"
     adapter_version = "command.v1"
 
-    def __init__(self, command_template: str):
+    def __init__(self, command_template: str, timeout: float | None = None):
         self.command_template = command_template
+        self.timeout = timeout
 
     def run(
         self,
@@ -34,7 +35,13 @@ class CommandAdapter(Adapter):
             output_dir=str(output_dir),
         )
         argv = ["/bin/sh", "-lc", command]
-        receipt = run_command_receipt(task.task_id, output_dir / "receipts/command", argv, workspace)
+        execution = run_command_receipt(
+            task.task_id,
+            output_dir / "receipts/command",
+            argv,
+            workspace,
+            timeout=self.timeout,
+        )
         output_path = output_dir / "agent_output.json"
         output_path.write_text(
             json.dumps(
@@ -53,9 +60,14 @@ class CommandAdapter(Adapter):
             encoding="utf-8",
         )
         return AdapterResult(
-            exit_code=0,
+            exit_code=execution.exit_code,
             output_path=output_path,
-            receipt_paths=[receipt],
+            receipt_paths=[execution.receipt_path],
             trace_paths=[],
-            metadata={"adapter": self.adapter_id, "adapter_version": self.adapter_version},
+            metadata={
+                "adapter": self.adapter_id,
+                "adapter_version": self.adapter_version,
+                "timed_out": execution.timed_out,
+                "command_receipt": str(execution.receipt_path),
+            },
         )

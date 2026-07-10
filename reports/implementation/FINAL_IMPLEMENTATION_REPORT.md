@@ -198,3 +198,42 @@ P3:
 - Additional adapters.
 - Optional reusable scorer plugin interface.
 - Larger benchmark suites with calibration and sampling manifests.
+
+## 12. P0 Hardening Addendum - 2026-07-10
+
+Status: implemented and verified locally.
+
+What changed:
+
+- Command adapter exit codes now propagate into `AdapterResult`.
+- Runner creates structured failure records for adapter non-zero exits,
+  timeouts, scorer failures, and required verification failures.
+- Tasks can declare `required_verification`; the harness runs it after the
+  adapter and stores a separate receipt.
+- `RunResult` artifacts are generated and referenced from EvidenceBundles.
+- Comparison validates bundles before reading scorer outputs, computes evidence
+  correctness, checks paired compatibility, and warns when any task has fewer
+  than the minimum trials.
+- CLI flags added: `--fail-on-invalid-run`, `--fail-on-hard-gate`,
+  `--max-policy-violations`, `--max-false-success-rate`.
+- Evidence refs reject absolute paths and `..` escapes.
+- Initializer rejects `unknown`, `TBD`, `TODO`, or empty project-readiness
+  answers for operational pain, current workaround, and first proof metric.
+- Runtime verification artifacts now default to ignored `.playbook-artifacts/`
+  instead of tracked timestamped report directories.
+
+Verification for this addendum:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `.venv/bin/python -m pytest -q` | 0 | 36 passed |
+| `.venv/bin/python tools/playbook_validate.py --root . --json .playbook-artifacts/playbook_validation.json` | 0 | 0 errors, 2 optional cognition reference warnings |
+| `.venv/bin/python tools/verify_playbook.py --root .` | 0 | 17 required checks, 0 failures |
+| `.venv/bin/python -m ai_workflow_harness_lab.cli compare --baseline .playbook-artifacts/eval-smoke/baseline --candidate .playbook-artifacts/eval-smoke/playbook --output .playbook-artifacts/eval-smoke/comparison --fail-on-invalid-run --fail-on-hard-gate` | 0 | candidate false-success 0.0, policy violations 0, per-task stability warning true |
+
+Remaining scope:
+
+- The evidence layer is locally integrity-validated, not externally attested.
+- Real-model comparison is still pending explicit budget and fixed provider/CLI
+  parameters.
+- `HarnessEvalUnit` remains a draft planning schema until a producer emits it.

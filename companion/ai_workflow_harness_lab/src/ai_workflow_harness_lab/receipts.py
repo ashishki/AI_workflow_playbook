@@ -11,6 +11,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from .models import ExecutionResult
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -36,7 +38,13 @@ def dirty(cwd: Path) -> list[str]:
     return result.stdout.splitlines() if result.stdout else []
 
 
-def run_command_receipt(task_id: str, output_dir: Path, argv: list[str], cwd: Path, timeout: float | None = None) -> Path:
+def run_command_receipt(
+    task_id: str,
+    output_dir: Path,
+    argv: list[str],
+    cwd: Path,
+    timeout: float | None = None,
+) -> ExecutionResult:
     output_dir.mkdir(parents=True, exist_ok=True)
     commit_before = git(["rev-parse", "HEAD"], cwd)
     dirty_before = dirty(cwd)
@@ -46,6 +54,11 @@ def run_command_receipt(task_id: str, output_dir: Path, argv: list[str], cwd: Pa
         exit_code = completed.returncode
         stdout = completed.stdout
         stderr = completed.stderr
+        timed_out = False
+    except FileNotFoundError as exc:
+        exit_code = 127
+        stdout = b""
+        stderr = f"command not found: {exc.filename}\n".encode("utf-8")
         timed_out = False
     except subprocess.TimeoutExpired as exc:
         exit_code = 124
@@ -91,7 +104,14 @@ def run_command_receipt(task_id: str, output_dir: Path, argv: list[str], cwd: Pa
     }
     receipt_path = output_dir / "receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return receipt_path
+    return ExecutionResult(
+        receipt_path=receipt_path,
+        exit_code=int(exit_code),
+        start_timestamp=start,
+        end_timestamp=end,
+        timed_out=timed_out,
+        command_argv=argv,
+    )
 
 
 def artifact_ref(path: Path, base: Path, kind: str, artifact_id: str | None = None) -> dict[str, Any]:

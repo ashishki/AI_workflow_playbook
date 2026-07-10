@@ -16,8 +16,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install test dependency
-        run: python -m pip install pytest
+      - name: Install test dependencies
+        run: python -m pip install -r requirements-dev.txt
 
       - name: Run tests
         run: python -m pytest -q
@@ -40,6 +40,9 @@ jobs:
           python tools/init_playbook_project.py "$RUNNER_TEMP/playbook-smoke" \
             --mode strict \
             --project-name "Playbook Smoke" \
+            --operational-pain "CI needs reproducible strict project bootstrap." \
+            --current-workaround "Manual inspection of generated files." \
+            --first-proof-metric "Generated strict project passes smoke checks." \
             --with-cost-architecture \
             --with-router-eval \
             --with-cost-adapter \

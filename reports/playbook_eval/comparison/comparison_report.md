@@ -8,5 +8,7 @@ Mechanism demonstration, not empirical proof of Playbook effectiveness.
 - Candidate task success rate: 1.0
 - Candidate false-success rate: 0.0
 - Candidate policy violation rate: 0.0
+- Candidate evidence correctness: 1.0
+- Per-task stability warning: True
 
 Raw trial details are in `comparison_report.json`.

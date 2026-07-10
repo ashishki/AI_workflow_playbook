@@ -16,6 +16,7 @@ class SuiteTask:
     scorers: list[dict[str, Any]]
     correction_budget: int
     expected_failure_taxonomy: list[str]
+    required_verification: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -33,6 +34,16 @@ class AdapterResult:
     receipt_paths: list[Path]
     trace_paths: list[Path]
     metadata: dict[str, Any]
+
+
+@dataclass
+class ExecutionResult:
+    receipt_path: Path
+    exit_code: int
+    start_timestamp: str
+    end_timestamp: str
+    timed_out: bool
+    command_argv: list[str]
 
 
 @dataclass

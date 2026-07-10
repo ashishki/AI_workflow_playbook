@@ -17,6 +17,7 @@ from pathlib import Path
 
 PLAYBOOK_ROOT = Path(__file__).resolve().parents[1]
 UNKNOWN_PLACEHOLDER_RE = re.compile(r"(?<!\$)\{\{[^{}\n]+\}\}")
+NOT_READY_VALUES = {"", "unknown", "tbd", "todo"}
 
 
 @dataclass
@@ -33,8 +34,31 @@ def render(text: str, replacements: dict[str, str]) -> str:
     rendered = text
     for key, value in replacements.items():
         rendered = rendered.replace("{{" + key + "}}", value)
-    rendered = UNKNOWN_PLACEHOLDER_RE.sub("unknown", rendered)
+    rendered = UNKNOWN_PLACEHOLDER_RE.sub(scaffold_placeholder, rendered)
     return rendered
+
+
+def scaffold_placeholder(match: re.Match[str]) -> str:
+    name = match.group(0).strip("{} ")
+    return f"not_applicable - scaffold placeholder {name}; replace before treating this section as authoritative"
+
+
+def readiness_value(value: str) -> str:
+    return value.strip()
+
+
+def validate_required_readiness(args: argparse.Namespace) -> list[str]:
+    required = {
+        "operational_pain": "--operational-pain",
+        "current_workaround": "--current-workaround",
+        "first_proof_metric": "--first-proof-metric",
+    }
+    errors: list[str] = []
+    for attr, flag in required.items():
+        value = readiness_value(str(getattr(args, attr, "")))
+        if value.lower() in NOT_READY_VALUES:
+            errors.append(f"{flag} is required and cannot be unknown/TBD/TODO/empty")
+    return errors
 
 
 def should_skip(path: Path, force: bool) -> bool:
@@ -180,15 +204,15 @@ Last updated: {{DATE}}
 
 ## Operational Pain
 
-unknown
+{{OPERATIONAL_PAIN}}
 
 ## Current Workaround
 
-unknown
+{{CURRENT_WORKAROUND}}
 
 ## First Proof Metric
 
-unknown
+{{FIRST_PROOF_METRIC}}
 
 ## Out-Of-Bounds Claims Before Evidence
 
@@ -389,8 +413,9 @@ def merge_settings(existing: dict[str, object], incoming: dict[str, object]) -> 
     return merged
 
 
-def install_claude_hooks(args: argparse.Namespace, target: Path, result: CopyResult) -> list[str]:
+def install_claude_hooks(args: argparse.Namespace, target: Path, result: CopyResult) -> tuple[list[str], bool]:
     messages: list[str] = []
+    failed = False
     template_path = PLAYBOOK_ROOT / "templates/.claude/settings.json"
     settings = json.loads(template_path.read_text(encoding="utf-8"))
     settings_path = target / ".claude/settings.json"
@@ -430,6 +455,7 @@ def install_claude_hooks(args: argparse.Namespace, target: Path, result: CopyRes
                 check=False,
             )
             if smoke.returncode != 0:
+                failed = True
                 messages.append(
                     "hook smoke test failed: "
                     + (smoke.stderr.strip() or smoke.stdout.strip() or str(smoke.returncode))
@@ -437,8 +463,9 @@ def install_claude_hooks(args: argparse.Namespace, target: Path, result: CopyRes
             else:
                 messages.append("hook smoke test passed")
         else:
+            failed = True
             messages.append("hook smoke test skipped: guard_files.sh not installed")
-    return messages
+    return messages, failed
 
 
 def add_optional_files(args: argparse.Namespace, target: Path, replacements: dict[str, str], result: CopyResult) -> None:
@@ -484,6 +511,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("target", help="Target repository directory.")
     parser.add_argument("--mode", choices=("lean-core", "lean", "standard", "strict"), default="standard")
     parser.add_argument("--project-name", default="")
+    parser.add_argument("--answers-file", help="JSON file with initializer readiness answers.")
+    parser.add_argument("--operational-pain", default="")
+    parser.add_argument("--current-workaround", default="")
+    parser.add_argument("--first-proof-metric", default="")
     parser.add_argument("--verify-command", default="python3 tools/verify_project.py --root .")
     parser.add_argument("--with-cost-architecture", action="store_true")
     parser.add_argument("--with-router-eval", action="store_true")
@@ -498,6 +529,16 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    if args.answers_file:
+        answers = json.loads(Path(args.answers_file).read_text(encoding="utf-8"))
+        for attr in ("operational_pain", "current_workaround", "first_proof_metric"):
+            if not getattr(args, attr) and attr in answers:
+                setattr(args, attr, str(answers[attr]))
+    readiness_errors = validate_required_readiness(args)
+    if readiness_errors:
+        for error in readiness_errors:
+            print(f"init_playbook_project: {error}", file=sys.stderr)
+        return 2
     target = Path(args.target).resolve()
     project_name = args.project_name or target.name
     mode = "lean-core" if args.mode == "lean" else args.mode
@@ -507,6 +548,9 @@ def main(argv: list[str] | None = None) -> int:
         "MODE": mode,
         "DATE": today,
         "VERIFY_COMMAND": args.verify_command,
+        "OPERATIONAL_PAIN": readiness_value(args.operational_pain),
+        "CURRENT_WORKAROUND": readiness_value(args.current_workaround),
+        "FIRST_PROOF_METRIC": readiness_value(args.first_proof_metric),
         "PYTHON_VERSION": "3.12",
         "APP_DIR": "app",
         "APP_MODULE": "app.main",
@@ -523,6 +567,7 @@ def main(argv: list[str] | None = None) -> int:
         target.mkdir(parents=True, exist_ok=True)
 
     hook_messages: list[str] = []
+    hook_failed = False
     if mode == "lean-core":
         add_lean_core_files(args, target, replacements, result)
     else:
@@ -535,7 +580,7 @@ def main(argv: list[str] | None = None) -> int:
             args.with_cost_architecture = True
     add_optional_files(args, target, replacements, result)
     if args.install_claude_hooks:
-        hook_messages = install_claude_hooks(args, target, result)
+        hook_messages, hook_failed = install_claude_hooks(args, target, result)
 
     print(f"init_playbook_project: target={target}")
     print(f"init_playbook_project: mode={mode}")
@@ -546,7 +591,7 @@ def main(argv: list[str] | None = None) -> int:
     for message in hook_messages:
         print(f"  hooks: {message}")
     print(f"init_playbook_project: created={len(result.created)} skipped={len(result.skipped)}")
-    return 0
+    return 1 if args.install_claude_hooks and hook_failed else 0
 
 
 if __name__ == "__main__":

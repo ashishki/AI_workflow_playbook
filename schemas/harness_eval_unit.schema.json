@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ai-workflow-playbook.local/schemas/harness_eval_unit.schema.json",
   "title": "HarnessEvalUnit",
+  "$comment": "Draft planning contract. The MVP companion suite does not yet emit HarnessEvalUnit artifacts; do not treat this schema as an enforced runtime contract until a producer is added.",
   "type": "object",
   "required": [
     "schema_version",

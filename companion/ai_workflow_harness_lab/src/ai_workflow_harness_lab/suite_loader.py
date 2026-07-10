@@ -51,6 +51,7 @@ def load_task(suite_path: Path, item: dict[str, Any]) -> SuiteTask:
         scorers=list(item["scorers"]),
         correction_budget=int(item["correction_budget"]),
         expected_failure_taxonomy=list(item["expected_failure_taxonomy"]),
+        required_verification=item.get("required_verification"),
     )
     for path in (task.fixture, task.baseline_prompt, task.playbook_prompt):
         if not path.exists():

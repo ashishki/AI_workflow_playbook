@@ -58,6 +58,21 @@ benchmark-defect failures are recorded separately from model capability. An
 environment failure is not converted to model score 0 unless a scorer explicitly
 marks it as a task failure.
 
+The command adapter propagates the real process exit code. Non-zero adapter
+exits, missing commands, timeouts, and scorer exceptions create structured
+failure records. With strict CLI flags, those failures return a non-zero harness
+exit instead of silently entering a comparison as valid capability data.
+
+When a task declares `required_verification`, the harness runs that command
+after the adapter finishes and records a separate command receipt. Success is
+based on post-state scorers and verification receipts, not on natural-language
+agent claims.
+
+Comparison validates each EvidenceBundle before reading scorer outputs. Tampered
+or invalid bundles are marked invalid, evidence correctness is computed from
+validation, and stability warnings are calculated per task rather than from the
+aggregate bundle count.
+
 ## Metrics
 
 Reports include task success rate, verified environment success rate,
@@ -78,6 +93,10 @@ environment digest, scorer versions/hashes, trial index, timeout, retry policy,
 permission configuration, token source, pricing source, traces, receipts,
 post-state manifest, redaction policy, exclusions, and invalid-run reason.
 
+The MVP is locally integrity-validated evidence. Do not describe a bundle as
+independently attested unless CI provenance, a signature, or another separate
+trust-domain mechanism is attached.
+
 ## Commands
 
 Scripted mechanism demonstration:
@@ -86,7 +105,7 @@ Scripted mechanism demonstration:
 harness-lab validate-suite companion/ai_workflow_harness_lab/suites/playbook_core_v1
 harness-lab run --suite companion/ai_workflow_harness_lab/suites/playbook_core_v1 --condition baseline --adapter scripted --trials 1 --output reports/playbook_eval/baseline
 harness-lab run --suite companion/ai_workflow_harness_lab/suites/playbook_core_v1 --condition playbook --adapter scripted --trials 1 --output reports/playbook_eval/playbook
-harness-lab compare --baseline reports/playbook_eval/baseline --candidate reports/playbook_eval/playbook --output reports/playbook_eval/comparison
+harness-lab compare --baseline reports/playbook_eval/baseline --candidate reports/playbook_eval/playbook --output reports/playbook_eval/comparison --fail-on-invalid-run --fail-on-hard-gate
 ```
 
 Real-model example with Codex CLI:
@@ -98,7 +117,8 @@ harness-lab run \
   --adapter command \
   --command-template 'codex exec -s workspace-write "$(cat {prompt_file})"' \
   --trials 3 \
-  --output reports/playbook_eval/codex_playbook
+  --output reports/playbook_eval/codex_playbook \
+  --fail-on-invalid-run
 ```
 
 Do not run paid or networked model experiments without an explicit budget.

@@ -7,7 +7,7 @@ name = "ai-workflow-harness-lab"
 version = "0.1.0"
 description = "Standalone companion evaluation lab for AI Workflow Playbook"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["jsonschema>=4.22"]
 
 [project.scripts]
 harness-lab = "ai_workflow_harness_lab.cli:main"

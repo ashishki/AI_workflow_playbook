@@ -37,7 +37,7 @@ This guide explains how to use AI Workflow Playbook in practice for:
 ### Standard / Strict Repository
 
 1. Prefer the initializer:
-   `python3 AI_workflow_playbook/tools/init_playbook_project.py <target> --mode standard`.
+   `python3 AI_workflow_playbook/tools/init_playbook_project.py <target> --mode standard --operational-pain "..." --current-workaround "..." --first-proof-metric "..."`.
 2. If bootstrapping manually, copy `PLAYBOOK.md`, `prompts/`, `templates/`,
    `hooks/`, `ci/ci.yml`, `tools/`, and `schemas/`.
 3. Copy the appropriate Claude/Codex entrypoint if your agent surface uses one.
@@ -126,6 +126,9 @@ python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py \
   /path/to/target-project \
   --mode standard \
   --project-name "Target Project" \
+  --operational-pain "Name the concrete workflow pain." \
+  --current-workaround "Name how the team handles it today." \
+  --first-proof-metric "Name the first measurable proof." \
   --with-cost-architecture \
   --with-cost-adapter
 ```
@@ -133,7 +136,9 @@ python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py \
 Add `--external-skill NAME` before installing a third-party skill. Add
 `--with-router-eval` before dynamic routing or cascades. The initializer skips
 existing files by default; use `--force` only when you intentionally want to
-replace generated artifacts.
+replace generated artifacts. It rejects empty, `unknown`, `TBD`, or `TODO`
+readiness values so generated projects do not pass placeholder checks with fake
+project-fit evidence.
 
 Manual path: copy only the selected mode's kit into the target repo.
 
