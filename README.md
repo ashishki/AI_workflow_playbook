@@ -215,23 +215,39 @@ Read `docs/project_fit_guide.md`, then select a mode from
 
 ### 2. New Project
 
-1. Choose Lean-Core, Standard, or Strict.
-2. Copy only the kit required by that mode.
-3. Declare AI/model budget boundaries if the project uses LLMs, agents, dynamic workflows, or recurring eval/review calls. Add cost architecture when usage is recurring/material or uses prompt caching, batch lanes, dynamic routing, or cascades.
-4. If using Claude Code and Standard/Strict, copy `.claude` settings/commands and hooks.
-5. Run `/bootstrap-new` or produce the mode's starter artifacts manually.
-6. Run the Phase 1 validator in the selected mode.
-7. Start the orchestrator or Lean task/review loop.
+Prefer the deterministic initializer:
+
+```bash
+python3 tools/init_playbook_project.py /path/to/new-project \
+  --mode lean-core \
+  --project-name "New Project" \
+  --operational-pain "Name the concrete workflow pain." \
+  --current-workaround "Name how the team handles it today." \
+  --first-proof-metric "Name the first measurable proof." \
+  --verify-command "python3 tools/verify_project.py --root ."
+```
+
+For Standard/Strict Claude Code projects, add `--install-claude-hooks`; for
+material AI cost/routing/skill scope, add the relevant explicit flags. Then run
+the generated project's validator and verification command before starting
+implementation.
 
 ### 3. Existing Project
 
-1. Choose Lean-Core, Standard, or Strict.
-2. Copy only the kit required by that mode.
-3. Normalize CI or document the local verification command.
-4. Declare AI/model budget boundaries for recurring or material AI usage. Add cost architecture when the existing system already has prompt caching, batch lanes, dynamic routing, cascades, or provider/model tiering.
-5. Run `/bootstrap-retrofit` only if the repo needs the full bootstrap flow.
-6. Run the Phase 1 validator in the selected mode.
-7. Start from the first real incomplete task.
+Run the initializer from inside the existing repo with the real stack command:
+
+```bash
+python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py . \
+  --mode lean-core \
+  --project-name "Existing Project" \
+  --operational-pain "Name the real pain in this repo." \
+  --current-workaround "Name the current workaround." \
+  --first-proof-metric "Name the first proof adoption helped." \
+  --verify-command "pytest -q"
+```
+
+Do not fake a greenfield Phase 1. Validate the generated artifacts, then start
+from the first real incomplete task.
 
 ### Mental Model
 

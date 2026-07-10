@@ -5,6 +5,193 @@ This guide explains how to use AI Workflow Playbook in practice for:
 1. a new repository
 2. an already existing repository
 
+## Current Recommended Launch Path
+
+Use the deterministic initializer first. The older slash-command bootstrap
+flows are still useful as Claude Code entrypoints for Standard/Strict projects,
+but they should not replace the initializer, validator, receipts, or project
+readiness answers.
+
+### New Lean-Core Project
+
+Lean-Core is the default starting point when the project only needs task
+discipline, a compact contract, and one runnable verification path.
+
+```bash
+python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py \
+  /path/to/new-project \
+  --mode lean-core \
+  --project-name "New Project" \
+  --operational-pain "Name the concrete workflow pain." \
+  --current-workaround "Name how the team handles it today." \
+  --first-proof-metric "Name the first measurable proof." \
+  --verify-command "python3 tools/verify_project.py --root ."
+```
+
+Then verify the generated project:
+
+```bash
+cd /path/to/new-project
+python3 tools/playbook_validate.py --root .
+python3 tools/verify_project.py --root .
+```
+
+### New Standard Or Strict Project
+
+Use Standard when the project has a recoverable product workflow. Use Strict for
+PII, compliance, privileged tools, persistent agents, destructive actions, or
+high-cost/hard-to-reverse changes.
+
+```bash
+python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py \
+  /path/to/new-project \
+  --mode standard \
+  --project-name "New Project" \
+  --operational-pain "Name the concrete workflow pain." \
+  --current-workaround "Name how the team handles it today." \
+  --first-proof-metric "Name the first measurable proof." \
+  --verify-command "python3 tools/verify_project.py --root ." \
+  --install-claude-hooks
+```
+
+Add optional capabilities only when they are actually in scope:
+
+```bash
+--with-cost-architecture
+--with-router-eval
+--with-cost-adapter
+--external-skill "skill-name"
+```
+
+`--install-claude-hooks` safely merges `.claude/settings.json`, copies hook
+scripts, makes them executable, and runs a hook smoke test. If the smoke test
+fails, the initializer returns a non-zero exit. Without this flag, hooks are
+available but not active enforcement.
+
+### Existing Repository Retrofit
+
+Do not fake a greenfield Phase 1. Run the initializer from inside the existing
+repository with the real verification command for that stack:
+
+```bash
+cd /path/to/existing-project
+python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py \
+  . \
+  --mode lean-core \
+  --project-name "Existing Project" \
+  --operational-pain "Name the real pain in this existing repo." \
+  --current-workaround "Name the current workaround or manual process." \
+  --first-proof-metric "Name the first proof that adoption helped." \
+  --verify-command "pytest -q"
+```
+
+Use the project's real command:
+
+```bash
+--verify-command "npm test"
+--verify-command "pnpm test && pnpm lint"
+--verify-command "make test"
+--verify-command "cargo test"
+```
+
+Then verify:
+
+```bash
+python3 tools/playbook_validate.py --root .
+python3 tools/verify_project.py --root .
+```
+
+The first task after retrofit should be the first real incomplete task, not a
+fake skeleton task unless the repository genuinely lacks a usable skeleton.
+
+### Claude Code Operating Pattern
+
+Use Claude as orchestrator/reviewer, especially in Standard and Strict modes.
+Claude should read:
+
+- `AGENTS.md` or `docs/CODEX_PROMPT.md`
+- `docs/tasks.md`
+- `docs/CONTRACT_LITE.md` or `docs/IMPLEMENTATION_CONTRACT.md`
+- `docs/adoption_modes.md`
+
+Claude's job is to select the next task, prepare the Codex prompt, inspect
+receipts and validator output, and enforce review boundaries. Claude should not
+treat an agent's prose summary as evidence that tests passed.
+
+If you use Claude Code slash commands, `/bootstrap-new` and
+`/bootstrap-retrofit` are entrypoints for generating or organizing the package.
+After that, the deterministic checks above are still required.
+
+### Codex Operating Pattern
+
+Use Codex as the implementation agent. A minimal task prompt is:
+
+```text
+Read AGENTS.md, docs/tasks.md, and docs/CONTRACT_LITE.md.
+Pick the next planned task or use the task ID I provide.
+Make the minimal implementation.
+Run the declared test or verification command.
+Do not claim success without command evidence.
+If verification fails, fix within the correction budget or report BLOCKED.
+```
+
+For higher-risk tasks, run verification through a command receipt:
+
+```bash
+python3 tools/receipt_run.py \
+  --task-id T01 \
+  --output-dir reports/receipts/T01 \
+  -- pytest -q
+```
+
+The receipt records stdout/stderr artifacts, hashes, exit code, Git state, and
+environment summary. It does not assign `passed`, `verified`, or
+`release_ready`.
+
+### Harness And Evaluation
+
+The companion harness is not required for ordinary Lean-Core or Standard use.
+Use it when you need evidence that a Playbook workflow improves false-success,
+policy compliance, recovery, or regression behavior.
+
+The bundled `playbook_core_v1` suite proves the mechanism works. It is not proof
+for your product. A project-specific benchmark needs project-specific fixtures,
+traps, independent scorers, pass/fail rules, and baseline vs Playbook-Min
+prompts.
+
+Recommended real-command comparison shape:
+
+```bash
+harness-lab run \
+  --suite path/to/project_suite \
+  --condition baseline \
+  --adapter command \
+  --command-template 'codex exec -s workspace-write "$(cat {prompt_file})"' \
+  --trials 3 \
+  --output runs/baseline \
+  --fail-on-invalid-run
+
+harness-lab run \
+  --suite path/to/project_suite \
+  --condition playbook \
+  --adapter command \
+  --command-template 'codex exec -s workspace-write "$(cat {prompt_file})"' \
+  --trials 3 \
+  --output runs/playbook \
+  --fail-on-invalid-run
+
+harness-lab compare \
+  --baseline runs/baseline \
+  --candidate runs/playbook \
+  --output reports/comparison \
+  --fail-on-invalid-run \
+  --fail-on-hard-gate
+```
+
+Do not run paid or networked model experiments until the model, provider,
+adapter, permission profile, timeout, retry policy, trial count, and budget are
+fixed.
+
 ## Cheat Sheet
 
 ### 1. Choose Mode
@@ -96,9 +283,10 @@ playbook.
 
 ## New Repository
 
-### Fastest Claude Code entrypoint for Standard/Strict
+### Optional Claude Code entrypoint for Standard/Strict
 
-If you are using Claude Code, you do not need to replace the system prompt manually every time.
+Prefer `init_playbook_project.py --install-claude-hooks`. Use the manual steps
+below only when you intentionally are not using the initializer.
 
 Recommended setup for Standard/Strict:
 
@@ -140,7 +328,7 @@ replace generated artifacts. It rejects empty, `unknown`, `TBD`, or `TODO`
 readiness values so generated projects do not pass placeholder checks with fake
 project-fit evidence.
 
-Manual path: copy only the selected mode's kit into the target repo.
+Manual fallback: copy only the selected mode's kit into the target repo.
 
 Lean:
 
@@ -274,9 +462,10 @@ Do not fake greenfield.
 
 Retrofit the playbook onto the current repo reality instead of pretending the project is starting from zero.
 
-### Fastest Claude Code entrypoint for Standard/Strict
+### Optional Claude Code entrypoint for Standard/Strict
 
-If you are using Claude Code for a Standard/Strict retrofit, copy:
+Prefer `init_playbook_project.py --install-claude-hooks`. If you are doing a
+manual Standard/Strict retrofit with Claude Code, copy:
 
 1. read `docs/project_fit_guide.md`
 2. `templates/.claude/settings.json` -> `.claude/settings.json`
@@ -291,7 +480,8 @@ This lets Claude start the retrofit flow as a command without changing the syste
 
 ### 1. Add the governance kit
 
-Copy:
+Manual fallback only. The initializer handles the proportional copy path for
+normal use. If bootstrapping manually, copy:
 
 - `PLAYBOOK.md`
 - `docs/project_fit_guide.md`
