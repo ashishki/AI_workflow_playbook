@@ -7,10 +7,181 @@ This guide explains how to use AI Workflow Playbook in practice for:
 
 ## Current Recommended Launch Path
 
-Use the deterministic initializer first. The older slash-command bootstrap
-flows are still useful as Claude Code entrypoints for Standard/Strict projects,
-but they should not replace the initializer, validator, receipts, or project
-readiness answers.
+Use a brief-first launch when the human will fill the project brief manually.
+The deterministic initializer runs only after the human approves the filled
+brief. The older slash-command bootstrap flows are still useful as Claude Code
+entrypoints for Standard/Strict projects, but they should not replace the
+initializer, validator, receipts, or project readiness answers.
+
+### Human-Filled Brief Gate
+
+This is the safest default for a fresh repository.
+
+Assume the Playbook is available as a Git checkout:
+
+```bash
+PLAYBOOK=/path/to/AI_workflow_playbook
+PROJECT=/path/to/new-project
+```
+
+#### Stage 1 - Copy Intake Pack Only
+
+Run this from the fresh target repository:
+
+```bash
+cd "$PROJECT"
+mkdir -p docs
+
+cp "$PLAYBOOK/templates/PROJECT_BRIEF.md" docs/PROJECT_BRIEF.md
+cp "$PLAYBOOK/docs/project_fit_guide.md" docs/project_fit_guide.md
+cp "$PLAYBOOK/docs/adoption_modes.md" docs/adoption_modes.md
+cp "$PLAYBOOK/docs/usage_guide.md" docs/usage_guide.md
+```
+
+Then stop. The human fills:
+
+```text
+docs/PROJECT_BRIEF.md
+```
+
+Do not copy the full Playbook kit yet. Do not run the initializer yet. Do not
+write application code yet.
+
+A valid brief must contain concrete answers for:
+
+- project name
+- operational pain
+- current workaround
+- first proof metric
+- verification command
+- expected AI/model usage
+- external tools/skills expected
+- risk level or enough risk context to choose Lean-Core, Standard, or Strict
+
+The human approval message should be explicit:
+
+```text
+BRIEF APPROVED
+Mode: lean-core | standard | strict
+Verification command: ...
+Install Claude hooks: yes | no
+Optional flags: cost-architecture/router-eval/cost-adapter/external-skill none|...
+```
+
+#### Stage 1 Agent Prompt
+
+Use this prompt with Codex or Claude in the target repository:
+
+```text
+You are preparing a fresh repository for AI Workflow Playbook adoption.
+
+Current repository is the target project.
+Playbook source Git checkout is:
+/path/to/AI_workflow_playbook
+
+Do not write application code.
+Do not run the initializer.
+Do not copy the full Playbook kit.
+
+Copy only the intake pack from the Playbook Git checkout:
+- templates/PROJECT_BRIEF.md -> docs/PROJECT_BRIEF.md
+- docs/project_fit_guide.md -> docs/project_fit_guide.md
+- docs/adoption_modes.md -> docs/adoption_modes.md
+- docs/usage_guide.md -> docs/usage_guide.md
+
+After copying, stop and report that the human must fill docs/PROJECT_BRIEF.md.
+Do not continue until the human sends BRIEF APPROVED.
+```
+
+#### Stage 2 - Bootstrap After Approval
+
+After the human fills and approves `docs/PROJECT_BRIEF.md`, run the initializer
+from the Playbook Git checkout against the target repository.
+
+Lean-Core example:
+
+```bash
+python3 "$PLAYBOOK/tools/init_playbook_project.py" . \
+  --mode lean-core \
+  --project-name "Project Name" \
+  --operational-pain "Concrete pain from docs/PROJECT_BRIEF.md" \
+  --current-workaround "Current workaround from docs/PROJECT_BRIEF.md" \
+  --first-proof-metric "First proof metric from docs/PROJECT_BRIEF.md" \
+  --verify-command "pytest -q"
+```
+
+Standard with Claude hooks:
+
+```bash
+python3 "$PLAYBOOK/tools/init_playbook_project.py" . \
+  --mode standard \
+  --project-name "Project Name" \
+  --operational-pain "Concrete pain from docs/PROJECT_BRIEF.md" \
+  --current-workaround "Current workaround from docs/PROJECT_BRIEF.md" \
+  --first-proof-metric "First proof metric from docs/PROJECT_BRIEF.md" \
+  --verify-command "pytest -q" \
+  --install-claude-hooks
+```
+
+The initializer skips existing files by default, so a filled
+`docs/PROJECT_BRIEF.md` is not overwritten unless `--force` is explicitly used.
+Do not use `--force` during bootstrap unless the human explicitly approves
+overwriting files.
+
+Then validate:
+
+```bash
+python3 tools/playbook_validate.py --root .
+python3 tools/verify_project.py --root .
+```
+
+#### Stage 2 Agent Prompt
+
+Use this prompt only after the human has approved the filled brief:
+
+```text
+The human has approved docs/PROJECT_BRIEF.md.
+
+Current repository is the target project.
+Playbook source Git checkout is:
+/path/to/AI_workflow_playbook
+
+Do not write application code yet.
+Do not use --force.
+
+Read:
+- docs/PROJECT_BRIEF.md
+- docs/project_fit_guide.md
+- docs/adoption_modes.md
+- docs/usage_guide.md
+
+Extract:
+- project name
+- selected mode from the human approval
+- operational pain
+- current workaround
+- first proof metric
+- verification command
+- whether Claude hooks should be installed
+- optional initializer flags
+
+If any required value is missing, stop and ask the human. Do not invent it.
+
+Run /path/to/AI_workflow_playbook/tools/init_playbook_project.py against this
+repository with those values.
+
+After initialization, run:
+python3 tools/playbook_validate.py --root .
+python3 tools/verify_project.py --root .
+
+Do not claim success unless both commands pass.
+Report:
+- selected mode
+- generated or skipped files
+- validation result
+- verification result
+- next recommended task
+```
 
 ### New Lean-Core Project
 

@@ -215,7 +215,13 @@ Read `docs/project_fit_guide.md`, then select a mode from
 
 ### 2. New Project
 
-Prefer the deterministic initializer:
+If the human will fill `docs/PROJECT_BRIEF.md` manually, use
+[docs/usage_guide.md §Human-Filled Brief Gate](docs/usage_guide.md#human-filled-brief-gate):
+copy only the intake pack from the Playbook Git checkout, stop for human brief
+approval, then run the initializer.
+
+If the brief values are already known, run the deterministic initializer
+directly:
 
 ```bash
 python3 tools/init_playbook_project.py /path/to/new-project \
