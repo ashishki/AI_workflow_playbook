@@ -110,6 +110,9 @@ harness-lab compare --baseline reports/playbook_eval/baseline --candidate report
 
 Real-model example with Codex CLI:
 
+Run this from an external shell or CI harness process. Do not run it from inside
+an active Codex Direct project session, because that would spawn nested Codex.
+
 ```bash
 harness-lab run \
   --suite companion/ai_workflow_harness_lab/suites/playbook_core_v1 \

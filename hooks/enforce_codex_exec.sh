@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # PreToolUse hook: enforce_codex_exec.sh
 # Blocks direct Claude Write/Edit/MultiEdit operations on application code paths.
-# Code changes must go through `codex exec` via Bash so the implementation agent
-# remains the only writer of application code.
+# Legacy/external Claude Code orchestration only. Code changes must go through a
+# separate Codex process via Bash so the implementation agent remains the only
+# writer of application code.
+#
+# Do not install this hook for Codex Direct projects. In Codex Direct mode, the
+# active Codex session writes code and runs commands directly.
 #
 # Configuration:
 #   PLAYBOOK_CODE_PATH_PREFIXES  colon-separated relative path prefixes treated as
@@ -37,7 +41,8 @@ for PREFIX in "${PATHS[@]}"; do
 
   if [[ "$FILE_PATH" == "$PREFIX"* ]] || [[ "$FILE_PATH" == *"/${PREFIX}"* ]]; then
     echo "BLOCKED: direct Claude edits to application code are disabled for '${FILE_PATH}'." >&2
-    echo "Use Bash -> codex exec, pass the prompt file, and wait for IMPLEMENTATION_RESULT." >&2
+    echo "This hook is for legacy external Claude orchestration." >&2
+    echo "Use an external Codex process from Claude, or disable this hook for Codex Direct projects." >&2
     echo "This repository reserves application code writing for Codex, not Claude subagents." >&2
     exit 2
   fi

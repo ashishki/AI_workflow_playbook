@@ -26,12 +26,20 @@ cycle.
 
 ## How to use
 
-Paste this entire file as a prompt to Claude Code. No variables to fill at runtime.
-The orchestrator reads all state from `docs/CODEX_PROMPT.md` and `docs/tasks.md` at runtime.
+This is a legacy/external Claude Code orchestration prompt. Paste it only into
+Claude Code or another non-Codex orchestrator that will launch Codex as a
+separate external process.
+
+Do not paste this file into an active Codex Direct implementation session. In
+Codex Direct mode, the running Codex agent is already the implementer and must
+not call nested `codex exec`, `codex run`, or another Codex CLI process.
+
+The orchestrator reads all state from `docs/CODEX_PROMPT.md` and
+`docs/tasks.md` at runtime.
 
 ---
 
-## Tool split — hard rule
+## Tool split - external orchestration only
 
 | Role | Tool | Why |
 |---|---|---|
@@ -41,12 +49,14 @@ The orchestrator reads all state from `docs/CODEX_PROMPT.md` and `docs/tasks.md`
 | Strategy reviewer | `Agent tool` (general-purpose) | architectural reasoning |
 
 <!-- {{CODEX_COMMAND}} is the implementation agent invocation.
-     Default and recommended value:
-     - Codex CLI: codex exec -s workspace-write
+     This placeholder is for legacy/external orchestration only.
 
-     This playbook assumes application code is written by Codex via Bash -> codex exec,
-     not by Claude subagents. Replace this placeholder only if your environment requires
-     a wrapper around the same Codex CLI path.
+     Current default for new projects is Codex Direct: the active Codex session
+     runs shell commands directly and does not spawn nested Codex CLI processes.
+
+     Use a command such as `codex exec -s workspace-write` only when a separate
+     non-Codex orchestrator or harness process is launching Codex from outside
+     the active Codex session.
 
      The command must accept a prompt string as its final argument, be able to read/write
      files under {{PROJECT_ROOT}}, and execute shell commands (test runner, linter). -->
@@ -1149,10 +1159,13 @@ Replace every `{{PLACEHOLDER}}` before using this template. The table below list
 |---|---|---|
 | `{{PROJECT_NAME}}` | Human-readable project name used in agent system prompts | `my-api-service` |
 | `{{PROJECT_ROOT}}` | Absolute path to the repository root on disk | `/home/alice/my-api-service` |
-| `{{CODEX_COMMAND}}` | The implementation agent invocation — see note below | `codex exec -s workspace-write` |
+| `{{CODEX_COMMAND}}` | Legacy/external implementation agent invocation - see note below | external only |
 | `{{NOTIFICATION_CHANNEL}}` | Optional out-of-band notification mechanism — see note below | Telegram bot, Slack webhook, or omit |
 
-**`{{CODEX_COMMAND}}` — implementation agent options:**
+**`{{CODEX_COMMAND}}` - external implementation agent options:**
+
+Do not use these options from inside an active Codex Direct session. They are
+for a separate orchestrator or harness process.
 
 The orchestrator expects a command that:
 1. Accepts a prompt string as its final argument (via shell variable, not stdin)

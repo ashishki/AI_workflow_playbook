@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # PostToolUse hook: log_bash.sh
 # Logs every Bash command (with exit code) to docs/hooks_log.txt.
-# Extracts IMPLEMENTATION_RESULT from codex exec invocations.
+# Extracts IMPLEMENTATION_RESULT from legacy external codex exec invocations.
 #
 # Runs async (async: true in settings.json) — does not block the Orchestrator.
 #
@@ -47,7 +47,7 @@ TASK_TAG="${CURRENT_TASK:-?}"
 
 echo "[$TIMESTAMP] [TASK:${TASK_TAG}] EXIT=${EXIT_CODE}  ${STATUS}  ${COMMAND}" >> "$LOG_FILE"
 
-# For codex exec/run: extract IMPLEMENTATION_RESULT line from stdout
+# For legacy external codex exec/run: extract IMPLEMENTATION_RESULT line from stdout
 if echo "$COMMAND" | grep -qE "codex (exec|run)"; then
   RESULT=$(echo "$STDOUT" | grep -oE "IMPLEMENTATION_RESULT: (DONE|BLOCKED)" | tail -1 || true)
   if [ -n "$RESULT" ]; then

@@ -1,5 +1,5 @@
 {
-  "_comment": "Copy this file to .claude/settings.json in your project root. Hook scripts must be executable: chmod +x hooks/*.sh",
+  "_comment": "Legacy/external Claude Code orchestration only. Do not install for Codex Direct projects. Hook scripts must be executable: chmod +x hooks/*.sh",
   "hooks": {
     "PreToolUse": [
       {

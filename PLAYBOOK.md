@@ -965,7 +965,7 @@ Every project's `docs/prompts/ORCHESTRATOR.md` must have all 7 steps filled in w
 |---|---|
 | Project name | Used in all agent system prompts |
 | Project root | Absolute path on disk |
-| Implementation agent command | `codex exec` or `Agent tool (general-purpose)` — whichever is available |
+| Implementation agent command | Codex Direct by default; external `codex exec` only for legacy/non-Codex orchestration or harness runs |
 | Test command | `pytest tests/ -q` or `python3 -m unittest discover tests/ -q` |
 | Lint command | `ruff check` or skip if not enforced |
 | Notification channel | Telegram bot, Slack, desktop notify, or remove if not needed |
@@ -1552,7 +1552,7 @@ Hooks execute at the shell process level, independent of LLM decisions. They enf
 | Hook event | File | What it does |
 |-----------|------|-------------|
 | `PreToolUse(Write\|Edit\|MultiEdit)` | `hooks/guard_files.sh` | Blocks writes to `docs/IMPLEMENTATION_CONTRACT.md`, `prompts/ORCHESTRATOR.md`, and `docs/audit/AUDIT_INDEX.md`. Exit 2 stops the tool and feeds the reason back to the Orchestrator. |
-| `PostToolUse(Bash)` | `hooks/log_bash.sh` | Appends every Bash command and its exit code to `docs/hooks_log.txt`, tagged with `[TASK:T##]` when `CURRENT_TASK` env var is set by the orchestrator's Execute block. For `codex exec` invocations, also extracts and logs `IMPLEMENTATION_RESULT: DONE\|BLOCKED`. Async — does not slow the Orchestrator. |
+| `PostToolUse(Bash)` | `hooks/log_bash.sh` | Appends every Bash command and its exit code to `docs/hooks_log.txt`, tagged with `[TASK:T##]` when `CURRENT_TASK` env var is set by the orchestrator's Execute block. For legacy external `codex exec` invocations, also extracts and logs `IMPLEMENTATION_RESULT: DONE\|BLOCKED`. Async — does not slow the Orchestrator. |
 | `Stop` | `hooks/save_checkpoint.sh` | Writes active task, Fix Queue size, and timestamp to `/tmp/orchestrator_checkpoint.md` whenever the Claude Code session ends. If `NOTIFICATION_TOKEN` and `NOTIFICATION_TARGET` env vars are set and `SILENT` ≠ 1, also sends a brief resume summary to the configured notification channel. Set `SILENT=1` for automated or cron-driven sessions to suppress delivery while still writing the checkpoint file. |
 
 **Activation** (per project, not in this template repo):
@@ -1567,7 +1567,7 @@ Per-session env vars:
 
 | Variable | Hook | Effect |
 |----------|------|--------|
-| `CURRENT_TASK=T07` | `log_bash.sh` | Tags every log line with the active task ID — set this in the orchestrator's Execute block before each `codex exec` call |
+| `CURRENT_TASK=T07` | `log_bash.sh` | Tags every log line with the active task ID. In Codex Direct mode, set it before direct shell verification; legacy external orchestrators may set it before a separate `codex exec` call. |
 | `SILENT=1` | `save_checkpoint.sh` | Suppresses session-end notification; checkpoint file is still written — use for cron or automated sessions |
 | `NOTIFICATION_TOKEN=<bot_token>` | `save_checkpoint.sh` | Telegram bot token for session-end push — omit to disable |
 | `NOTIFICATION_TARGET=<chat_id>` | `save_checkpoint.sh` | Telegram chat ID for session-end push — omit to disable |

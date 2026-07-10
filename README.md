@@ -131,9 +131,16 @@ declared capabilities, SkillSpector or equivalent scan evidence, finding triage,
 install scope, and risk acceptance. Clean scans and signatures are evidence, not
 proof of safety.
 
-**Codex-only code writing.** Claude-side direct edits to application code can be blocked with hooks so implementation goes only through `Bash -> codex exec`, preserving the implementer/reviewer split. A separate phase-boundary hook can block `CODEX_PROMPT.md` phase advancement until the completed phase has an archived review entry.
+**Codex Direct execution.** The current supported default is a direct Codex
+session in the target repository. Codex reads the approved brief and Playbook
+artifacts, runs shell commands directly, writes code directly, and records
+evidence through receipts and validators. Do not ask an active Codex session to
+spawn nested `codex exec`, `codex run`, or another Codex CLI process.
 
-**Default implementation command.** The default and recommended implementation path is `codex exec -s workspace-write` invoked from Bash with a prompt file. The playbook's intended operating model is: Claude orchestrates and reviews; Codex writes application code.
+**External orchestration is separate.** `codex exec` remains valid for CI, the
+standalone harness command adapter, or a separate non-Codex orchestrator process
+running outside the active Codex session. It is not the current bootstrap path
+for new Codex Direct projects.
 
 ---
 
@@ -518,51 +525,27 @@ agent context.
 
 ## How to Start a New Project
 
-Fast path with Claude Code for Standard/Strict:
+Current supported path: Codex Direct brief-first bootstrap. The full algorithm
+is in [docs/usage_guide.md](docs/usage_guide.md).
 
-1. Check `docs/project_fit_guide.md`
-2. Copy `templates/.claude/settings.json` to `.claude/settings.json`
-3. Copy `templates/.claude/commands/bootstrap-new.md` to `.claude/commands/bootstrap-new.md`
-4. Copy `hooks/*.sh` and make them executable
-5. Run `/bootstrap-new`
+1. Open Codex in the fresh target repository.
+2. Copy only the intake pack from this Playbook checkout:
+   `templates/PROJECT_BRIEF.md`, `docs/project_fit_guide.md`,
+   `docs/adoption_modes.md`, and `docs/usage_guide.md`.
+3. Stop. The human fills `docs/PROJECT_BRIEF.md`, optionally with help from a
+   top-tier model outside the target repo.
+4. Continue only after an explicit `BRIEF APPROVED` message with mode,
+   verification command, and optional flags.
+5. Codex runs `tools/init_playbook_project.py`, validators, tests, and receipt
+   commands directly from the active session.
 
-This does not replace validation or orchestration. It gives Claude a standard bootstrap entrypoint without changing the system prompt.
+Do not configure a nested Codex command for this path. An active Codex session
+must not call `codex exec`, `codex run`, or another Codex CLI process inside
+itself.
 
-Lean-Core projects may skip this command path and create the smaller artifact set
-from `docs/adoption_modes.md` directly.
-
-1. Open a Claude session (Claude.ai or Claude Code).
-2. Set `prompts/STRATEGIST.md` as the system prompt.
-3. Fill `templates/PROJECT_BRIEF.md` or describe the same fields in chat: concrete pain, current workaround, adoption proof metric, domain, workflows, AI scope, deterministic candidates, expected scale, constraints, risk boundaries, AI/model budget, and compliance requirements.
-4. The Strategist asks clarifying questions, then produces the starter package for the selected mode:
-   - Lean: `docs/tasks.md`, short `docs/CODEX_PROMPT.md` or `AGENTS.md`, contract-lite, CI/local verification command, review checklist, inline budget/cost architecture notes, and inline external-skill trust notes or dedicated artifacts when needed
-   - Standard/Strict:
-     - `docs/ARCHITECTURE.md`, `docs/spec.md`, `docs/tasks.md`
-     - `docs/CODEX_PROMPT.md`, `docs/IMPLEMENTATION_CONTRACT.md`
-     - `docs/COST_BUDGET.md` when recurring AI usage, agent loops, dynamic workflows, multi-user AI features, or material inference cost are present
-     - `docs/ai_cost_architecture.md` when AI spend is recurring/material, prompt caching or batch lanes are used, or model routing/cascades affect quality/cost
-     - `docs/router_eval.md` when dynamic routing or cascades are used
-     - `docs/security/skills/{skill-name}/TRUST_RECORD.md` before external skill install/update/enablement
-     - `.github/workflows/ci.yml`
-     - Review prompts: `docs/audit/PROMPT_0_META.md` through `PROMPT_3_CONSOLIDATED.md`, `docs/audit/AUDIT_INDEX.md`
-     - If Compliance=ON: `docs/compliance_eval.md` (with framework-specific control rows)
-     - If NFR constraints stated: `docs/nfr.md` (with SLA table)
-5. Copy `prompts/ORCHESTRATOR.md` to `your-project/docs/prompts/ORCHESTRATOR.md`, fill the project-root placeholder, and set the Codex command placeholder to `codex exec -s workspace-write` unless your environment requires a wrapper around the same command.
-6. Copy hooks and settings:
-   ```bash
-   cp -r hooks/ your-project/hooks/
-   mkdir -p your-project/.claude/
-   cp templates/.claude/settings.json your-project/.claude/settings.json
-   chmod +x your-project/hooks/*.sh
-   ```
-7. Run the Phase 1 Validator in the selected mode before starting implementation:
-   - Open a Claude session with `prompts/PHASE1_VALIDATOR.md` as the prompt
-   - Set `Mode: Lean-Core`, `Mode: Standard`, or `Mode: Strict`
-   - It produces `docs/audit/PHASE1_AUDIT.md` — resolve all mode-relevant BLOCKERs before proceeding
-8. Open a Claude Code session with `docs/prompts/ORCHESTRATOR.md` as the system prompt.
-9. Say: "Start Phase 1." The Orchestrator reads `docs/CODEX_PROMPT.md` and begins.
-
-The human sits at every phase gate. From there, the loop runs itself.
+Legacy/external Claude Code bootstrap commands and `prompts/ORCHESTRATOR.md`
+remain available for projects that intentionally run a separate non-Codex
+orchestrator process. They are not the current default launch path.
 
 ## How to Retrofit an Existing Project
 
@@ -570,14 +553,18 @@ Do not pretend the repo is greenfield.
 
 Use the playbook as a governance retrofit:
 
-Fast path with Claude Code:
+Current Codex Direct path:
 
-1. Copy `templates/.claude/settings.json` to `.claude/settings.json`
-2. Copy `templates/.claude/commands/bootstrap-retrofit.md` to `.claude/commands/bootstrap-retrofit.md`
-3. Copy `hooks/*.sh` and make them executable
-4. Run `/bootstrap-retrofit`
+1. Open Codex in the existing repository.
+2. Copy the intake pack and fill/approve `docs/PROJECT_BRIEF.md` against the
+   real repository state.
+3. Run `tools/init_playbook_project.py` with the selected mode and the
+   repository's real verification command.
+4. Run `python3 tools/playbook_validate.py --root .` and
+   `python3 tools/verify_project.py --root .`.
 
-This starts the retrofit bootstrap as a command-driven flow without replacing the system prompt.
+Legacy/external Claude Code can still use `/bootstrap-retrofit`, but that path
+requires a separate non-Codex orchestrator process and is not the default.
 
 1. Generate `docs/ARCHITECTURE.md` from current reality, not from an imagined rewrite.
 2. Create `docs/CODEX_PROMPT.md` using the real current baseline and next task.

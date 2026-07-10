@@ -48,6 +48,10 @@ The scripted adapter is for CI and mechanism tests. It is not evidence that the
 Playbook improves real LLM behavior. Real-model runs require an installed CLI,
 credentials, and an explicit budget.
 
+Command-adapter examples are launched by an external shell, CI job, or harness
+worker. Do not run them from inside an active Codex Direct project session,
+because that would spawn nested Codex.
+
 The command adapter propagates the real process exit code. Use
 `--fail-on-invalid-run` during real experiments so missing commands, non-zero
 adapter exits, timeouts, invalid evidence, and scorer failures fail the harness
@@ -76,6 +80,9 @@ Scaffolded directories are acceptable as a starting point. Automatically
 invented benchmark content is not acceptable evidence.
 
 ## Generic Command Adapter Examples
+
+These commands are external adapter examples. They are not the Codex Direct
+bootstrap path.
 
 Codex:
 

@@ -13,6 +13,22 @@ brief. The older slash-command bootstrap flows are still useful as Claude Code
 entrypoints for Standard/Strict projects, but they should not replace the
 initializer, validator, receipts, or project readiness answers.
 
+### Current Execution Model: Codex Direct
+
+The currently supported default is **Codex Direct**:
+
+- the human opens a Codex session in the target repository;
+- Codex reads the copied Playbook files and the approved project brief;
+- Codex runs shell commands, initializer commands, validators, and tests
+  directly from the active session;
+- Codex must not spawn a nested Codex process with `codex exec`, `codex run`,
+  or another Codex CLI invocation from inside that active Codex session.
+
+`codex exec` examples in this repository are external-orchestration examples
+only: CI, the standalone harness command adapter, or a separate non-Codex
+orchestrator process may use them from outside the active Codex session. They
+are not the bootstrap path for a Codex Direct project.
+
 ### Human-Filled Brief Gate
 
 This is the safest default for a fresh repository.
@@ -68,9 +84,12 @@ Install Claude hooks: yes | no
 Optional flags: cost-architecture/router-eval/cost-adapter/external-skill none|...
 ```
 
+For Codex Direct, use `Install Claude hooks: no` unless the human explicitly
+chooses the legacy/external Claude Code orchestration path.
+
 #### Stage 1 Agent Prompt
 
-Use this prompt with Codex or Claude in the target repository:
+Use this prompt with Codex in the target repository:
 
 ```text
 You are preparing a fresh repository for AI Workflow Playbook adoption.
@@ -78,6 +97,10 @@ You are preparing a fresh repository for AI Workflow Playbook adoption.
 Current repository is the target project.
 Playbook source Git checkout is:
 /path/to/AI_workflow_playbook
+
+Execution model: Codex Direct.
+If you are Codex, do not invoke `codex exec`, `codex run`, or any nested Codex
+CLI. You are the active bootstrap agent; run shell commands directly.
 
 Do not write application code.
 Do not run the initializer.
@@ -110,7 +133,7 @@ python3 "$PLAYBOOK/tools/init_playbook_project.py" . \
   --verify-command "pytest -q"
 ```
 
-Standard with Claude hooks:
+Standard with legacy/external Claude hooks:
 
 ```bash
 python3 "$PLAYBOOK/tools/init_playbook_project.py" . \
@@ -137,7 +160,7 @@ python3 tools/verify_project.py --root .
 
 #### Stage 2 Agent Prompt
 
-Use this prompt only after the human has approved the filled brief:
+Use this prompt with Codex only after the human has approved the filled brief:
 
 ```text
 The human has approved docs/PROJECT_BRIEF.md.
@@ -145,6 +168,10 @@ The human has approved docs/PROJECT_BRIEF.md.
 Current repository is the target project.
 Playbook source Git checkout is:
 /path/to/AI_workflow_playbook
+
+Execution model: Codex Direct.
+If you are Codex, do not invoke `codex exec`, `codex run`, or any nested Codex
+CLI. You are the active bootstrap agent; run shell commands directly.
 
 Do not write application code yet.
 Do not use --force.
@@ -237,7 +264,8 @@ Add optional capabilities only when they are actually in scope:
 `--install-claude-hooks` safely merges `.claude/settings.json`, copies hook
 scripts, makes them executable, and runs a hook smoke test. If the smoke test
 fails, the initializer returns a non-zero exit. Without this flag, hooks are
-available but not active enforcement.
+available but not active enforcement. In Codex Direct mode, leave this flag off
+unless the human intentionally enables the legacy/external Claude Code path.
 
 ### Existing Repository Retrofit
 
@@ -275,10 +303,12 @@ python3 tools/verify_project.py --root .
 The first task after retrofit should be the first real incomplete task, not a
 fake skeleton task unless the repository genuinely lacks a usable skeleton.
 
-### Claude Code Operating Pattern
+### Legacy Claude Code Operating Pattern
 
-Use Claude as orchestrator/reviewer, especially in Standard and Strict modes.
-Claude should read:
+This is a legacy/external orchestration path, not the current Codex Direct
+default. Use it only when the project intentionally runs Claude Code as the
+orchestrator and Codex as a separate external implementation process. Claude
+should read:
 
 - `AGENTS.md` or `docs/CODEX_PROMPT.md`
 - `docs/tasks.md`
@@ -293,15 +323,18 @@ If you use Claude Code slash commands, `/bootstrap-new` and
 `/bootstrap-retrofit` are entrypoints for generating or organizing the package.
 After that, the deterministic checks above are still required.
 
-### Codex Operating Pattern
+### Codex Direct Operating Pattern
 
-Use Codex as the implementation agent. A minimal task prompt is:
+Use Codex as the active implementation agent. Do not ask Codex to call
+`codex exec` inside itself; the current Codex session is already the execution
+agent. A minimal task prompt is:
 
 ```text
 Read AGENTS.md, docs/tasks.md, and docs/CONTRACT_LITE.md.
 Pick the next planned task or use the task ID I provide.
 Make the minimal implementation.
-Run the declared test or verification command.
+Run shell commands directly, including the declared test or verification
+command.
 Do not claim success without command evidence.
 If verification fails, fix within the correction budget or report BLOCKED.
 ```
@@ -331,6 +364,9 @@ traps, independent scorers, pass/fail rules, and baseline vs Playbook-Min
 prompts.
 
 Recommended real-command comparison shape:
+
+The `codex exec` template below is for an external harness process. Do not run
+it from inside an active Codex Direct project session.
 
 ```bash
 harness-lab run \
@@ -607,6 +643,10 @@ Recommended:
 - copy `hooks/*.sh`
 - make hooks executable
 
+This is for the legacy/external Claude Code orchestration path. For Codex
+Direct bootstrap, do not install Claude hooks unless the human explicitly asks
+for that separate path.
+
 ### 4. Validate Phase 1
 
 Run the Phase 1 validator before any implementation task.
@@ -616,7 +656,12 @@ mode-relevant blockers are resolved.
 
 ### 5. Start the Orchestrator
 
-Open Claude Code with `docs/prompts/ORCHESTRATOR.md`.
+For Codex Direct, skip the Claude orchestrator and continue in the active Codex
+session using the approved brief, `AGENTS.md`, `docs/tasks.md`, and the project
+verification command.
+
+For the legacy/external Claude Code path only, open Claude Code with
+`docs/prompts/ORCHESTRATOR.md`.
 
 The orchestrator should:
 
@@ -752,6 +797,9 @@ This order preserves momentum while tightening governance over time.
 
 ## What Command-Based Bootstrap Does And Does Not Do
 
+This section describes the legacy/external Claude Code command flow. It is not
+the current Codex Direct bootstrap path.
+
 What it does:
 
 - gives Claude a standard entrypoint
@@ -793,13 +841,20 @@ Small env vars that change hook behaviour without touching code.
 
 ### Task-tagged bash logs
 
-Set `CURRENT_TASK` before each `codex exec` invocation to annotate every bash log line with the active task ID:
+Set `CURRENT_TASK` before task-scoped shell work to annotate hook logs with the
+active task ID.
+
+In Codex Direct mode, run commands directly from the active Codex session:
 
 ```bash
 export CURRENT_TASK="T07"
-PROMPT=$(cat /tmp/orchestrator_codex_prompt.txt)
-cd /path/to/project && codex exec -s workspace-write "$PROMPT"
+cd /path/to/project
+pytest -q
 ```
+
+Do not invoke nested `codex exec` from inside Codex Direct. Legacy external
+orchestrators may still set `CURRENT_TASK` before launching their separate
+implementation process.
 
 The log at `docs/hooks_log.txt` will then show:
 
@@ -808,7 +863,9 @@ The log at `docs/hooks_log.txt` will then show:
 [2026-04-03T12:00:01Z] [TASK:T07]   └─ IMPLEMENTATION_RESULT: DONE
 ```
 
-This is already included in the ORCHESTRATOR.md Execute block template — fill in the task ID each time.
+This is included in the legacy `ORCHESTRATOR.md` Execute block template for
+external orchestration. In Codex Direct mode, set the task ID in the active
+session before running the task's verification commands.
 
 ### Session-end notifications
 

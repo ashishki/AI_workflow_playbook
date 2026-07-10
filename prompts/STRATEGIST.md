@@ -493,9 +493,11 @@ the core project documents above.
 **Rules for this section:**
 - Replace every `{{PROJECT_NAME}}` occurrence with the actual project name.
 - Leave `{{PROJECT_ROOT}}` as a literal placeholder.
-- Leave `{{CODEX_COMMAND}}` as a literal placeholder, but the intended default is
-  `codex exec -s workspace-write`. Replace it only if the environment needs a wrapper
-  around the same Codex CLI invocation.
+- Current default is Codex Direct: the active Codex session runs commands
+  directly and must not spawn nested `codex exec` or `codex run` processes.
+- Leave `{{CODEX_COMMAND}}` as a literal placeholder only when generating the
+  legacy/external Claude Code orchestration stub. It is not needed for Codex
+  Direct bootstrap.
 - Output each file verbatim inside a fenced code block labelled with its path.
 - Do NOT summarise or paraphrase — agents read these files exactly as written.
 
@@ -516,10 +518,11 @@ replace the two placeholders shown.
      Before first use, replace:
        {{PROJECT_NAME}}  → the project name (e.g. my-api-service)
        {{PROJECT_ROOT}}  → absolute path on disk (e.g. /home/alice/my-api-service)
-       {{CODEX_COMMAND}} → default: codex exec -s workspace-write
-                           replace only if your environment needs a wrapper
+       {{CODEX_COMMAND}} → external orchestration only; not used for Codex Direct
 
-     See reference/CODEX_CLI.md for CODEX_COMMAND options and sandbox notes. -->
+     Codex Direct projects continue in the active Codex session and run shell
+     commands directly. See reference/CODEX_CLI.md only when configuring a
+     separate external Codex process. -->
 ```
 
 ---
