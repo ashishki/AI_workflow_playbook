@@ -1,0 +1,244 @@
+{
+  "branch": "master",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "id": "git_status",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/git_status.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/git_status.stdout.txt",
+      "stdout_sha256": "0d533bd4f499b8a19a0c09d7ec4edb277d8aa2ca42184ed4f1e859e482f471f2"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "id": "git_rev_parse",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/git_rev_parse.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/git_rev_parse.stdout.txt",
+      "stdout_sha256": "9b220941966495e9f2a075488bb3079b6aab212281a6c693e5952d9321f629b6"
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "id": "git_branch",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/git_branch.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/git_branch.stdout.txt",
+      "stdout_sha256": "9b3162498c21d7f960877099174ecea13410bd21d12440b2ea8868117fc08ae0"
+    },
+    {
+      "argv": [
+        "python",
+        "--version"
+      ],
+      "exit_code": 127,
+      "id": "python_version",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/python_version.stderr.txt",
+      "stderr_sha256": "30c6c50ad904cf226222c99444eba669dbac6b6d89355be989629da33d46da88",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/python_version.stdout.txt",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "python3",
+        "--version"
+      ],
+      "exit_code": 0,
+      "id": "python3_version",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/python3_version.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/python3_version.stdout.txt",
+      "stdout_sha256": "5b3e43dc38ca01e3f5a7854ba50d4330864b0c1e0f646650b2c78cf072acc366"
+    },
+    {
+      "argv": [
+        "find",
+        ".",
+        "-maxdepth",
+        "3",
+        "-type",
+        "f",
+        "|",
+        "sort"
+      ],
+      "exit_code": 0,
+      "id": "file_list",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/file_list.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/file_list.stdout.txt",
+      "stdout_sha256": "3fdb3e27fcb5ee0032b2291bcf2d0eede5ed135fc17eb9c99ae9f64babf1bdf4"
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit_code": 1,
+      "id": "pytest_system",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/pytest_system.stderr.txt",
+      "stderr_sha256": "b72695fcb3e2889d64484497e2ea8079822f1532c2505f226cde970957bedf7d",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/pytest_system.stdout.txt",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit_code": 5,
+      "id": "pytest_venv",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/pytest_venv.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/pytest_venv.stdout.txt",
+      "stdout_sha256": "fd637db4c244dc02ad65049d9f339eab9c30f1c02a401a04f6f729d811eaf002"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/integrity_check.py",
+        "--root",
+        "."
+      ],
+      "exit_code": 0,
+      "id": "integrity",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/integrity.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/integrity.stdout.txt",
+      "stdout_sha256": "5bd65344f529d81e37fed850f6f0482a3b6b584aba0c3c5c6207d24efc6f2ae0"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/skill_security_gate.py",
+        "--root",
+        ".",
+        "--discover-agent-skills"
+      ],
+      "exit_code": 0,
+      "id": "skill_security",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/skill_security.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/skill_security.stdout.txt",
+      "stdout_sha256": "0f8aaf29fe1be8c2e026e70ed4778b7a68cef1c87c606753b0023112a31721da"
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "py_compile",
+        "tools/*.py"
+      ],
+      "exit_code": 0,
+      "id": "py_compile",
+      "stderr_artifact": "reports/implementation/baseline_artifacts/py_compile.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_artifact": "reports/implementation/baseline_artifacts/py_compile.stdout.txt",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "confirmed_audit_gaps": [
+    {
+      "evidence": "README.md uses \u201chard guarantees\u201d; current enforcement is partly prompt/hook/document based.",
+      "id": "H1",
+      "status": "confirmed"
+    },
+    {
+      "evidence": "No schemas/task.schema.json and no deterministic task parser/validator existed at baseline.",
+      "id": "H2",
+      "status": "confirmed"
+    },
+    {
+      "evidence": "docs/tasks.md declares framework tasks and does not conform to the README-described acceptance criterion object shape.",
+      "id": "H3",
+      "status": "confirmed"
+    },
+    {
+      "evidence": "templates/RUNTIME_VERIFICATION_RECORD.md allowed manual status: passed without an independent verifier.",
+      "id": "H4",
+      "status": "confirmed"
+    },
+    {
+      "evidence": "hooks/guard_phase_boundary.sh checks archive markers in AUDIT_INDEX; it cannot validate review substance.",
+      "id": "H5",
+      "status": "partially_confirmed"
+    },
+    {
+      "evidence": "HARNESS_EVAL_PLAN.md defines eval concepts but no runnable eval lab/CLI/scorer existed.",
+      "id": "H6",
+      "status": "confirmed"
+    },
+    {
+      "evidence": "Initializer copies hooks for Standard/Strict but has no --install-claude-hooks merge/smoke path.",
+      "id": "H7",
+      "status": "confirmed"
+    },
+    {
+      "evidence": ".github/workflows/playbook-checks.yml did not run pytest or a canonical verification command.",
+      "id": "H8",
+      "status": "confirmed"
+    },
+    {
+      "evidence": "Lean mode avoids Standard files, but common files still include cost/security docs and no Lean-Core mode existed.",
+      "id": "H9",
+      "status": "partially_confirmed"
+    },
+    {
+      "evidence": "AGENT_HARNESS_DESIGN.md and HARNESS_EVAL_PLAN.md are separate normative harness/eval docs with overlap.",
+      "id": "H10",
+      "status": "confirmed"
+    },
+    {
+      "evidence": "No reproducible baseline-vs-Playbook experiment or companion package existed at baseline.",
+      "id": "H11",
+      "status": "confirmed"
+    }
+  ],
+  "current_commit": "f604883db2c9787e2580d9ccf7e4ee19b636b585",
+  "dirty_state": [
+    "?? .codex",
+    "?? .venv/",
+    "?? reports/"
+  ],
+  "generated_at": "2026-07-10T10:06:33Z",
+  "notes": [
+    "The first observed git status before tool setup was only `?? .codex`; py_compile and local venv setup generated untracked local artifacts during baseline collection.",
+    "The venv pytest replay found zero tests before implementation and exited 5."
+  ],
+  "python": {
+    "python3_version": "Python 3.12.3",
+    "python_command_error": "environment: line 4: python: command not found",
+    "requested_python_command_available": false,
+    "venv_python": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python"
+  },
+  "repository": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook",
+  "schema_version": "baseline.implementation.v1",
+  "skipped_checks": [
+    {
+      "command": "python -m pytest -q",
+      "reason": "The requested python executable was not present in PATH; python3 existed but pytest was not installed in system environment."
+    },
+    {
+      "command": "real model benchmark run",
+      "reason": "Not a baseline command; external budget and credentials were not declared."
+    }
+  ],
+  "test_count": 0
+}
