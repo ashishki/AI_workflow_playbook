@@ -105,3 +105,18 @@ The companion package:
 
 It is intentionally not a database, Web UI, Docker platform, provider gateway,
 or required dependency for ordinary Playbook adoption.
+
+## Project-Specific Benchmark Rule
+
+The bundled `playbook_core_v1` suite is a mechanism test for the Playbook
+workflow. It is not proof that any particular product, repository, or domain
+benefits from Playbook adoption.
+
+Project-specific claims require a project-specific suite with representative
+fixtures, baseline and Playbook-Min prompts, traps based on that project's real
+failure modes, independent scorers, pass/fail rules, and expected failure
+taxonomy.
+
+Do not generate benchmark content automatically and treat it as evidence.
+Scaffolding directories is acceptable; proof starts only when maintainers add
+project-specific fixtures, traps, and scorers.

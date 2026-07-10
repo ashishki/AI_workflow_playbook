@@ -46,6 +46,23 @@ The scripted adapter is for CI and mechanism tests. It is not evidence that the
 Playbook improves real LLM behavior. Real-model runs require an installed CLI,
 credentials, and an explicit budget.
 
+## Project-Specific Suites
+
+`suites/playbook_core_v1` demonstrates the shared Playbook evaluation
+mechanism. It is not evidence that the Playbook improves a specific project.
+
+For a product or repository claim, create a project-specific suite with:
+
+- representative fixture repositories or task states
+- baseline and Playbook-Min prompts for the same task
+- traps based on the project's real failure modes
+- independent scorers for protected files, command receipts, diffs, tests,
+  policy boundaries, and post-state invariants
+- explicit pass/fail rules and expected failure taxonomy
+
+Scaffolded directories are acceptable as a starting point. Automatically
+invented benchmark content is not acceptable evidence.
+
 ## Generic Command Adapter Examples
 
 Codex:

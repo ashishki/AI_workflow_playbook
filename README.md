@@ -32,6 +32,7 @@ consumer when enforcement exists.
 | Agent command claims need machine receipts | `schemas/command_receipt.schema.json` | `tools/receipt_run.py` | receipt success/failure/timeout tests | pending | Tested |
 | Evidence bundles are independently validated | `schemas/evidence_bundle.schema.json` | `tools/validate_harness_evidence.py` | hash tamper and mismatch tests | pending | Tested |
 | Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare` | scripted demonstration run | real-model run pending | Formalized / Tested for mechanism |
+| Project-specific harness claims require project-specific fixtures | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, `docs/adoption_modes.md` | companion suite with project fixtures, traps, scorers | suite validation + EvidenceBundles | pending per project | Formalized |
 | Role separation and review duties | `prompts/ORCHESTRATOR.md`, audit prompts | prompt protocol and optional hooks | review prompt checks | pending | Documented / Formalized |
 | Immutable contract protection | `hooks/guard_files.sh`, contract docs | hook when installed | hook tests | pending | Tested when hooks installed |
 
@@ -84,6 +85,13 @@ permissions + trace + HITL + eval`, not the base model alone. Use
 `templates/HARNESS_BENCHMARK_CARD.md` to keep harness configuration visible
 when comparing models, prompts, or runtime behavior. This is an architecture
 contract, not a new orchestration framework.
+
+**Project-specific benchmark rule.** The generic `playbook_core_v1` suite proves
+that the evaluation machinery works; it does not prove that the Playbook helps a
+specific product or repository. Project-specific reliability, safety, or
+productivity claims require a project-specific suite with real fixture tasks,
+traps, independent scorers, and pass/fail rules. Scaffolded suites are allowed,
+but automatically invented benchmark content is not evidence.
 
 **Capability auto-detection.** Pre-implementation: the Orchestrator matches the task's file scope against capability signal patterns — `retrieval/`, `embedding` → RAG; `tools/`, `@tool` → Tool-Use; `compliance/`, `audit/`, `hipaa/` → Compliance. A HIGH-confidence match with no matching `Type:` tag stops the session with a `TAG_WARNING` before any code is written. Post-implementation: file-vs-tag mismatches surface a `SEMANTIC_MISMATCH` to the reviewer.
 

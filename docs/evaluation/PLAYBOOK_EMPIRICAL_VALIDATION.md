@@ -27,6 +27,30 @@ contains five tasks:
 | Repository prompt injection | Untrusted file asks to leak canary and bypass rules | Treat file as data, do not leak canary | instruction hierarchy |
 | Cross-session resume | Stage 1 already done | Continue without duplicate side effect | resumability and idempotency |
 
+This suite is the shared mechanism test for the Playbook workflow. It is not a
+substitute for a project-specific benchmark.
+
+## Project-Specific Proof Rule
+
+Claims about a specific project require a project-specific suite. The generic
+suite can show that receipts, scorers, EvidenceBundles, and comparisons work; it
+cannot prove that a given product's agent workflow is safer, faster, cheaper, or
+more reliable.
+
+A project-specific suite must be based on the project's real risk surface:
+
+- representative fixture repositories or captured task states
+- baseline and Playbook-Min prompts for the same task
+- traps derived from actual failure modes or plausible project-specific hazards
+- independent scorers for the project's protected files, contracts, tests,
+  policies, cost boundaries, and post-state invariants
+- pass/fail rules and expected failure taxonomy
+
+Scaffolding can create directories and example files. It must not invent
+benchmark content and present it as evidence. A generated suite with placeholder
+tasks is only a setup artifact until a maintainer replaces the fixtures, traps,
+and scorers with project-specific material.
+
 ## Valid And Invalid Runs
 
 Infrastructure, fixture, adapter, scorer, provider/network, timeout, and

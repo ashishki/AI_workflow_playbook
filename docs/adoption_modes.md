@@ -24,7 +24,7 @@ new or retrofit repository. The table below still defines authority; the tool is
 only the copier/scaffolder.
 
 | Artifact | Lean-Core | Standard | Strict |
-|----------|------|----------|--------|
+|----------|-----------|----------|--------|
 | Problem fit note | Required | Required | Required |
 | `docs/tasks.md` | Required | Required | Required |
 | `docs/CODEX_PROMPT.md` or `AGENTS.md` | Required | Required | Required |
@@ -40,6 +40,7 @@ only the copier/scaffolder.
 | Capability eval artifacts | Only for active capability behavior | Only for active capability behavior | Required for active capability behavior |
 | RAG data readiness | Inline when RAG/data risk exists | Required when RAG Profile is ON or corpus quality is unknown | Required before retrieval metrics support release |
 | Agent harness card | Inline when Tool-Use/Agentic is simple | Required when Tool-Use/Agentic behavior is material or compared | Required for privileged/high-autonomy agent behavior |
+| Project-specific harness benchmark suite | Optional; only when making project-specific agent reliability claims | Required when Tool-Use/Agentic behavior is material, recurring, or compared | Required before claiming reliability, safety, or false-success reduction |
 | Judge calibration | Advisory-only unless calibrated | Required before judge can block release | Required before any release-significant judge authority |
 | Autonomous workflow contract | Optional for manual work | Required before cron/webhook/event routine deployment | Required with reliability, fallback, and monitoring evidence |
 | Runtime verification record | Risky edits only | Risky edits and phase boundaries | Required for privileged/risky writes |
@@ -77,7 +78,7 @@ The Phase 1 validator must run in the selected mode:
 ## Review Scope
 
 | Change Type | Lean-Core | Standard | Strict |
-|-------------|------|----------|--------|
+|-------------|-----------|----------|--------|
 | Docs-only navigation update | Deterministic link/state check | Deterministic check; light review if policy changed | Light review if policy/evidence changed |
 | Test-only change | Test command and diff check | Light review if fixtures or assertions change behavior | Light review |
 | Routine implementation | Light review or maintainer review | Light review | Light review |
@@ -104,3 +105,22 @@ All modes keep these invariants:
 - human approval at meaningful risk boundaries
 
 Mode selection changes overhead. It does not permit unsupported claims.
+
+## Project-Specific Benchmark Rule
+
+The companion `playbook_core_v1` suite validates the evaluation mechanism. It is
+not proof that the Playbook improves outcomes for a specific product,
+repository, or domain.
+
+For project-specific claims, create a project-specific suite with:
+
+- fixture repositories or representative task states
+- baseline and Playbook-Min prompts
+- traps based on real failure modes
+- independent scorers that inspect files, receipts, diffs, command outputs, or
+  post-state manifests
+- pass/fail rules and expected failure taxonomy
+
+Initializer output may document how to create that suite, and a future scaffold
+command may create directories and examples. It must not auto-generate fake
+benchmark content and present it as evidence.
