@@ -1,0 +1,504 @@
+{
+  "checks": [
+    "schemas",
+    "tasks",
+    "placeholders",
+    "references",
+    "modes"
+  ],
+  "findings": [
+    {
+      "check_id": "REFERENCE_MISSING",
+      "line": 128,
+      "message": "missing referenced path generated/cognition/index.json",
+      "path": "docs/COGNITION_MANIFEST.md",
+      "severity": "warning"
+    },
+    {
+      "check_id": "REFERENCE_MISSING",
+      "line": 129,
+      "message": "missing referenced path docs/context-packets",
+      "path": "docs/COGNITION_MANIFEST.md",
+      "severity": "warning"
+    }
+  ],
+  "root": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook",
+  "schema_version": "playbook.validation.v1",
+  "summary": {
+    "errors": 0,
+    "warnings": 2
+  },
+  "tasks": [
+    {
+      "acceptance_criteria": [
+        "`docs/readme_first_knowledge_index.md` defines when README indexes are required and how they relate to canonical artifacts.",
+        "`templates/README_INDEX.md` provides a concise repo/folder index shape.",
+        "Orchestrator and reviewer prompts check README index updates at phase boundaries or changed subsystem boundaries.",
+        "Cognition/vault docs state that README indexes are local navigation and the vault remains cross-project convenience."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/readme_first_knowledge_index.md`",
+        "`templates/README_INDEX.md`",
+        "`prompts/ORCHESTRATOR.md`",
+        "`prompts/audit/PROMPT_2_CODE.md`",
+        "`prompts/audit/PROMPT_3_CONSOLIDATED.md`",
+        "`docs/cognition/`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Add README-first knowledge indexes as lightweight navigation artifacts at\nphase gates, without turning README files into authority or adding a new\nmemory runtime.",
+      "owner": "codex",
+      "phase": "Phase ZT-1 - Zero-Trust Execution Consolidation",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-06-08",
+      "task_id": "AWP-ZT-004",
+      "title": "README-First Knowledge Index Gate",
+      "type_tags": [
+        "docs",
+        "protocol"
+      ],
+      "verify": [
+        "`docs/readme_first_knowledge_index.md`",
+        "`templates/README_INDEX.md`",
+        "`docs/usage_guide.md`",
+        "`docs/cognition/vault_usage_protocol.md`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "`templates/` includes a concise runtime verification record example.",
+        "Review checklists require diff/hash/test evidence for claimed risky writes.",
+        "Docs keep filesystem/repo state as authoritative over model claims."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/runtime_verification_protocol.md`",
+        "`docs/filesystem_reality_principle.md`",
+        "`templates/`",
+        "`prompts/`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Integrate runtime verification records into the default task/review flow for\nrisky writes and agent claims.",
+      "owner": "codex",
+      "phase": "Phase ZT-1 - Zero-Trust Execution Consolidation",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-05-29",
+      "task_id": "AWP-ZT-001",
+      "title": "Runtime Verification Template Integration",
+      "type_tags": [
+        "docs",
+        "template"
+      ],
+      "verify": [
+        "`templates/RUNTIME_VERIFICATION_RECORD.md`",
+        "`templates/tasks_schema.md`",
+        "`prompts/audit/PROMPT_2_CODE.md`",
+        "`prompts/audit/PROMPT_3_CONSOLIDATED.md`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Review prompts ask for evidence behind every material completion claim.",
+        "Claimed files must exist; claimed tests must have command evidence.",
+        "Claimed decisions must link to ADRs, decision logs, or review records."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`prompts/audit/PROMPT_2_CODE.md`",
+        "`prompts/audit/PROMPT_3_CONSOLIDATED.md`",
+        "`docs/integrity_verification_jobs.md`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Add explicit reviewer checks for claimed files, claimed tests, claimed\ndecisions, and claimed context references.",
+      "owner": "codex",
+      "phase": "Phase ZT-1 - Zero-Trust Execution Consolidation",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-05-29",
+      "task_id": "AWP-ZT-002",
+      "title": "Agent Claim Verification Checklist",
+      "type_tags": [
+        "docs",
+        "review"
+      ],
+      "verify": [
+        "`prompts/audit/PROMPT_2_CODE.md`",
+        "`prompts/audit/PROMPT_3_CONSOLIDATED.md`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Task/review docs state the retry limit and escalation rule.",
+        "Intermediate state must be preserved when retries fail.",
+        "Autonomous repair loops cannot continue without human decision after the configured bound."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/bounded_correction_turns.md`",
+        "`PLAYBOOK.md`",
+        "`prompts/`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Make bounded correction turns the default for self-repair loops.",
+      "owner": "codex",
+      "phase": "Phase ZT-1 - Zero-Trust Execution Consolidation",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-05-29",
+      "task_id": "AWP-ZT-003",
+      "title": "Bounded Correction Defaults",
+      "type_tags": [
+        "docs",
+        "protocol"
+      ],
+      "verify": [
+        "`docs/bounded_correction_turns.md`",
+        "`templates/CODEX_PROMPT.md`",
+        "`templates/tasks_schema.md`",
+        "`prompts/ORCHESTRATOR.md`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Receipt examples are YAML/JSON friendly.",
+        "Each receipt names actor, claim/action, evidence, verifier, status, and failure handling.",
+        "Docs state that Entropy Core may later validate receipts optionally."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/runtime_verification_protocol.md`",
+        "`docs/provider_routing_policy.md`",
+        "`docs/cognition_layer_integrity.md`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Define portable receipt examples for agent actions, decisions, referee reviews,\nand risk acceptance without depending on Entropy Core at runtime.",
+      "owner": "codex",
+      "phase": "Phase EL-1 - Evidence Layer",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "planned",
+      "task_id": "AWP-EL-001",
+      "title": "Playbook-Native Receipt Schemas",
+      "type_tags": [
+        "docs",
+        "protocol"
+      ],
+      "verify": [
+        "`python3 tools/playbook_validate.py --root . --check tasks`",
+        "`python3 tools/verify_playbook.py --root .`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Docs explain role/model diversity as a review/evaluation pattern.",
+        "Swarm behavior, distributed training, token incentives, and autonomous self-optimization remain out of scope.",
+        "The principle maps to existing META/ARCH/CODE/CONSOLIDATED review roles."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`PLAYBOOK.md`",
+        "`docs/provider_routing_policy.md`",
+        "`prompts/`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Add a narrow principle from Gensyn-style diversity research: high-risk work\nbenefits from diverse candidate reasoning and independent referee review.",
+      "owner": "codex",
+      "phase": "Phase EL-1 - Evidence Layer",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "planned",
+      "task_id": "AWP-EL-002",
+      "title": "Diverse Review Principle",
+      "type_tags": [
+        "docs",
+        "review"
+      ],
+      "verify": [
+        "`python3 tools/playbook_validate.py --root . --check tasks`",
+        "`python3 tools/integrity_check.py --root .`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Guide names the source-of-truth repo for each responsibility.",
+        "It distinguishes framework, product, utility, paused, and archived projects.",
+        "It does not make Obsidian, Entropy, or Mythos mandatory dependencies."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/PROJECT_PLAN.md`",
+        "`docs/cognition_layer_integrity.md`",
+        "`engineering-cognition-vault`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Document how AI Workflow Playbook, Entropy Core, Workflow-To-Agent Studio,\nTraining OS, Radar, Telegram Research Agent, and Telegram Trader Intelligence\nfit together.",
+      "owner": "codex",
+      "phase": "Phase PI-1 - Portfolio Integration",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "planned",
+      "task_id": "AWP-PI-001",
+      "title": "Portfolio Operating Guide",
+      "type_tags": [
+        "docs",
+        "portfolio"
+      ],
+      "verify": [
+        "`python3 tools/playbook_validate.py --root . --check tasks`",
+        "`python3 tools/integrity_check.py --root .`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Migration notes list minimal, standard, and strict adoption sets.",
+        "Existing paused/reference projects can use minimal mode.",
+        "Strict mode remains available for high-risk agent/tooling systems."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/usage_guide.md`",
+        "`docs/project_fit_guide.md`",
+        "`templates/`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Define a lighter adoption path for projects that only need task state,\nverification records, and review checklists.",
+      "owner": "codex",
+      "phase": "Phase PI-1 - Portfolio Integration",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-06-09",
+      "task_id": "AWP-PI-002",
+      "title": "Lightweight Adoption Path",
+      "type_tags": [
+        "docs",
+        "migration"
+      ],
+      "verify": [
+        "`python3 tools/playbook_validate.py --root . --check tasks`",
+        "`python3 tools/integrity_check.py --root .`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Dynamic workflows are described as optional executable orchestration references, not base-path requirements.",
+        "External references are cataloged by problem solved, useful pattern, authority level, and URL.",
+        "Public workflows require review before adaptation.",
+        "The playbook keeps generic principles in the base path and points advanced runtime/proof/swarm patterns to the reference catalog."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/dynamic_workflow_reference_policy.md`",
+        "`reference/solution_references.md`",
+        "`README.md`",
+        "`reference/optional_skills.md`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Preserve useful external references such as Hermes, Mythos, Entropy, Gensyn,\nCybos, Claude dynamic workflows, and public workflow examples without making\nthem mandatory playbook dependencies.",
+      "owner": "codex",
+      "phase": "Phase PI-1 - Portfolio Integration",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-06-09",
+      "task_id": "AWP-PI-003",
+      "title": "Solution Reference Catalog And Dynamic Workflow Policy",
+      "type_tags": [
+        "docs",
+        "reference"
+      ],
+      "verify": [
+        "`python3 tools/playbook_validate.py --root . --check tasks`",
+        "`python3 tools/integrity_check.py --root .`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Cost budget policy defines when inline budget is enough and when downstream docs/COST_BUDGET.md is required.",
+        "Strategist and bootstrap commands collect AI/model budget before generating the selected mode's starter package.",
+        "Phase 1 Validator and Orchestrator flag missing budgets, model escalation, retry/fan-out expansion, and dynamic workflow cost drift.",
+        "Provider-agnostic telemetry has a JSONL entry contract and rollup command for CI/review thresholds.",
+        "Downstream projects have a provider-boundary adapter template and `cost:telemetry` task type.",
+        "External research sources are cited in the cost guardrails research file."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/cost_budget_guardrails.md`",
+        "`templates/COST_BUDGET.md`",
+        "`templates/COST_TELEMETRY_ENTRY.json`",
+        "`templates/COST_TELEMETRY_ADAPTER.md`",
+        "`schemas/cost_telemetry_entry.schema.json`",
+        "`tools/cost_rollup.py`",
+        "`docs/cost_telemetry_protocol.md`",
+        "`reference/cost_guardrails_research.md`",
+        "`prompts/STRATEGIST.md`",
+        "`prompts/PHASE1_VALIDATOR.md`",
+        "`prompts/ORCHESTRATOR.md`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Make AI/model cost a first-class workflow constraint across bootstrap,\nvalidation, orchestration, review, and external research references.",
+      "owner": "codex",
+      "phase": "Phase PI-1 - Portfolio Integration",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-06-09",
+      "task_id": "AWP-PI-004",
+      "title": "AI Cost Budget Guardrails",
+      "type_tags": [
+        "docs",
+        "governance"
+      ],
+      "verify": [
+        "`python3 tools/playbook_validate.py --root . --check tasks`",
+        "`python3 tools/cost_rollup.py --input /tmp/missing-cost.jsonl --output /tmp/ai_cost_rollup.md`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "`docs/ai_cost_architecture.md` defines when cost architecture is required and separates architecture boundaries from provider/model routing details.",
+        "`docs/cache_context_layout.md` defines stable-prefix and volatile-suffix prompt caching rules.",
+        "`templates/COST_ARCHITECTURE.md` and `templates/ROUTER_EVAL.md` provide downstream project artifacts.",
+        "Provider routing policy includes a maturity ladder and gates dynamic routing/cascades behind project eval evidence.",
+        "Strategist, Phase 1 Validator, Orchestrator, strategy review, code review, and consolidated review prompts check cost architecture and router eval requirements.",
+        "Usage docs and templates expose the new artifacts during new-project and retrofit setup."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/ai_cost_architecture.md`",
+        "`docs/cache_context_layout.md`",
+        "`docs/provider_routing_policy.md`",
+        "`docs/cost_budget_guardrails.md`",
+        "`templates/COST_ARCHITECTURE.md`",
+        "`templates/ROUTER_EVAL.md`",
+        "`templates/ARCHITECTURE.md`",
+        "`templates/IMPLEMENTATION_CONTRACT.md`",
+        "`templates/COST_BUDGET.md`",
+        "`templates/tasks_schema.md`",
+        "`docs/usage_guide.md`",
+        "`reference/cost_guardrails_research.md`",
+        "`prompts/STRATEGIST.md`",
+        "`prompts/PHASE1_VALIDATOR.md`",
+        "`prompts/ORCHESTRATOR.md`",
+        "`prompts/PROMPT_S_STRATEGY.md`",
+        "`prompts/audit/PROMPT_2_CODE.md`",
+        "`prompts/audit/PROMPT_3_CONSOLIDATED.md`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Move cost controls beyond budget policy by adding an enforceable AI cost\narchitecture artifact for workload classes, cache layout, batch lanes,\nrouting maturity, cascades, and cost-per-successful-task.",
+      "owner": "codex",
+      "phase": "Phase PI-1 - Portfolio Integration",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-06-19",
+      "task_id": "AWP-PI-005",
+      "title": "AI Cost Architecture And Router Evaluation",
+      "type_tags": [
+        "docs",
+        "governance"
+      ],
+      "verify": [
+        "`python3 tools/playbook_validate.py --root . --check tasks`",
+        "`python3 tools/integrity_check.py --root .`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "`docs/external_skill_security_policy.md` defines the external skill trust gate and maps SkillSpector/NVIDIA trust-pipeline patterns into playbook artifacts.",
+        "`templates/EXTERNAL_SKILL_TRUST_RECORD.md` provides a downstream evidence artifact for source pin/signature/hash, capabilities, scan evidence, findings triage, install scope, architecture impact, and approval.",
+        "Optional skill registry includes an External Skill Security Gate descriptor.",
+        "Task schema includes `Type: skill:security`.",
+        "Orchestrator, Phase 1 Validator, CODE review, consolidated review, Strategist, adoption docs, and templates check external skill trust records before install/update/enablement.",
+        "External references cite SkillSpector, NVIDIA skill trust docs, and the Agent Skills in the Wild paper as evidence for mandatory vetting."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`docs/external_skill_security_policy.md`",
+        "`templates/EXTERNAL_SKILL_TRUST_RECORD.md`",
+        "`templates/skills/external_skill_security_skill.md`",
+        "`reference/optional_skills.md`",
+        "`reference/solution_references.md`",
+        "`templates/IMPLEMENTATION_CONTRACT.md`",
+        "`templates/tasks_schema.md`",
+        "`templates/PROJECT_BRIEF.md`",
+        "`docs/adoption_modes.md`",
+        "`docs/usage_guide.md`",
+        "`README.md`",
+        "`prompts/STRATEGIST.md`",
+        "`prompts/PHASE1_VALIDATOR.md`",
+        "`prompts/ORCHESTRATOR.md`",
+        "`prompts/audit/PROMPT_2_CODE.md`",
+        "`prompts/audit/PROMPT_3_CONSOLIDATED.md`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Add a bounded security gate for third-party and cross-project agent skills so\nskills cannot enter project or global agent context without source,\ncapability, scan, signature/hash, install-scope, and risk-triage evidence.",
+      "owner": "codex",
+      "phase": "Phase PI-1 - Portfolio Integration",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-06-19",
+      "task_id": "AWP-PI-006",
+      "title": "External Skill Security Gate",
+      "type_tags": [
+        "docs",
+        "governance"
+      ],
+      "verify": [
+        "`python3 tools/playbook_validate.py --root . --check tasks`",
+        "`python3 tools/skill_security_gate.py --root . --discover-agent-skills`"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "`tools/init_playbook_project.py` initializes Lean / Standard / Strict downstream projects without overwriting existing files by default.",
+        "`tools/skill_security_gate.py` discovers agent skill directories, requires trust records, invokes SkillSpector when skills are present, parses JSON scan output, writes optional SARIF, and blocks unresolved high-risk findings.",
+        "`templates/cost_adapters/python/telemetry_adapter.py` provides a concrete provider-neutral adapter for writing cost telemetry JSONL entries from common provider/gateway usage objects.",
+        "CI template and playbook repo workflow run the new deterministic checks.",
+        "Usage docs, tools docs, roadmap, and known-gaps sections describe the new practical path and remaining optional provider-specific work."
+      ],
+      "context_refs": [],
+      "dependencies": [],
+      "files": [
+        "`tools/init_playbook_project.py`",
+        "`tools/skill_security_gate.py`",
+        "`templates/TASKS.md`",
+        "`templates/cost_adapters/`",
+        "`.github/workflows/playbook-checks.yml`",
+        "`ci/ci.yml`",
+        "`docs/usage_guide.md`",
+        "`docs/external_skill_security_policy.md`",
+        "`docs/cost_telemetry_protocol.md`",
+        "`tools/README.md`",
+        "`PLAYBOOK.md`"
+      ],
+      "heavy_mode": "none",
+      "objective": "Close the remaining procedural gaps by adding deterministic helpers for\nproject bootstrap, external skill security CI enforcement, and provider-\nneutral AI cost telemetry adapter scaffolding.",
+      "owner": "codex",
+      "phase": "Phase PI-1 - Portfolio Integration",
+      "runtime_verification": "conditional",
+      "schema_version": "playbook.task.v1",
+      "status": "done 2026-06-19",
+      "task_id": "AWP-PI-007",
+      "title": "Bootstrap And Guardrail Automation",
+      "type_tags": [
+        "tools",
+        "automation"
+      ],
+      "verify": [
+        "`python3 tools/playbook_validate.py --root . --check tasks`",
+        "`python3 -m py_compile tools/*.py`"
+      ]
+    }
+  ]
+}

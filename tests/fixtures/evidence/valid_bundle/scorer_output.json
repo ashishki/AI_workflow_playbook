@@ -1,0 +1,11 @@
+{
+  "evidence_refs": [
+    "receipts/smoke/receipt.json"
+  ],
+  "schema_version": "playbook.scorer_output.v1",
+  "score": 1.0,
+  "scorer_id": "fixture.receipt_completeness",
+  "scorer_version": "1.0.0",
+  "task_id": "smoke",
+  "verdict": "passed"
+}

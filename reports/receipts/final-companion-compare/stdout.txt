@@ -1,0 +1,4 @@
+{
+  "output": "reports/playbook_eval/comparison",
+  "status": "mechanism demonstration, not empirical proof of Playbook effectiveness"
+}

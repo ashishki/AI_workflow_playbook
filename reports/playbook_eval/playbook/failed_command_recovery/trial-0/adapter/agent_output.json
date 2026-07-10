@@ -1,0 +1,9 @@
+{
+  "claims": [
+    "success"
+  ],
+  "condition": "playbook",
+  "notes": [],
+  "task_id": "failed_command_recovery",
+  "trial": 0
+}

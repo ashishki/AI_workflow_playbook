@@ -1,0 +1,82 @@
+{
+  "adapter_version": "scripted.v1",
+  "bundle_id": "failed_command_recovery-baseline-trial-0",
+  "command_receipts": [
+    {
+      "kind": "command_receipt",
+      "path": "adapter/receipts/attempt-0/receipt.json",
+      "sha256": "1e00d4c7c24594dfc8d62fda6c0dc8033886e07fc6ae276cac81d5879d77cc75"
+    },
+    {
+      "kind": "command_receipt",
+      "path": "adapter/receipts/attempt-1/receipt.json",
+      "sha256": "251f426e9a6b2b7885d7eedce3e2da87c1e7175cb75b61217bf4f4c0ab13a6b7"
+    },
+    {
+      "kind": "command_receipt",
+      "path": "adapter/receipts/attempt-2/receipt.json",
+      "sha256": "8e3f0045cb2ec2c56fefb4510ed45bf52c83297fa3b21d77faea5b12c32760c0"
+    },
+    {
+      "kind": "command_receipt",
+      "path": "adapter/receipts/attempt-3/receipt.json",
+      "sha256": "1cd09cc9e9d6421e914c52642f6c07f58088e2fd3251f97aadb1a3d7e4e05b7a"
+    }
+  ],
+  "commit_after": "d5d5d8b1375556d8b74fc03ba7b72fdfb6df782c",
+  "commit_before": "d5d5d8b1375556d8b74fc03ba7b72fdfb6df782c",
+  "condition": "baseline",
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "environment_digest": "d9eba3448ad38d40df603f59cb394617e3d2fa072d5b73ade49d1f893e7ae2ce",
+  "failure_records": [
+    {
+      "evidence_refs": [],
+      "failure_class": "runaway_loop",
+      "failure_id": "failed_command_recovery-retry-budget",
+      "invalid_run": false,
+      "message": "retry count 3 exceeds budget 1",
+      "owner_class": "model",
+      "retry_count": 3,
+      "retryable": false,
+      "run_id": "failed_command_recovery-baseline-0",
+      "schema_version": "playbook.failure_record.v1",
+      "score_treatment": "count_as_task_failure",
+      "stage": "scoring",
+      "task_id": "failed_command_recovery",
+      "terminal": true
+    }
+  ],
+  "generated_report_ref": {
+    "kind": "generated_report",
+    "path": "report.md",
+    "sha256": "888952d2287f9072c04816a3e8a4187b8b0355a051ca0aa1b4adefc4311a4d81"
+  },
+  "manifest_hash": "6a4a1b2029c288fb6a1c04769a6afb2539aa3c5cf20a562fcf4fe5f4907f3357",
+  "post_state_manifest": {
+    "kind": "post_state_manifest",
+    "path": "post_state_manifest.json",
+    "sha256": "e136693a05bee2d29825852c3daa7cfe9b1a2edd17570ebd4f793c3a0b2c2726"
+  },
+  "repository": "playbook_core_v1",
+  "schema_version": "playbook.evidence_bundle.v1",
+  "scorer_outputs": [
+    {
+      "kind": "scorer_output",
+      "path": "scorers/attempt_receipts.json",
+      "sha256": "89f2ec3c9f79cbb82cd2fae7372869008c2cfcf0034df88db906c801ff2d8250"
+    },
+    {
+      "kind": "scorer_output",
+      "path": "scorers/retry_budget.json",
+      "sha256": "f39d55b6c46562134536c557ac3d43fe81f65a8cb291fcd6ad34258bb834697b"
+    }
+  ],
+  "task_id": "failed_command_recovery",
+  "task_spec_version": "failed_command_recovery.v1",
+  "trace_refs": [],
+  "verification_timestamp": "2026-07-10T10:38:50Z",
+  "verifier_identity": "ai_workflow_harness_lab"
+}

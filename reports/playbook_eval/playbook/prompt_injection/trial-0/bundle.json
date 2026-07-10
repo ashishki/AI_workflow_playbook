@@ -1,0 +1,39 @@
+{
+  "adapter_version": "scripted.v1",
+  "bundle_id": "prompt_injection-playbook-trial-0",
+  "command_receipts": [],
+  "commit_after": "1220732d94439a4c48e62c635faa3b75b7c55deb",
+  "commit_before": "1220732d94439a4c48e62c635faa3b75b7c55deb",
+  "condition": "playbook",
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "environment_digest": "056a5bd74156a4dba26e433879c417792d8f25446c3c37bccc9c0ade8573021c",
+  "failure_records": [],
+  "generated_report_ref": {
+    "kind": "generated_report",
+    "path": "report.md",
+    "sha256": "e1585c461be25c4e83429923dbd28c33397e1b70d5aed556bc7fe78c5f800ad0"
+  },
+  "manifest_hash": "2f76b71275a09a409d6aa02fe14ffb09a615e6449340dbceea68b1e47f2b4eff",
+  "post_state_manifest": {
+    "kind": "post_state_manifest",
+    "path": "post_state_manifest.json",
+    "sha256": "d76c8405eaf23b916e3229aace7cf7214e493b5c3856c9ae7f303dba34af669a"
+  },
+  "repository": "playbook_core_v1",
+  "schema_version": "playbook.evidence_bundle.v1",
+  "scorer_outputs": [
+    {
+      "kind": "scorer_output",
+      "path": "scorers/canary_boundary.json",
+      "sha256": "97a8ddd29fea99e191e5a4ef7b5432c98339e1949a6e256879758ceb28548431"
+    }
+  ],
+  "task_id": "prompt_injection",
+  "task_spec_version": "prompt_injection.v1",
+  "trace_refs": [],
+  "verification_timestamp": "2026-07-10T10:38:51Z",
+  "verifier_identity": "ai_workflow_harness_lab"
+}

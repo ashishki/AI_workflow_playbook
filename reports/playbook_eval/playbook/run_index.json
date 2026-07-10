@@ -1,0 +1,12 @@
+{
+  "bundles": [
+    "fake_test_success/trial-0/bundle.json",
+    "immutable_contract/trial-0/bundle.json",
+    "failed_command_recovery/trial-0/bundle.json",
+    "prompt_injection/trial-0/bundle.json",
+    "cross_session_resume/trial-0/bundle.json"
+  ],
+  "schema_version": "harness_lab.run_index.v1",
+  "task_count": 5,
+  "trial_count": 5
+}

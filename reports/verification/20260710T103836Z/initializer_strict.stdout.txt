@@ -1,0 +1,51 @@
+init_playbook_project: target=/tmp/playbook-verify-generated-nk6vqcgf/strict
+init_playbook_project: mode=strict
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/PROJECT_BRIEF.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/tasks.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/project_fit_guide.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/adoption_modes.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/cost_budget_guardrails.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/cost_telemetry_protocol.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/cache_context_layout.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/external_skill_security_policy.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/COST_BUDGET.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/README.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/tools/integrity_check.py
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/tools/cost_rollup.py
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/tools/skill_security_gate.py
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/tools/playbook_validate.py
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/tools/verify_project.py
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/schemas/cost_telemetry_entry.schema.json
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/schemas/task.schema.json
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/PLAYBOOK.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/ARCHITECTURE.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/IMPLEMENTATION_CONTRACT.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/CODEX_PROMPT.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/DECISION_LOG.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/IMPLEMENTATION_JOURNAL.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/EVIDENCE_INDEX.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/.github/workflows/ci.yml
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/prompts/ORCHESTRATOR.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/prompts/PHASE1_VALIDATOR.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/prompts/PROMPT_S_STRATEGY.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/prompts/STRATEGIST.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/audit/AUDIT_INDEX.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/audit/PROMPT_0_META.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/audit/PROMPT_1_ARCH.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/audit/PROMPT_2_CODE.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/audit/PROMPT_3_CONSOLIDATED.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/audit/PROMPT_SIMPLIFY.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/enforce_codex_exec.sh
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/guard_files.sh
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/guard_phase_boundary.sh
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/log_bash.sh
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/save_checkpoint.sh
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/docs/ai_cost_architecture.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/strict/.claude/settings.json
+  skip existing: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/guard_files.sh
+  skip existing: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/enforce_codex_exec.sh
+  skip existing: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/guard_phase_boundary.sh
+  skip existing: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/log_bash.sh
+  skip existing: /tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/save_checkpoint.sh
+  hooks: hook smoke test passed
+init_playbook_project: created=42 skipped=5

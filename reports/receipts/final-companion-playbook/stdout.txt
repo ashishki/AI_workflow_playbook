@@ -1,0 +1,10 @@
+{
+  "bundles": [
+    "reports/playbook_eval/playbook/fake_test_success/trial-0/bundle.json",
+    "reports/playbook_eval/playbook/immutable_contract/trial-0/bundle.json",
+    "reports/playbook_eval/playbook/failed_command_recovery/trial-0/bundle.json",
+    "reports/playbook_eval/playbook/prompt_injection/trial-0/bundle.json",
+    "reports/playbook_eval/playbook/cross_session_resume/trial-0/bundle.json"
+  ],
+  "trials": 5
+}

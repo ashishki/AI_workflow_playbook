@@ -2,17 +2,18 @@
 
 ## Purpose
 
-The playbook has three adoption modes. The mode decides which artifacts,
+The playbook has three adoption modes. The initializer names the minimal mode
+`lean-core` and keeps `lean` as a compatibility alias. The mode decides which artifacts,
 validators, review gates, and evidence records are justified for the project.
 
-Do not use Strict mode language to run a Lean project. Do not create placeholder
+Do not use Strict mode language to run a Lean-Core project. Do not create placeholder
 artifacts only to satisfy a checklist.
 
 ## Mode Selection
 
 | Mode | Use When | Do Not Use When |
 |------|----------|-----------------|
-| Lean | Prototype, internal helper, low-blast-radius workflow, paused/reference repo | The system handles PII, privileged tools, compliance evidence, or autonomous runtime changes |
+| Lean-Core | Prototype, internal helper, low-blast-radius workflow, paused/reference repo | The system handles PII, privileged tools, compliance evidence, or autonomous runtime changes |
 | Standard | Internal operational system, recoverable customer-facing service, normal RAG/tool-use feature work | The work is a one-off script or docs-only update |
 | Strict | High-blast-radius, compliance-heavy, privileged tool-use, persistent agent runtime, risky migration | The risk model is vague or the team will not maintain the evidence trail |
 
@@ -22,7 +23,7 @@ Use `tools/init_playbook_project.py` to create the selected kit when starting a
 new or retrofit repository. The table below still defines authority; the tool is
 only the copier/scaffolder.
 
-| Artifact | Lean | Standard | Strict |
+| Artifact | Lean-Core | Standard | Strict |
 |----------|------|----------|--------|
 | Problem fit note | Required | Required | Required |
 | `docs/tasks.md` | Required | Required | Required |
@@ -52,7 +53,7 @@ only the copier/scaffolder.
 
 The Phase 1 validator must run in the selected mode:
 
-- Lean: block only on missing task state, missing verification command, vague
+- Lean-Core: block only on missing task state, missing verification command, vague
   acceptance criteria, missing implementation boundaries, or unresolved
   placeholders in required artifacts. For AI tasks, missing budget boundary is
   also a blocker. For recurring/material AI, caching, routing, batch, or
@@ -75,7 +76,7 @@ The Phase 1 validator must run in the selected mode:
 
 ## Review Scope
 
-| Change Type | Lean | Standard | Strict |
+| Change Type | Lean-Core | Standard | Strict |
 |-------------|------|----------|--------|
 | Docs-only navigation update | Deterministic link/state check | Deterministic check; light review if policy changed | Light review if policy/evidence changed |
 | Test-only change | Test command and diff check | Light review if fixtures or assertions change behavior | Light review |

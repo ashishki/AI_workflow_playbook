@@ -1,0 +1,55 @@
+{
+  "adapter_version": "scripted.v1",
+  "bundle_id": "failed_command_recovery-playbook-trial-0",
+  "command_receipts": [
+    {
+      "kind": "command_receipt",
+      "path": "adapter/receipts/attempt-0/receipt.json",
+      "sha256": "dc41b59d7c5673c04591a5652291c7daddf0d3bc05613b44677888367b6a460d"
+    },
+    {
+      "kind": "command_receipt",
+      "path": "adapter/receipts/attempt-1/receipt.json",
+      "sha256": "1c484eaf4281d7a4e6216a84d123735b088936755bf81136bfe52addc070cfbc"
+    }
+  ],
+  "commit_after": "5ffd2b5bbb0dde70c5557b23202ca4e79037f863",
+  "commit_before": "5ffd2b5bbb0dde70c5557b23202ca4e79037f863",
+  "condition": "playbook",
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "environment_digest": "d9eba3448ad38d40df603f59cb394617e3d2fa072d5b73ade49d1f893e7ae2ce",
+  "failure_records": [],
+  "generated_report_ref": {
+    "kind": "generated_report",
+    "path": "report.md",
+    "sha256": "d75b4f25f904581e66b0e7a1cbb6ef481fd2b69710d6365ca13a422d545187e0"
+  },
+  "manifest_hash": "b09d609911585ab6c701339800b715a4ddbc89ea32d31cddcd9f102221b40fad",
+  "post_state_manifest": {
+    "kind": "post_state_manifest",
+    "path": "post_state_manifest.json",
+    "sha256": "68b32d5d6fcb19119dd6c43bd6d5f887ceeb144ecb6d97c5f492a2589d9284bd"
+  },
+  "repository": "playbook_core_v1",
+  "schema_version": "playbook.evidence_bundle.v1",
+  "scorer_outputs": [
+    {
+      "kind": "scorer_output",
+      "path": "scorers/attempt_receipts.json",
+      "sha256": "27ea34d33a608960c8ab0a090c1f01d10277bdf0c79961914ef20032e5217a21"
+    },
+    {
+      "kind": "scorer_output",
+      "path": "scorers/retry_budget.json",
+      "sha256": "df6ca8b987204241fbd0bc01baefbf58342db58092cdedbcef031000059dfcfb"
+    }
+  ],
+  "task_id": "failed_command_recovery",
+  "task_spec_version": "failed_command_recovery.v1",
+  "trace_refs": [],
+  "verification_timestamp": "2026-07-10T10:38:51Z",
+  "verifier_identity": "ai_workflow_harness_lab"
+}

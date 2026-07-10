@@ -1,0 +1,16 @@
+{
+  "failure_records": [
+    "failed_command_recovery-retry-budget"
+  ],
+  "metrics": {
+    "attempt_count": 4,
+    "retry_count": 3
+  },
+  "schema_version": "playbook.scorer_output.v1",
+  "score": 0.0,
+  "scorer_code_hash": "bae7940bf7cda1605ce8d080e4a48b63870453e790f3fc181c5c0a162e31a0e3",
+  "scorer_id": "retry_budget",
+  "scorer_version": "1.0.0",
+  "task_id": "failed_command_recovery",
+  "verdict": "failed"
+}

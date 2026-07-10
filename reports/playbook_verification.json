@@ -1,0 +1,288 @@
+{
+  "checks": [
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "tools/playbook_validate.py",
+        "--root",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook",
+        "--json",
+        "reports/playbook_validation.json"
+      ],
+      "check_id": "playbook_validate",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/playbook_validate.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/playbook_validate.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "-m",
+        "py_compile",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/cognition_index.py",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/context_packet_builder.py",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/cost_rollup.py",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/init_playbook_project.py",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/integrity_check.py",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/playbook_validate.py",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/receipt_run.py",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/skill_security_gate.py",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/validate_harness_evidence.py",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/verify_playbook.py"
+      ],
+      "check_id": "py_compile_tools",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/py_compile_tools.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/py_compile_tools.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "-m",
+        "py_compile",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/templates/cost_adapters/python/telemetry_adapter.py"
+      ],
+      "check_id": "py_compile_templates",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/py_compile_templates.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/py_compile_templates.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "check_id": "pytest",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/pytest.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/pytest.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/hooks",
+        "-q"
+      ],
+      "check_id": "hook_tests",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/hook_tests.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/hook_tests.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "tools/init_playbook_project.py",
+        "/tmp/playbook-verify-generated-nk6vqcgf/lean-core",
+        "--mode",
+        "lean-core",
+        "--project-name",
+        "Verify lean-core",
+        "--verify-command",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python tools/verify_project.py --root ."
+      ],
+      "check_id": "initializer_lean-core",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/initializer_lean-core.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/initializer_lean-core.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/playbook_validate.py",
+        "--root",
+        "/tmp/playbook-verify-generated-nk6vqcgf/lean-core",
+        "--check",
+        "tasks",
+        "--check",
+        "placeholders"
+      ],
+      "check_id": "generated_validate_lean-core",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_validate_lean-core.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_validate_lean-core.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "tools/verify_project.py",
+        "--root",
+        "."
+      ],
+      "check_id": "generated_verify_lean-core",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_verify_lean-core.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_verify_lean-core.stdout.txt"
+    },
+    {
+      "argv": [
+        "internal",
+        "lean-core-artifact-matrix"
+      ],
+      "check_id": "generated_lean_core_artifact_matrix",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_lean_core_artifact_matrix.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_lean_core_artifact_matrix.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "tools/init_playbook_project.py",
+        "/tmp/playbook-verify-generated-nk6vqcgf/standard",
+        "--mode",
+        "standard",
+        "--project-name",
+        "Verify standard",
+        "--verify-command",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python tools/verify_project.py --root ."
+      ],
+      "check_id": "initializer_standard",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/initializer_standard.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/initializer_standard.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/playbook_validate.py",
+        "--root",
+        "/tmp/playbook-verify-generated-nk6vqcgf/standard",
+        "--check",
+        "tasks",
+        "--check",
+        "placeholders"
+      ],
+      "check_id": "generated_validate_standard",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_validate_standard.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_validate_standard.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "tools/verify_project.py",
+        "--root",
+        "."
+      ],
+      "check_id": "generated_verify_standard",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_verify_standard.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_verify_standard.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "tools/init_playbook_project.py",
+        "/tmp/playbook-verify-generated-nk6vqcgf/strict",
+        "--mode",
+        "strict",
+        "--project-name",
+        "Verify strict",
+        "--verify-command",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python tools/verify_project.py --root .",
+        "--install-claude-hooks"
+      ],
+      "check_id": "initializer_strict",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/initializer_strict.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/initializer_strict.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tools/playbook_validate.py",
+        "--root",
+        "/tmp/playbook-verify-generated-nk6vqcgf/strict",
+        "--check",
+        "tasks",
+        "--check",
+        "placeholders"
+      ],
+      "check_id": "generated_validate_strict",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_validate_strict.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_validate_strict.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "tools/verify_project.py",
+        "--root",
+        "."
+      ],
+      "check_id": "generated_verify_strict",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_verify_strict.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_verify_strict.stdout.txt"
+    },
+    {
+      "argv": [
+        "internal",
+        "strict-hook-install"
+      ],
+      "check_id": "generated_strict_hook_install",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_strict_hook_install.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/generated_strict_hook_install.stdout.txt"
+    },
+    {
+      "argv": [
+        "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+        "tools/validate_harness_evidence.py",
+        "tests/fixtures/evidence/valid_bundle/bundle.json",
+        "--json",
+        "reports/evidence_fixture_validation.json"
+      ],
+      "check_id": "evidence_fixture_validation",
+      "exit_code": 0,
+      "passed": true,
+      "required": true,
+      "stderr_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/evidence_fixture_validation.stderr.txt",
+      "stdout_artifact": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z/evidence_fixture_validation.stdout.txt"
+    }
+  ],
+  "generated_at": "2026-07-10T10:38:48Z",
+  "root": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook",
+  "run_dir": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/reports/verification/20260710T103836Z",
+  "schema_version": "playbook.verify.v1",
+  "summary": {
+    "optional_failures": 0,
+    "required": 17,
+    "required_failures": 0
+  }
+}

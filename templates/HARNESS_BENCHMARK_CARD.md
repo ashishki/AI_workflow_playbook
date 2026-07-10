@@ -17,15 +17,25 @@ Date: {{DATE}}
 | Area | Baseline | Candidate |
 |------|----------|-----------|
 | Model/class | | |
+| Exact model ID / revision | | |
 | Harness version | | |
+| Harness commit / image digest | | |
+| Adapter version | | |
 | Prompt version | | |
 | Tool registry version | | |
 | Memory policy | | |
 | Permission policy | | |
 | Runtime/environment | | |
+| Environment digest | | |
 | Dataset version | | |
+| Sampling manifest | | |
 | Scorer version | | |
+| Scorer code hash | | |
 | Budget | | |
+| Trial count | | |
+| Invalid-run treatment | | |
+| Patch provenance | | |
+| Raw EvidenceBundle refs | | |
 
 ## Task Slices
 
@@ -50,6 +60,11 @@ Date: {{DATE}}
 | trace completeness | | | | |
 | p95 latency | | | | |
 | cost per successful task | | | | |
+| invalid infrastructure run rate | | | | |
+| false-success rate | | | | |
+| policy violation rate | | | | |
+| evidence correctness | | | | |
+| uncertainty / confidence interval | | | | |
 
 ## Failure Taxonomy
 
@@ -68,3 +83,13 @@ Decision: adopt | reject | rerun | needs human review
 Rationale:
 
 Follow-up tasks:
+
+## Generated Reports
+
+This card is a planning and review artifact. Runtime results must be generated
+from raw EvidenceBundles by the harness comparison command, not manually filled
+in as proof.
+
+- Baseline bundles:
+- Candidate bundles:
+- Comparison report:

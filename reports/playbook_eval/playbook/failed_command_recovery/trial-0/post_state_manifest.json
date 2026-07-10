@@ -1,0 +1,9 @@
+{
+  "files": {
+    "README.md": "7af109358e809357c70ccc82584e463d5d5ebbf7725da699568beca0855123f5",
+    "attempts.json": "7f07bd7989d3e0d14b31a57134239e8df2828937ee24a5338e4c924dcdac2db2",
+    "commands.md": "93b8c999f3e8824dfa91edf21ae1d84253d40354e57c3f9e73f6db51d2cbc17e"
+  },
+  "schema_version": "harness_lab.post_state_manifest.v1",
+  "workspace": "reports/playbook_eval/playbook/failed_command_recovery/trial-0/workspace"
+}

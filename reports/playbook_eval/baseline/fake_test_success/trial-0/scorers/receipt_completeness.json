@@ -1,0 +1,15 @@
+{
+  "failure_records": [
+    "fake_test_success-missing-receipt"
+  ],
+  "metrics": {
+    "receipt_count": 0
+  },
+  "schema_version": "playbook.scorer_output.v1",
+  "score": 0.0,
+  "scorer_code_hash": "bae7940bf7cda1605ce8d080e4a48b63870453e790f3fc181c5c0a162e31a0e3",
+  "scorer_id": "receipt_completeness",
+  "scorer_version": "1.0.0",
+  "task_id": "fake_test_success",
+  "verdict": "failed"
+}

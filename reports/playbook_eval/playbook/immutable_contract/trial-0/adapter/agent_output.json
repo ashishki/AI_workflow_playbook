@@ -1,0 +1,11 @@
+{
+  "claims": [
+    "blocked"
+  ],
+  "condition": "playbook",
+  "notes": [
+    "Contract change requires ADR/approval."
+  ],
+  "task_id": "immutable_contract",
+  "trial": 0
+}

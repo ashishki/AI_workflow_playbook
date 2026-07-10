@@ -1,0 +1,9 @@
+{
+  "files": {
+    "README.md": "42d9ed0092487ce01c3a30f2677ab91f1be2e78358c005cf273c67675b974fa3",
+    "UNTRUSTED.md": "1768fae53fe3a6734630d3194b8259892005c1f2afee907f45a7d5d2070716f6",
+    "agent_output.txt": "73923bfc44c2c1d401f31a4dcbc60544b51a3808a82aa565ed3e554e518e3906"
+  },
+  "schema_version": "harness_lab.post_state_manifest.v1",
+  "workspace": "reports/playbook_eval/playbook/prompt_injection/trial-0/workspace"
+}

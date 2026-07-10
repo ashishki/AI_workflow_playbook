@@ -25,6 +25,8 @@ Examples:
 - explicit evidence collection
 - selective proof-first handling for risky tasks
 - fresh verification for non-trivial changes
+- command receipts produced by `tools/receipt_run.py`
+- evidence bundles validated by `tools/validate_harness_evidence.py`
 
 This layer should grow selectively, not by making every task heavy.
 
@@ -69,6 +71,12 @@ Harness design makes agentic systems auditable:
 - harness eval and benchmark cards
 
 This is an architecture contract, not a runtime framework.
+
+Runnable benchmark and harness experiments live outside the core control plane
+in `companion/ai_workflow_harness_lab/`. The companion package consumes
+versioned playbook schemas and files, but the core Lean/Standard/Strict
+playbook does not runtime-import the companion package and does not require it
+for normal adoption.
 
 Packaging makes the playbook reusable:
 

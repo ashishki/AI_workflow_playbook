@@ -1,0 +1,11 @@
+init_playbook_project: target=/tmp/playbook-verify-generated-nk6vqcgf/lean-core
+init_playbook_project: mode=lean-core
+  create: /tmp/playbook-verify-generated-nk6vqcgf/lean-core/docs/tasks.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/lean-core/docs/CONTRACT_LITE.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/lean-core/AGENTS.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/lean-core/docs/PROBLEM_FIT.md
+  create: /tmp/playbook-verify-generated-nk6vqcgf/lean-core/tools/integrity_check.py
+  create: /tmp/playbook-verify-generated-nk6vqcgf/lean-core/tools/playbook_validate.py
+  create: /tmp/playbook-verify-generated-nk6vqcgf/lean-core/tools/verify_project.py
+  create: /tmp/playbook-verify-generated-nk6vqcgf/lean-core/schemas/task.schema.json
+init_playbook_project: created=8 skipped=0

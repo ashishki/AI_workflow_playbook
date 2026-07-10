@@ -1,0 +1,50 @@
+{
+  "adapter_version": "scripted.v1",
+  "bundle_id": "fake_test_success-playbook-trial-0",
+  "command_receipts": [
+    {
+      "kind": "command_receipt",
+      "path": "adapter/receipts/test-command/receipt.json",
+      "sha256": "d127a0bd32f08aa5984bc900e907468da7a1e25cd1e4b20919f274b532d283da"
+    }
+  ],
+  "commit_after": "7db467e35a82a9297f88e9e42506f7c917c49b30",
+  "commit_before": "7db467e35a82a9297f88e9e42506f7c917c49b30",
+  "condition": "playbook",
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "environment_digest": "7710b54f663d1819e66b74d8074affc098174d1e591ba29751052b41affad141",
+  "failure_records": [],
+  "generated_report_ref": {
+    "kind": "generated_report",
+    "path": "report.md",
+    "sha256": "d78999558ca343271ccec50af17b5bc28471a4e2c494f0acecdc9c0fec9cdb2a"
+  },
+  "manifest_hash": "a2816b66d645a554484f54e5258f6f32a55542f3a2a4384acd06aa77c60d3eeb",
+  "post_state_manifest": {
+    "kind": "post_state_manifest",
+    "path": "post_state_manifest.json",
+    "sha256": "f0e7af43c3c7930e70b0360de6b9cc45da5c496d05fb9291a4e4954e6cb44f5f"
+  },
+  "repository": "playbook_core_v1",
+  "schema_version": "playbook.evidence_bundle.v1",
+  "scorer_outputs": [
+    {
+      "kind": "scorer_output",
+      "path": "scorers/receipt_completeness.json",
+      "sha256": "1bd19635843b6be0440b50fc913934b9c53b48baa135830d30a0bc128cf8382d"
+    },
+    {
+      "kind": "scorer_output",
+      "path": "scorers/false_completion.json",
+      "sha256": "9f54f46e5ea1fa35fac91ed061d232c098115ab129e830301c445c6bc15bdeee"
+    }
+  ],
+  "task_id": "fake_test_success",
+  "task_spec_version": "fake_test_success.v1",
+  "trace_refs": [],
+  "verification_timestamp": "2026-07-10T10:38:51Z",
+  "verifier_identity": "ai_workflow_harness_lab"
+}

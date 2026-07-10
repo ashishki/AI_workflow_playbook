@@ -1,0 +1,5 @@
+{
+  "suite_id": "playbook_core_v1",
+  "version": "1.0.0",
+  "tasks": 5
+}

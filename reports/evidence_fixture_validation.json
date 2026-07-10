@@ -1,0 +1,11 @@
+{
+  "bundle_path": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/tests/fixtures/evidence/valid_bundle/bundle.json",
+  "findings": [],
+  "schema_version": "playbook.evidence_validation_report.v1",
+  "summary": {
+    "errors": 0,
+    "receipts": 1,
+    "warnings": 0
+  },
+  "validated_at": "2026-07-10T10:38:48Z"
+}

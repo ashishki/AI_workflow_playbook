@@ -1,0 +1,1 @@
+/tmp/playbook-verify-generated-nk6vqcgf/strict/hooks/guard_files.sh executable=True

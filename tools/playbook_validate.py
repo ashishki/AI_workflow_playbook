@@ -1,0 +1,773 @@
+#!/usr/bin/env python3
+"""Deterministic AI Workflow Playbook validator.
+
+The validator intentionally avoids LLMs and third-party dependencies. JSON
+Schema files remain the versioned contract; this tool is the executable
+consumer for the parts of the contract that the playbook itself needs in CI.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+import tempfile
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any
+
+
+FIELD_RE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):(?:\s*(.*))?$")
+TASK_HEADING_RE = re.compile(r"^###\s+([A-Za-z][A-Za-z0-9._-]*):\s*(.+?)\s*$")
+FENCE_RE = re.compile(r"^\s*(```|~~~)")
+PLACEHOLDER_RE = re.compile(r"\{\{[^{}\n]+\}\}")
+BACKTICK_RE = re.compile(r"`([^`]+)`")
+PATH_LIKE_RE = re.compile(r"[/\\]|(?:\.(?:md|py|json|ya?ml|toml|txt|sh)$)")
+
+FIELD_ALIASES = {
+    "acceptance-criteria": "acceptance_criteria",
+    "acceptance_criteria": "acceptance_criteria",
+    "context-refs": "context_refs",
+    "context_refs": "context_refs",
+    "correction-budget": "correction_budget",
+    "correction_budget": "correction_budget",
+    "cost-budget": "cost_budget",
+    "cost_budget": "cost_budget",
+    "depends-on": "dependencies",
+    "depends_on": "dependencies",
+    "evidence": "evidence",
+    "files": "files",
+    "heavy-mode": "heavy_mode",
+    "heavy_mode": "heavy_mode",
+    "integration-points": "files",
+    "integration_points": "files",
+    "notes": "notes",
+    "objective": "objective",
+    "owner": "owner",
+    "phase": "phase",
+    "runtime-verification": "runtime_verification",
+    "runtime_verification": "runtime_verification",
+    "status": "status",
+    "test": "test",
+    "type": "type_tags",
+    "verification": "verify",
+    "verify": "verify",
+}
+
+LIST_FIELDS = {
+    "acceptance_criteria",
+    "context_refs",
+    "dependencies",
+    "evidence",
+    "files",
+    "test",
+    "type_tags",
+    "verify",
+}
+
+PATH_SKIP_PARTS = {
+    ".git",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    "node_modules",
+}
+
+PLACEHOLDER_SKIP_DIRS = {
+    "templates",
+    "prompts",
+    "examples",
+    "domain_packs",
+    "reference",
+    "reports",
+}
+
+ACTIVE_PLACEHOLDER_FILES = {
+    "README.md",
+    "PLAYBOOK.md",
+    ".github/workflows/playbook-checks.yml",
+    "docs/tasks.md",
+    "docs/architecture_layers.md",
+    "docs/runtime_verification_protocol.md",
+    "docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md",
+    "docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md",
+}
+
+
+@dataclass
+class Finding:
+    severity: str
+    path: str
+    line: int
+    check_id: str
+    message: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "severity": self.severity,
+            "path": self.path,
+            "line": self.line,
+            "check_id": self.check_id,
+            "message": self.message,
+        }
+
+
+@dataclass
+class TaskBlock:
+    task_id: str
+    title: str
+    path: Path
+    line: int
+    phase_context: str = ""
+    fields: dict[str, Any] = field(default_factory=dict)
+    field_lines: dict[str, int] = field(default_factory=dict)
+
+    def to_record(self) -> dict[str, Any]:
+        status = str(self.fields.get("status", "")).strip()
+        verify = listify(self.fields.get("verify"))
+        test = listify(self.fields.get("test"))
+        evidence = listify(self.fields.get("evidence"))
+        record: dict[str, Any] = {
+            "schema_version": "playbook.task.v1",
+            "task_id": self.task_id,
+            "title": self.title,
+            "owner": str(self.fields.get("owner", "")).strip(),
+            "phase": str(self.fields.get("phase") or self.phase_context).strip(),
+            "status": status,
+            "type_tags": split_tags(self.fields.get("type_tags")),
+            "dependencies": parse_dependencies(self.fields.get("dependencies")),
+            "objective": str(self.fields.get("objective", "")).strip(),
+            "acceptance_criteria": listify(self.fields.get("acceptance_criteria")),
+            "files": listify(self.fields.get("files")),
+            "context_refs": listify(self.fields.get("context_refs")),
+            "heavy_mode": normalize_heavy_mode(self.fields.get("heavy_mode")),
+            "runtime_verification": normalize_runtime_verification(
+                self.fields.get("runtime_verification")
+            ),
+        }
+        if verify:
+            record["verify"] = verify
+        elif status.startswith("done") and evidence:
+            # Historical framework tasks used Evidence before the executable
+            # schema existed. Keep them valid while new tasks use Verification.
+            record["verify"] = evidence
+        if test:
+            record["test"] = test
+        correction_budget = self.fields.get("correction_budget")
+        if correction_budget not in (None, ""):
+            try:
+                record["correction_budget"] = int(str(correction_budget).strip())
+            except ValueError:
+                record["correction_budget"] = correction_budget
+        cost_budget = self.fields.get("cost_budget")
+        if cost_budget not in (None, ""):
+            record["cost_budget"] = str(cost_budget).strip()
+        return record
+
+
+def relative(root: Path, path: Path) -> str:
+    try:
+        return str(path.relative_to(root))
+    except ValueError:
+        return str(path)
+
+
+def canonical_field(raw: str) -> str | None:
+    return FIELD_ALIASES.get(raw.strip().lower().replace(" ", "-"))
+
+
+def listify(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    text = str(value).strip()
+    if not text or text.lower() in {"none", "n/a", "not applicable"}:
+        return []
+    return [text]
+
+
+def split_tags(value: Any) -> list[str]:
+    values = listify(value)
+    tags: list[str] = []
+    for item in values:
+        tags.extend(part.strip() for part in re.split(r"[, ]+", item) if part.strip())
+    return tags
+
+
+def parse_dependencies(value: Any) -> list[str]:
+    deps: list[str] = []
+    for item in listify(value):
+        if item.strip().lower() in {"none", "n/a", "no", "-"}:
+            continue
+        deps.extend(part.strip() for part in re.split(r"[, ]+", item) if part.strip())
+    return deps
+
+
+def normalize_heavy_mode(value: Any) -> str:
+    raw = str(value or "").strip().lower().replace("-", "_")
+    if raw in {"required", "yes", "true"}:
+        return "required"
+    if raw in {"optional", "conditional"}:
+        return "optional"
+    return "none"
+
+
+def normalize_runtime_verification(value: Any) -> str:
+    raw = str(value or "").strip().lower().replace("-", "_")
+    if raw in {"required", "yes", "true"}:
+        return "required"
+    if raw in {"not_required", "none", "no", "false"}:
+        return "not_required"
+    return "conditional"
+
+
+def parse_list_item(line: str) -> str | None:
+    stripped = line.strip()
+    if stripped.startswith("- "):
+        return stripped[2:].strip()
+    return None
+
+
+def parse_task_blocks(path: Path) -> list[TaskBlock]:
+    text = path.read_text(encoding="utf-8", errors="replace")
+    lines = text.splitlines()
+    tasks: list[TaskBlock] = []
+    current: TaskBlock | None = None
+    current_phase = ""
+    active_field: str | None = None
+    multiline_field: str | None = None
+    multiline_indent: int | None = None
+
+    for line_no, line in enumerate(lines, 1):
+        if line.startswith("## Phase "):
+            current_phase = line[3:].strip()
+            active_field = None
+            multiline_field = None
+            multiline_indent = None
+            continue
+        heading = TASK_HEADING_RE.match(line)
+        if heading:
+            current = TaskBlock(
+                task_id=heading.group(1).strip(),
+                title=heading.group(2).strip(),
+                path=path,
+                line=line_no,
+                phase_context=current_phase,
+            )
+            tasks.append(current)
+            active_field = None
+            multiline_field = None
+            multiline_indent = None
+            continue
+        if current is None:
+            continue
+        if line.startswith("## "):
+            active_field = None
+            multiline_field = None
+            multiline_indent = None
+            continue
+        field_match = FIELD_RE.match(line.strip())
+        if field_match:
+            field_name = canonical_field(field_match.group(1))
+            if field_name is None:
+                active_field = None
+                multiline_field = None
+                multiline_indent = None
+                continue
+            raw_value = (field_match.group(2) or "").rstrip()
+            current.field_lines.setdefault(field_name, line_no)
+            if raw_value == "|":
+                current.fields[field_name] = ""
+                active_field = field_name
+                multiline_field = field_name
+                multiline_indent = None
+            elif field_name in LIST_FIELDS:
+                current.fields[field_name] = listify(raw_value)
+                active_field = field_name
+                multiline_field = None
+                multiline_indent = None
+            else:
+                current.fields[field_name] = raw_value.strip()
+                active_field = field_name
+                multiline_field = None
+                multiline_indent = None
+            continue
+        if multiline_field is not None:
+            if not line.strip():
+                current.fields[multiline_field] = (
+                    str(current.fields.get(multiline_field, "")) + "\n"
+                )
+                continue
+            indent = len(line) - len(line.lstrip(" "))
+            if multiline_indent is None:
+                multiline_indent = indent
+            trimmed = line[multiline_indent:] if len(line) >= multiline_indent else line.strip()
+            current.fields[multiline_field] = (
+                str(current.fields.get(multiline_field, "")) + trimmed.rstrip() + "\n"
+            )
+            continue
+        if active_field in LIST_FIELDS:
+            item = parse_list_item(line)
+            if item is not None:
+                current.fields.setdefault(active_field, [])
+                current.fields[active_field].append(item)
+                continue
+            if active_field and line.startswith("    ") and current.fields.get(active_field):
+                current.fields[active_field][-1] = (
+                    current.fields[active_field][-1] + " " + line.strip()
+                ).strip()
+
+    return tasks
+
+
+def validate_task_record(task: TaskBlock, root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    record = task.to_record()
+    required = [
+        "task_id",
+        "title",
+        "owner",
+        "phase",
+        "type_tags",
+        "objective",
+        "acceptance_criteria",
+    ]
+    for field_name in required:
+        value = record.get(field_name)
+        if value in ("", [], None):
+            findings.append(
+                Finding(
+                    "error",
+                    relative(root, task.path),
+                    task.field_lines.get(field_name, task.line),
+                    "TASK_REQUIRED_FIELD",
+                    f"task {task.task_id} missing required field `{field_name}`",
+                )
+            )
+    if not record.get("verify") and not record.get("test"):
+        findings.append(
+            Finding(
+                "error",
+                relative(root, task.path),
+                task.line,
+                "TASK_VERIFIER_REQUIRED",
+                f"task {task.task_id} must declare Verification/Verify or Test",
+            )
+        )
+    if "correction_budget" in record and not isinstance(record["correction_budget"], int):
+        findings.append(
+            Finding(
+                "error",
+                relative(root, task.path),
+                task.field_lines.get("correction_budget", task.line),
+                "TASK_CORRECTION_BUDGET",
+                f"task {task.task_id} correction budget must be an integer",
+            )
+        )
+    if isinstance(record.get("correction_budget"), int) and record["correction_budget"] > 10:
+        findings.append(
+            Finding(
+                "error",
+                relative(root, task.path),
+                task.field_lines.get("correction_budget", task.line),
+                "TASK_CORRECTION_BUDGET",
+                f"task {task.task_id} correction budget exceeds maximum 10",
+            )
+        )
+    return findings
+
+
+def validate_dependency_graph(tasks: list[TaskBlock], root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    by_id = {task.task_id: task for task in tasks}
+    graph = {task.task_id: task.to_record().get("dependencies", []) for task in tasks}
+    for task_id, deps in graph.items():
+        for dep in deps:
+            if dep not in by_id:
+                task = by_id[task_id]
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("dependencies", task.line),
+                        "TASK_UNKNOWN_DEPENDENCY",
+                        f"task {task_id} depends on unknown task {dep}",
+                    )
+                )
+
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def walk(task_id: str, stack: list[str]) -> None:
+        if task_id in visiting:
+            cycle = stack[stack.index(task_id) :] + [task_id]
+            task = by_id[task_id]
+            findings.append(
+                Finding(
+                    "error",
+                    relative(root, task.path),
+                    task.field_lines.get("dependencies", task.line),
+                    "TASK_CYCLIC_DEPENDENCY",
+                    "cyclic dependency: " + " -> ".join(cycle),
+                )
+            )
+            return
+        if task_id in visited or task_id not in graph:
+            return
+        visiting.add(task_id)
+        for dep in graph[task_id]:
+            walk(dep, stack + [dep])
+        visiting.remove(task_id)
+        visited.add(task_id)
+
+    for task_id in graph:
+        walk(task_id, [task_id])
+    return findings
+
+
+def looks_like_path(value: str) -> bool:
+    value = value.strip().split("#", 1)[0].split("::", 1)[0].rstrip("/")
+    if not value or value.startswith(("http://", "https://")):
+        return False
+    if value.startswith("{{") and value.endswith("}}"):
+        return False
+    return bool(PATH_LIKE_RE.search(value)) or value in {"README.md", "PLAYBOOK.md"}
+
+
+def referenced_paths(value: str) -> list[str]:
+    refs = [match.group(1).strip() for match in BACKTICK_RE.finditer(value)]
+    if not refs and looks_like_path(value):
+        refs.append(value.strip())
+    return [ref.split("#", 1)[0].split("::", 1)[0].rstrip("/") for ref in refs]
+
+
+def backticked_path_refs(value: str) -> list[str]:
+    refs: list[str] = []
+    for match in BACKTICK_RE.finditer(value):
+        raw = match.group(1).strip()
+        if " " in raw:
+            continue
+        if looks_like_path(raw):
+            refs.append(raw.split("#", 1)[0].split("::", 1)[0].rstrip("/"))
+    return refs
+
+
+def validate_context_refs(tasks: list[TaskBlock], root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    for task in tasks:
+        for ref in task.to_record().get("context_refs", []):
+            for path_text in referenced_paths(ref):
+                if looks_like_path(path_text) and not (root / path_text).exists():
+                    findings.append(
+                        Finding(
+                            "error",
+                            relative(root, task.path),
+                            task.field_lines.get("context_refs", task.line),
+                            "REFERENCE_MISSING_CONTEXT",
+                            f"task {task.task_id} Context-Refs path missing: {path_text}",
+                        )
+                    )
+    return findings
+
+
+def validate_tasks(root: Path) -> tuple[list[Finding], list[dict[str, Any]]]:
+    tasks_path = root / "docs" / "tasks.md"
+    if not tasks_path.exists():
+        return [
+            Finding(
+                "error",
+                "docs/tasks.md",
+                1,
+                "TASK_FILE_MISSING",
+                "docs/tasks.md is required",
+            )
+        ], []
+    tasks = parse_task_blocks(tasks_path)
+    findings: list[Finding] = []
+    if not tasks:
+        findings.append(
+            Finding("error", "docs/tasks.md", 1, "TASK_NONE_FOUND", "no task blocks found")
+        )
+    for task in tasks:
+        findings.extend(validate_task_record(task, root))
+    findings.extend(validate_dependency_graph(tasks, root))
+    findings.extend(validate_context_refs(tasks, root))
+    return findings, [task.to_record() for task in tasks]
+
+
+def should_skip_path(path: Path) -> bool:
+    return any(part in PATH_SKIP_PARTS for part in path.parts)
+
+
+def active_placeholder_paths(root: Path) -> list[Path]:
+    paths: list[Path] = []
+    for rel in ACTIVE_PLACEHOLDER_FILES:
+        path = root / rel
+        if path.exists():
+            paths.append(path)
+    for path in sorted((root / "docs").rglob("*.md")) if (root / "docs").exists() else []:
+        rel_parts = set(path.relative_to(root).parts)
+        if rel_parts & PLACEHOLDER_SKIP_DIRS:
+            continue
+        if path not in paths:
+            paths.append(path)
+    return paths
+
+
+def validate_placeholders(root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    for path in active_placeholder_paths(root):
+        if should_skip_path(path):
+            continue
+        in_fence = False
+        for line_no, line in enumerate(
+            path.read_text(encoding="utf-8", errors="replace").splitlines(),
+            1,
+        ):
+            if FENCE_RE.match(line):
+                in_fence = not in_fence
+                continue
+            if in_fence:
+                continue
+            if "placeholder" in line.lower() or "replace `" in line.lower():
+                continue
+            for match in PLACEHOLDER_RE.finditer(line):
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, path),
+                        line_no,
+                        "PLACEHOLDER_UNRESOLVED",
+                        f"unresolved placeholder {match.group(0)}",
+                    )
+                )
+    return findings
+
+
+def validate_json_schemas(root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    schema_dir = root / "schemas"
+    if not schema_dir.exists():
+        return [Finding("error", "schemas", 1, "SCHEMA_DIR_MISSING", "schemas/ missing")]
+    for path in sorted(schema_dir.glob("*.schema.json")):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            findings.append(
+                Finding(
+                    "error",
+                    relative(root, path),
+                    exc.lineno,
+                    "SCHEMA_JSON_INVALID",
+                    exc.msg,
+                )
+            )
+            continue
+        if not isinstance(data, dict) or "$schema" not in data:
+            findings.append(
+                Finding(
+                    "error",
+                    relative(root, path),
+                    1,
+                    "SCHEMA_META_MISSING",
+                    "schema file must contain a $schema field",
+                )
+            )
+    return findings
+
+
+def validate_reference_integrity(root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    docs = [
+        root / "docs" / "COGNITION_MANIFEST.md",
+        root / "docs" / "EVIDENCE_INDEX.md",
+        root / "docs" / "tasks.md",
+    ]
+    for path in docs:
+        if not path.exists():
+            continue
+        in_fence = False
+        for line_no, line in enumerate(
+            path.read_text(encoding="utf-8", errors="replace").splitlines(),
+            1,
+        ):
+            if FENCE_RE.match(line):
+                in_fence = not in_fence
+                continue
+            if in_fence:
+                continue
+            for ref in backticked_path_refs(line):
+                if not looks_like_path(ref):
+                    continue
+                normalized = ref.split("#", 1)[0].split("::", 1)[0].rstrip("/")
+                if normalized in {"docs/context-packets"} or normalized.startswith("generated/"):
+                    severity = "warning"
+                else:
+                    severity = "error"
+                if not (root / normalized).exists():
+                    findings.append(
+                        Finding(
+                            severity,
+                            relative(root, path),
+                            line_no,
+                            "REFERENCE_MISSING",
+                            f"missing referenced path {normalized}",
+                        )
+                    )
+    return findings
+
+
+def validate_modes(root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    init_tool = root / "tools" / "init_playbook_project.py"
+    if not init_tool.exists():
+        return [
+            Finding(
+                "error",
+                "tools/init_playbook_project.py",
+                1,
+                "MODE_INITIALIZER_MISSING",
+                "initializer tool missing",
+            )
+        ]
+    with tempfile.TemporaryDirectory(prefix="playbook-modes-") as tmp:
+        tmp_path = Path(tmp)
+        import subprocess
+
+        modes = ["lean-core", "standard", "strict"]
+        for mode in modes:
+            target = tmp_path / mode
+            cmd = [
+                sys.executable,
+                str(init_tool),
+                str(target),
+                "--mode",
+                mode,
+                "--project-name",
+                f"Mode {mode}",
+                "--verify-command",
+                f"{sys.executable} tools/verify_project.py --root .",
+            ]
+            result = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if result.returncode != 0:
+                findings.append(
+                    Finding(
+                        "error",
+                        "tools/init_playbook_project.py",
+                        1,
+                        "MODE_INITIALIZER_FAILED",
+                        f"initializer failed for {mode}: {result.stderr.strip() or result.stdout.strip()}",
+                    )
+                )
+                continue
+            mode_findings, _ = validate_tasks(target)
+            for finding in mode_findings:
+                finding.path = f"generated:{mode}/{finding.path}"
+            findings.extend(mode_findings)
+            findings.extend(
+                Finding(
+                    finding.severity,
+                    f"generated:{mode}/{finding.path}",
+                    finding.line,
+                    finding.check_id,
+                    finding.message,
+                )
+                for finding in validate_placeholders(target)
+            )
+            if mode == "lean-core":
+                unexpected = [
+                    "PLAYBOOK.md",
+                    "docs/ARCHITECTURE.md",
+                    "docs/EVIDENCE_INDEX.md",
+                    "docs/ai_cost_architecture.md",
+                    "docs/router_eval.md",
+                ]
+                for rel in unexpected:
+                    if (target / rel).exists():
+                        findings.append(
+                            Finding(
+                                "error",
+                                f"generated:{mode}/{rel}",
+                                1,
+                                "MODE_LEAN_CORE_TOO_HEAVY",
+                                f"Lean-Core generated unexpected Strict/Standard artifact {rel}",
+                            )
+                        )
+    return findings
+
+
+def run_checks(root: Path, checks: list[str]) -> dict[str, Any]:
+    findings: list[Finding] = []
+    tasks: list[dict[str, Any]] = []
+    expanded = checks if checks != ["all"] else ["schemas", "tasks", "placeholders", "references", "modes"]
+    for check in expanded:
+        if check == "schemas":
+            findings.extend(validate_json_schemas(root))
+        elif check == "tasks":
+            task_findings, tasks = validate_tasks(root)
+            findings.extend(task_findings)
+        elif check == "placeholders":
+            findings.extend(validate_placeholders(root))
+        elif check == "references":
+            findings.extend(validate_reference_integrity(root))
+        elif check == "modes":
+            findings.extend(validate_modes(root))
+        else:
+            findings.append(
+                Finding("error", ".", 1, "CHECK_UNKNOWN", f"unknown check {check}")
+            )
+    return {
+        "schema_version": "playbook.validation.v1",
+        "root": str(root),
+        "checks": expanded,
+        "tasks": tasks,
+        "findings": [finding.as_dict() for finding in findings],
+        "summary": {
+            "errors": sum(1 for finding in findings if finding.severity == "error"),
+            "warnings": sum(1 for finding in findings if finding.severity == "warning"),
+        },
+    }
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", default=".", help="Playbook or generated project root.")
+    parser.add_argument(
+        "--check",
+        action="append",
+        choices=("all", "schemas", "tasks", "placeholders", "references", "modes"),
+        default=None,
+        help="Run only this check. Repeatable. Defaults to all checks.",
+    )
+    parser.add_argument("--json", dest="json_path", help="Write machine-readable report.")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    root = Path(args.root).resolve()
+    checks = args.check or ["all"]
+    report = run_checks(root, checks)
+    if args.json_path:
+        json_path = Path(args.json_path)
+        if not json_path.is_absolute():
+            json_path = root / json_path
+        json_path.parent.mkdir(parents=True, exist_ok=True)
+        json_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    for finding in report["findings"]:
+        print(
+            "{severity}: {path}:{line}: {check_id}: {message}".format(**finding),
+            file=sys.stderr if finding["severity"] == "error" else sys.stdout,
+        )
+    summary = report["summary"]
+    print(
+        f"playbook_validate: errors={summary['errors']} warnings={summary['warnings']}"
+    )
+    return 1 if summary["errors"] else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

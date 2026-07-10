@@ -1,0 +1,13 @@
+.github/workflows/playbook-checks.yml      |   9 +
+ README.md                                  |  68 +++++--
+ ci/ci.yml                                  | 276 +-------------------------
+ docs/adoption_modes.md                     |  13 +-
+ docs/agent_harness/AGENT_HARNESS_DESIGN.md |  39 +---
+ docs/agent_harness/HARNESS_EVAL_PLAN.md    |  54 +-----
+ docs/architecture_layers.md                |   8 +
+ docs/tasks.md                              |  42 +++-
+ templates/HARNESS_BENCHMARK_CARD.md        |  25 +++
+ templates/RUNTIME_VERIFICATION_RECORD.md   |  85 +++-----
+ tools/README.md                            |  14 +-
+ tools/init_playbook_project.py             | 299 +++++++++++++++++++++++++++--
+ 12 files changed, 484 insertions(+), 448 deletions(-)

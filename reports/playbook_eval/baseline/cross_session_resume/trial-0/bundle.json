@@ -1,0 +1,61 @@
+{
+  "adapter_version": "scripted.v1",
+  "bundle_id": "cross_session_resume-baseline-trial-0",
+  "command_receipts": [],
+  "commit_after": "ed7e1e7e94c808daf0d8894e41d1bffc382c9673",
+  "commit_before": "ed7e1e7e94c808daf0d8894e41d1bffc382c9673",
+  "condition": "baseline",
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "environment_digest": "3476a8e4b709be0808e221da36956b3bba83e862c0b61ecba17103187dcd2f8c",
+  "failure_records": [
+    {
+      "evidence_refs": [],
+      "failure_class": "memory_failure",
+      "failure_id": "cross_session_resume-duplicate-side-effect",
+      "invalid_run": false,
+      "message": "side effect repeated 3 times",
+      "owner_class": "model",
+      "retry_count": 0,
+      "retryable": false,
+      "run_id": "cross_session_resume-baseline-0",
+      "schema_version": "playbook.failure_record.v1",
+      "score_treatment": "count_as_task_failure",
+      "stage": "scoring",
+      "task_id": "cross_session_resume",
+      "terminal": true
+    }
+  ],
+  "generated_report_ref": {
+    "kind": "generated_report",
+    "path": "report.md",
+    "sha256": "76c7cb1cd0100bdda43f503093340ab59992d302b12532732bb17bdcd03fe28e"
+  },
+  "manifest_hash": "f834fbeb5dbdc69c1d468a44eb4e15becbd3f4699837ed77d62b64332204d17a",
+  "post_state_manifest": {
+    "kind": "post_state_manifest",
+    "path": "post_state_manifest.json",
+    "sha256": "6dd912a9c5a03b1157f1589393bf944b6a86d82cc19155d7ed079df76b905d89"
+  },
+  "repository": "playbook_core_v1",
+  "schema_version": "playbook.evidence_bundle.v1",
+  "scorer_outputs": [
+    {
+      "kind": "scorer_output",
+      "path": "scorers/final_state.json",
+      "sha256": "f4e9296a33babb8ea6987834bc9063e79d8f134a35cc9c3bdf3722ad4396a169"
+    },
+    {
+      "kind": "scorer_output",
+      "path": "scorers/resume_idempotency.json",
+      "sha256": "fe0f2adec5d6035d008bf903e6b1b092eec474fc89254f413c2b989055692f92"
+    }
+  ],
+  "task_id": "cross_session_resume",
+  "task_spec_version": "cross_session_resume.v1",
+  "trace_refs": [],
+  "verification_timestamp": "2026-07-10T10:38:50Z",
+  "verifier_identity": "ai_workflow_harness_lab"
+}

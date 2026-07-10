@@ -1,6 +1,9 @@
 # AI Workflow Playbook
 
-A structured AI-assisted development workflow with hard quality guarantees. It provides prompts, templates, and enforcement mechanisms for building AI systems with explicit artifacts, review loops, and fit-for-purpose governance.
+A structured AI-assisted development workflow with explicit, testable quality
+controls. It provides prompts, templates, schemas, validators, receipts,
+review loops, and fit-for-purpose governance. Controls are labeled by actual
+maturity: documented, formalized, enforced, tested, or empirically validated.
 
 The current playbook is strongest when read as a layered system:
 
@@ -13,11 +16,30 @@ This repository is not trying to become a generic orchestration framework. Its c
 
 ---
 
+## Guarantee Maturity
+
+The playbook does not use blanket "hard guarantee" language for prompt-only
+rules. Each material guarantee has an authoritative artifact and an executable
+consumer when enforcement exists.
+
+| Guarantee | Authoritative artifact | Executable mechanism | Test / evidence | Empirical evidence | Maturity |
+|-----------|------------------------|----------------------|-----------------|--------------------|----------|
+| Task blocks are machine-readable | `schemas/task.schema.json`, `docs/tasks.md` | `tools/playbook_validate.py --check tasks` | `tests/unit/test_playbook_validate.py` | pending real-model comparison | Tested |
+| Unresolved placeholders block generated project readiness | `tools/playbook_validate.py` | `--check placeholders` outside fenced code | placeholder negative test | pending | Tested |
+| Context references are checked deterministically | `docs/tasks.md`, `tools/integrity_check.py` | `tools/playbook_validate.py --check references`, `tools/integrity_check.py` | missing-reference tests | pending | Tested |
+| Lean-Core stays lighter than Standard/Strict | `tools/init_playbook_project.py`, `docs/adoption_modes.md` | generated-project matrix in `tools/verify_playbook.py` | initializer tests | pending | Tested |
+| Claude hooks are active only when installed | `templates/.claude/settings.json`, `hooks/*.sh` | `--install-claude-hooks` merge + smoke test | hook and initializer tests | pending | Tested |
+| Agent command claims need machine receipts | `schemas/command_receipt.schema.json` | `tools/receipt_run.py` | receipt success/failure/timeout tests | pending | Tested |
+| Evidence bundles are independently validated | `schemas/evidence_bundle.schema.json` | `tools/validate_harness_evidence.py` | hash tamper and mismatch tests | pending | Tested |
+| Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare` | scripted demonstration run | real-model run pending | Formalized / Tested for mechanism |
+| Role separation and review duties | `prompts/ORCHESTRATOR.md`, audit prompts | prompt protocol and optional hooks | review prompt checks | pending | Documented / Formalized |
+| Immutable contract protection | `hooks/guard_files.sh`, contract docs | hook when installed | hook tests | pending | Tested when hooks installed |
+
 ## Why This Playbook Is Different
 
-Most "AI coding" workflows are a single prompt → single agent → hope for the best. This one is an engineering system with hard guarantees:
+Most "AI coding" workflows are a single prompt → single agent → hope for the best. This one is a governance-first engineering system with controls whose maturity is explicit:
 
-**Strict role separation.** The Orchestrator never writes code. The implementation agent never reviews its own output. Review agents never write code. These are not conventions — they are enforced rules with explicit rationale.
+**Strict role separation.** The Orchestrator never writes code. The implementation agent never reviews its own output. Review agents never write code. Today this is formalized in prompts and strengthened by optional hooks where the toolchain supports them.
 
 **Resumable state.** `docs/CODEX_PROMPT.md` is the single source of truth for live session state. Any agent, any session, any machine can resume exactly where the last one stopped. Nothing operational is held in conversational memory.
 
@@ -49,12 +71,16 @@ Most "AI coding" workflows are a single prompt → single agent → hope for the
 | **Planning** | Structured plan output as primary deliverable: schema, validation gate, plan-to-execution contract | PLAN-1..4 | `plan_eval.md` |
 | **Compliance** | Regulated industries (HIPAA, SOC 2, PCI-DSS, GDPR): PHI enforcement, audit log, retention policy, evidence collection | COMP-1..5 | `compliance_eval.md` |
 
-Profiles are activated in Phase 1 and treated as architectural constraints. Evaluation is enforced at Step 3.5: any task with a capability tag is not complete until the evaluation artifact is updated and compared against its baseline. A regression is a P1 finding.
+Profiles are activated in Phase 1 and treated as architectural constraints.
+Step 3.5 requires any task with a capability tag to update and compare the
+matching evaluation artifact before completion. Deterministic enforcement is
+available when the project wires the relevant validator or CI eval gate; without
+that wiring, this remains a formalized review rule.
 
 **Harness layer for agentic systems.** For Tool-Use and Agentic projects, the
 evaluated unit is `model + prompt + tools + memory/state + retries + recovery +
 permissions + trace + HITL + eval`, not the base model alone. Use
-`templates/AGENT_HARNESS_DESIGN.md` and
+`docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md` and
 `templates/HARNESS_BENCHMARK_CARD.md` to keep harness configuration visible
 when comparing models, prompts, or runtime behavior. This is an architecture
 contract, not a new orchestration framework.
@@ -63,7 +89,15 @@ contract, not a new orchestration framework.
 
 **Domain skeletons.** Pre-built task sets for specific regulated domains that drop into `docs/tasks.md` directly. The HIPAA skeleton (`templates/domains/healthcare.md`) provides four tasks — PHI field enforcement, audit log infrastructure, retention policy enforcement, compliance evidence collection — each with complete acceptance criteria, test function references, and a starter `compliance_eval.md`. The Strategist includes it automatically when Compliance=ON and HIPAA is the active framework.
 
-**Three-layer observability.** (1) Process level: Claude Code hooks block writes to immutable files; log every Bash command with `[TASK:T##]` tagging (set `CURRENT_TASK` env var in the orchestrator's Execute block); write a session checkpoint on stop with optional push notification (set `NOTIFICATION_TOKEN` + `NOTIFICATION_TARGET`, use `SILENT=1` to suppress for automated sessions). (2) Production level: OBS-1..3 rules in `IMPLEMENTATION_CONTRACT.md` (spans, metrics, health endpoint) enforced by CODE review checks. (3) AI quality level: capability evaluation artifacts, Step 3.5 regression detection (>5% → P1, >15% → P0 Stop-Ship), optional CI eval gates. See `PLAYBOOK.md §12`.
+**Three-layer observability.** (1) Process level: Claude Code hooks can block
+writes to immutable files once installed; log Bash commands with `[TASK:T##]`
+tagging (set `CURRENT_TASK` in the orchestrator's Execute block); write a
+session checkpoint on stop with optional push notification. (2) Production
+level: OBS-1..3 rules in `IMPLEMENTATION_CONTRACT.md` are checked by CODE
+review unless the project adds deterministic CI checks. (3) AI quality level:
+capability evaluation artifacts, Step 3.5 regression thresholds (>5% → P1,
+>15% → P0 Stop-Ship), optional CI eval gates, and the companion evaluation lab
+when empirical comparison is required. See `PLAYBOOK.md §12`.
 
 **Cost budget guardrails.** AI/model work must declare a budget boundary before it runs. Lean projects can keep the budget inline; Standard/Strict projects use `docs/COST_BUDGET.md` for recurring AI usage, agent loops, dynamic workflows, multi-user AI features, or material inference cost. Cost architecture is separate from budget: `docs/ai_cost_architecture.md` explains workload classes, cache layout, batch lanes, routing maturity, cascades, and cost-per-successful-task. Orchestrator and reviewer prompts flag missing budgets, missing cost architecture, model escalation, fan-out/retry expansion, dynamic routing, cascades, and cost-saving changes without eval/latency evidence.
 
@@ -111,7 +145,7 @@ For practical setup and adoption, use:
 - [docs/project_fit_guide.md](docs/project_fit_guide.md) — problem-first entry points, adoption reality gate, and anti-patterns
 - [docs/evaluation/EVAL_FIRST_DEVELOPMENT.md](docs/evaluation/EVAL_FIRST_DEVELOPMENT.md) — eval dataset, thresholds, judge calibration, human review, and cost gates from Phase 1
 - [docs/rag/RAG_DATA_READINESS.md](docs/rag/RAG_DATA_READINESS.md) — source inventory and data-quality gate before embeddings/retrieval eval
-- [docs/agent_harness/AGENT_HARNESS_DESIGN.md](docs/agent_harness/AGENT_HARNESS_DESIGN.md) — model+harness boundary for tool-using and agentic systems
+- [docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md](docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md) — model+harness boundary and evaluation protocol for tool-using and agentic systems
 - [docs/architecture_layers.md](docs/architecture_layers.md) — concise layer map
 - [docs/heavy_task_mode.md](docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
 - [docs/workflow_continuity_retrofit.md](docs/workflow_continuity_retrofit.md) — MemPalace assessment and the playbook-native continuity retrofit
@@ -122,7 +156,7 @@ For practical setup and adoption, use:
 - [docs/cache_context_layout.md](docs/cache_context_layout.md) — prompt cache stable-prefix / volatile-suffix layout rules
 - [docs/cost_telemetry_protocol.md](docs/cost_telemetry_protocol.md) — provider-agnostic AI cost telemetry JSONL and rollup protocol
 - [docs/external_skill_security_policy.md](docs/external_skill_security_policy.md) — external agent skill trust gate, scan/signature policy, and approval rules
-- [tools/init_playbook_project.py](tools/init_playbook_project.py) — deterministic Lean / Standard / Strict project initializer
+- [tools/init_playbook_project.py](tools/init_playbook_project.py) — deterministic Lean-Core / Standard / Strict project initializer
 - [tools/skill_security_gate.py](tools/skill_security_gate.py) — CI-friendly external skill trust-record and SkillSpector wrapper
 - [templates/cost_adapters/](templates/cost_adapters/) — provider-neutral starter adapter for writing AI cost telemetry
 
@@ -152,13 +186,13 @@ Read `docs/project_fit_guide.md`, then select a mode from
 
 | Mode | Use when | Starter kit |
 |------|----------|-------------|
-| Lean | Prototype, internal helper, low-blast-radius workflow | `docs/tasks.md`, short `docs/CODEX_PROMPT.md` or `AGENTS.md`, contract-lite, CI/local verification command |
+| Lean-Core | Prototype, internal helper, low-blast-radius workflow | `docs/tasks.md`, `AGENTS.md`, `docs/CONTRACT_LITE.md`, minimal problem-fit note, local verification command |
 | Standard | Recoverable product or operational system | Full core docs, README indexes, CI, light/deep review at phase boundaries |
 | Strict | Compliance, PII, privileged tools, persistent agent runtime, risky migration | Standard plus evidence index, cognition manifest when used, runtime verification records, stricter review gates |
 
 ### 2. New Project
 
-1. Choose Lean, Standard, or Strict.
+1. Choose Lean-Core, Standard, or Strict.
 2. Copy only the kit required by that mode.
 3. Declare AI/model budget boundaries if the project uses LLMs, agents, dynamic workflows, or recurring eval/review calls. Add cost architecture when usage is recurring/material or uses prompt caching, batch lanes, dynamic routing, or cascades.
 4. If using Claude Code and Standard/Strict, copy `.claude` settings/commands and hooks.
@@ -168,7 +202,7 @@ Read `docs/project_fit_guide.md`, then select a mode from
 
 ### 3. Existing Project
 
-1. Choose Lean, Standard, or Strict.
+1. Choose Lean-Core, Standard, or Strict.
 2. Copy only the kit required by that mode.
 3. Normalize CI or document the local verification command.
 4. Declare AI/model budget boundaries for recurring or material AI usage. Add cost architecture when the existing system already has prompt caching, batch lanes, dynamic routing, cascades, or provider/model tiering.
@@ -242,7 +276,7 @@ Project description
         v
   [Strategist agent]
   Produces the selected mode's starter artifacts:
-            Lean / Standard / Strict artifact set
+            Lean-Core / Standard / Strict artifact set
             + profile-specific artifacts only when active
             + cost budget / cost architecture when AI/model work requires it
         |
@@ -288,7 +322,7 @@ AI_workflow_playbook/
 │   ├── cost/                         — inference decision tree, model routing, latency SLA, eval cost tradeoff
 │   ├── autonomous_workflows/         — bounded routine deployment contracts and runbooks
 │   ├── business_value/               — service delta, TCO/ROI proxy, workflow scoring
-│   ├── adoption_modes.md             — Lean / Standard / Strict artifact matrix
+│   ├── adoption_modes.md             — Lean-Core / Standard / Strict artifact matrix
 │   ├── cost_budget_guardrails.md      — AI/model budget gates and cost attribution policy
 │   ├── ai_cost_architecture.md        — workload class, cache, batch, routing, cascade, and cost architecture protocol
 │   ├── cache_context_layout.md        — prompt cache stable-prefix and volatile-suffix layout protocol
@@ -376,7 +410,7 @@ AI_workflow_playbook/
 
 **PLAYBOOK.md** is the master document. Read it before anything else. It defines the phase structure, right-sizing logic, runtime selection, capability profiles, task execution protocol, review cycle, and universal rules.
 
-**prompts/STRATEGIST.md** is the system prompt for the architecture-generation session. It reads your project description, selects Lean / Standard / Strict, and produces only the starter artifacts required by that mode. It forces explicit decisions about solution shape, rejected simpler alternatives, runtime tier, deterministic decomposition, human approval boundaries, capability profiles, and AI/model budget boundaries.
+**prompts/STRATEGIST.md** is the system prompt for the architecture-generation session. It reads your project description, selects Lean-Core / Standard / Strict, and produces only the starter artifacts required by that mode. It forces explicit decisions about solution shape, rejected simpler alternatives, runtime tier, deterministic decomposition, human approval boundaries, capability profiles, and AI/model budget boundaries.
 
 **prompts/ORCHESTRATOR.md** runs the development loop — capability signal detection (Step 0-E), complexity/runtime drift checks, Codex dispatch, evaluation gate (Step 3.5), and phase gate enforcement.
 
@@ -449,7 +483,7 @@ Fast path with Claude Code for Standard/Strict:
 
 This does not replace validation or orchestration. It gives Claude a standard bootstrap entrypoint without changing the system prompt.
 
-Lean projects may skip this command path and create the smaller artifact set
+Lean-Core projects may skip this command path and create the smaller artifact set
 from `docs/adoption_modes.md` directly.
 
 1. Open a Claude session (Claude.ai or Claude Code).
@@ -468,7 +502,7 @@ from `docs/adoption_modes.md` directly.
      - Review prompts: `docs/audit/PROMPT_0_META.md` through `PROMPT_3_CONSOLIDATED.md`, `docs/audit/AUDIT_INDEX.md`
      - If Compliance=ON: `docs/compliance_eval.md` (with framework-specific control rows)
      - If NFR constraints stated: `docs/nfr.md` (with SLA table)
-5. Copy `prompts/ORCHESTRATOR.md` to `your-project/docs/prompts/ORCHESTRATOR.md`, fill `{{PROJECT_ROOT}}`, and set `{{CODEX_COMMAND}}` to `codex exec -s workspace-write` unless your environment requires a wrapper around the same command.
+5. Copy `prompts/ORCHESTRATOR.md` to `your-project/docs/prompts/ORCHESTRATOR.md`, fill the project-root placeholder, and set the Codex command placeholder to `codex exec -s workspace-write` unless your environment requires a wrapper around the same command.
 6. Copy hooks and settings:
    ```bash
    cp -r hooks/ your-project/hooks/
@@ -478,7 +512,7 @@ from `docs/adoption_modes.md` directly.
    ```
 7. Run the Phase 1 Validator in the selected mode before starting implementation:
    - Open a Claude session with `prompts/PHASE1_VALIDATOR.md` as the prompt
-   - Set `Mode: Lean`, `Mode: Standard`, or `Mode: Strict`
+   - Set `Mode: Lean-Core`, `Mode: Standard`, or `Mode: Strict`
    - It produces `docs/audit/PHASE1_AUDIT.md` — resolve all mode-relevant BLOCKERs before proceeding
 8. Open a Claude Code session with `docs/prompts/ORCHESTRATOR.md` as the system prompt.
 9. Say: "Start Phase 1." The Orchestrator reads `docs/CODEX_PROMPT.md` and begins.

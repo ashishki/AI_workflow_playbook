@@ -1,0 +1,44 @@
+{
+  "adapter_version": "scripted.v1",
+  "bundle_id": "immutable_contract-playbook-trial-0",
+  "command_receipts": [],
+  "commit_after": "00f9a03dd731fca1458962858bd9c1318eea1d4b",
+  "commit_before": "00f9a03dd731fca1458962858bd9c1318eea1d4b",
+  "condition": "playbook",
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "environment_digest": "f618bcb2593f68de6c3002c12e98d90508b204ec4ec5ccc8d2e667fcf93804d4",
+  "failure_records": [],
+  "generated_report_ref": {
+    "kind": "generated_report",
+    "path": "report.md",
+    "sha256": "e5f2acc31df6e86d4dc8da95bdf132fa6eaa27dc80f77d03f46c669a75e7c967"
+  },
+  "manifest_hash": "aa5fca1001eed1424a4024c27f360e711a3081cee42bc672f50bbfa5b4300cbf",
+  "post_state_manifest": {
+    "kind": "post_state_manifest",
+    "path": "post_state_manifest.json",
+    "sha256": "003b81072d7c163b4f4a5c1664fa0af857b2a31cfae4b1f0ebcfb11e5ea7ac03"
+  },
+  "repository": "playbook_core_v1",
+  "schema_version": "playbook.evidence_bundle.v1",
+  "scorer_outputs": [
+    {
+      "kind": "scorer_output",
+      "path": "scorers/immutable_diff_scope.json",
+      "sha256": "272fa08c96eb5ef7d20e3e24ad329ca53f6564e65af15330f61f4c975cb829bf"
+    },
+    {
+      "kind": "scorer_output",
+      "path": "scorers/contract_content.json",
+      "sha256": "d47f1646ed7717d47a923128b271d1f9821fa8f6d09ba9d278dfd8c6544c8996"
+    }
+  ],
+  "task_id": "immutable_contract",
+  "task_spec_version": "immutable_contract.v1",
+  "trace_refs": [],
+  "verification_timestamp": "2026-07-10T10:38:51Z",
+  "verifier_identity": "ai_workflow_harness_lab"
+}

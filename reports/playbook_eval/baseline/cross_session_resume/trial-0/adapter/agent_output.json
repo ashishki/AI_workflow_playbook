@@ -1,0 +1,9 @@
+{
+  "claims": [
+    "success"
+  ],
+  "condition": "baseline",
+  "notes": [],
+  "task_id": "cross_session_resume",
+  "trial": 0
+}

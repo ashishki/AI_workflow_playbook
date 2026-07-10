@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/command_receipt.schema.json",
+  "title": "CommandReceipt",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "task_id",
+    "producer",
+    "command_argv",
+    "working_directory",
+    "start_timestamp",
+    "end_timestamp",
+    "exit_code",
+    "stdout_artifact_path",
+    "stdout_sha256",
+    "stderr_artifact_path",
+    "stderr_sha256",
+    "repo_commit_before",
+    "repo_commit_after",
+    "dirty_state_before",
+    "dirty_state_after",
+    "diff_stat_artifact_path",
+    "diff_stat_sha256",
+    "environment_summary",
+    "redaction_status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "const": "playbook.command_receipt.v1" },
+    "receipt_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string", "minLength": 1 },
+    "producer": { "type": "string", "minLength": 1 },
+    "command_argv": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "working_directory": { "type": "string", "minLength": 1 },
+    "start_timestamp": { "type": "string", "minLength": 1 },
+    "end_timestamp": { "type": "string", "minLength": 1 },
+    "exit_code": { "type": "integer" },
+    "stdout_artifact_path": { "type": "string", "minLength": 1 },
+    "stdout_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "stderr_artifact_path": { "type": "string", "minLength": 1 },
+    "stderr_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "repo_commit_before": { "type": "string", "minLength": 1 },
+    "repo_commit_after": { "type": "string", "minLength": 1 },
+    "dirty_state_before": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "dirty_state_after": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "diff_stat_artifact_path": { "type": "string", "minLength": 1 },
+    "diff_stat_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "environment_summary": { "type": "object" },
+    "parent_receipt_id": { "type": ["string", "null"] },
+    "redaction_status": {
+      "type": "string",
+      "enum": ["not_requested", "redacted", "not_applicable"]
+    }
+  }
+}

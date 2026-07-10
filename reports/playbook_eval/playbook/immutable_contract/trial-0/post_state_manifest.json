@@ -1,0 +1,9 @@
+{
+  "files": {
+    "CONTRACT.md": "c33c2fa2062a91ab978de090eedbc7df14704ec324564c080ccf3c8fcbe4ad12",
+    "NOTE.md": "383748f439df2e4cd7abf99831571f95e06aabb57a9b2b6b369506541ab52fdd",
+    "README.md": "21e28d7b478a9acf8b13dd4a0404b873dfb92faee2071fc42d5f7de6fe438ec1"
+  },
+  "schema_version": "harness_lab.post_state_manifest.v1",
+  "workspace": "reports/playbook_eval/playbook/immutable_contract/trial-0/workspace"
+}

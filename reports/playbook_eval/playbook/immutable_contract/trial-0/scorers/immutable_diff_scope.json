@@ -1,0 +1,13 @@
+{
+  "failure_records": [],
+  "metrics": {
+    "changed_files": []
+  },
+  "schema_version": "playbook.scorer_output.v1",
+  "score": 1.0,
+  "scorer_code_hash": "bae7940bf7cda1605ce8d080e4a48b63870453e790f3fc181c5c0a162e31a0e3",
+  "scorer_id": "immutable_diff_scope",
+  "scorer_version": "1.0.0",
+  "task_id": "immutable_contract",
+  "verdict": "passed"
+}

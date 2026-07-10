@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/run_result.schema.json",
+  "title": "RunResult",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "task_id",
+    "task_score",
+    "run_validity",
+    "policy_status",
+    "evidence_status",
+    "failure_records",
+    "cost_record",
+    "latency",
+    "human_intervention",
+    "final_verdict"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "const": "playbook.run_result.v1" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string", "minLength": 1 },
+    "task_score": {
+      "type": "object",
+      "required": ["status", "score"],
+      "properties": {
+        "status": { "type": "string", "enum": ["pass", "fail", "partial", "not_scored"] },
+        "score": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "reason": { "type": "string" }
+      }
+    },
+    "run_validity": {
+      "type": "object",
+      "required": ["valid", "reason"],
+      "properties": {
+        "valid": { "type": "boolean" },
+        "reason": { "type": "string" }
+      }
+    },
+    "policy_status": { "type": "string", "enum": ["pass", "fail", "not_applicable"] },
+    "evidence_status": { "type": "string", "enum": ["complete", "incomplete", "invalid"] },
+    "failure_records": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "cost_record": { "type": ["object", "null"] },
+    "latency": { "type": "object" },
+    "human_intervention": { "type": "object" },
+    "final_verdict": {
+      "type": "string",
+      "enum": ["passed", "failed", "blocked", "invalid_run", "human_review_required"]
+    }
+  }
+}

@@ -1,0 +1,4 @@
+README.md                      |   2 +-
+ docs/tasks.md                  |  42 +++++-
+ tools/init_playbook_project.py | 291 +++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 320 insertions(+), 15 deletions(-)

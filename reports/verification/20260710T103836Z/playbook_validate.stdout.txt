@@ -1,0 +1,3 @@
+warning: docs/COGNITION_MANIFEST.md:128: REFERENCE_MISSING: missing referenced path generated/cognition/index.json
+warning: docs/COGNITION_MANIFEST.md:129: REFERENCE_MISSING: missing referenced path docs/context-packets
+playbook_validate: errors=0 warnings=2

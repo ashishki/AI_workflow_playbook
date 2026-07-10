@@ -91,8 +91,8 @@ Acceptance-Criteria:
   - Claimed decisions must link to ADRs, decision logs, or review records.
 
 Integration-Points:
-  - `prompts/PROMPT_2_CODE.md`
-  - `prompts/PROMPT_3_CONSOLIDATED.md`
+  - `prompts/audit/PROMPT_2_CODE.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
   - `docs/integrity_verification_jobs.md`
 
 Evidence:
@@ -148,6 +148,10 @@ Integration-Points:
   - `docs/provider_routing_policy.md`
   - `docs/cognition_layer_integrity.md`
 
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/verify_playbook.py --root .`
+
 ### AWP-EL-002: Diverse Review Principle
 
 Owner: codex
@@ -168,6 +172,10 @@ Integration-Points:
   - `PLAYBOOK.md`
   - `docs/provider_routing_policy.md`
   - `prompts/`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/integrity_check.py --root .`
 
 ## Phase PI-1 - Portfolio Integration
 
@@ -191,6 +199,10 @@ Integration-Points:
   - `docs/PROJECT_PLAN.md`
   - `docs/cognition_layer_integrity.md`
   - `engineering-cognition-vault`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/integrity_check.py --root .`
 
 ### AWP-PI-002: Lightweight Adoption Path
 
@@ -218,6 +230,10 @@ Implementation-Notes: |
   real mode-specific paths rather than one full artifact set with softer
   language.
 
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/integrity_check.py --root .`
+
 ### AWP-PI-003: Solution Reference Catalog And Dynamic Workflow Policy
 
 Owner: codex
@@ -244,6 +260,10 @@ Integration-Points:
   - `README.md`
   - `reference/optional_skills.md`
 
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/integrity_check.py --root .`
+
 ### AWP-PI-004: AI Cost Budget Guardrails
 
 Owner: codex
@@ -256,7 +276,7 @@ Objective: |
 
 Acceptance-Criteria:
   - Cost budget policy defines when inline budget is enough and when
-    `docs/COST_BUDGET.md` is required.
+    downstream docs/COST_BUDGET.md is required.
   - Strategist and bootstrap commands collect AI/model budget before generating
     the selected mode's starter package.
   - Phase 1 Validator and Orchestrator flag missing budgets, model escalation,
@@ -279,6 +299,10 @@ Integration-Points:
   - `prompts/STRATEGIST.md`
   - `prompts/PHASE1_VALIDATOR.md`
   - `prompts/ORCHESTRATOR.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/cost_rollup.py --input /tmp/missing-cost.jsonl --output /tmp/ai_cost_rollup.md`
 
 ### AWP-PI-005: AI Cost Architecture And Router Evaluation
 
@@ -326,6 +350,10 @@ Integration-Points:
   - `prompts/audit/PROMPT_2_CODE.md`
   - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
 
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/integrity_check.py --root .`
+
 ### AWP-PI-006: External Skill Security Gate
 
 Owner: codex
@@ -370,6 +398,10 @@ Integration-Points:
   - `prompts/audit/PROMPT_2_CODE.md`
   - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
 
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/skill_security_gate.py --root . --discover-agent-skills`
+
 ### AWP-PI-007: Bootstrap And Guardrail Automation
 
 Owner: codex
@@ -406,3 +438,7 @@ Integration-Points:
   - `docs/cost_telemetry_protocol.md`
   - `tools/README.md`
   - `PLAYBOOK.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 -m py_compile tools/*.py`

@@ -1,0 +1,6 @@
+{
+  "files": [],
+  "notes": "fixture post-state manifest for evidence validator smoke test",
+  "schema_version": "playbook.post_state_manifest.v1",
+  "task_id": "smoke"
+}

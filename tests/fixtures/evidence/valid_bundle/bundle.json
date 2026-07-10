@@ -1,0 +1,47 @@
+{
+  "adapter_version": "scripted.fixture.v1",
+  "bundle_id": "fixture-smoke-bundle",
+  "command_receipts": [
+    {
+      "id": "smoke-1783678823-8ef5c608",
+      "kind": "command_receipt",
+      "path": "receipts/smoke/receipt.json",
+      "sha256": "7a2b3c68d09fbc3e5c5bf00fa5192cf2bd02934febf54bb9a8a5f4edc05c999a"
+    }
+  ],
+  "commit_after": "362c2a548b806f0b5d705601e948752990b39643",
+  "commit_before": "362c2a548b806f0b5d705601e948752990b39643",
+  "condition": "fixture",
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "environment_digest": "fixture-env-digest",
+  "failure_records": [],
+  "generated_report_ref": {
+    "kind": "generated_report",
+    "path": "report.md",
+    "sha256": "bb2a33c4becaaabcab49c7e3a8829b6a1190517ab6ba3ddab608898d51fff9fd"
+  },
+  "manifest_hash": "629ebc52ff72b731611fc07bc8121ac929d6693bc1490266103f432ac7996df7",
+  "post_state_manifest": {
+    "kind": "post_state_manifest",
+    "path": "post_state_manifest.json",
+    "sha256": "c3ee13dd2a005bfd9b09e6cb5e05a1f2169ede2d4e2241258328537237da14f3"
+  },
+  "repository": "AI_workflow_playbook",
+  "schema_version": "playbook.evidence_bundle.v1",
+  "scorer_outputs": [
+    {
+      "id": "fixture.receipt_completeness",
+      "kind": "scorer_output",
+      "path": "scorer_output.json",
+      "sha256": "35c8e6310c7bceb8005544f99f2b9eed9e43341f2d43185bda26eaddb95c46e1"
+    }
+  ],
+  "task_id": "smoke",
+  "task_spec_version": "fixture.smoke.v1",
+  "trace_refs": [],
+  "verification_timestamp": "2026-07-10T10:20:44Z",
+  "verifier_identity": "tools/validate_harness_evidence.py"
+}

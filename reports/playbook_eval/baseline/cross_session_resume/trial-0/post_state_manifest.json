@@ -1,0 +1,8 @@
+{
+  "files": {
+    "README.md": "a7d1d94e8cbd9107f1b86a9d368140302836e6f0a9d1184729a873c14ca60b0c",
+    "state.json": "4960d172a163a6467df8a89385ad17682d467468ee11330f5502501f9b6ff0db"
+  },
+  "schema_version": "harness_lab.post_state_manifest.v1",
+  "workspace": "reports/playbook_eval/baseline/cross_session_resume/trial-0/workspace"
+}

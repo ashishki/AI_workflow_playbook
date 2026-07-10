@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/failure_record.schema.json",
+  "title": "FailureRecord",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "failure_id",
+    "run_id",
+    "task_id",
+    "stage",
+    "failure_class",
+    "owner_class",
+    "retryable",
+    "retry_count",
+    "terminal",
+    "message",
+    "evidence_refs",
+    "score_treatment",
+    "invalid_run"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "const": "playbook.failure_record.v1" },
+    "failure_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string", "minLength": 1 },
+    "stage": { "type": "string", "minLength": 1 },
+    "failure_class": {
+      "type": "string",
+      "enum": [
+        "model_reasoning_failure",
+        "harness_failure",
+        "tool_adapter_failure",
+        "environment_failure",
+        "scorer_failure",
+        "provider_network_failure",
+        "policy_failure",
+        "memory_failure",
+        "context_construction_failure",
+        "timeout",
+        "runaway_loop",
+        "false_completion",
+        "invalid_evidence",
+        "benchmark_defect"
+      ]
+    },
+    "owner_class": {
+      "type": "string",
+      "enum": ["model", "harness", "adapter", "environment", "scorer", "policy", "benchmark", "human"]
+    },
+    "retryable": { "type": "boolean" },
+    "retry_count": { "type": "integer", "minimum": 0 },
+    "terminal": { "type": "boolean" },
+    "message": { "type": "string", "minLength": 1 },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "score_treatment": {
+      "type": "string",
+      "enum": ["count_as_task_failure", "invalid_run_exclude_from_capability_score", "policy_gate_failure", "informational"]
+    },
+    "invalid_run": { "type": "boolean" }
+  }
+}

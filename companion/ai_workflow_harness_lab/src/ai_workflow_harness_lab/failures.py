@@ -1,0 +1,16 @@
+FAILURE_CLASSES = {
+    "model_reasoning_failure",
+    "harness_failure",
+    "tool_adapter_failure",
+    "environment_failure",
+    "scorer_failure",
+    "provider_network_failure",
+    "policy_failure",
+    "memory_failure",
+    "context_construction_failure",
+    "timeout",
+    "runaway_loop",
+    "false_completion",
+    "invalid_evidence",
+    "benchmark_defect",
+}

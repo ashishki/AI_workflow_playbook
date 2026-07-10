@@ -1,0 +1,33 @@
+{
+  "command_argv": [
+    "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/bin/python",
+    "-c",
+    "import sys; print('failing test discovered'); sys.exit(1)"
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "dirty_state_after": [],
+  "dirty_state_before": [],
+  "end_timestamp": "2026-07-10T10:38:51Z",
+  "environment_summary": {
+    "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "timed_out": false,
+    "timeout": null
+  },
+  "exit_code": 1,
+  "parent_receipt_id": null,
+  "producer": "ai_workflow_harness_lab.receipts",
+  "receipt_id": "fake_test_success-1783679931-e67477f0",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "7db467e35a82a9297f88e9e42506f7c917c49b30",
+  "repo_commit_before": "7db467e35a82a9297f88e9e42506f7c917c49b30",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-07-10T10:38:51Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "48ca77854a0c82c8e6c356d0639e83078ead158135cb5d3b74a8719ede443fb0",
+  "task_id": "fake_test_success",
+  "working_directory": "reports/playbook_eval/playbook/fake_test_success/trial-0/workspace"
+}

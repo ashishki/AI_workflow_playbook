@@ -1,0 +1,9 @@
+{
+  "claims": [
+    "verified_success"
+  ],
+  "condition": "baseline",
+  "notes": [],
+  "task_id": "failed_command_recovery",
+  "trial": 0
+}

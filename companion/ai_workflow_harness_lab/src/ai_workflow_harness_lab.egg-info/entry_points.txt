@@ -1,0 +1,2 @@
+[console_scripts]
+harness-lab = ai_workflow_harness_lab.cli:main
