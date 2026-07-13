@@ -19,10 +19,11 @@ This repository is not trying to become a generic orchestration framework. Its c
 > or adoption has not been established with independent users.
 
 > **Licensing boundary:** this repository is publicly readable reference material,
-> but it has no project-level open-source license and grants no permission to
-> copy, modify, or redistribute its contents. See [Legal Status](docs/LEGAL_STATUS.md)
-> before reuse. Eval Ground Truth Lab and Agent Runtime Grid are separate
-> Apache-2.0 projects; their licenses do not apply here.
+> but it has no project-level open-source license and grants no additional
+> copyright permission beyond the GitHub Terms, applicable law, and any
+> file-specific license. See [Legal Status](docs/LEGAL_STATUS.md) before reuse.
+> Eval Ground Truth Lab and Agent Runtime Grid are separate Apache-2.0 projects;
+> their licenses do not apply here.
 
 ## Five-Minute Reviewer Path
 

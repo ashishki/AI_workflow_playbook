@@ -8,11 +8,18 @@ AI Workflow Playbook is intentionally published as source-visible portfolio and
 reference material. This repository does **not** contain a project-level license
 and is **not** offered as an open-source project.
 
-Public access to the repository does not by itself grant permission to copy,
-modify, distribute, sublicense, or create derivative works from its contents.
-Obtain permission from the applicable rights holder before reuse unless a
-specific file or incorporated third-party component states a separate license.
-Any such file-specific license applies only to that material.
+Making a repository public on GitHub does grant GitHub users limited rights
+under the [GitHub Terms of Service](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service),
+including viewing and forking through the service. Applicable law may provide
+other rights or exceptions. This repository grants no **additional** copyright
+permission beyond those GitHub Terms, applicable law, and any license stated by
+a specific file or incorporated third-party component. A file-specific license
+applies only to that material. For reuse outside those boundaries, obtain
+permission from the applicable rights holder.
+
+GitHub's [repository licensing guidance](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)
+distinguishes a public repository from an open-source project and explains the
+default no-project-license copyright boundary.
 
 Do not infer a license for this repository from neighboring projects. In
 particular, [Eval Ground Truth Lab](https://github.com/ashishki/Eval-Ground-Truth-Lab)
