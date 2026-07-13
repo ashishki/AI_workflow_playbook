@@ -18,6 +18,12 @@ This repository is not trying to become a generic orchestration framework. Its c
 > tested locally and in CI. Their effect on team productivity, delivery quality,
 > or adoption has not been established with independent users.
 
+> **Licensing boundary:** this repository is publicly readable reference material,
+> but it has no project-level open-source license and grants no permission to
+> copy, modify, or redistribute its contents. See [Legal Status](docs/LEGAL_STATUS.md)
+> before reuse. Eval Ground Truth Lab and Agent Runtime Grid are separate
+> Apache-2.0 projects; their licenses do not apply here.
+
 ## Five-Minute Reviewer Path
 
 1. Read [Guarantee Maturity](#guarantee-maturity) to distinguish documented,
@@ -41,7 +47,8 @@ This repository is not trying to become a generic orchestration framework. Its c
 
 AI Workflow Playbook is an independent governance companion for project
 contracts, receipts, and review discipline. It is not part of the runtime data
-path.
+path. Its [source-visible, non-open-source legal status](docs/LEGAL_STATUS.md)
+is independent of the licenses used by the runtime and evaluation projects.
 
 - [Eval Ground Truth Lab](https://github.com/ashishki/Eval-Ground-Truth-Lab)
   owns versioned workflow regression evidence and release gates.
