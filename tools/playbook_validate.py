@@ -12,6 +12,7 @@ import argparse
 import difflib
 import json
 import re
+import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass, field
@@ -691,8 +692,206 @@ def validate_readiness(root: Path) -> list[Finding]:
     if state in {"implementation_ready", "release_ready"} and data.get(
         "implementation_ready_requires_no_scaffold_placeholders", True
     ):
-        return active_scaffold_placeholder_findings(root)
-    return []
+        findings = active_scaffold_placeholder_findings(root)
+    else:
+        findings = []
+    if state == "release_ready" and data.get("release_ready_requires_current_verification", True):
+        findings.extend(validate_release_verification(root))
+    return findings
+
+
+def git_text(root: Path, args: list[str]) -> tuple[int, str]:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=root,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    return result.returncode, result.stdout.strip()
+
+
+def current_commit(root: Path) -> str:
+    code, stdout = git_text(root, ["rev-parse", "HEAD"])
+    return stdout if code == 0 and stdout else "not-a-git-repository"
+
+
+def current_dirty_state(root: Path) -> list[str]:
+    code, stdout = git_text(root, ["status", "--short"])
+    if code != 0:
+        return []
+    if not stdout:
+        return []
+    return [
+        line
+        for line in stdout.splitlines()
+        if ".playbook-artifacts/" not in line and not line.endswith(".playbook-artifacts")
+    ]
+
+
+def validate_release_verification(root: Path) -> list[Finding]:
+    result_path = root / ".playbook-artifacts/project_verification.json"
+    if not result_path.is_file():
+        return [
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_VERIFICATION_MISSING",
+                "release_ready requires current project verification result",
+            )
+        ]
+    try:
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return [
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                exc.lineno,
+                "READINESS_RELEASE_VERIFICATION_INVALID",
+                f"project verification result is invalid JSON: {exc.msg}",
+            )
+        ]
+    findings: list[Finding] = []
+    if result.get("schema_version") != "playbook.project_verification_result.v1":
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_VERIFICATION_SCHEMA",
+                "project verification result has unsupported schema_version",
+            )
+        )
+    if result.get("required_failures") != 0:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_VERIFICATION_FAILED",
+                "release_ready requires project verification required_failures=0",
+            )
+        )
+    expected_commit = current_commit(root)
+    if result.get("project_commit") != expected_commit:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_VERIFICATION_STALE",
+                "project verification result project_commit does not match current HEAD",
+            )
+        )
+    dirty = current_dirty_state(root)
+    if dirty:
+        findings.append(
+            Finding(
+                "error",
+                ".",
+                1,
+                "READINESS_RELEASE_DIRTY_STATE",
+                "release_ready requires a clean Git working tree after verification",
+            )
+        )
+    return findings
+
+
+def validate_delivery(root: Path) -> list[Finding]:
+    path = root / ".playbook/delivery_execution_model.json"
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return [
+            Finding(
+                "error",
+                ".playbook/delivery_execution_model.json",
+                exc.lineno,
+                "DELIVERY_JSON_INVALID",
+                f"delivery execution model is invalid JSON: {exc.msg}",
+            )
+        ]
+    findings: list[Finding] = []
+    schema_path = root / "schemas/delivery_execution_model.schema.json"
+    if schema_path.exists() and Draft202012Validator is not None:
+        validator = Draft202012Validator(json.loads(schema_path.read_text(encoding="utf-8")))
+        for error in sorted(validator.iter_errors(data), key=lambda item: list(item.path)):
+            findings.append(
+                Finding(
+                    "error",
+                    ".playbook/delivery_execution_model.json",
+                    1,
+                    "DELIVERY_SCHEMA_INVALID",
+                    f"delivery execution model schema violation: {error.message}",
+                )
+            )
+        if findings:
+            return findings
+    implementer = data.get("implementer", {})
+    reviewer = data.get("reviewer", {})
+    verifier = data.get("verifier", {})
+    completion = data.get("completion_authority", {})
+    if not isinstance(implementer, dict) or not isinstance(reviewer, dict) or not isinstance(verifier, dict) or not isinstance(completion, dict):
+        return findings
+    if completion.get("kind") == implementer.get("kind") or completion.get("kind") == "active_codex_session":
+        findings.append(
+            Finding(
+                "error",
+                ".playbook/delivery_execution_model.json",
+                1,
+                "DELIVERY_SELF_COMPLETION_AUTHORITY",
+                "implementer must not be the completion authority",
+            )
+        )
+    if not reviewer.get("kind"):
+        findings.append(
+            Finding(
+                "error",
+                ".playbook/delivery_execution_model.json",
+                1,
+                "DELIVERY_REVIEWER_MISSING",
+                "delivery model must name reviewer authority",
+            )
+        )
+    verifier_command = str(verifier.get("command", ""))
+    if "tools/verify_project.py" not in verifier_command:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook/delivery_execution_model.json",
+                1,
+                "DELIVERY_VERIFIER_MISSING",
+                "delivery model verifier must reference tools/verify_project.py",
+            )
+        )
+    triggers = data.get("independent_review_triggers")
+    if not isinstance(triggers, list) or not triggers:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook/delivery_execution_model.json",
+                1,
+                "DELIVERY_REVIEW_TRIGGERS_MISSING",
+                "delivery model must define independent review triggers",
+            )
+        )
+    bindings = data.get("cli_bindings")
+    if not isinstance(bindings, dict) or not bindings.get("codex_direct"):
+        findings.append(
+            Finding(
+                "error",
+                ".playbook/delivery_execution_model.json",
+                1,
+                "DELIVERY_CLI_BINDING_MISSING",
+                "delivery model must define Codex Direct CLI binding",
+            )
+        )
+    return findings
 
 
 def validate_json_schemas(root: Path) -> list[Finding]:
@@ -880,7 +1079,7 @@ def validate_modes(root: Path) -> list[Finding]:
 def run_checks(root: Path, checks: list[str]) -> dict[str, Any]:
     findings: list[Finding] = []
     tasks: list[dict[str, Any]] = []
-    expanded = checks if checks != ["all"] else ["schemas", "tasks", "placeholders", "readiness", "references", "modes"]
+    expanded = checks if checks != ["all"] else ["schemas", "tasks", "placeholders", "readiness", "delivery", "references", "modes"]
     for check in expanded:
         if check == "schemas":
             findings.extend(validate_json_schemas(root))
@@ -891,6 +1090,8 @@ def run_checks(root: Path, checks: list[str]) -> dict[str, Any]:
             findings.extend(validate_placeholders(root))
         elif check == "readiness":
             findings.extend(validate_readiness(root))
+        elif check == "delivery":
+            findings.extend(validate_delivery(root))
         elif check == "references":
             findings.extend(validate_reference_integrity(root))
         elif check == "modes":
@@ -918,7 +1119,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--check",
         action="append",
-        choices=("all", "schemas", "tasks", "placeholders", "readiness", "references", "modes"),
+        choices=("all", "schemas", "tasks", "placeholders", "readiness", "delivery", "references", "modes"),
         default=None,
         help="Run only this check. Repeatable. Defaults to all checks.",
     )

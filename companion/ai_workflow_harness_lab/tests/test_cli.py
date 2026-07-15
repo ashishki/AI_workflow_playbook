@@ -253,6 +253,8 @@ def test_command_adapter_smoke(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     assert (output / "fake_test_success/trial-0/bundle.json").exists()
+    eval_unit = json.loads((output / "fake_test_success/trial-0/harness_eval_unit.json").read_text(encoding="utf-8"))
+    assert eval_unit["model"]["provider"] == "unknown"
     receipt = json.loads(
         (
             output
@@ -261,6 +263,68 @@ def test_command_adapter_smoke(tmp_path: Path) -> None:
     )
     environment = receipt["environment_summary"]
     assert environment["start_monotonic_ns"] <= environment["end_monotonic_ns"]
+
+
+def test_empirical_command_adapter_requires_identity(tmp_path: Path) -> None:
+    output = tmp_path / "empirical-missing"
+    result = run_cli(
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "command",
+        "--command-template",
+        ":",
+        "--task-id",
+        "fake_test_success",
+        "--output",
+        str(output),
+        "--empirical-comparison",
+    )
+
+    assert result.returncode == 2
+    assert "empirical comparison requires explicit identity flags" in result.stderr
+
+
+def test_empirical_command_adapter_records_identity(tmp_path: Path) -> None:
+    output = tmp_path / "empirical"
+    result = run_cli(
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "command",
+        "--command-template",
+        ":",
+        "--task-id",
+        "fake_test_success",
+        "--output",
+        str(output),
+        "--empirical-comparison",
+        "--provider",
+        "openai",
+        "--model-id",
+        "gpt-test",
+        "--cli-version",
+        "codex-cli-test",
+        "--reasoning-profile",
+        "medium",
+        "--permission-policy",
+        "workspace-write",
+        "--delivery-profile",
+        "solo_verified",
+    )
+
+    assert result.returncode == 0, result.stderr
+    eval_unit = json.loads((output / "fake_test_success/trial-0/harness_eval_unit.json").read_text(encoding="utf-8"))
+    assert eval_unit["model"] == {"provider": "openai", "id": "gpt-test", "parameters": "medium"}
+    assert eval_unit["cli_version"] == "codex-cli-test"
+    assert eval_unit["permission_policy_version"] == "workspace-write"
+    assert eval_unit["delivery_profile"] == "solo_verified"
 
 
 def test_command_adapter_does_not_source_login_profile(

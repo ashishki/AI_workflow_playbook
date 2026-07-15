@@ -370,14 +370,20 @@ Generated projects include `.playbook/readiness_state.json` and
 `readiness_state.json` starts at `scaffold`. The initializer may preserve
 generated scaffold placeholders, but `tools/playbook_validate.py --check
 readiness` blocks `implementation_ready` and `release_ready` while those markers
-remain in active artifacts. Required decisions are mode/profile/risk-triggered,
-not every universal template row.
+remain in active artifacts. `release_ready` also requires
+`.playbook-artifacts/project_verification.json` with `required_failures=0`, a
+`project_commit` matching current `HEAD`, and no dirty Git state outside
+`.playbook-artifacts/`. Required decisions are mode/profile/risk-triggered, not
+every universal template row.
 
 `delivery_execution_model.json` records the active delivery profile. The default
 is `solo_verified`: one active Codex session may implement, deterministic
 verification must pass, and human or independent review gates still apply by risk
-policy. External `codex exec` remains for CI, harness runs, or a separate
-non-Codex orchestrator process.
+policy. `tools/playbook_validate.py --check delivery` blocks self-completion
+authority, missing reviewer authority, missing `tools/verify_project.py`
+verifier binding, missing review triggers, and missing Codex Direct binding.
+External `codex exec` remains for CI, harness runs, or a separate non-Codex
+orchestrator process.
 
 ### Harness And Evaluation
 
@@ -395,6 +401,10 @@ references it. Comparison checks a compatibility fingerprint covering model,
 adapter, tool/memory/permission policy, environment, scorer set, timeout/retry
 policy, dataset version, and delivery profile. Prompt hashes are recorded but not
 forced identical because baseline and candidate prompts are expected to differ.
+For real-model comparisons, run with `--empirical-comparison` and supply
+`--provider`, `--model-id`, `--cli-version`, `--reasoning-profile`,
+`--permission-policy`, and `--delivery-profile`; unknown identity is accepted
+only for scripted/mechanism demonstrations.
 
 Recommended real-command comparison shape:
 

@@ -39,6 +39,13 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--append", action="store_true")
     run.add_argument("--output", required=True)
     run.add_argument("--fail-on-invalid-run", action="store_true")
+    run.add_argument("--empirical-comparison", action="store_true")
+    run.add_argument("--provider", default="")
+    run.add_argument("--model-id", default="")
+    run.add_argument("--cli-version", default="")
+    run.add_argument("--reasoning-profile", default="")
+    run.add_argument("--permission-policy", default="")
+    run.add_argument("--delivery-profile", default="")
 
     verify = sub.add_parser("verify-bundle")
     verify.add_argument("bundle_path")
@@ -68,13 +75,38 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run":
         suite = load_suite(Path(args.suite))
+        empirical_required = {
+            "--provider": args.provider,
+            "--model-id": args.model_id,
+            "--cli-version": args.cli_version,
+            "--reasoning-profile": args.reasoning_profile,
+            "--permission-policy": args.permission_policy,
+            "--delivery-profile": args.delivery_profile,
+        }
+        if args.empirical_comparison:
+            missing = [flag for flag, value in empirical_required.items() if not value or value == "unknown"]
+            if missing:
+                print(f"empirical comparison requires explicit identity flags: {', '.join(missing)}", file=sys.stderr)
+                return 2
+        metadata = {
+            "model": {
+                "provider": args.provider or "unknown",
+                "id": args.model_id or "unknown",
+                "parameters": args.reasoning_profile or "unknown",
+            },
+            "cli_version": args.cli_version or "unknown",
+            "reasoning_profile": args.reasoning_profile or "unknown",
+            "permission_policy_version": args.permission_policy or "adapter_default.v1",
+            "delivery_profile": args.delivery_profile or "harness_lab_single_adapter",
+            "empirical_comparison": args.empirical_comparison,
+        }
         if args.adapter == "scripted":
-            adapter = ScriptedAdapter()
+            adapter = ScriptedAdapter(metadata)
         else:
             if not args.command_template:
                 print("--command-template is required for command adapter", file=sys.stderr)
                 return 2
-            adapter = CommandAdapter(args.command_template, timeout=args.adapter_timeout)
+            adapter = CommandAdapter(args.command_template, timeout=args.adapter_timeout, metadata=metadata)
         try:
             results = run_suite(
                 suite,

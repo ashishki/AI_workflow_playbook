@@ -79,6 +79,8 @@ def project_verification_config(verify_argvs: list[list[str]]) -> str:
                 "placeholders",
                 "--check",
                 "readiness",
+                "--check",
+                "delivery",
             ],
             "required": True,
             "expected_exit_code": 0,
@@ -435,7 +437,7 @@ def write_result(root: Path, checks: list[dict[str, Any]], config_errors: list[s
     required_failures = sum(
         1
         for check in checks
-        if check.get("required") and not check.get("passed", False) and not check.get("skipped", False)
+        if check.get("required") and not check.get("passed", False)
     )
     payload = {
         "schema_version": "playbook.project_verification_result.v1",
@@ -464,6 +466,7 @@ def run_check(root: Path, artifacts_root: Path, check: dict[str, Any]) -> dict[s
     if platforms and current_platform not in platforms:
         stdout_path.write_text("", encoding="utf-8")
         stderr_path.write_text(f"skipped on platform {current_platform}\\n", encoding="utf-8")
+        passed = not check["required"]
         return {
             "id": check["id"],
             "argv": argv,
@@ -471,7 +474,7 @@ def run_check(root: Path, artifacts_root: Path, check: dict[str, Any]) -> dict[s
             "required": check["required"],
             "expected_exit_code": check["expected_exit_code"],
             "exit_code": None,
-            "passed": True,
+            "passed": passed,
             "skipped": True,
             "stdout_ref": artifact_ref(stdout_path, root),
             "stderr_ref": artifact_ref(stderr_path, root),
@@ -545,7 +548,7 @@ def main() -> int:
     artifacts_root = root / ".playbook-artifacts"
     results = [run_check(root, artifacts_root, check) for check in checks]
     result_path = write_result(root, results, [], started_at)
-    required_failures = sum(1 for item in results if item["required"] and not item["passed"] and not item["skipped"])
+    required_failures = sum(1 for item in results if item["required"] and not item["passed"])
     for item in results:
         status = "SKIP" if item["skipped"] else "PASS" if item["passed"] else "FAIL"
         print(f"{status}: {item['id']} exit={item['exit_code']}")

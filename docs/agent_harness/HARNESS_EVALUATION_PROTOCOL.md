@@ -154,3 +154,8 @@ a required `fail` blocks, while an `invalid` run is not a capability failure but
 still does not satisfy the gate. Follow
 `docs/testing/holdout_acceptance.md` for access, contamination, rotation, and
 repair rules.
+
+For empirical comparisons, the command adapter must be launched with explicit
+provider, model ID, CLI version, reasoning profile, permission policy, and
+delivery profile flags. Scripted mechanism demonstrations may record unknown
+identity; empirical runs fail closed when identity is unknown.

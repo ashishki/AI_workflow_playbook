@@ -354,3 +354,60 @@ def test_readiness_blocks_scaffold_placeholders_after_implementation_ready(tmp_p
     findings = playbook_validate.validate_readiness(tmp_path)
 
     assert [finding.check_id for finding in findings] == ["READINESS_SCAFFOLD_PLACEHOLDER_ACTIVE"]
+
+
+def test_release_ready_requires_current_green_project_verification(tmp_path: Path) -> None:
+    playbook = tmp_path / ".playbook"
+    playbook.mkdir()
+    readiness = {
+        "schema_version": "playbook.readiness_state.v1",
+        "mode": "lean-core",
+        "state": "release_ready",
+        "required_decision_policy": "mode_profile_risk_triggered",
+        "unresolved_decision_marker": "scaffold placeholder",
+        "implementation_ready_requires_no_scaffold_placeholders": True,
+        "release_ready_requires_current_verification": True,
+    }
+    (playbook / "readiness_state.json").write_text(json.dumps(readiness), encoding="utf-8")
+
+    missing = playbook_validate.validate_readiness(tmp_path)
+    assert [finding.check_id for finding in missing] == ["READINESS_RELEASE_VERIFICATION_MISSING"]
+
+    result_dir = tmp_path / ".playbook-artifacts"
+    result_dir.mkdir()
+    verification = {
+        "schema_version": "playbook.project_verification_result.v1",
+        "project_commit": "not-a-git-repository",
+        "required_failures": 0,
+        "checks": [],
+    }
+    (result_dir / "project_verification.json").write_text(json.dumps(verification), encoding="utf-8")
+    assert playbook_validate.validate_readiness(tmp_path) == []
+
+    verification["required_failures"] = 1
+    (result_dir / "project_verification.json").write_text(json.dumps(verification), encoding="utf-8")
+    failed = playbook_validate.validate_readiness(tmp_path)
+    assert [finding.check_id for finding in failed] == ["READINESS_RELEASE_VERIFICATION_FAILED"]
+
+
+def test_delivery_validation_blocks_self_completion(tmp_path: Path) -> None:
+    playbook = tmp_path / ".playbook"
+    playbook.mkdir()
+    delivery = {
+        "schema_version": "playbook.delivery_execution_model.v1",
+        "delivery_profile": "solo_verified",
+        "orchestrator": {"kind": "human"},
+        "implementer": {"kind": "active_codex_session"},
+        "reviewer": {"kind": "human"},
+        "verifier": {"kind": "deterministic_project_verifier", "command": "python tools/verify_project.py --root ."},
+        "completion_authority": {"kind": "active_codex_session"},
+        "cli_bindings": {"codex_direct": "active_session"},
+        "permission_profile": "repo_local_default",
+        "budget": {"spend_budget": "project_defined"},
+        "independent_review_triggers": ["meaningful_implementation_change"],
+    }
+    (playbook / "delivery_execution_model.json").write_text(json.dumps(delivery), encoding="utf-8")
+
+    findings = playbook_validate.validate_delivery(tmp_path)
+
+    assert [finding.check_id for finding in findings] == ["DELIVERY_SELF_COMPLETION_AUTHORITY"]

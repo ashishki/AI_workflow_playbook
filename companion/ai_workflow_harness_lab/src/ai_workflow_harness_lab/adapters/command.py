@@ -12,9 +12,10 @@ class CommandAdapter(Adapter):
     adapter_id = "command"
     adapter_version = "command.v1"
 
-    def __init__(self, command_template: str, timeout: float | None = None):
+    def __init__(self, command_template: str, timeout: float | None = None, metadata: dict[str, object] | None = None):
         self.command_template = command_template
         self.timeout = timeout
+        self.metadata = metadata or {}
 
     def run(
         self,
@@ -83,5 +84,6 @@ class CommandAdapter(Adapter):
                 "command_receipt": str(execution.receipt_path),
                 "command_template": self.command_template,
                 "timeout_seconds": self.timeout,
+                **self.metadata,
             },
         )

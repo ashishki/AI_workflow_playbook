@@ -13,6 +13,9 @@ class ScriptedAdapter(Adapter):
     adapter_id = "scripted"
     adapter_version = "scripted.v1"
 
+    def __init__(self, metadata: dict[str, object] | None = None):
+        self.metadata = metadata or {}
+
     def run(
         self,
         task: SuiteTask,
@@ -121,5 +124,5 @@ class ScriptedAdapter(Adapter):
             output_path=output_path,
             receipt_paths=receipts,
             trace_paths=trace_paths,
-            metadata={"adapter": self.adapter_id, "adapter_version": self.adapter_version},
+            metadata={"adapter": self.adapter_id, "adapter_version": self.adapter_version, **self.metadata},
         )

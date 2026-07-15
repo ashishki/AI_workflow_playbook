@@ -223,6 +223,8 @@ def write_harness_eval_unit(
     timeout = adapter_metadata.get("timeout_seconds", "unknown")
     compatibility = {
         "model": adapter_metadata.get("model", {"provider": "unknown", "id": "unknown", "parameters": "unknown"}),
+        "cli_version": adapter_metadata.get("cli_version", "unknown"),
+        "reasoning_profile": adapter_metadata.get("reasoning_profile", "unknown"),
         "harness_version": __version__,
         "adapter_version": adapter.adapter_version,
         "command_template": adapter_metadata.get("command_template", "not_applicable"),
@@ -243,6 +245,8 @@ def write_harness_eval_unit(
         "condition": condition,
         "trial_index": trial,
         "model": compatibility["model"],
+        "cli_version": compatibility["cli_version"],
+        "reasoning_profile": compatibility["reasoning_profile"],
         "harness_version": __version__,
         "adapter_version": adapter.adapter_version,
         "prompt_version": f"{task.version}:{condition}",

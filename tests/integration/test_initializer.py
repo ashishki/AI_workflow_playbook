@@ -245,3 +245,43 @@ def test_generated_verifier_rejects_recursive_project_verification(tmp_path: Pat
 
     assert verification.returncode == 2
     assert "must not call tools/verify_project.py recursively" in verification.stderr
+
+
+def test_required_platform_skip_fails_project_verification(tmp_path: Path) -> None:
+    target = tmp_path / "platform-skip"
+    result = run_init(
+        target,
+        "--mode",
+        "lean-core",
+        "--project-name",
+        "Platform Skip",
+        "--operational-pain",
+        "Required checks must not disappear on unsupported platforms.",
+        "--current-workaround",
+        "Manual platform review.",
+        "--first-proof-metric",
+        "Generated verifier blocks skipped required checks.",
+        "--verify-argv",
+        passing_verify_argv(),
+    )
+    assert result.returncode == 0, result.stderr
+    config_path = target / ".playbook/project_verification.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    config["checks"][1]["platforms"] = ["definitely-not-this-platform"]
+    config_path.write_text(json.dumps(config, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    verification = subprocess.run(
+        [sys.executable, "tools/verify_project.py", "--root", "."],
+        cwd=target,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert verification.returncode == 1
+    result_payload = json.loads((target / ".playbook-artifacts/project_verification.json").read_text(encoding="utf-8"))
+    skipped = next(check for check in result_payload["checks"] if check["id"] == "project_verification")
+    assert skipped["skipped"] is True
+    assert skipped["passed"] is False
+    assert result_payload["required_failures"] == 1
