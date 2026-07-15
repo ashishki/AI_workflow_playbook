@@ -673,7 +673,7 @@ Verification:
 
 Owner: codex
 Type: evaluation
-Status: implementation_reported 2026-07-15 - fresh critic ALLOW; human approval required
+Status: done 2026-07-15 - approved and executed for shishki_bot_v1
 Depends-On: TFA-1.2, TFA-2.2, TFA-3.2, TFA-4.1, TFA-4.2, TFA-5.1, TFA-6.2
 Risk-Level: high
 Public-Tests-Required: not_required
@@ -702,6 +702,7 @@ Integration-Points:
   - `reports/test_first_pilot/shishki_bot_v1/PILOT_REGISTRY.md`
   - `reports/test_first_pilot/shishki_bot_v1/CRITIC_REVIEW.md`
   - `reports/test_first_pilot/shishki_bot_v1/APPROVAL_REQUEST_2026-07-15.md`
+  - `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/approval_record.md`
 
 Verification:
   - `python3 tools/playbook_validate.py --root . --check placeholders`
@@ -712,7 +713,7 @@ Verification:
 
 Owner: human + codex
 Type: evaluation evidence
-Status: blocked 2026-07-15 - execution prerequisites not approved; external launch required
+Status: implementation_reported 2026-07-15 - 12 runs captured; blind adjudication pending
 Depends-On: TFA-7.1, TFA-7.2A, TFA-7.2B, TFA-7.2C
 Risk-Level: high
 Public-Tests-Required: not_required
@@ -722,10 +723,10 @@ Mutation-Required: not_required
 Property-Required: not_required
 Visual-Contract: not_applicable
 
-Blocking rationale: this framework change records prose/evidence only, so its
-task-local executable and stronger-oracle routes are not applicable. The real
-project tasks retain their own resolved routes. No pilot may run until humans
-approve fixtures, data handling, budget, and the external execution boundary.
+Execution note: the approved external runner completed one 12-execution schedule
+for `shishki-tfa7-20260715`. The completed run is sealed and six blind review
+pairs are prepared. TFA-7.2 remains incomplete until human blind review,
+protected unblinding, adjudication, and a final adoption decision are recorded.
 
 Objective: |
   Execute the paired pilot and record auditable results rather than narrative
@@ -741,6 +742,8 @@ Integration-Points:
   - docs/evaluation/TEST_FIRST_PILOT_RESULTS.md
   - `docs/tasks.md`
   - `reports/test_first_pilot/shishki_bot_v1/PREFLIGHT_2026-07-15.md`
+  - `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/`
+  - `reports/test_first_pilot/shishki_bot_v1/review/shishki-tfa7-20260715/`
 
 Verification:
   - Project-specific commands recorded in docs/evaluation/TEST_FIRST_PILOT_PLAN.md.
@@ -751,7 +754,7 @@ Verification:
 
 Owner: human + codex
 Type: evaluation preparation
-Status: implementation_reported 2026-07-15 - exact repository and data approval required
+Status: done 2026-07-15 - approved in completed run record
 Depends-On: TFA-7.1
 Risk-Level: high
 Public-Tests-Required: not_required
@@ -775,6 +778,7 @@ Integration-Points:
   - `reports/test_first_pilot/shishki_bot_v1/PILOT_REGISTRY.md`
   - `companion/ai_workflow_harness_lab/suites/shishki_bot_ci_v1/`
   - `reports/test_first_pilot/shishki_bot_v1/APPROVAL_REQUEST_2026-07-15.md`
+  - `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/approval_record.md`
 
 Verification:
   - Human repository/data approval references are recorded.
@@ -784,7 +788,7 @@ Verification:
 
 Owner: human
 Type: evaluation governance
-Status: implementation_reported 2026-07-15 - budget operator and retention approval required
+Status: done 2026-07-15 - approved and executed once
 Depends-On: TFA-7.1
 Risk-Level: high
 Public-Tests-Required: not_required
@@ -808,6 +812,7 @@ Integration-Points:
   - `tools/test_first_pilot_codex_adapter.py`
   - `tools/run_test_first_pilot.sh`
   - `reports/test_first_pilot/shishki_bot_v1/APPROVAL_REQUEST_2026-07-15.md`
+  - `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/`
   - external approval and retention record
 
 Verification:
@@ -817,7 +822,7 @@ Verification:
 
 Owner: human + codex
 Type: evaluation preparation
-Status: implementation_reported 2026-07-15 - fresh critic ALLOW; scorer/adjudicator approval required
+Status: done 2026-07-15 - frozen and approved; review packages prepared
 Depends-On: TFA-7.2A, TFA-7.2B
 Risk-Level: high
 Public-Tests-Required: not_required

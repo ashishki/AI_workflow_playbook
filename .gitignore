@@ -4,3 +4,12 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 .playbook-artifacts/
+.codex
+
+# Local TFA pilot execution artifacts. Keep frozen manifests, templates,
+# preflight records, and registry files tracked; keep real runs and protected
+# mappings local unless an explicit publication decision is made.
+reports/test_first_pilot/shishki_bot_v1/approval_*.md
+reports/test_first_pilot/shishki_bot_v1/approval_usage/
+reports/test_first_pilot/shishki_bot_v1/runs/
+reports/test_first_pilot/shishki_bot_v1/review/
