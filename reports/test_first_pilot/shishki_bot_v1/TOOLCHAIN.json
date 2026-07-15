@@ -1,0 +1,66 @@
+{
+  "bwrap": {
+    "path": "/usr/bin/bwrap",
+    "sha256": "52231e1caf55bcbc667b269f49c63599a6f7db4767ae6a039580d0ff853db712",
+    "version": "bubblewrap 0.9.0"
+  },
+  "codex_cli": {
+    "entrypoint_path": "/home/ashishki/.nvm/versions/node/v22.22.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex",
+    "entrypoint_sha256": "2b3edc9cdfd1717fba3dbc92817205a8a2c7511d459e456d4817eeff6f78ed7a",
+    "package_json_path": "/home/ashishki/.nvm/versions/node/v22.22.1/lib/node_modules/@openai/codex/package.json",
+    "package_json_sha256": "68d47f4d7fa6e318450c3e352c47000a6451ee861f203b332015289a767557b5",
+    "platform_package_json_path": "/home/ashishki/.nvm/versions/node/v22.22.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-package.json",
+    "platform_package_sha256": "42bab5980ada0004fb00857b9ad36f26038f6b548c6ae12d838fdf3927c17ff0",
+    "version": "codex-cli 0.144.4"
+  },
+  "harness_cli_sha256": "2f8c9a5aac10905e0142db9c8546e7ee3abb9901f13d3115ddff181b7df37ee5",
+  "harness_version": "0.1.0",
+  "jsonschema_version": "4.26.0",
+  "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+  "pytest_cli_sha256": "cf04d642cf529949510346a02991b72c978d42bbd419771a919421877733b2c0",
+  "pytest_version": "9.1.1",
+  "python_build": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+  "python_executable_realpath": "/usr/bin/python3.12",
+  "python_executable_sha256": "1643dacd9feaedc58f3cc581e4d22577dfe25c09b10282936186ccf0f2e61118",
+  "python_implementation": "CPython",
+  "python_version": "3.12.3",
+  "runner_binaries": {
+    "bash": {
+      "path": "/usr/bin/bash",
+      "realpath": "/usr/bin/bash",
+      "sha256": "bc5945feb8bd26203ebfafea5ce1878bb2e32cb8fb50ab7ae395cfb1e1aaaef1"
+    },
+    "cp": {
+      "path": "/usr/bin/cp",
+      "realpath": "/usr/bin/cp",
+      "sha256": "6187dab32cd7b6291d96c54425a22915a6eeb39add6d95ee9008e1dbba427131"
+    },
+    "git": {
+      "path": "/usr/bin/git",
+      "realpath": "/usr/bin/git",
+      "sha256": "2a8c18fbf43da9f692d75474c72bea9dfd796c260b0f3dfe456376abc3bbd668",
+      "version": "git version 2.43.0"
+    },
+    "mkdir": {
+      "path": "/usr/bin/mkdir",
+      "realpath": "/usr/bin/mkdir",
+      "sha256": "af2cc5106b37532b2aa1b4981668685cf7aebdf5fea3ac7356d568cf98d7470b"
+    },
+    "sha256sum": {
+      "path": "/usr/bin/sha256sum",
+      "realpath": "/usr/bin/sha256sum",
+      "sha256": "9992e1f1feb6f0f396bc8d6691ebc1adbfc269fd628bce84eda1d4ba5c3995c7"
+    },
+    "sh": {
+      "path": "/bin/sh",
+      "realpath": "/usr/bin/dash",
+      "sha256": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"
+    }
+  },
+  "site_packages": {
+    "file_count": 1153,
+    "manifest_sha256": "332d984614227af694aec8264da7153d61cd74917cb6ff7970edcab75184534d",
+    "root": "/home/ashishki/Documents/dev/ai-stack/projects/AI_workflow_playbook/.venv/lib/python3.12/site-packages"
+  },
+  "schema_version": "test_first_pilot.toolchain.v2"
+}

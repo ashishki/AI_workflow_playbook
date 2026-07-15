@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/test_first_pilot_event.schema.json",
+  "title": "Test-First Pilot Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pilot_manifest_sha256",
+    "approval_id",
+    "pilot_id",
+    "attempt_id",
+    "task_id",
+    "condition",
+    "trial",
+    "model",
+    "reasoning_effort",
+    "service_tier",
+    "event",
+    "timestamp",
+    "monotonic_ns"
+  ],
+  "properties": {
+    "schema_version": {"const": "test_first_pilot.event.v1"},
+    "pilot_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "approval_id": {"type": "string", "minLength": 1},
+    "pilot_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "attempt_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "task_id": {"type": "string", "minLength": 1},
+    "condition": {"enum": ["baseline", "playbook"]},
+    "trial": {"type": "integer", "minimum": 0},
+    "model": {"const": "gpt-5.6-sol"},
+    "reasoning_effort": {"const": "medium"},
+    "service_tier": {"const": "default"},
+    "event": {
+      "enum": [
+        "adapter_start",
+        "human_intervention",
+        "command_start",
+        "command_end",
+        "file_change",
+        "verifier_start",
+        "verifier_end",
+        "first_green",
+        "repair_candidate",
+        "trace_parse_error",
+        "final_model_gate",
+        "adapter_end"
+      ]
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "monotonic_ns": {"type": "integer", "minimum": 0},
+    "source_event_type": {"type": "string", "minLength": 1},
+    "source_item_id": {"type": "string", "minLength": 1},
+    "command": {"type": "string"},
+    "exit_code": {"type": "integer"},
+    "codex_exit_code": {"type": "integer"},
+    "wrapper_exit_code": {"type": "integer"},
+    "timed_out": {"type": "boolean"},
+    "terminal_class": {
+      "enum": ["completed", "task_timeout", "infrastructure_failure"]
+    },
+    "result": {"enum": ["passed", "failed", "unknown"]},
+    "verifier_attempt": {"type": "integer", "minimum": 1},
+    "change_count": {"type": "integer", "minimum": 1},
+    "file_paths": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "occurred": {"type": "boolean"},
+    "reason": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event": {"const": "human_intervention"}}, "required": ["event"]},
+      "then": {"required": ["occurred", "reason"]}
+    },
+    {
+      "if": {"properties": {"event": {"enum": ["command_start", "command_end"]}}, "required": ["event"]},
+      "then": {"required": ["source_event_type", "source_item_id", "command"]}
+    },
+    {
+      "if": {"properties": {"event": {"const": "file_change"}}, "required": ["event"]},
+      "then": {"required": ["source_event_type", "source_item_id", "file_paths", "change_count"]}
+    },
+    {
+      "if": {"properties": {"event": {"enum": ["verifier_start", "verifier_end"]}}, "required": ["event"]},
+      "then": {"required": ["source_event_type", "source_item_id", "command", "verifier_attempt"]}
+    },
+    {
+      "if": {
+        "properties": {
+          "event": {
+            "enum": ["verifier_end", "first_green", "repair_candidate", "final_model_gate"]
+          }
+        },
+        "required": ["event"]
+      },
+      "then": {"required": ["result"]}
+    },
+    {
+      "if": {"properties": {"event": {"enum": ["first_green", "repair_candidate"]}}, "required": ["event"]},
+      "then": {"required": ["source_item_id", "verifier_attempt"]}
+    },
+    {
+      "if": {"properties": {"event": {"const": "trace_parse_error"}}, "required": ["event"]},
+      "then": {"required": ["reason"]}
+    },
+    {
+      "if": {"properties": {"event": {"const": "adapter_end"}}, "required": ["event"]},
+      "then": {
+        "required": [
+          "codex_exit_code",
+          "wrapper_exit_code",
+          "terminal_class",
+          "timed_out"
+        ]
+      }
+    }
+  ]
+}

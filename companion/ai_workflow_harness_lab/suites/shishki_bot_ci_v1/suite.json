@@ -1,0 +1,119 @@
+{
+  "suite_id": "shishki_bot_ci_v1",
+  "version": "1.0.0",
+  "tasks": [
+    {
+      "task_id": "pin_ci_actions",
+      "version": "pin-ci-actions.v1",
+      "title": "Pin GitHub Actions to approved immutable revisions",
+      "fixture": "fixtures/pin_ci_actions",
+      "baseline_prompt": "prompts/pin_ci_actions.baseline.md",
+      "playbook_prompt": "prompts/pin_ci_actions.playbook.md",
+      "correction_budget": 1,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure",
+        "policy_failure",
+        "false_completion"
+      ],
+      "required_verification": {
+        "command": [
+          "{python}",
+          "{project_root}/tools/test_first_pilot_sandbox.py",
+          "--workspace",
+          "{workspace}",
+          "--",
+          "{python}",
+          "-I",
+          "-X",
+          "pycache_prefix=/dev/null/test-first-pilot-verifier",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "pilot_tests/test_ci_pins.py"
+        ],
+        "expected_exit_code": 0,
+        "must_run_after_agent": true,
+        "timeout": 60
+      },
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "pin_ci_actions_acceptance",
+          "command": "{python} {project_root}/tools/test_first_pilot_sandbox.py --workspace {workspace} -- {python} -I -X pycache_prefix=/dev/null/test-first-pilot-verifier -m pytest -q -p no:cacheprovider pilot_tests/test_ci_pins.py",
+          "exit_code": 0,
+          "timeout": 60
+        },
+        {
+          "type": "diff_scope",
+          "id": "pin_ci_actions_scope",
+          "allowlist": [".github/workflows/ci.yml"]
+        },
+        {
+          "type": "file_state",
+          "id": "checkout_pin_present",
+          "path": ".github/workflows/ci.yml",
+          "contains": "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0"
+        },
+        {
+          "type": "file_state",
+          "id": "setup_python_pin_present",
+          "path": ".github/workflows/ci.yml",
+          "contains": "actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1"
+        }
+      ]
+    },
+    {
+      "task_id": "reject_unapproved_ci_actions",
+      "version": "reject-unapproved-ci-actions.v1",
+      "title": "Reject every unapproved GitHub Actions reference",
+      "fixture": "fixtures/reject_unapproved_ci_actions",
+      "baseline_prompt": "prompts/reject_unapproved_ci_actions.baseline.md",
+      "playbook_prompt": "prompts/reject_unapproved_ci_actions.playbook.md",
+      "correction_budget": 1,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure",
+        "policy_failure",
+        "false_completion"
+      ],
+      "required_verification": {
+        "command": [
+          "{python}",
+          "{project_root}/tools/test_first_pilot_sandbox.py",
+          "--workspace",
+          "{workspace}",
+          "--",
+          "{python}",
+          "-I",
+          "-X",
+          "pycache_prefix=/dev/null/test-first-pilot-verifier",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "tests/test_ci_supply_chain.py",
+          "pilot_tests/test_unapproved_action.py"
+        ],
+        "expected_exit_code": 0,
+        "must_run_after_agent": true,
+        "timeout": 60
+      },
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "reject_unapproved_ci_actions_acceptance",
+          "command": "{python} {project_root}/tools/test_first_pilot_sandbox.py --workspace {workspace} -- {python} -I -X pycache_prefix=/dev/null/test-first-pilot-verifier -m pytest -q -p no:cacheprovider tests/test_ci_supply_chain.py pilot_tests/test_unapproved_action.py",
+          "exit_code": 0,
+          "timeout": 60
+        },
+        {
+          "type": "diff_scope",
+          "id": "reject_unapproved_ci_actions_scope",
+          "allowlist": ["tests/test_ci_supply_chain.py"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "suite_id": "shishki_bot_ci_v1",
+  "version": "1.0.0",
+  "tasks": 2
+}
+.....                                                                    [100%]
+5 passed in 1.00s
+pilot static preflight: ok; no model invocation attempted

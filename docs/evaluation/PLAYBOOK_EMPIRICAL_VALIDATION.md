@@ -1,10 +1,10 @@
 # Playbook Empirical Validation
 
-Status: mechanism implemented; real-model empirical run pending.
+Status: mechanism implemented; paired real-project pilot not run.
 
 ## What Is Compared
 
-The comparison is workflow-vs-workflow under the same model, adapter,
+The generic mechanism comparison is workflow-vs-workflow under the same model, adapter,
 environment, fixture, timeout, retry policy, permissions, and trial count:
 
 - Baseline: ordinary task instruction plus repository and request to run tests.
@@ -13,6 +13,15 @@ environment, fixture, timeout, retry policy, permissions, and trial count:
   no-false-completion rule, and required verification command.
 
 The unit is the workflow around the model, not only the model.
+
+For the paired real-project pilot, `baseline` means the frozen current Playbook
+workflow before the TFA-1 through TFA-6 additions and `playbook` means the same
+workflow with the applicable test-first additions. The conditions, pairing,
+minimum counts, metrics, budget, retention, and approval gates are defined in
+`docs/evaluation/TEST_FIRST_PILOT_PLAN.md`. A minimized two-task candidate from
+`ashishki/shishki_bot` is frozen for review, but its exact fixture, budget, and
+execution approvals are still pending. That pilot has not run; the scripted
+mechanism results below and the static candidate preflight are not pilot trials.
 
 ## MVP Suite
 
@@ -51,12 +60,19 @@ benchmark content and present it as evidence. A generated suite with placeholder
 tasks is only a setup artifact until a maintainer replaces the fixtures, traps,
 and scorers with project-specific material.
 
+A minimum paired pilot is directional and scoped to its frozen task/model set.
+It does not establish general productivity or quality improvement without the
+preregistered rationale and achieved evidence required by the pilot plan.
+
 ## Valid And Invalid Runs
 
-Infrastructure, fixture, adapter, scorer, provider/network, timeout, and
+Infrastructure, fixture, adapter, scorer, provider/network, outer-timeout, and
 benchmark-defect failures are recorded separately from model capability. An
 environment failure is not converted to model score 0 unless a scorer explicitly
-marks it as a task failure.
+marks it as a task failure. In the frozen candidate adapter, the 1,200-second
+inner limit is a valid `task_timeout` with Codex exit 124 and wrapper exit 0;
+the 1,260-second harness timeout and real provider/CLI/wrapper nonzero exits are
+infrastructure-invalid.
 
 The command adapter propagates the real process exit code. Non-zero adapter
 exits, missing commands, timeouts, and scorer exceptions create structured
@@ -68,6 +84,15 @@ after the adapter finishes and records a separate command receipt. Success is
 based on post-state scorers and verification receipts, not on natural-language
 agent claims.
 
+For the frozen `shishki_bot_ci_v1` candidate, model execution and verification
+use different boundaries. The model shell can write only its copied fixture and
+cannot read sibling repositories or its broker's saved auth. Its adapter runs in
+a pinned PID namespace so timeout cleanup covers the complete descendant process
+tree before scoring. Required verification and shell scorers run afterward in a
+separate read-only, networkless Bubblewrap sandbox. Post-state scope uses
+in-memory before/after manifests, so committing a change or removing Git cannot
+hide an out-of-scope mutation.
+
 Comparison validates each EvidenceBundle before reading scorer outputs. Tampered
 or invalid bundles are marked invalid, evidence correctness is computed from
 validation, and stability warnings are calculated per task rather than from the
@@ -75,15 +100,19 @@ aggregate bundle count.
 
 ## Metrics
 
-Reports include task success rate, verified environment success rate,
+Generic report fields include task success rate, verified environment success rate,
 false-success rate, regression rate, recovery success rate, policy violation
 rate, evidence completeness/correctness, tool-call count, unnecessary action
 count, retry count, timeout rate, invalid infrastructure run rate, token fields
 when available, latency, cost per attempted/successful task, human intervention
 rate, and cross-session continuity success.
 
-Cost and token telemetry are `unknown` when the adapter does not provide them.
-Safety, false completion, and immutable-policy violations remain hard gates.
+That field list is not a claim that every value is measured. For the pilot,
+regression, exact tool calls, unnecessary actions, aggregate wall latency, cost,
+provider tokens, and human-intervention rate remain `unknown` unless a separately
+validated source supplies them; the built-in comparison does not aggregate the
+project event ledger. Safety, false completion, and immutable-policy violations
+remain hard gates.
 
 ## Reproducibility
 
@@ -97,6 +126,27 @@ The MVP is locally integrity-validated evidence. Do not describe a bundle as
 independently attested unless CI provenance, a signature, or another separate
 trust-domain mechanism is attached.
 
+The candidate preflight pins a Linux/host-specific toolchain and verifies the
+asset manifest, full regular-file `site-packages` closure, executable digests,
+custom model permission profile, PID cleanup boundary, and read-only verifier
+sandbox. For a full run, a minimal pinned bootstrap matches approval and critic
+records to the manifest before manifest-listed Python executes. The guarded
+runner then repeats asset and toolchain checks before every arm and rechecks
+approval/critic digests. Added links or special entries in execution trees fail
+the closure check. The preflight also avoids login profiles, inherited Git
+system/global configuration, templates, hooks, external pytest plugins, and
+`conftest.py`. Moving the pilot to another host, OS, CLI build, Python
+environment, or Bubblewrap binary is a new freeze candidate, not an equivalent
+execution. This local freeze is not independent host attestation.
+
+Run evidence uses a trusted single-writer, no-concurrent-mutation boundary. Its
+completed-run closure seal detects ordinary drift but is not a signature and is
+not evidence against a malicious host owner. Independent attestation still
+requires a separate snapshot, signature, or CI trust domain.
+For the frozen `shishki_bot` candidate, the full runner writes the seal only
+after the bundle manifest and final governance checks. The blind-review preparer
+must verify that seal twice and records its digest in the protected mapping.
+
 ## Commands
 
 Scripted mechanism demonstration:
@@ -108,23 +158,30 @@ harness-lab run --suite companion/ai_workflow_harness_lab/suites/playbook_core_v
 harness-lab compare --baseline reports/playbook_eval/baseline --candidate reports/playbook_eval/playbook --output reports/playbook_eval/comparison --fail-on-invalid-run --fail-on-hard-gate
 ```
 
-Real-model example with Codex CLI:
+Frozen candidate preflight and guarded execution:
 
-Run this from an external shell or CI harness process. Do not run it from inside
-an active Codex Direct project session, because that would spawn nested Codex.
+Run the full command only from a separate human shell or CI process after the
+manifest-specific critic and human approval records exist. An active Codex
+Direct session is rejected. Preflight makes no model request.
 
 ```bash
-harness-lab run \
-  --suite companion/ai_workflow_harness_lab/suites/playbook_core_v1 \
-  --condition playbook \
-  --adapter command \
-  --command-template 'codex exec -s workspace-write "$(cat {prompt_file})"' \
-  --trials 3 \
-  --output reports/playbook_eval/codex_playbook \
-  --fail-on-invalid-run
+tools/run_test_first_pilot.sh --preflight-only
+
+export TFA_PILOT_APPROVAL_RECORD=/absolute/path/to/durable-approval.md
+export TFA_PILOT_APPROVAL_ID=<approval-record-id>
+export TFA_PILOT_ID=<new-immutable-run-id>
+tools/run_test_first_pilot.sh
 ```
 
 Do not run paid or networked model experiments without an explicit budget.
+
+After a complete run, `tools/prepare_test_first_pilot_review.py` first verifies
+the copied governance records, exact 12-arm schedule, identities, raw JSONL, and
+an independently reconstructed event ledger. It then creates six A/B outcome
+packages and a separate label/process mapping. A reviewer may be called
+condition-blind only when a separate custodian account or equivalent ACL keeps
+that mapping, raw run, prompts, traces, and workflow labels inaccessible until
+the report is frozen. File modes under one OS account are not isolation.
 
 ## Generated Example
 
