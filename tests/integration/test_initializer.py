@@ -20,6 +20,10 @@ def run_init(target: Path, *args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def passing_verify_argv() -> str:
+    return json.dumps(["{python}", "-c", "raise SystemExit(0)"])
+
+
 def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
     target = tmp_path / "lean-core"
     result = run_init(
@@ -34,6 +38,8 @@ def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
         "Manual copying of playbook files.",
         "--first-proof-metric",
         "Generated project verifier exits zero.",
+        "--verify-argv",
+        passing_verify_argv(),
     )
 
     assert result.returncode == 0, result.stderr
@@ -42,6 +48,7 @@ def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
     assert (target / "docs/CONTRACT_LITE.md").exists()
     assert (target / "docs/PROBLEM_FIT.md").exists()
     assert (target / "tools/verify_project.py").exists()
+    assert (target / ".playbook/project_verification.json").exists()
     assert not (target / "PLAYBOOK.md").exists()
     assert not (target / "docs/ARCHITECTURE.md").exists()
     assert not (target / "docs/EVIDENCE_INDEX.md").exists()
@@ -65,6 +72,23 @@ def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
         check=False,
     )
     assert validation.returncode == 0, validation.stderr
+    verification = subprocess.run(
+        [sys.executable, "tools/verify_project.py", "--root", "."],
+        cwd=target,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert verification.returncode == 0, verification.stderr
+    result_path = target / ".playbook-artifacts/project_verification.json"
+    assert result_path.exists()
+    verification_result = json.loads(result_path.read_text(encoding="utf-8"))
+    assert verification_result["required_failures"] == 0
+    assert {check["id"] for check in verification_result["checks"]} == {
+        "playbook_contract",
+        "project_verification",
+    }
 
 
 def test_install_claude_hooks_merges_settings(tmp_path: Path) -> None:
@@ -88,6 +112,8 @@ def test_install_claude_hooks_merges_settings(tmp_path: Path) -> None:
         "Manual hook copying.",
         "--first-proof-metric",
         "Hook smoke test passes.",
+        "--verify-argv",
+        passing_verify_argv(),
         "--install-claude-hooks",
     )
 
@@ -98,6 +124,11 @@ def test_install_claude_hooks_merges_settings(tmp_path: Path) -> None:
     assert (target / "hooks/guard_files.sh").exists()
     assert (target / "hooks/guard_files.sh").stat().st_mode & 0o111
     assert "hook smoke test passed" in result.stdout
+    workflow = (target / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    assert "permissions:\n  contents: read" in workflow
+    assert "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" in workflow
+    assert "persist-credentials: false" in workflow
+    assert "python -m pip install pytest" not in workflow
 
 
 def test_initializer_rejects_unknown_readiness_values(tmp_path: Path) -> None:
@@ -114,7 +145,103 @@ def test_initializer_rejects_unknown_readiness_values(tmp_path: Path) -> None:
         "Manual process.",
         "--first-proof-metric",
         "Verifier exits zero.",
+        "--verify-argv",
+        passing_verify_argv(),
     )
 
     assert result.returncode == 2
     assert "--operational-pain is required" in result.stderr
+
+
+def test_initializer_rejects_legacy_shell_verify_command_without_argv(tmp_path: Path) -> None:
+    target = tmp_path / "legacy-shell"
+    result = run_init(
+        target,
+        "--mode",
+        "lean-core",
+        "--project-name",
+        "Legacy Shell",
+        "--operational-pain",
+        "Project verification must be executable without shell parsing.",
+        "--current-workaround",
+        "Manual command review.",
+        "--first-proof-metric",
+        "Initializer rejects unsafe verification input.",
+        "--verify-command",
+        "pytest -q",
+    )
+
+    assert result.returncode == 2
+    assert "--verify-command is not enforced" in result.stderr
+
+
+def test_generated_verifier_fails_when_project_verification_fails(tmp_path: Path) -> None:
+    target = tmp_path / "failing-project"
+    result = run_init(
+        target,
+        "--mode",
+        "lean-core",
+        "--project-name",
+        "Failing Project",
+        "--operational-pain",
+        "Project tests must be part of completion evidence.",
+        "--current-workaround",
+        "Manual pytest inspection.",
+        "--first-proof-metric",
+        "Generated verifier exits non-zero when pytest fails.",
+        "--verify-argv",
+        json.dumps([sys.executable, "-m", "pytest", "-q"]),
+    )
+    assert result.returncode == 0, result.stderr
+    tests_dir = target / "tests"
+    tests_dir.mkdir()
+    (tests_dir / "test_fail.py").write_text("def test_fails():\n    assert False\n", encoding="utf-8")
+
+    verification = subprocess.run(
+        [sys.executable, "tools/verify_project.py", "--root", "."],
+        cwd=target,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert verification.returncode == 1
+    result_path = target / ".playbook-artifacts/project_verification.json"
+    verification_result = json.loads(result_path.read_text(encoding="utf-8"))
+    assert verification_result["required_failures"] == 1
+    project_check = next(check for check in verification_result["checks"] if check["id"] == "project_verification")
+    assert project_check["passed"] is False
+    assert project_check["exit_code"] == 1
+
+
+def test_generated_verifier_rejects_recursive_project_verification(tmp_path: Path) -> None:
+    target = tmp_path / "recursive-project"
+    result = run_init(
+        target,
+        "--mode",
+        "lean-core",
+        "--project-name",
+        "Recursive Project",
+        "--operational-pain",
+        "Self-referential verification must fail closed.",
+        "--current-workaround",
+        "Manual config inspection.",
+        "--first-proof-metric",
+        "Generated verifier rejects recursive checks.",
+        "--verify-argv",
+        json.dumps(["{python}", "tools/verify_project.py", "--root", "."]),
+    )
+    assert result.returncode == 0, result.stderr
+
+    verification = subprocess.run(
+        [sys.executable, "tools/verify_project.py", "--root", "."],
+        cwd=target,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert verification.returncode == 2
+    assert "must not call tools/verify_project.py recursively" in verification.stderr

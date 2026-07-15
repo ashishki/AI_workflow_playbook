@@ -1,0 +1,35 @@
+{
+  "schema_version": "playbook.project_verification.v1",
+  "checks": [
+    {
+      "id": "playbook_contract",
+      "argv": [
+        "{python}",
+        "tools/playbook_validate.py",
+        "--root",
+        ".",
+        "--check",
+        "tasks",
+        "--check",
+        "placeholders",
+        "--check",
+        "readiness"
+      ],
+      "required": true,
+      "expected_exit_code": 0,
+      "timeout_seconds": 60
+    },
+    {
+      "id": "project_verification",
+      "argv": [
+        "{python}",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "required": true,
+      "expected_exit_code": 0,
+      "timeout_seconds": 600
+    }
+  ]
+}

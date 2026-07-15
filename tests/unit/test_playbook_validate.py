@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from tools import playbook_validate
@@ -324,3 +325,32 @@ outside {{BROKEN}}
     findings = playbook_validate.validate_placeholders(tmp_path)
 
     assert [finding.message for finding in findings] == ["unresolved placeholder {{BROKEN}}"]
+
+
+def test_readiness_blocks_scaffold_placeholders_after_implementation_ready(tmp_path: Path) -> None:
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "tasks.md").write_text(
+        "not_applicable - scaffold placeholder AUTH_MODEL; replace before treating this section as authoritative\n",
+        encoding="utf-8",
+    )
+    playbook = tmp_path / ".playbook"
+    playbook.mkdir()
+    readiness = {
+        "schema_version": "playbook.readiness_state.v1",
+        "mode": "lean-core",
+        "state": "scaffold",
+        "required_decision_policy": "mode_profile_risk_triggered",
+        "unresolved_decision_marker": "scaffold placeholder",
+        "implementation_ready_requires_no_scaffold_placeholders": True,
+        "release_ready_requires_current_verification": True,
+    }
+    (playbook / "readiness_state.json").write_text(json.dumps(readiness), encoding="utf-8")
+
+    assert playbook_validate.validate_readiness(tmp_path) == []
+
+    readiness["state"] = "implementation_ready"
+    (playbook / "readiness_state.json").write_text(json.dumps(readiness), encoding="utf-8")
+    findings = playbook_validate.validate_readiness(tmp_path)
+
+    assert [finding.check_id for finding in findings] == ["READINESS_SCAFFOLD_PLACEHOLDER_ACTIVE"]

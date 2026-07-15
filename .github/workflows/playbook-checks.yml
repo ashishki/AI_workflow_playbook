@@ -48,6 +48,7 @@ jobs:
             --operational-pain "CI needs reproducible strict project bootstrap." \
             --current-workaround "Manual inspection of generated files." \
             --first-proof-metric "Generated strict project passes smoke checks." \
+            --verify-argv '["{python}", "-c", "raise SystemExit(0)"]' \
             --with-cost-architecture \
             --with-router-eval \
             --with-cost-adapter \

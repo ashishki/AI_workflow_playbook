@@ -7,11 +7,17 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from ai_workflow_harness_lab.adapters.command import CommandAdapter
+from ai_workflow_harness_lab.evidence import manifest_hash
+from ai_workflow_harness_lab.receipts import sha256_file
 
 
 ROOT = Path(__file__).resolve().parents[3]
 SUITE = ROOT / "companion/ai_workflow_harness_lab/suites/playbook_core_v1"
 PYTHONPATH = str(ROOT / "companion/ai_workflow_harness_lab/src")
+
+
+def sha256(path: Path) -> str:
+    return sha256_file(path)
 
 
 def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
@@ -217,6 +223,10 @@ def test_scripted_run_verify_and_compare(tmp_path: Path) -> None:
     bundle = playbook / "fake_test_success/trial-0/bundle.json"
     verify = run_cli("verify-bundle", str(bundle))
     assert verify.returncode == 0, verify.stderr
+    bundle_payload = json.loads(bundle.read_text(encoding="utf-8"))
+    assert bundle_payload["harness_eval_unit_ref"]["path"] == "harness_eval_unit.json"
+    eval_unit = json.loads((bundle.parent / "harness_eval_unit.json").read_text(encoding="utf-8"))
+    assert eval_unit["compatibility_fingerprint"]
     compare = run_cli("compare", "--baseline", str(baseline), "--candidate", str(playbook), "--output", str(comparison))
     assert compare.returncode == 0, compare.stderr
     assert (comparison / "comparison_report.json").exists()
@@ -454,6 +464,39 @@ def test_compare_rejects_invalid_bundle_with_flag(tmp_path: Path) -> None:
     assert result.returncode == 1
     report = json.loads((comparison / "comparison_report.json").read_text(encoding="utf-8"))
     assert report["candidate"]["invalid_runs"] >= 1
+
+
+def test_compare_rejects_harness_eval_unit_mismatch(tmp_path: Path) -> None:
+    baseline = tmp_path / "baseline"
+    playbook = tmp_path / "playbook"
+    comparison = tmp_path / "comparison"
+
+    assert run_cli("run", "--suite", str(SUITE), "--condition", "baseline", "--adapter", "scripted", "--task-id", "fake_test_success", "--output", str(baseline)).returncode == 0
+    assert run_cli("run", "--suite", str(SUITE), "--condition", "playbook", "--adapter", "scripted", "--task-id", "fake_test_success", "--output", str(playbook)).returncode == 0
+    eval_unit_path = playbook / "fake_test_success/trial-0/harness_eval_unit.json"
+    eval_unit = json.loads(eval_unit_path.read_text(encoding="utf-8"))
+    eval_unit["compatibility_fingerprint"] = "0" * 64
+    eval_unit_path.write_text(json.dumps(eval_unit, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    bundle_path = playbook / "fake_test_success/trial-0/bundle.json"
+    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+    bundle["harness_eval_unit_ref"]["sha256"] = sha256(eval_unit_path)
+    bundle["manifest_hash"] = manifest_hash(bundle)
+    bundle_path.write_text(json.dumps(bundle, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    result = run_cli(
+        "compare",
+        "--baseline",
+        str(baseline),
+        "--candidate",
+        str(playbook),
+        "--output",
+        str(comparison),
+        "--fail-on-invalid-run",
+    )
+
+    assert result.returncode == 1
+    report = json.loads((comparison / "comparison_report.json").read_text(encoding="utf-8"))
+    assert "harness_eval_unit compatibility differs for fake_test_success trial 0" in report["compatibility_errors"]
 
 
 def test_verify_bundle_rejects_path_escape(tmp_path: Path) -> None:

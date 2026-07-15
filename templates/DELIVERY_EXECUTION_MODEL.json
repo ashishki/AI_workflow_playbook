@@ -1,0 +1,45 @@
+{
+  "schema_version": "playbook.delivery_execution_model.v1",
+  "delivery_profile": "solo_verified",
+  "orchestrator": {
+    "kind": "human",
+    "authority": "select_task_and_accept_completion"
+  },
+  "implementer": {
+    "kind": "active_codex_session",
+    "may_write_code": true
+  },
+  "reviewer": {
+    "kind": "human_or_independent_agent_by_risk",
+    "required_when": [
+      "medium_or_higher_risk",
+      "auth_secrets_billing",
+      "destructive_or_external_write"
+    ]
+  },
+  "verifier": {
+    "kind": "deterministic_project_verifier",
+    "command": "python tools/verify_project.py --root ."
+  },
+  "completion_authority": {
+    "kind": "human",
+    "requires": [
+      "project_verification_passed",
+      "risk_review_satisfied"
+    ]
+  },
+  "cli_bindings": {
+    "codex_direct": "active_session_runs_shell_directly",
+    "external_codex_exec": "ci_harness_or_non_codex_orchestrator_only"
+  },
+  "permission_profile": "repo_local_default",
+  "budget": {
+    "model_call_budget": "project_defined",
+    "spend_budget": "project_defined"
+  },
+  "independent_review_triggers": [
+    "meaningful_implementation_change",
+    "security_or_privacy_boundary",
+    "production_release_claim"
+  ]
+}

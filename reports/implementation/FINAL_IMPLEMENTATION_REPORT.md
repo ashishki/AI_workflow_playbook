@@ -1,5 +1,10 @@
 # Final Implementation Report
 
+Historical snapshot only. Do not treat this file as current HEAD verification
+status. Current status is generated from `tools/verify_playbook.py` and can be
+rendered with `tools/render_current_verification_status.py`; the machine report
+includes `valid_for_commit`, dirty state, and exact check results.
+
 ## 1. Итог
 
 Core Playbook now has executable task/schema validation, canonical verification,

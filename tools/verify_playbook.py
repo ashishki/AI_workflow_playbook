@@ -42,6 +42,18 @@ def utc_stamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
+def git_text(root: Path, args: list[str]) -> str:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=root,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    return result.stdout.strip() if result.returncode == 0 else "git-unavailable"
+
+
 def run_check(
     root: Path,
     output_dir: Path,
@@ -73,6 +85,36 @@ def run_check(
     )
 
 
+def run_expected_failure_check(
+    root: Path,
+    output_dir: Path,
+    check_id: str,
+    argv: list[str],
+    *,
+    cwd: Path | None = None,
+) -> CheckResult:
+    stdout_path = output_dir / f"{check_id}.stdout.txt"
+    stderr_path = output_dir / f"{check_id}.stderr.txt"
+    result = subprocess.run(
+        argv,
+        cwd=cwd or root,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    stdout_path.write_text(result.stdout, encoding="utf-8")
+    stderr_path.write_text(result.stderr, encoding="utf-8")
+    return CheckResult(
+        check_id=check_id,
+        argv=argv,
+        required=True,
+        exit_code=0 if result.returncode != 0 else 1,
+        stdout_artifact=str(stdout_path),
+        stderr_artifact=str(stderr_path),
+    )
+
+
 def generated_project_checks(root: Path, output_dir: Path) -> list[CheckResult]:
     checks: list[CheckResult] = []
     with tempfile.TemporaryDirectory(prefix="playbook-verify-generated-") as tmp:
@@ -87,8 +129,8 @@ def generated_project_checks(root: Path, output_dir: Path) -> list[CheckResult]:
                 mode,
                 "--project-name",
                 f"Verify {mode}",
-                "--verify-command",
-                f"{sys.executable} tools/verify_project.py --root .",
+                "--verify-argv",
+                json.dumps(["{python}", "-c", "raise SystemExit(0)"]),
                 "--operational-pain",
                 f"Verify {mode} smoke project bootstrap.",
                 "--current-workaround",
@@ -172,6 +214,35 @@ def generated_project_checks(root: Path, output_dir: Path) -> list[CheckResult]:
                         stderr_artifact=str(stderr_path),
                     )
                 )
+        failing_target = tmp_path / "failing-project"
+        init_failure_cmd = [
+            sys.executable,
+            "tools/init_playbook_project.py",
+            str(failing_target),
+            "--mode",
+            "lean-core",
+            "--project-name",
+            "Verify failing project",
+            "--verify-argv",
+            json.dumps(["{python}", "-c", "raise SystemExit(7)"]),
+            "--operational-pain",
+            "Generated verification must fail when the project verification command fails.",
+            "--current-workaround",
+            "Manual project test inspection.",
+            "--first-proof-metric",
+            "Generated verifier returns non-zero for failing project checks.",
+        ]
+        checks.append(run_check(root, output_dir, "initializer_failing_project", init_failure_cmd))
+        if checks[-1].exit_code == 0:
+            checks.append(
+                run_expected_failure_check(
+                    root,
+                    output_dir,
+                    "generated_verify_failing_project",
+                    [sys.executable, "tools/verify_project.py", "--root", "."],
+                    cwd=failing_target,
+                )
+            )
     return checks
 
 
@@ -237,6 +308,8 @@ def main(argv: list[str] | None = None) -> int:
     report = {
         "schema_version": "playbook.verify.v1",
         "root": str(root),
+        "valid_for_commit": git_text(root, ["rev-parse", "HEAD"]),
+        "dirty_state": git_text(root, ["status", "--short"]).splitlines(),
         "run_dir": str(run_dir),
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "checks": [check.as_dict() for check in checks],

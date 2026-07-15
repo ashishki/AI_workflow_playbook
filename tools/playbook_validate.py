@@ -634,6 +634,67 @@ def validate_placeholders(root: Path) -> list[Finding]:
     return findings
 
 
+def active_scaffold_placeholder_findings(root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    for path in active_placeholder_paths(root):
+        if should_skip_path(path):
+            continue
+        for line_no, line in enumerate(
+            path.read_text(encoding="utf-8", errors="replace").splitlines(),
+            1,
+        ):
+            if "scaffold placeholder" in line.lower():
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, path),
+                        line_no,
+                        "READINESS_SCAFFOLD_PLACEHOLDER_ACTIVE",
+                        "scaffold placeholder remains in an active artifact",
+                    )
+                )
+    return findings
+
+
+def validate_readiness(root: Path) -> list[Finding]:
+    path = root / ".playbook/readiness_state.json"
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return [
+            Finding(
+                "error",
+                ".playbook/readiness_state.json",
+                1,
+                "READINESS_JSON_INVALID",
+                f"readiness state is invalid JSON: {exc}",
+            )
+        ]
+    schema_path = root / "schemas/readiness_state.schema.json"
+    if schema_path.exists() and Draft202012Validator is not None:
+        validator = Draft202012Validator(json.loads(schema_path.read_text(encoding="utf-8")))
+        errors = sorted(validator.iter_errors(data), key=lambda error: list(error.path))
+        if errors:
+            return [
+                Finding(
+                    "error",
+                    ".playbook/readiness_state.json",
+                    1,
+                    "READINESS_SCHEMA_INVALID",
+                    f"readiness state schema violation: {error.message}",
+                )
+                for error in errors
+            ]
+    state = data.get("state")
+    if state in {"implementation_ready", "release_ready"} and data.get(
+        "implementation_ready_requires_no_scaffold_placeholders", True
+    ):
+        return active_scaffold_placeholder_findings(root)
+    return []
+
+
 def validate_json_schemas(root: Path) -> list[Finding]:
     findings: list[Finding] = []
     schema_dir = root / "schemas"
@@ -759,8 +820,8 @@ def validate_modes(root: Path) -> list[Finding]:
                 mode,
                 "--project-name",
                 f"Mode {mode}",
-                "--verify-command",
-                f"{sys.executable} tools/verify_project.py --root .",
+                "--verify-argv",
+                json.dumps(["{python}", "-c", "raise SystemExit(0)"]),
                 "--operational-pain",
                 f"Mode {mode} smoke validation needs reproducible project bootstrap.",
                 "--current-workaround",
@@ -819,7 +880,7 @@ def validate_modes(root: Path) -> list[Finding]:
 def run_checks(root: Path, checks: list[str]) -> dict[str, Any]:
     findings: list[Finding] = []
     tasks: list[dict[str, Any]] = []
-    expanded = checks if checks != ["all"] else ["schemas", "tasks", "placeholders", "references", "modes"]
+    expanded = checks if checks != ["all"] else ["schemas", "tasks", "placeholders", "readiness", "references", "modes"]
     for check in expanded:
         if check == "schemas":
             findings.extend(validate_json_schemas(root))
@@ -828,6 +889,8 @@ def run_checks(root: Path, checks: list[str]) -> dict[str, Any]:
             findings.extend(task_findings)
         elif check == "placeholders":
             findings.extend(validate_placeholders(root))
+        elif check == "readiness":
+            findings.extend(validate_readiness(root))
         elif check == "references":
             findings.extend(validate_reference_integrity(root))
         elif check == "modes":
@@ -855,7 +918,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--check",
         action="append",
-        choices=("all", "schemas", "tasks", "placeholders", "references", "modes"),
+        choices=("all", "schemas", "tasks", "placeholders", "readiness", "references", "modes"),
         default=None,
         help="Run only this check. Repeatable. Defaults to all checks.",
     )

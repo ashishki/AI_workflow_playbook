@@ -74,6 +74,7 @@
         { "type": "null" }
       ]
     },
+    "harness_eval_unit_ref": { "$ref": "#/$defs/artifact_ref" },
     "verifier_identity": { "type": "string", "minLength": 1 },
     "verification_timestamp": { "type": "string", "minLength": 1 },
     "regression_thresholds": { "type": "object" }

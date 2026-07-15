@@ -68,6 +68,9 @@ is independent of the licenses used by the runtime and evaluation projects.
   mechanism enforces it.
 - Generated project scaffolds still require project-specific requirements,
   threat analysis, datasets, thresholds, and human decisions.
+- Generated projects start as `scaffold`; `implementation_ready` and
+  `release_ready` are blocked while scaffold placeholders remain in active
+  artifacts.
 - There is no hosted service, model provider, production dataset, external-user
   validation, or production reliability claim in this repository.
 - Optional tools and reference architectures are not implicit dependencies and
@@ -85,12 +88,14 @@ consumer when enforcement exists.
 |-----------|------------------------|----------------------|-----------------|--------------------|----------|
 | Task blocks are machine-readable | `schemas/task.schema.json`, `docs/tasks.md` | `tools/playbook_validate.py --check tasks` | `tests/unit/test_playbook_validate.py` | pending real-model comparison | Tested |
 | Unresolved placeholders block generated project readiness | `tools/playbook_validate.py` | `--check placeholders` outside fenced code | placeholder negative test | pending | Tested |
+| Generated project verification runs actual project checks | `.playbook/project_verification.json`, `schemas/project_verification.schema.json` | generated `tools/verify_project.py` | failing-project negative integration test | pending | Tested |
+| Delivery operating model is explicit | `.playbook/delivery_execution_model.json`, `schemas/delivery_execution_model.schema.json` | initializer emits contract; human/reviewer authority remains policy-bound | initializer generated matrix | pending | Formalized |
 | Context references are checked deterministically | `docs/tasks.md`, `tools/integrity_check.py` | `tools/playbook_validate.py --check references`, `tools/integrity_check.py` | missing-reference tests | pending | Tested |
 | Lean-Core stays lighter than Standard/Strict | `tools/init_playbook_project.py`, `docs/adoption_modes.md` | generated-project matrix in `tools/verify_playbook.py` | initializer tests | pending | Tested |
 | Claude hooks are active only when installed | `templates/.claude/settings.json`, `hooks/*.sh` | `--install-claude-hooks` merge + smoke test | hook and initializer tests | pending | Tested |
 | Agent command claims need machine receipts | `schemas/command_receipt.schema.json` | `tools/receipt_run.py` | receipt success/failure/timeout tests | pending | Tested |
 | Evidence bundles are locally integrity-validated | `schemas/evidence_bundle.schema.json` | `tools/validate_harness_evidence.py` | hash tamper, path escape, schema mismatch tests | pending external attestation | Tested |
-| Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare` | scripted demonstration run + adjudicated first pilot | no improvement claim supported by TFA-7 | Formalized / Tested for mechanism |
+| Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare`, HarnessEvalUnit compatibility fingerprints | scripted demonstration run + adjudicated first pilot | no improvement claim supported by TFA-7 | Formalized / Tested for mechanism |
 | Project-specific harness claims require project-specific fixtures | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, `docs/adoption_modes.md` | companion suite with project fixtures, traps, scorers | suite validation + EvidenceBundles | pending per project | Formalized |
 | Role separation and review duties | `prompts/ORCHESTRATOR.md`, audit prompts | prompt protocol and optional hooks | review prompt checks | pending | Documented / Formalized |
 | Immutable contract protection | `hooks/guard_files.sh`, contract docs | hook when installed | hook tests | pending | Tested when hooks installed |
@@ -304,7 +309,7 @@ python3 tools/init_playbook_project.py /path/to/new-project \
   --operational-pain "Name the concrete workflow pain." \
   --current-workaround "Name how the team handles it today." \
   --first-proof-metric "Name the first measurable proof." \
-  --verify-command "python3 tools/verify_project.py --root ."
+  --verify-argv '["{python}", "-m", "pytest", "-q"]'
 ```
 
 For Standard/Strict Claude Code projects, add `--install-claude-hooks`; for
@@ -323,7 +328,7 @@ python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py . \
   --operational-pain "Name the real pain in this repo." \
   --current-workaround "Name the current workaround." \
   --first-proof-metric "Name the first proof adoption helped." \
-  --verify-command "pytest -q"
+  --verify-argv '["{python}", "-m", "pytest", "-q"]'
 ```
 
 Do not fake a greenfield Phase 1. Validate the generated artifacts, then start
@@ -577,7 +582,11 @@ agent context.
 
 **templates/NFR.md** tracks non-functional SLAs: target, measurement method, CI gate threshold, and a phase-by-phase baseline history. Included when the project has explicit latency, throughput, or error rate requirements.
 
-**ci/ci.yml** has five commented capability eval steps (RAG, Agentic, Tool-Use, Planning, Compliance) and a commented NFR load test step (locust). Uncomment the steps for your active profiles.
+**ci/ci.yml** is the downstream GitHub Actions template. It pins approved action
+SHAs, uses read-only repository permissions, disables persisted checkout
+credentials, and calls `python tools/verify_project.py --root .`. Projects should
+install dependencies through their native lock/constraints file before relying on
+CI as release evidence.
 
 **reference/CODEX_CLI.md** documents real operational knowledge: file-based prompt invocation, known sandbox limitations (async DB hangs, heavy ML deps), prompt engineering patterns.
 
@@ -603,7 +612,7 @@ is in [docs/usage_guide.md](docs/usage_guide.md).
 3. Stop. The human fills `docs/PROJECT_BRIEF.md`, optionally with help from a
    top-tier model outside the target repo.
 4. Continue only after an explicit `BRIEF APPROVED` message with mode,
-   verification command, and optional flags.
+   structured verification argv, and optional flags.
 5. Codex runs `tools/init_playbook_project.py`, validators, tests, and receipt
    commands directly from the active session.
 
@@ -627,7 +636,7 @@ Current Codex Direct path:
 2. Copy the intake pack and fill/approve `docs/PROJECT_BRIEF.md` against the
    real repository state.
 3. Run `tools/init_playbook_project.py` with the selected mode and the
-   repository's real verification command.
+   repository's real structured verification argv.
 4. Run `python3 tools/playbook_validate.py --root .` and
    `python3 tools/verify_project.py --root .`.
 

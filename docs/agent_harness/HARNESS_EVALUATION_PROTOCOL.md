@@ -31,8 +31,8 @@ Every Tool-Use or Agentic project should make these boundaries explicit:
 
 ## Versioned Contracts
 
-- `schemas/harness_eval_unit.schema.json` (draft planning contract until a
-  producer emits eval-unit artifacts)
+- `schemas/harness_eval_unit.schema.json` (emitted by `harness-lab run` as
+  `harness_eval_unit.json`)
 - `schemas/command_receipt.schema.json`
 - `schemas/failure_record.schema.json`
 - `schemas/run_result.schema.json`

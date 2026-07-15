@@ -81,5 +81,7 @@ class CommandAdapter(Adapter):
                 "adapter_version": self.adapter_version,
                 "timed_out": execution.timed_out,
                 "command_receipt": str(execution.receipt_path),
+                "command_template": self.command_template,
+                "timeout_seconds": self.timeout,
             },
         )

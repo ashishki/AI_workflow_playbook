@@ -1,0 +1,13 @@
+{
+  "schema_version": "playbook.readiness_state.v1",
+  "mode": "lean-core",
+  "state": "scaffold",
+  "required_decision_policy": "mode_profile_risk_triggered",
+  "unresolved_decision_marker": "scaffold placeholder",
+  "implementation_ready_requires_no_scaffold_placeholders": true,
+  "release_ready_requires_current_verification": true,
+  "notes": [
+    "Initializer output is a scaffold until project-specific decisions are resolved.",
+    "Do not mark implementation_ready or release_ready while generated scaffold placeholders remain active."
+  ]
+}

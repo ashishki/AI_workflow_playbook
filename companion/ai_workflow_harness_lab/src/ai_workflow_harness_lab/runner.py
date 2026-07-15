@@ -1,15 +1,17 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import sys
 from pathlib import Path
 from typing import Any
 
+from . import __version__
 from .adapters.base import Adapter
 from .environment import copy_fixture, environment_digest, init_git, post_state_manifest, tree_manifest
 from .evidence import write_bundle
 from .models import ScorerResult, Suite, SuiteTask, TrialResult
-from .receipts import run_command_receipt
+from .receipts import run_command_receipt, sha256_file
 from .scorers import diff_scope, file_state, json_state, shell
 from .scorers.base import failure, write_scorer_output
 from .scorers import meta
@@ -140,6 +142,18 @@ def run_trial(suite: Suite, task: SuiteTask, condition: str, adapter: Adapter, t
     )
     post_manifest = post_state_manifest(workspace, trial_dir / "post_state_manifest.json")
     report_path = write_trial_report(trial_dir, task, condition, scorer_results)
+    harness_eval_unit_path = write_harness_eval_unit(
+        trial_dir,
+        suite,
+        task,
+        condition,
+        trial,
+        adapter,
+        adapter_result.metadata,
+        prompt_file,
+        env_digest,
+        scorer_results,
+    )
     commit_after = "not_inspected_after_agent_execution"
     failure_records = (
         adapter_failures
@@ -173,6 +187,7 @@ def run_trial(suite: Suite, task: SuiteTask, condition: str, adapter: Adapter, t
         scorer_outputs=[result.output_path for result in scorer_results],
         failure_records=failure_records,
         report_path=report_path,
+        harness_eval_unit_path=harness_eval_unit_path,
     )
     return TrialResult(
         task=task,
@@ -185,6 +200,68 @@ def run_trial(suite: Suite, task: SuiteTask, condition: str, adapter: Adapter, t
         score=score,
         failure_records=failure_records,
     )
+
+
+def stable_hash(data: dict[str, Any]) -> str:
+    payload = json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def write_harness_eval_unit(
+    trial_dir: Path,
+    suite: Suite,
+    task: SuiteTask,
+    condition: str,
+    trial: int,
+    adapter: Adapter,
+    adapter_metadata: dict[str, Any],
+    prompt_file: Path,
+    env_digest: str,
+    scorer_results: list[ScorerResult],
+) -> Path:
+    scorer_version = ",".join(f"{result.scorer_id}:{result.scorer_version}" for result in scorer_results)
+    timeout = adapter_metadata.get("timeout_seconds", "unknown")
+    compatibility = {
+        "model": adapter_metadata.get("model", {"provider": "unknown", "id": "unknown", "parameters": "unknown"}),
+        "harness_version": __version__,
+        "adapter_version": adapter.adapter_version,
+        "command_template": adapter_metadata.get("command_template", "not_applicable"),
+        "tool_registry_version": "harness_lab_builtin.v1",
+        "memory_policy_version": "stateless_fixture_workspace.v1",
+        "permission_policy_version": adapter_metadata.get("permission_policy_version", "adapter_default.v1"),
+        "environment_digest": env_digest,
+        "dataset_version": suite.version,
+        "scorer_version": scorer_version,
+        "timeout_seconds": timeout,
+        "retry_policy": "single_attempt_no_retry",
+        "delivery_profile": adapter_metadata.get("delivery_profile", "harness_lab_single_adapter"),
+    }
+    unit = {
+        "schema_version": "playbook.harness_eval_unit.v1",
+        "unit_id": f"{suite.suite_id}-{task.task_id}-{condition}-{trial}",
+        "task_id": task.task_id,
+        "condition": condition,
+        "trial_index": trial,
+        "model": compatibility["model"],
+        "harness_version": __version__,
+        "adapter_version": adapter.adapter_version,
+        "prompt_version": f"{task.version}:{condition}",
+        "prompt_hash": sha256_file(prompt_file),
+        "tool_registry_version": compatibility["tool_registry_version"],
+        "memory_policy_version": compatibility["memory_policy_version"],
+        "permission_policy_version": compatibility["permission_policy_version"],
+        "environment": {"digest": env_digest, "workspace_policy": "fresh_fixture_copy"},
+        "dataset_version": suite.version,
+        "scorer_version": scorer_version,
+        "budget": {"correction_budget": task.correction_budget, "timeout_seconds": timeout},
+        "timeout_seconds": timeout,
+        "retry_policy": compatibility["retry_policy"],
+        "delivery_profile": compatibility["delivery_profile"],
+        "compatibility_fingerprint": stable_hash(compatibility),
+    }
+    path = trial_dir / "harness_eval_unit.json"
+    path.write_text(json.dumps(unit, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
 
 
 def classify_adapter_result(task_id: str, run_id: str, exit_code: int, metadata: dict[str, Any]) -> list[dict[str, Any]]:

@@ -48,9 +48,13 @@ def load_trial(bundle_path: Path) -> dict[str, Any]:
             "receipt_count": 0,
         }
     scorer_outputs = []
+    eval_unit = None
     if not evidence_errors:
         for ref in bundle.get("scorer_outputs", []):
             scorer_outputs.append(json.loads((bundle_path.parent / ref["path"]).read_text(encoding="utf-8")))
+        eval_ref = bundle.get("harness_eval_unit_ref")
+        if isinstance(eval_ref, dict):
+            eval_unit = json.loads((bundle_path.parent / eval_ref["path"]).read_text(encoding="utf-8"))
     failures = bundle.get("failure_records", [])
     scores = [float(output.get("score", 0.0)) for output in scorer_outputs]
     invalid = bool(evidence_errors) or any(record.get("invalid_run") for record in failures)
@@ -61,6 +65,8 @@ def load_trial(bundle_path: Path) -> dict[str, Any]:
         "task_spec_version": bundle.get("task_spec_version"),
         "condition": bundle["condition"],
         "adapter_version": bundle.get("adapter_version"),
+        "harness_eval_unit": eval_unit,
+        "compatibility_fingerprint": eval_unit.get("compatibility_fingerprint") if isinstance(eval_unit, dict) else None,
         "trial_index": trial_index_from_path(bundle_path),
         "valid": not invalid,
         "evidence_errors": evidence_errors,
@@ -150,6 +156,8 @@ def compatibility_errors(baseline: list[dict[str, Any]], candidate: list[dict[st
         for field in ("repository", "task_spec_version", "adapter_version"):
             if trial.get(field) != other.get(field):
                 errors.append(f"{field} differs for {trial['task_id']} trial {trial['trial_index']}")
+        if trial.get("compatibility_fingerprint") != other.get("compatibility_fingerprint"):
+            errors.append(f"harness_eval_unit compatibility differs for {trial['task_id']} trial {trial['trial_index']}")
     return sorted(set(errors))
 
 

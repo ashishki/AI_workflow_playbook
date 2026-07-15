@@ -12,6 +12,7 @@ python3 tools/init_playbook_project.py ../my-project \
   --operational-pain "Agents need a reproducible verification scaffold." \
   --current-workaround "Manual copying of playbook files." \
   --first-proof-metric "Generated project verification exits zero." \
+  --verify-argv '["{python}", "-m", "pytest", "-q"]' \
   --install-claude-hooks
 ```
 
@@ -23,6 +24,8 @@ passed. The initializer requires concrete `--operational-pain`,
 merge `.claude/settings.json`, copy hook scripts, set executable permissions,
 and run a hook smoke test. A failed hook smoke test returns a non-zero exit.
 Without that flag hooks are available but not claimed as active enforcement.
+Project verification must be declared with one or more structured
+`--verify-argv` JSON arrays; shell strings are not parsed into executable checks.
 Use `--external-skill NAME` to create a trust-record stub before any third-party
 skill is installed or enabled.
 

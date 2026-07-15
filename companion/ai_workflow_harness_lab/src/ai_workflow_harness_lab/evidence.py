@@ -35,6 +35,7 @@ def write_bundle(
     scorer_outputs: list[Path],
     failure_records: list[dict[str, Any]],
     report_path: Path,
+    harness_eval_unit_path: Path | None = None,
 ) -> Path:
     bundle = {
         "schema_version": "playbook.evidence_bundle.v1",
@@ -59,6 +60,8 @@ def write_bundle(
         "verifier_identity": "ai_workflow_harness_lab",
         "verification_timestamp": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
     }
+    if harness_eval_unit_path is not None:
+        bundle["harness_eval_unit_ref"] = artifact_ref(harness_eval_unit_path, output_dir, "harness_eval_unit")
     bundle["manifest_hash"] = manifest_hash(bundle)
     path = output_dir / "bundle.json"
     path.write_text(json.dumps(bundle, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -88,7 +91,7 @@ def verify_bundle(bundle_path: Path) -> list[str]:
     for key in ("trace_refs", "scorer_outputs"):
         for ref in bundle.get(key, []):
             errors.extend(check_ref(bundle_dir, ref))
-    for key in ("post_state_manifest", "generated_report_ref"):
+    for key in ("post_state_manifest", "generated_report_ref", "harness_eval_unit_ref"):
         ref = bundle.get(key)
         if isinstance(ref, dict):
             errors.extend(check_ref(bundle_dir, ref))

@@ -130,7 +130,7 @@ python3 "$PLAYBOOK/tools/init_playbook_project.py" . \
   --operational-pain "Concrete pain from docs/PROJECT_BRIEF.md" \
   --current-workaround "Current workaround from docs/PROJECT_BRIEF.md" \
   --first-proof-metric "First proof metric from docs/PROJECT_BRIEF.md" \
-  --verify-command "pytest -q"
+  --verify-argv '["{python}", "-m", "pytest", "-q"]'
 ```
 
 Standard with legacy/external Claude hooks:
@@ -142,7 +142,7 @@ python3 "$PLAYBOOK/tools/init_playbook_project.py" . \
   --operational-pain "Concrete pain from docs/PROJECT_BRIEF.md" \
   --current-workaround "Current workaround from docs/PROJECT_BRIEF.md" \
   --first-proof-metric "First proof metric from docs/PROJECT_BRIEF.md" \
-  --verify-command "pytest -q" \
+  --verify-argv '["{python}", "-m", "pytest", "-q"]' \
   --install-claude-hooks
 ```
 
@@ -223,7 +223,7 @@ python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py \
   --operational-pain "Name the concrete workflow pain." \
   --current-workaround "Name how the team handles it today." \
   --first-proof-metric "Name the first measurable proof." \
-  --verify-command "python3 tools/verify_project.py --root ."
+  --verify-argv '["{python}", "-m", "pytest", "-q"]'
 ```
 
 Then verify the generated project:
@@ -248,7 +248,7 @@ python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py \
   --operational-pain "Name the concrete workflow pain." \
   --current-workaround "Name how the team handles it today." \
   --first-proof-metric "Name the first measurable proof." \
-  --verify-command "python3 tools/verify_project.py --root ." \
+  --verify-argv '["{python}", "-m", "pytest", "-q"]' \
   --install-claude-hooks
 ```
 
@@ -281,16 +281,16 @@ python3 /path/to/AI_workflow_playbook/tools/init_playbook_project.py \
   --operational-pain "Name the real pain in this existing repo." \
   --current-workaround "Name the current workaround or manual process." \
   --first-proof-metric "Name the first proof that adoption helped." \
-  --verify-command "pytest -q"
+  --verify-argv '["{python}", "-m", "pytest", "-q"]'
 ```
 
 Use the project's real command:
 
 ```bash
---verify-command "npm test"
---verify-command "pnpm test && pnpm lint"
---verify-command "make test"
---verify-command "cargo test"
+--verify-argv '["npm", "test"]'
+--verify-argv '["pnpm", "test"]' --verify-argv '["pnpm", "lint"]'
+--verify-argv '["make", "test"]'
+--verify-argv '["cargo", "test"]'
 ```
 
 Then verify:
@@ -362,6 +362,23 @@ The receipt records stdout/stderr artifacts, hashes, exit code, Git state, and
 environment summary. It does not assign `passed`, `verified`, or
 `release_ready`.
 
+### Readiness And Delivery Contracts
+
+Generated projects include `.playbook/readiness_state.json` and
+`.playbook/delivery_execution_model.json`.
+
+`readiness_state.json` starts at `scaffold`. The initializer may preserve
+generated scaffold placeholders, but `tools/playbook_validate.py --check
+readiness` blocks `implementation_ready` and `release_ready` while those markers
+remain in active artifacts. Required decisions are mode/profile/risk-triggered,
+not every universal template row.
+
+`delivery_execution_model.json` records the active delivery profile. The default
+is `solo_verified`: one active Codex session may implement, deterministic
+verification must pass, and human or independent review gates still apply by risk
+policy. External `codex exec` remains for CI, harness runs, or a separate
+non-Codex orchestrator process.
+
 ### Harness And Evaluation
 
 The companion harness is not required for ordinary Lean-Core or Standard use.
@@ -372,6 +389,12 @@ The bundled `playbook_core_v1` suite proves the mechanism works. It is not proof
 for your product. A project-specific benchmark needs project-specific fixtures,
 traps, independent scorers, pass/fail rules, and baseline vs Playbook-Min
 prompts.
+
+Every harness trial emits `harness_eval_unit.json`, and each EvidenceBundle
+references it. Comparison checks a compatibility fingerprint covering model,
+adapter, tool/memory/permission policy, environment, scorer set, timeout/retry
+policy, dataset version, and delivery profile. Prompt hashes are recorded but not
+forced identical because baseline and candidate prompts are expected to differ.
 
 Recommended real-command comparison shape:
 
