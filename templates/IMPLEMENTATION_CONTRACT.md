@@ -77,6 +77,28 @@ _Applies only if {{PROJECT_NAME}} is multi-tenant. Delete this section if single
 - If CI is flaky (non-deterministic failures), the flakiness is fixed before the PR is merged — not bypassed.
 - Violation: automatic P1.
 
+### Conditional UI Evidence Gate
+
+_Applies only when the task changes a rendered UI boundary or declares a visual
+acceptance criterion. Non-UI work records `Visual-Contract: not_applicable` and
+does not create placeholder screenshots._
+
+- Behavior and appearance are separate gates. A screenshot does not prove an
+  interaction; a DOM/behavior assertion does not prove layout or fidelity.
+- Resolve `Risk-Level`, `Public-Tests-Required`, and `Visual-Contract` before
+  implementation. Missing optional visual evidence is not a violation.
+- A resolved-required visual contract records an acceptance-driven state and
+  viewport matrix, stable capture environment, baseline/current/diff artifacts,
+  browser console evidence, stabilization/masks, and review of every new or
+  changed baseline.
+- High/critical user-facing UI work follows the required visual floor and human
+  authority. Missing/stale required evidence, blind baseline regeneration, or a
+  mask over an acceptance-critical region is a P1 and stop-ship basis.
+- A vision critic is advisory. It cannot replace deterministic diffs, behavior
+  checks, human visual review, or completion authority.
+- The project selects and maintains its browser/snapshot tool. Playwright,
+  Percy, and Chromatic are examples, not Playbook dependencies.
+
 ### Cognition and Memory Authority
 
 - Repository artifacts remain authoritative: architecture, contract, tasks, CODEX prompt state, ADRs, evals, reviews, evidence, code, tests, and CI.
@@ -533,7 +555,10 @@ Every Codex agent must execute these steps before writing any implementation cod
 4. Read the task's `Context-Refs` and the relevant entries in `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`, and `docs/EVIDENCE_INDEX.md` when the task depends on prior decisions, proof, or findings.
 5. Run `pytest -q`. Record the output: `{N} passing, {M} failed`. If M > 0, stop and report — you do not start on a broken baseline.
 6. Run `ruff check`. Must exit 0. If not, create a separate commit with ruff fixes, then restart the pre-task protocol.
-7. Confirm that every acceptance criterion in the task will have a corresponding test before implementation is considered complete.
+7. Map every acceptance criterion to a routed test, deterministic verifier, or
+   reviewable evidence before implementation is considered complete. For visual
+   acceptance, use the conditional UI evidence gate above; do not manufacture a
+   unit test for non-semantic work.
 
 Skipping any step in this protocol is a P1 finding in the next review cycle.
 

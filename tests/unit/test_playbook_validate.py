@@ -137,6 +137,175 @@ Context-Refs:
     assert any(finding.check_id == "REFERENCE_MISSING_CONTEXT" for finding in findings)
 
 
+def test_task_parser_accepts_test_governance_fields_and_aliases(
+    tmp_path: Path,
+) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Govern Tests
+
+Owner: codex
+Type: test
+Risk-Level: high
+Public-Tests-Required: required
+Critic_Required: conditional
+Holdout-Required: required
+Mutation_Required: conditional
+Property-Required: not-required
+Visual-Contract: optional
+Objective: |
+  Route test governance deterministically.
+Acceptance-Criteria:
+  - Governance fields are parsed.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, tasks = playbook_validate.validate_tasks(tmp_path)
+
+    assert findings == []
+    assert tasks[0]["risk_level"] == "high"
+    assert tasks[0]["public_tests_required"] == "required"
+    assert tasks[0]["critic_required"] == "conditional"
+    assert tasks[0]["holdout_required"] == "required"
+    assert tasks[0]["mutation_required"] == "conditional"
+    assert tasks[0]["property_required"] == "not_required"
+    assert tasks[0]["visual_contract"] == "optional"
+
+
+def test_task_parser_applies_backward_compatible_governance_defaults(
+    tmp_path: Path,
+) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Historical Task
+
+Owner: codex
+Type: test
+Objective: |
+  Remain valid without new Markdown fields.
+Acceptance-Criteria:
+  - Historical syntax remains valid.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, tasks = playbook_validate.validate_tasks(tmp_path)
+
+    assert findings == []
+    assert tasks[0]["risk_level"] == "medium"
+    assert tasks[0]["public_tests_required"] == "conditional"
+    assert tasks[0]["critic_required"] == "conditional"
+    assert tasks[0]["holdout_required"] == "conditional"
+    assert tasks[0]["mutation_required"] == "conditional"
+    assert tasks[0]["property_required"] == "conditional"
+    assert tasks[0]["visual_contract"] == "optional"
+
+
+def test_invalid_test_governance_value_fails_schema(tmp_path: Path) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Invalid Governance
+
+Owner: codex
+Type: test
+Risk-Level: extreme
+Objective: |
+  Reject an unsupported risk level.
+Acceptance-Criteria:
+  - Invalid governance fails validation.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, _ = playbook_validate.validate_tasks(tmp_path)
+
+    assert any(
+        finding.check_id == "TASK_SCHEMA" and "risk_level" in finding.message
+        for finding in findings
+    )
+
+
+def test_misspelled_test_governance_field_fails_closed(tmp_path: Path) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Misspelled Governance
+
+Owner: codex
+Type: test
+Risk-Lvel: critical
+Objective: |
+  Reject a governance key that would otherwise fall back silently.
+Acceptance-Criteria:
+  - The typo is reported.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, tasks = playbook_validate.validate_tasks(tmp_path)
+
+    assert tasks[0]["risk_level"] == "medium"
+    assert any(
+        finding.check_id == "TASK_GOVERNANCE_FIELD_UNKNOWN"
+        and "Risk-Lvel" in finding.message
+        for finding in findings
+    )
+
+
+def test_duplicate_task_field_aliases_fail_without_overwriting_first_value(
+    tmp_path: Path,
+) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Duplicate Governance
+
+Owner: codex
+Type: test
+Risk-Level: critical
+Risk_Level: low
+Objective: |
+  Reject conflicting aliases deterministically.
+Acceptance-Criteria:
+  - The duplicate is reported.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, tasks = playbook_validate.validate_tasks(tmp_path)
+
+    assert tasks[0]["risk_level"] == "critical"
+    assert any(
+        finding.check_id == "TASK_FIELD_DUPLICATE"
+        and "Risk_Level" in finding.message
+        for finding in findings
+    )
+
+
 def test_placeholder_detection_ignores_fenced_code(tmp_path: Path) -> None:
     docs = tmp_path / "docs"
     docs.mkdir()

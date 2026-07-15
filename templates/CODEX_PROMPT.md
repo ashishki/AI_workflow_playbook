@@ -42,6 +42,7 @@ Never delete history from this file. Append; do not replace.
 - **External skill trust:** `docs/security/skills/**/TRUST_RECORD.md` (required for external skills unless Lean inline evidence is justified)
 - **Task-scoped context:** read `Context-Refs` in `docs/tasks.md` before broad searching
 - **Generated context packets:** `docs/context-packets/` (if present; convenience only, canonical paths win)
+- **Test-first implementer prompt:** `docs/prompts/IMPLEMENTER_TDD.md` (use when applicability is `required`)
 
 ---
 
@@ -56,8 +57,17 @@ Before implementation, the orchestrator should hand Codex a narrow task digest i
 - applicable contract rules only
 - dependency facts from prior tasks
 - immediate pipeline / flow if one matters
+- test-first applicability (`required`, `optional`, or `not_applicable`) and its
+  rationale
+- focused and broader verification commands plus the receipt/output path when
+  available
 
 Only send Codex to full documents when the task is architecture-shaping, security-sensitive, ambiguous, or otherwise too risky to compress safely.
+
+When the digest marks test-first applicability as `required`, use
+`docs/prompts/IMPLEMENTER_TDD.md` as the task-specific implementation prompt.
+Until task-schema routing fields exist, keep this as an explicit digest decision
+under the test-first protocol; do not invent an unsupported task field.
 
 ---
 
@@ -401,9 +411,13 @@ Read these instructions every time you pick up a task. Do not skip steps.
 2. **Read `docs/tasks.md` for the current task entry only** when the digest references details that must be copied exactly.
 3. **Read `docs/IMPLEMENTATION_CONTRACT.md` only if the digest did not inline the applicable rules** or if the task crosses a risky boundary.
 4. **Read Depends-On tasks, `Context-Refs`, and continuity artifacts only when required** — mandatory for architecture changes, risky boundaries, open findings, or tasks where prior interfaces / evidence materially constrain the implementation.
-5. **Run `pytest -q`** — capture the current baseline. Record: `N passing, M failed`. If M > 0, stop and report: you cannot add failures to an already-failing baseline.
+5. **Run `pytest -q`** — capture the current baseline. Record: `N passing, M failed`. Separate known unrelated failures. Stop when an affected-area or unattributed failure masks this task; do not add new failures to a red baseline.
 6. **Run `ruff check`** — must exit 0. If not, fix ruff issues first. Commit the ruff fix separately with message `chore(lint): resolve ruff issues`. Then re-run the pre-task protocol.
-7. **Write tests before or alongside implementation.** Every acceptance criterion has concrete verification evidence. Standard/Strict code-changing criteria use `test:` whenever practical; Lean may use a concrete `verify:` command or bounded manual check.
+7. **Apply the test-first decision from the task digest.** Required work follows
+   `docs/prompts/IMPLEMENTER_TDD.md` and captures focused RED then GREEN evidence.
+   Optional or non-applicable work still gives every acceptance criterion a
+   concrete test, verifier, or reviewable evidence. Lean may use a concrete
+   `verify:` command or bounded manual check when full TDD is disproportionate.
 
 ### During Implementation
 
@@ -448,6 +462,8 @@ Apply at every task. These are verified by the optional Simplification Pass
    - Created files exist.
    - Deleted files are absent and shown as deleted in the diff.
    - Tests you claim to have run are listed with exact commands.
+   - Required test-first work includes the expected RED signal and subsequent
+     GREEN command evidence.
    - Risky writes include enough before/after evidence for the Orchestrator or reviewer to reconstruct the state change.
 7. Commit with format: `type(scope): description` — one logical change per commit.
 8. If the task produced multiple logical changes (migration + service + tests), use multiple commits.
@@ -461,6 +477,7 @@ IMPLEMENTATION_RESULT: DONE
 New baseline: {N} passing tests
 Commits: {list of commit hashes and messages}
 Files changed: {created/modified/deleted paths}
+Test-first evidence: {applicability; RED/GREEN commands and output paths when required}
 Verification: {exact commands run; diff/hash/file-existence evidence; unverified claims or "none"}
 Notes: {anything the orchestrator should know — surprises, deviations, decisions made}
 ```

@@ -7,9 +7,9 @@ _Append-only. One row per review cycle._
 
 ## Review Schedule
 
-| Cycle | Phase | Date | Scope | Stop-Ship | P0 | P1 | P2 |
-|-------|-------|------|-------|-----------|----|----|-----|
-| 1 | Phase N (T##–T##) | YYYY-MM-DD | [description] | No | 0 | 0 | 0 |
+| Cycle | Phase | Date | Scope | Test Critic | Stop-Ship | P0 | P1 | P2 |
+|-------|-------|------|-------|-------------|-----------|----|----|-----|
+| 1 | Phase N (T##–T##) | YYYY-MM-DD | [description] | not required | No | 0 | 0 | 0 |
 
 ---
 
@@ -24,4 +24,7 @@ _Append-only. One row per review cycle._
 ## Notes
 
 - Add cycle notes here.
+- Test Critic values are `not required`, `no finding`, `advisory (TC-...)`, or
+  `stop-ship (TC-...)`. Missing critic output blocks only when the resolved task
+  route required it; routine Lean work does not require a critic by default.
 - Optional simplification passes use a separate row prefix (`SIMP-N`) and live in `docs/audit/SIMPLIFICATION_REPORT.md`. They do not interleave with deep review cycles in this index. See `templates/skills/simplification_skill.md`.

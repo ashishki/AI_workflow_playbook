@@ -36,6 +36,60 @@ human_notes:
   - "Any residual uncertainty or manual observation goes here."
 ```
 
+For a task with UI evidence, add this optional observation block. Keep paths and
+raw observations; do not add a self-issued `visual_pass` or merge verdict.
+
+```yaml
+ui_evidence:
+  risk_level: medium
+  visual_contract:
+    declared: required
+    resolved: required
+  behavior_checks:
+    - command: project-owned-ui-behavior-command
+      result: observed_exit_and_summary
+      receipt_ref: reports/receipts/T-123/ui-behavior.json
+  capture_environment:
+    browser: chromium
+    browser_version: recorded-by-runner
+    locale: en-US
+    timezone: UTC
+    color_scheme: light
+    fonts_fixture_and_readiness: project-owned-config-ref
+  viewport_coverage:
+    - id: desktop-supported-breakpoint
+      width: 1440
+      height: 900
+      device_scale_factor: 1
+  stabilization:
+    config_ref: project-owned-ui-test-config
+    dynamic_regions:
+      - target: non_acceptance_clock
+        treatment: fixed_fixture
+        reason: nondeterministic_value
+  screenshots:
+    - state: default
+      viewport: desktop-supported-breakpoint
+      baseline_path: reports/evidence/T-123/ui/baseline.png
+      actual_path: reports/evidence/T-123/ui/actual.png
+  visual_diffs:
+    - state: default
+      viewport: desktop-supported-breakpoint
+      diff_path: reports/evidence/T-123/ui/diff.png
+      observed_delta: project_tool_raw_observation
+      threshold_or_rationale: predeclared_project_rule
+  browser_console:
+    artifact_path: reports/evidence/T-123/ui/console.txt
+    policy: no_new_errors_relative_to_baseline
+    observed_new_errors: 0
+  baseline_updates: []
+  human_review_ref: null
+  vision_critic:
+    used: false
+    report_ref: null
+  missing_evidence: []
+```
+
 If a command was not run, record the missing receipt and reason:
 
 ```yaml

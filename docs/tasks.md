@@ -1,7 +1,7 @@
 # AI Workflow Playbook Tasks
 
 Status: active core framework task graph
-Last updated: 2026-07-10
+Last updated: 2026-07-15
 
 This file tracks framework work for the playbook itself. It is separate from
 project adoption tasks in downstream repositories.
@@ -221,6 +221,634 @@ Integration-Points:
 Verification:
   - `python3 tools/playbook_validate.py --root . --check tasks`
   - `python3 tools/integrity_check.py --root .`
+
+## Phase TFA-0 - Baseline And Backlog Wiring
+
+### TFA-0.1: Add Test-First Workstream To Canonical Tasks
+
+Owner: codex
+Type: docs roadmap
+Status: done 2026-07-13
+Depends-On: none
+Risk-Level: low
+Public-Tests-Required: not_required
+Critic-Required: not_required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Add the test-first roadmap phases to the canonical task graph and near-term
+  project plan without claiming that their implementations already exist.
+
+Acceptance-Criteria:
+  - Canonical tasks cover the protocol, schema/routing, Test Critic, stronger
+    oracles, UI evidence, completion authority, calibration, and paired pilot.
+  - Every added implementation task has validator-compatible ownership, status,
+    dependencies, acceptance criteria, integration points, and verification.
+  - The project plan records proportional P1/P2 test-first governance work.
+
+Integration-Points:
+  - docs/tasks.md
+  - docs/PROJECT_PLAN.md
+  - docs/TEST_FIRST_AGENTIC_ROADMAP.md
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/integrity_check.py --root .`
+
+## Phase TFA-1 - First-Class Test-First Protocol
+
+Detailed sequencing and implementation notes live in
+`docs/TEST_FIRST_AGENTIC_ROADMAP.md`. All tasks in this workstream remain planned
+until their task-specific verification passes.
+
+### TFA-1.1: Add Test-First Protocol Document
+
+Owner: codex
+Type: docs protocol
+Status: done 2026-07-13
+Depends-On: TFA-0.1
+
+Objective: |
+  Define a risk-tiered protocol for public executable specifications,
+  test-first implementation, bounded repair, and evidence capture.
+
+Acceptance-Criteria:
+  - The protocol defines when test-first is required, optional, or not
+    applicable.
+  - Lean / Standard / Strict modes retain proportionate minimum test
+    expectations.
+  - Receipts and runtime verification are evidence inputs without claims of
+    empirical improvement before pilot evidence exists.
+
+Integration-Points:
+  - docs/testing/test_first_protocol.md
+  - `PLAYBOOK.md`
+  - `README.md`
+  - `docs/usage_guide.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+### TFA-1.2: Add Implementer TDD Prompt
+
+Owner: codex
+Type: prompt
+Status: done 2026-07-13
+Depends-On: TFA-1.1
+
+Objective: |
+  Add a direct implementer prompt for test-first agentic software tasks.
+
+Acceptance-Criteria:
+  - The prompt inspects existing tests and follows the required narrow
+    test-first loop before broad verification.
+  - Prose-only completion claims are forbidden and bounded escalation paths are
+    explicit.
+  - Orchestrator and downstream prompt templates select the prompt only when
+    task governance requires it.
+
+Integration-Points:
+  - prompts/IMPLEMENTER_TDD.md
+  - `templates/CODEX_PROMPT.md`
+  - `prompts/ORCHESTRATOR.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+## Phase TFA-2 - Task Metadata And Deterministic Routing
+
+### TFA-2.1: Extend Task Schema With Test Governance Fields
+
+Owner: codex
+Type: schema tooling
+Status: done 2026-07-14 - human-approved task scope 63f3584234d9
+Depends-On: TFA-1.1
+Risk-Level: high
+Public-Tests-Required: required
+Critic-Required: required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Test-governance rationale: the schema/parser contract changes executable task
+routing and therefore requires focused public tests and independent review.
+Restricted, mutation, property, and visual evidence are not task-applicable:
+the change adds a bounded set of enumerated fields/defaults rather than a large
+input-space invariant, hidden acceptance surface, critical algorithm, or UI.
+
+Objective: |
+  Add backward-compatible risk and test-governance fields to the machine-readable
+  task contract.
+
+Acceptance-Criteria:
+  - Schema and Markdown parser support risk level, public tests, critic,
+    holdout, mutation, property, and visual-contract decisions.
+  - Existing task blocks remain valid through conservative defaults.
+  - Templates and validator tests demonstrate a lightweight Lean default.
+
+Integration-Points:
+  - `schemas/task.schema.json`
+  - `tools/playbook_validate.py`
+  - `templates/TASKS.md`
+  - `docs/tasks.md`
+  - `tests/unit/test_playbook_validate.py`
+  - `docs/audit/TEST_CRITIC_TFA-2.1_2026-07-13.md`
+  - `docs/audit/HUMAN_APPROVAL_TFA-2.1_TFA-4.1_TFA-6.1_2026-07-14.md`
+
+Verification:
+  - `python3 -m pytest tests/unit/test_playbook_validate.py -q`
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - `python3 tools/verify_playbook.py --root .`
+
+### TFA-2.2: Add Risk-Tier Routing Rules
+
+Owner: codex
+Type: docs prompt
+Status: done 2026-07-13
+Depends-On: TFA-2.1
+Risk-Level: medium
+Public-Tests-Required: not_required
+Critic-Required: conditional
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Map task risk metadata to deterministic checks, evidence gates, critic review,
+  stronger oracles, and human approval.
+
+Acceptance-Criteria:
+  - A routing table defines the minimum evidence and gates for each risk tier.
+  - Low-risk tasks stay cheap while high/critical tasks require explicit evidence
+    mapping and human approval.
+  - Orchestrator, phase validation, and consolidated review consume the routing
+    fields without ad hoc model judgement.
+
+Integration-Points:
+  - docs/testing/test_first_protocol.md
+  - `prompts/ORCHESTRATOR.md`
+  - `prompts/PHASE1_VALIDATOR.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+## Phase TFA-3 - Independent Test Critic
+
+### TFA-3.1: Add Test Critic Prompt
+
+Owner: codex
+Type: prompt review
+Status: done 2026-07-13
+Depends-On: TFA-1.1, TFA-2.1
+Risk-Level: medium
+Public-Tests-Required: not_required
+Critic-Required: not_required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Add an independent evidence auditor for oracle gaps, missing cases, public-test
+  overfitting, flaky signals, and acceptance-criteria coverage.
+
+Acceptance-Criteria:
+  - The prompt defines inputs, structured findings, severity, and anti-patterns.
+  - A critic blocks only for deterministic failure, missing required evidence,
+    or an explicit stop-ship policy.
+  - Consolidated review can consume the critic findings without broad style or
+    architecture rewrites.
+
+Integration-Points:
+  - prompts/audit/PROMPT_TEST_CRITIC.md
+  - `prompts/audit/AUDIT_INDEX.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
+  - docs/testing/test_first_protocol.md
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+### TFA-3.2: Add Test Critic Report Template
+
+Owner: codex
+Type: template
+Status: done 2026-07-13
+Depends-On: TFA-3.1
+Risk-Level: low
+Public-Tests-Required: not_required
+Critic-Required: not_required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Add a reusable evidence-mapping report for Test Critic findings.
+
+Acceptance-Criteria:
+  - The report maps acceptance criteria to tests, receipts, holdout evidence
+    where applicable, and unresolved oracle gaps.
+  - False-alarm and miss candidates are retained for later calibration.
+  - Lean tasks do not require a critic report by default.
+
+Integration-Points:
+  - templates/TEST_CRITIC_REPORT.md
+  - `templates/EVIDENCE_INDEX.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+
+## Phase TFA-4 - Stronger Acceptance Oracles
+
+### TFA-4.1: Add Holdout Acceptance Protocol
+
+Owner: codex
+Type: docs evaluation
+Status: done 2026-07-14 - human-approved task scope 63f3584234d9
+Depends-On: TFA-2.1, TFA-3.1
+Risk-Level: high
+Public-Tests-Required: not_required
+Critic-Required: required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Test-governance rationale: this task changes documentation only; it has no
+executable behavior or independent restricted oracle, so holdout applicability
+resolves to `not_applicable`.
+
+Objective: |
+  Define restricted acceptance tests for merge and phase gates without exposing
+  their cases to implementer prompts.
+
+Acceptance-Criteria:
+  - The protocol defines when holdouts are required, optional, or not applicable.
+  - Storage, access, contamination controls, rotation, receipts, and failure
+    handling are explicit.
+  - Harness documentation shows how project-specific suites model holdout checks
+    without adding secret contents to this repository.
+
+Integration-Points:
+  - docs/testing/holdout_acceptance.md
+  - `docs/evaluation/CI_EVAL_GATE.md`
+  - `docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md`
+  - `companion/ai_workflow_harness_lab/README.md`
+  - `docs/audit/TEST_CRITIC_TFA-4.1_2026-07-13.md`
+  - `docs/audit/HUMAN_APPROVAL_TFA-2.1_TFA-4.1_TFA-6.1_2026-07-14.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+### TFA-4.2: Add Mutation And Property Oracle Guidance
+
+Owner: codex
+Type: docs evaluation
+Status: done 2026-07-13
+Depends-On: TFA-2.1
+Risk-Level: medium
+Public-Tests-Required: not_required
+Critic-Required: conditional
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Define stack-neutral selection and evidence rules for property-based and
+  mutation testing on high-value code paths.
+
+Acceptance-Criteria:
+  - A decision tree distinguishes public tests, property checks, and mutation
+    checks.
+  - Minimum evidence includes command, configuration, threshold or rationale,
+    receipt, and accepted risk for skipped required checks.
+  - Evaluation templates reference stronger oracles only where their risk and
+    operational cost justify them.
+
+Integration-Points:
+  - docs/testing/property_and_mutation_oracles.md
+  - `templates/RETRIEVAL_EVAL_PLAN.md`
+  - `templates/ROUTER_EVAL.md`
+  - docs/testing/test_first_protocol.md
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+## Phase TFA-5 - UI Evidence Protocol
+
+### TFA-5.1: Add UI Verification Protocol
+
+Owner: codex
+Type: docs frontend
+Status: done 2026-07-13
+Depends-On: TFA-2.1
+Risk-Level: medium
+Public-Tests-Required: not_required
+Critic-Required: conditional
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Define a proportional UI evidence stack of behavior checks, visual regression,
+  human review, and an optional vision critic.
+
+Acceptance-Criteria:
+  - Required UI evidence is defined by risk tier and visual contract.
+  - Runtime verification can record screenshots, diffs, console output, and
+    stable viewport coverage.
+  - Browser tools remain examples rather than mandatory Playbook dependencies.
+
+Integration-Points:
+  - docs/testing/ui_verification.md
+  - `templates/RUNTIME_VERIFICATION_RECORD.md`
+  - `templates/IMPLEMENTATION_CONTRACT.md`
+  - `prompts/audit/PROMPT_2_CODE.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+## Phase TFA-6 - Completion Authority And Critic Calibration
+
+### TFA-6.1: Add Merge Authority Policy
+
+Owner: codex
+Type: docs governance
+Status: done 2026-07-14 - human-approved task scope 63f3584234d9
+Depends-On: TFA-2.2, TFA-3.1
+Risk-Level: high
+Public-Tests-Required: not_required
+Critic-Required: required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Map risk-tier evidence and stop-ship rules to task, phase, and merge approval
+  authority.
+
+Acceptance-Criteria:
+  - The policy maps risk levels to required evidence and human approval.
+  - Implementers cannot self-certify completion from prose or self-authored
+    verdicts.
+  - Failed required tests, missing receipts, failed holdouts, security/compliance
+    risk, and unaudited baseline changes have explicit stop-ship treatment.
+
+Integration-Points:
+  - docs/merge_authority.md
+  - `PLAYBOOK.md`
+  - `prompts/ORCHESTRATOR.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
+  - `docs/audit/TEST_CRITIC_TFA-6.1_2026-07-13.md`
+  - `docs/audit/HUMAN_APPROVAL_TFA-2.1_TFA-4.1_TFA-6.1_2026-07-14.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+### TFA-6.2: Add Critic Calibration Protocol
+
+Owner: codex
+Type: docs evaluation
+Status: done 2026-07-13
+Depends-On: TFA-3.1, TFA-6.1
+Risk-Level: medium
+Public-Tests-Required: not_required
+Critic-Required: conditional
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Measure Test Critic and final critic behaviour against seeded defects and
+  known-good changes.
+
+Acceptance-Criteria:
+  - The protocol defines dataset shape, metrics, cadence, and decision
+    thresholds by risk tier.
+  - Calibration tracks false alarms, misses, severity accuracy, evidence-link
+    accuracy, and repair usefulness rather than rewarding more blocks.
+  - No benchmark or quality claim is made before recorded calibration and pilot
+    evidence exists.
+
+Integration-Points:
+  - docs/evaluation/CRITIC_CALIBRATION.md
+  - templates/TEST_CRITIC_REPORT.md
+  - `companion/ai_workflow_harness_lab/README.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+## Phase TFA-7 - Empirical Pilot
+
+### TFA-7.1: Add Paired Pilot Plan
+
+Owner: codex
+Type: evaluation
+Status: implementation_reported 2026-07-15 - fresh critic ALLOW; human approval required
+Depends-On: TFA-1.2, TFA-2.2, TFA-3.2, TFA-4.1, TFA-4.2, TFA-5.1, TFA-6.2
+Risk-Level: high
+Public-Tests-Required: not_required
+Critic-Required: required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Define a paired experiment comparing the current workflow with the test-first
+  workflow in one or two real repositories.
+
+Acceptance-Criteria:
+  - The plan names project fixtures, minimum trial counts, metrics, budget, data
+    retention, and human approval boundaries.
+  - Mechanism validation is separated from productivity and quality claims.
+  - No empirical improvement claim is made before the paired pilot produces
+    reviewable evidence.
+
+Integration-Points:
+  - docs/evaluation/TEST_FIRST_PILOT_PLAN.md
+  - `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`
+  - `companion/ai_workflow_harness_lab/README.md`
+  - `docs/audit/TEST_CRITIC_TFA-7.1_2026-07-13.md`
+  - `reports/test_first_pilot/shishki_bot_v1/PILOT_REGISTRY.md`
+  - `reports/test_first_pilot/shishki_bot_v1/CRITIC_REVIEW.md`
+  - `reports/test_first_pilot/shishki_bot_v1/APPROVAL_REQUEST_2026-07-15.md`
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check placeholders`
+  - `python3 tools/integrity_check.py --root .`
+  - `python3 tools/verify_playbook.py --root .`
+
+### TFA-7.2: Run And Record Pilot Results
+
+Owner: human + codex
+Type: evaluation evidence
+Status: blocked 2026-07-15 - execution prerequisites not approved; external launch required
+Depends-On: TFA-7.1, TFA-7.2A, TFA-7.2B, TFA-7.2C
+Risk-Level: high
+Public-Tests-Required: not_required
+Critic-Required: required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Blocking rationale: this framework change records prose/evidence only, so its
+task-local executable and stronger-oracle routes are not applicable. The real
+project tasks retain their own resolved routes. No pilot may run until humans
+approve fixtures, data handling, budget, and the external execution boundary.
+
+Objective: |
+  Execute the paired pilot and record auditable results rather than narrative
+  conclusions.
+
+Acceptance-Criteria:
+  - Pilot runs produce command receipts, harness bundles, or equivalent evidence.
+  - Results include wins and failures and support an explicit adoption decision.
+  - Gaps found during the pilot become follow-up task records.
+
+Integration-Points:
+  - reports/test_first_pilot/
+  - docs/evaluation/TEST_FIRST_PILOT_RESULTS.md
+  - `docs/tasks.md`
+  - `reports/test_first_pilot/shishki_bot_v1/PREFLIGHT_2026-07-15.md`
+
+Verification:
+  - Project-specific commands recorded in docs/evaluation/TEST_FIRST_PILOT_PLAN.md.
+  - `find reports/test_first_pilot -name bundle.json -print0 | xargs -0 -n1 python3 tools/validate_harness_evidence.py`
+  - `python3 tools/verify_playbook.py --root .`
+
+### TFA-7.2A: Select And Approve Real Project Fixtures
+
+Owner: human + codex
+Type: evaluation preparation
+Status: implementation_reported 2026-07-15 - exact repository and data approval required
+Depends-On: TFA-7.1
+Risk-Level: high
+Public-Tests-Required: not_required
+Critic-Required: required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Select at least one real repository and two representative tasks, then freeze
+  their approved snapshots, provenance, routing, scorers, and data classification.
+
+Acceptance-Criteria:
+  - Repository/data owners approve named immutable snapshots and task provenance.
+  - The fixture registry contains every field required by the paired pilot plan.
+  - Generic mechanism fixtures are not represented as real-project evidence.
+
+Integration-Points:
+  - docs/evaluation/TEST_FIRST_PILOT_PLAN.md
+  - `reports/test_first_pilot/shishki_bot_v1/PILOT_REGISTRY.md`
+  - `companion/ai_workflow_harness_lab/suites/shishki_bot_ci_v1/`
+  - `reports/test_first_pilot/shishki_bot_v1/APPROVAL_REQUEST_2026-07-15.md`
+
+Verification:
+  - Human repository/data approval references are recorded.
+  - `.venv/bin/harness-lab validate-suite "$PILOT_SUITE"`
+
+### TFA-7.2B: Approve Pilot Execution Boundary
+
+Owner: human
+Type: evaluation governance
+Status: implementation_reported 2026-07-15 - budget operator and retention approval required
+Depends-On: TFA-7.1
+Risk-Level: high
+Public-Tests-Required: not_required
+Critic-Required: required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
+
+Objective: |
+  Approve the paired budget, external runner, provider/model parameters,
+  permissions, redaction, retention, and protected-evidence access boundary.
+
+Acceptance-Criteria:
+  - Named owners approve ceilings sufficient for both arms of every admitted pair.
+  - Credentials and protected labels remain outside repository and agent context.
+  - Retention, deletion, incident, and protocol-amendment handling are recorded.
+
+Integration-Points:
+  - docs/evaluation/TEST_FIRST_PILOT_PLAN.md
+  - `tools/test_first_pilot_codex_adapter.py`
+  - `tools/run_test_first_pilot.sh`
+  - `reports/test_first_pilot/shishki_bot_v1/APPROVAL_REQUEST_2026-07-15.md`
+  - external approval and retention record
+
+Verification:
+  - Human budget, runner, data, and protected-access approval references are recorded.
+
+### TFA-7.2C: Freeze Project Scorers And Pilot Ledger
+
+Owner: human + codex
+Type: evaluation preparation
+Status: implementation_reported 2026-07-15 - fresh critic ALLOW; scorer/adjudicator approval required
+Depends-On: TFA-7.2A, TFA-7.2B
+Risk-Level: high
+Public-Tests-Required: not_required
+Critic-Required: required
+Holdout-Required: conditional
+Mutation-Required: conditional
+Property-Required: conditional
+Visual-Contract: not_applicable
+
+Objective: |
+  Freeze independent scorers, protected wrappers, expected failure taxonomy,
+  condition-blind adjudication, and the append-only event ledger before execution.
+
+Acceptance-Criteria:
+  - Scorer and prompt digests, metric denominators, missing-value rules, and pair
+    admission rules are preregistered.
+  - Required project-task routes have executable owners and evidence destinations.
+  - The ledger can observe verifier attempts, first green, final model-side
+    gates, heuristic repair candidates, and the non-interactive intervention
+    policy; exact repair turns remain unknown without later adjudication.
+
+Integration-Points:
+  - docs/evaluation/TEST_FIRST_PILOT_PLAN.md
+  - docs/evaluation/CRITIC_CALIBRATION.md
+  - `reports/test_first_pilot/shishki_bot_v1/PILOT_REGISTRY.md`
+  - `schemas/test_first_pilot_event.schema.json`
+  - `companion/ai_workflow_harness_lab/suites/shishki_bot_ci_v1/`
+
+Verification:
+  - Project-specific scorer and protected-wrapper checks are recorded.
+  - Independent human/critic review records no unresolved stop-ship gap.
 
 ## Phase PI-1 - Portfolio Integration
 

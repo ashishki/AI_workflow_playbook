@@ -28,6 +28,18 @@ Date: {{DATE}}
 | ACL leak rate | 0 | | | |
 | p95 retrieval latency | | | | |
 
+## Stronger Oracle Checks
+
+Template presence does not make these gates mandatory. Resolve
+`Property-Required` and `Mutation-Required` through
+`docs/testing/property_and_mutation_oracles.md` and record only applicable
+deterministic retrieval/evaluator semantics, not stochastic answer quality.
+
+| Gate | Resolved decision / predicate | Target | Exact command | Config / version | Threshold or rationale | Receipt / result | Exception |
+|------|-------------------------------|--------|---------------|------------------|------------------------|------------------|-----------|
+| Property | | ACL non-leakage, no-answer, fresh-over-stale, distractor rejection, or source mapping | | | | | |
+| Mutation | | ACL/freshness/no-answer filters, ranking/threshold, or evaluator logic | | | | | |
+
 ## Eval History
 
 | Date | Corpus version | Eval source | Summary | Decision |

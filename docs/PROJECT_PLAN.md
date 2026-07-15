@@ -55,6 +55,26 @@ verification, and cognition integrity.
 - Do not add swarm behavior.
 - Keep consolidation human-readable and evidence-backed.
 
+### P1 - Add Test-First Governance
+
+- Define a risk-tiered test-first protocol and implementer prompt for semantic
+  code changes without imposing full TDD on low-risk docs/config work.
+- Add backward-compatible task metadata for public tests, independent critic
+  review, stronger acceptance oracles, visual contracts, and completion
+  authority.
+- Keep deterministic checks and human approval authoritative; critics audit
+  evidence and explicit stop-ship conditions rather than self-assigning merge
+  authority.
+
+### P2 - Evaluate Stronger Test Oracles
+
+- Define holdout, mutation/property, and UI evidence protocols as optional or
+  risk-triggered layers, not mandatory runtime dependencies.
+- Calibrate critics and run a paired project pilot before making any claim that
+  the test-first workflow improves quality or productivity.
+- Preserve distinct Lean / Standard / Strict expectations and record the
+  operational cost of stricter gates.
+
 ### P2 - Portfolio Integration
 
 - Add a portfolio operating guide showing how Playbook, Entropy Core, Workflow

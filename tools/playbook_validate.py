@@ -9,6 +9,7 @@ consumer for the parts of the contract that the playbook itself needs in CI.
 from __future__ import annotations
 
 import argparse
+import difflib
 import json
 import re
 import sys
@@ -39,18 +40,30 @@ FIELD_ALIASES = {
     "correction_budget": "correction_budget",
     "cost-budget": "cost_budget",
     "cost_budget": "cost_budget",
+    "critic-required": "critic_required",
+    "critic_required": "critic_required",
     "depends-on": "dependencies",
     "depends_on": "dependencies",
     "evidence": "evidence",
     "files": "files",
     "heavy-mode": "heavy_mode",
     "heavy_mode": "heavy_mode",
+    "holdout-required": "holdout_required",
+    "holdout_required": "holdout_required",
     "integration-points": "files",
     "integration_points": "files",
     "notes": "notes",
     "objective": "objective",
     "owner": "owner",
     "phase": "phase",
+    "property-required": "property_required",
+    "property_required": "property_required",
+    "public-tests-required": "public_tests_required",
+    "public_tests_required": "public_tests_required",
+    "mutation-required": "mutation_required",
+    "mutation_required": "mutation_required",
+    "risk-level": "risk_level",
+    "risk_level": "risk_level",
     "runtime-verification": "runtime_verification",
     "runtime_verification": "runtime_verification",
     "status": "status",
@@ -58,7 +71,27 @@ FIELD_ALIASES = {
     "type": "type_tags",
     "verification": "verify",
     "verify": "verify",
+    "visual-contract": "visual_contract",
+    "visual_contract": "visual_contract",
 }
+
+TEST_GOVERNANCE_DEFAULTS = {
+    "risk_level": "medium",
+    "public_tests_required": "conditional",
+    "critic_required": "conditional",
+    "holdout_required": "conditional",
+    "mutation_required": "conditional",
+    "property_required": "conditional",
+    "visual_contract": "optional",
+}
+
+GOVERNANCE_FIELD_KEYS = tuple(
+    sorted(
+        key
+        for key, canonical in FIELD_ALIASES.items()
+        if canonical in TEST_GOVERNANCE_DEFAULTS
+    )
+)
 
 LIST_FIELDS = {
     "acceptance_criteria",
@@ -127,6 +160,7 @@ class TaskBlock:
     phase_context: str = ""
     fields: dict[str, Any] = field(default_factory=dict)
     field_lines: dict[str, int] = field(default_factory=dict)
+    parse_findings: list[tuple[int, str, str]] = field(default_factory=list)
 
     def to_record(self) -> dict[str, Any]:
         status = str(self.fields.get("status", "")).strip()
@@ -151,6 +185,10 @@ class TaskBlock:
                 self.fields.get("runtime_verification")
             ),
         }
+        for field_name, default in TEST_GOVERNANCE_DEFAULTS.items():
+            record[field_name] = normalize_governance_value(
+                self.fields.get(field_name), default
+            )
         if verify:
             record["verify"] = verify
         elif status.startswith("done") and evidence:
@@ -180,6 +218,17 @@ def relative(root: Path, path: Path) -> str:
 
 def canonical_field(raw: str) -> str | None:
     return FIELD_ALIASES.get(raw.strip().lower().replace(" ", "-"))
+
+
+def governance_field_suggestion(raw: str) -> str | None:
+    normalized = raw.strip().lower().replace(" ", "-")
+    matches = difflib.get_close_matches(
+        normalized,
+        GOVERNANCE_FIELD_KEYS,
+        n=1,
+        cutoff=0.8,
+    )
+    return matches[0] if matches else None
 
 
 def listify(value: Any) -> list[str]:
@@ -226,6 +275,13 @@ def normalize_runtime_verification(value: Any) -> str:
     if raw in {"not_required", "none", "no", "false"}:
         return "not_required"
     return "conditional"
+
+
+def normalize_governance_value(value: Any, default: str) -> str:
+    raw = (
+        str(value or "").strip().lower().replace("-", "_").replace(" ", "_")
+    )
+    return raw or default
 
 
 def parse_list_item(line: str) -> str | None:
@@ -275,8 +331,32 @@ def parse_task_blocks(path: Path) -> list[TaskBlock]:
             continue
         field_match = FIELD_RE.match(line.strip())
         if field_match:
-            field_name = canonical_field(field_match.group(1))
+            raw_field_name = field_match.group(1)
+            field_name = canonical_field(raw_field_name)
             if field_name is None:
+                suggestion = governance_field_suggestion(raw_field_name)
+                if suggestion is not None:
+                    current.parse_findings.append(
+                        (
+                            line_no,
+                            "TASK_GOVERNANCE_FIELD_UNKNOWN",
+                            f"task {current.task_id} has unknown governance field "
+                            f"{raw_field_name}; did you mean {suggestion}?",
+                        )
+                    )
+                active_field = None
+                multiline_field = None
+                multiline_indent = None
+                continue
+            if field_name in current.fields:
+                current.parse_findings.append(
+                    (
+                        line_no,
+                        "TASK_FIELD_DUPLICATE",
+                        f"task {current.task_id} repeats field {raw_field_name}; "
+                        f"first declaration is line {current.field_lines[field_name]}",
+                    )
+                )
                 active_field = None
                 multiline_field = None
                 multiline_indent = None
@@ -328,7 +408,16 @@ def parse_task_blocks(path: Path) -> list[TaskBlock]:
 
 
 def validate_task_record(task: TaskBlock, root: Path, schema_validator: Any | None = None) -> list[Finding]:
-    findings: list[Finding] = []
+    findings = [
+        Finding(
+            "error",
+            relative(root, task.path),
+            line,
+            check_id,
+            message,
+        )
+        for line, check_id, message in task.parse_findings
+    ]
     record = task.to_record()
     if not record.get("verify") and not record.get("test"):
         findings.append(
@@ -350,7 +439,9 @@ def validate_task_record(task: TaskBlock, root: Path, schema_validator: Any | No
                     relative(root, task.path),
                     task.field_lines.get(field_name, task.line),
                     "TASK_SCHEMA",
-                    f"task {task.task_id} schema violation: {error.message}",
+                    f"task {task.task_id} schema violation"
+                    + (f" at {field_path}" if field_path else "")
+                    + f": {error.message}",
                 )
             )
         return findings

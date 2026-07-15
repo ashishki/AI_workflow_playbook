@@ -76,6 +76,11 @@ requires evidence that the claimed files, tests, and state updates exist. See
 `docs/filesystem_reality_principle.md` and
 `docs/runtime_verification_protocol.md`.
 
+Completion authority is governed by `docs/merge_authority.md`. An implementer
+`DONE`, green checks, receipts, and reviewer or critic verdicts make work a
+readiness candidate only. The risk-tier authority named by that policy must
+approve the task, phase, or merge; phase and merge approval remain human.
+
 Correction loops are bounded. Default maximum: two implementation correction
 turns and two test-healing turns unless the task explicitly enables heavy mode.
 Repeated failures, unchanged test output, increased failure count, budget
@@ -974,17 +979,18 @@ The template is in `prompts/ORCHESTRATOR.md` in this playbook. Copy it, fill the
 
 ### Required Audit Prompt Files
 
-The deep review pipeline (Steps 4.0–4.3) references four prompt files that must exist in `docs/audit/`:
+The deep review pipeline references five prompt files that must exist in `docs/audit/`:
 
 | File | Purpose |
 |---|---|
 | `PROMPT_0_META.md` | Snapshot current state, define review scope |
 | `PROMPT_1_ARCH.md` | Check architectural drift vs spec + contracts |
 | `PROMPT_2_CODE.md` | Security and quality checklist per file |
+| `PROMPT_TEST_CRITIC.md` | Conditional independent audit of task tests and evidence |
 | `PROMPT_3_CONSOLIDATED.md` | Produce REVIEW_REPORT.md + patches for tasks.md and CODEX_PROMPT.md |
 | `AUDIT_INDEX.md` | Running log of all review cycles and archive entries |
 
-Templates for all five are in the `prompts/audit/` directory of this playbook.
+Templates for all six files are in the `prompts/audit/` directory of this playbook.
 
 ### Retrofit for Existing Projects
 
@@ -1040,7 +1046,8 @@ All of the following must be true before a phase is closed:
 - [ ] All P1 findings from the review cycle are resolved
 - [ ] `docs/CODEX_PROMPT.md` is updated with new baseline, next task, and open findings
 - [ ] Review cycle report saved to `docs/audit/CYCLE{N}_REVIEW.md`
-- [ ] Human has reviewed and approved
+- [ ] The human approval required for this phase scope is durably recorded under
+      `docs/merge_authority.md`; agent prose cannot satisfy this gate
 
 ### CODEX_PROMPT.md at Phase Boundaries
 
@@ -1056,6 +1063,13 @@ All of the following must be true before a phase is closed:
 
 Each task is executed by a Codex subagent. The orchestrator spawns the subagent with a precise prompt. The subagent operates in its own context window.
 
+Semantic changes use the risk-tiered inner loop in
+`docs/testing/test_first_protocol.md`: a focused public executable spec is
+required before implementation when the task classification calls for it.
+Public tests guide implementation; they do not replace broader verification,
+capability evals, review, or human approval. Prose-only and other non-semantic
+work may use a concrete validator or verifier instead of manufacturing a test.
+
 ### Pre-Task Protocol (skip nothing)
 
 The following steps are mandatory before writing any implementation code:
@@ -1065,7 +1079,11 @@ The following steps are mandatory before writing any implementation code:
 3. **Read Depends-On tasks, `Context-Refs`, and canonical docs only when the digest is insufficient** — this is mandatory for architecture changes, risky boundaries, open findings, or interface-sensitive tasks.
 4. **Run `pytest`** to capture the pre-task baseline. Record the number: `N passing, M failed`.
 5. **Run `ruff check`** — must exit 0. Do not begin if ruff is not clean. Fix ruff issues first, commit them separately.
-6. **Write tests before or alongside implementation.** No task is complete until every acceptance criterion has a passing test.
+6. **Apply the test-first classification.** For `required` work, demonstrate a
+   focused public executable spec failing for the intended reason before
+   implementation. For `optional` or `not_applicable` work, record the rationale
+   and run the declared concrete verifier. Every acceptance criterion still
+   needs test, verification, or reviewable evidence before completion.
 
 ### During Implementation
 
@@ -1347,6 +1365,7 @@ volume justifies them.
 | Review cycle reports | `docs/audit/CYCLE{N}_REVIEW.md` | Phase-by-phase review findings | Standard/Strict required at phase/risk boundaries |
 | ADRs | `docs/adr/ADR{NNN}.md` | Architectural Decision Records | Required when architectural decisions change |
 | Dev standards | `docs/dev-standards.md` | Code style, test strategy, observability conventions | Optional in Lean; useful when conventions are non-trivial |
+| Test-first protocol | `docs/testing/test_first_protocol.md` | Risk-tiered public executable-spec loop and evidence boundary | Referenced in all modes; full RED/GREEN is required only when task semantics and risk justify it |
 
 ### CODEX_PROMPT.md — Required Fields
 

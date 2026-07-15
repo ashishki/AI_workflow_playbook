@@ -66,6 +66,13 @@ count and verification command as the baseline. It becomes enforceable when the
 project wires the verification command into CI, receipts, or a deterministic
 validator gate.
 
+**Risk-tiered test-first loop.** Semantic changes use public executable specs
+when mode and task risk require them; low-risk prose/config work can use a
+concrete validator instead. The protocol is documented in
+`docs/testing/test_first_protocol.md`. Public tests are inner-loop specs, not
+empirical proof that the workflow improves project outcomes; paired pilot
+evidence is still pending.
+
 **Finding lifecycle.** P2 findings that survive three review cycles without
 resolution must be escalated, closed with justification, or deferred to v2. This
 is formalized in review protocol and becomes deterministic only when a project
@@ -173,6 +180,7 @@ For practical setup and adoption, use:
 - [docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md) — current portfolio role and roadmap
 - [docs/tasks.md](docs/tasks.md) — active framework task graph
 - [docs/project_fit_guide.md](docs/project_fit_guide.md) — problem-first entry points, adoption reality gate, and anti-patterns
+- [docs/testing/test_first_protocol.md](docs/testing/test_first_protocol.md) — risk-tiered public executable-spec loop and evidence boundaries
 - [docs/evaluation/EVAL_FIRST_DEVELOPMENT.md](docs/evaluation/EVAL_FIRST_DEVELOPMENT.md) — eval dataset, thresholds, judge calibration, human review, and cost gates from Phase 1
 - [docs/rag/RAG_DATA_READINESS.md](docs/rag/RAG_DATA_READINESS.md) — source inventory and data-quality gate before embeddings/retrieval eval
 - [docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md](docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md) — model+harness boundary and evaluation protocol for tool-using and agentic systems
@@ -368,6 +376,7 @@ AI_workflow_playbook/
 ├── PLAYBOOK.md                      — master workflow document (read this first)
 ├── docs/
 │   ├── project_fit_guide.md          — problem-first entry points, adoption reality gate, and anti-patterns
+│   ├── testing/                      — risk-tiered test-first implementation protocols
 │   ├── evaluation/                   — eval-first development, judge calibration, CI gates, human review cost
 │   ├── rag/                          — data readiness, data quality, retrieval/generation eval, RAG acceptance
 │   ├── agent_harness/                — harness design, trace schema, recovery, permissions, HITL policy

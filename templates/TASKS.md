@@ -16,6 +16,13 @@ Owner: human
 Phase: 1
 Type: governance
 Status: planned
+Risk-Level: low
+Public-Tests-Required: not_required
+Critic-Required: not_required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
 
 Objective: |
   Fill `docs/PROJECT_BRIEF.md`, choose Lean / Standard / Strict mode, and record
@@ -36,6 +43,13 @@ Owner: codex
 Phase: 1
 Type: test
 Status: planned
+Risk-Level: low
+Public-Tests-Required: conditional
+Critic-Required: not_required
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
 
 Objective: |
   Add or confirm the project's first deterministic verification command before
@@ -55,6 +69,13 @@ Owner: codex
 Phase: 1
 Type: cost:telemetry, skill:security
 Status: planned
+Risk-Level: medium
+Public-Tests-Required: conditional
+Critic-Required: conditional
+Holdout-Required: not_required
+Mutation-Required: not_required
+Property-Required: not_required
+Visual-Contract: not_applicable
 
 Objective: |
   Enable cost telemetry and external-skill security gates only when the project

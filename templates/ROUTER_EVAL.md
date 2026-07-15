@@ -73,6 +73,19 @@ Rules:
 - verifier cost counts toward total cost
 - escalation threshold must come from the measured cost/quality curve
 
+## Stronger Oracle Checks
+
+Template presence does not require both gates. Resolve `Property-Required` and
+`Mutation-Required` through
+`docs/testing/property_and_mutation_oracles.md`, including tool feasibility and
+the task-specific risk floor. Check deterministic router/verifier semantics; do
+not mutate or treat model/provider output as a deterministic property.
+
+| Gate | Resolved decision / predicate | Target | Exact command | Config / version | Threshold or rationale | Receipt / result | Exception |
+|------|-------------------------------|--------|---------------|------------------|------------------------|------------------|-----------|
+| Property | | allowed workloads/routes, safe escalation, finite terminal route/retry bound, complete cost accounting | | | | | |
+| Mutation | | route predicates, thresholds, escalation/termination, verifier acceptance/calibration logic | | | | | |
+
 ## Stale Router Policy
 
 Retrain or re-evaluate when:

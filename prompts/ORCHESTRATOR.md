@@ -13,6 +13,7 @@ The following steps are NEVER optional regardless of time pressure:
 |------|------|-----------|
 | Step 0 — Goals check + state | Every run | Forbidden — orchestrator is blind without it |
 | Step 4 Review decision | After every task | Forbidden — no task is complete without a review decision |
+| Completion authority gate | After required review and before task/phase/merge state advances | Forbidden — evidence and agent verdicts are not approval |
 | Step 4 Deep review | Every phase or risk boundary required by the selected mode | Forbidden when the mode/risk requires it |
 | Step 6 Archive | After every deep review | Forbidden — audit trail is broken without it |
 | Step 6.5 Doc update | After every phase | Forbidden — docs drift without it |
@@ -287,6 +288,7 @@ proof receipts, or review reports.
 
 **D. Review tier** — which review to run after the next implementation:
 - True phase boundary (C above, no archive entry for just-completed phase) → Deep review
+- Task `Risk-Level` is `high` or `critical` → Deep review
 - Security-critical task (auth, middleware, RLS, secrets) → Deep review
 - External skill install/update/enablement, skill registry changes, or agent
   skill directory changes → at least Light review; Deep review if executable,
@@ -294,6 +296,31 @@ proof receipts, or review reports.
 - Cost-sensitive task (model routing/class, budget limits, agent fan-out, retry limits, tool-call breadth, dynamic workflow policy, or recurring AI budget) → at least Light review; Deep review if Strict or phase boundary
 - Docs-only navigation, dependency metadata, test harness only, or Lean low-risk task with no behavior/security/runtime change → Deterministic review
 - Otherwise → Light review
+
+**D1. Test governance routing** — read the validated task record fields:
+`Risk-Level`, `Public-Tests-Required`, `Critic-Required`, `Holdout-Required`,
+`Mutation-Required`, `Property-Required`, and `Visual-Contract`. Resolve every
+`conditional` value through `docs/testing/test_first_protocol.md §Deterministic
+Risk Routing`; record the raw value, resolved value, applicability predicate,
+and expected command/artifact path.
+
+Do not infer a weaker gate from model confidence. A stricter explicit value
+wins. A value below the risk-tier floor, an unresolved conditional, or a
+required gate with no protocol/command/owner/evidence destination produces:
+
+```
+TEST_GOVERNANCE_GAP
+Task: [T## - Title]
+Risk: [low | medium | high | critical]
+Field: [field name]
+Declared -> resolved: [value -> value/unresolved]
+Conflict or missing prerequisite: [exact reason]
+Action required: [correct task metadata | add prerequisite | record human-approved risk decision]
+```
+
+**STOP.** Critical tasks require recorded human approval before execution. High
+and critical tasks require recorded human completion approval. Cross-vendor
+review may be added, but is never an automatic requirement.
 
 **E. Capability tag check** — for the next task, compare each path in its `Files:` scope against the signal patterns below.
 
@@ -463,6 +490,10 @@ Active Profiles: [RAG:ON/OFF | Tool-Use:ON/OFF | Agentic:ON/OFF | Planning:ON/OF
 Phase 1 Audit: [PASS (N warnings) | FAIL (N blockers) | skipped (mid-project) | not yet run]
 Phase boundary: [yes | no]
 Review tier: [deterministic | light | deep] — [reason]
+Test governance: risk=[level] public=[raw->resolved] critic=[raw->resolved] holdout=[raw->resolved] mutation=[raw->resolved] property=[raw->resolved] visual=[raw->resolved]
+Test-first applicability: [required | optional | not_applicable] — [resolved from Public-Tests-Required]
+Human approval: [not required | required | recorded | missing]
+Completion authority: scope=[task | phase | merge] state=[implementation_reported | evidence_complete | review_complete | approved | ready | blocked] record=[path/ref or none]
 Continuity context: [none | N refs read | CONTINUITY_GAP]
 Tag check: [OK | WARNING: T## — [pattern] suggests [profile], verify Type: tag]
 Complexity check: [OK | DETERMINISM_WARNING: ... | MODEL_STRATEGY_WARNING: ... | STOPPED: ...]
@@ -505,6 +536,12 @@ Read `docs/audit/STRATEGY_NOTE.md`.
 
 For each FIX-N item in order:
 
+Classify the fix under `docs/testing/test_first_protocol.md`. When test-first
+applicability is `required`, use `docs/prompts/IMPLEMENTER_TDD.md` with the Fix
+Queue entry, allowed files, applicable rules, commands, receipt path, and
+correction budget supplied inline. Use the generic prompt below only for
+`optional` or `not_applicable` fixes.
+
 Write to `/tmp/orchestrator_codex_prompt.txt`:
 ```
 You are the implementation agent for {{PROJECT_NAME}}.
@@ -520,7 +557,8 @@ Inline digest:
 
 Assignment: [FIX-N] — [Title]
 
-Rules: fix ONLY what is described. Every fix needs a failing→passing test.
+Rules: fix ONLY what is described. Follow the supplied test-first applicability
+decision; every fix still needs a test, verifier, or reviewable evidence.
 Run: cd {{PROJECT_ROOT}} && [YOUR_TEST_COMMAND]
 
 Return:
@@ -548,6 +586,11 @@ After all fixes done → Step 3.
 
 Read the full task entry from `docs/tasks.md` (AC list + file scope).
 
+Use the resolved public-test decision from Step 0-D1. When it is `required`, use
+`docs/prompts/IMPLEMENTER_TDD.md` as the implementation prompt and fill its
+Required Task Digest from the same scoped inputs below. The generic prompt below
+is the proportional path for `optional` or `not_applicable` tasks.
+
 Write to `/tmp/orchestrator_codex_prompt.txt`:
 ```
 You are the implementation agent for {{PROJECT_NAME}}.
@@ -557,8 +600,21 @@ Use this prompt as the primary working context. Do not start by reading full pro
 
 Assignment: [T##] — [Title]
 
-Acceptance criteria (each must have a passing test):
+Acceptance criteria (each must have a test, verifier, or reviewable evidence):
 [paste AC list verbatim]
+
+Test-first applicability: [optional | not_applicable]
+Rationale: [one sentence]
+
+Test governance routing:
+- Risk-Level: [level]
+- Public-Tests-Required: [raw -> resolved]
+- Critic-Required: [raw -> resolved; expected report path or n/a]
+- Holdout-Required: [raw -> resolved; command/artifact path or n/a]
+- Mutation-Required: [raw -> resolved; command/artifact path or n/a]
+- Property-Required: [raw -> resolved; command/artifact path or n/a]
+- Visual-Contract: [raw -> resolved; command/artifact path or n/a]
+- Human approval: [not required | required; evidence path]
 
 Files to create/modify:
 [paste file scope verbatim]
@@ -584,7 +640,8 @@ Immediate flow / pipeline:
 Protocol:
 1. Run [YOUR_TEST_COMMAND] → record baseline BEFORE any changes
 2. Open additional docs only when the inline digest is insufficient for correctness
-3. Write tests alongside code
+3. Add or update tests when behavior changes and the applicability decision
+   justifies it; otherwise run the declared concrete verifier
 4. Run [YOUR_LINT_COMMAND] → zero errors
 5. Run [YOUR_TEST_COMMAND] after → must not decrease passing count
 
@@ -599,6 +656,7 @@ Tests added: [file:function]
 Baseline before: [N passed, N skipped]
 Baseline after:  [N passed, N skipped, N failed]
 AC status: [AC-1: PASS | FAIL, ...]
+Test-first evidence: [applicability; RED/GREEN commands and output paths when required]
 Runtime verification:
 - Changed files verified by: [git diff | file existence | hash record | other]
 - Commands actually run: [exact commands]
@@ -613,13 +671,20 @@ PROMPT=$(cat /tmp/orchestrator_codex_prompt.txt)
 cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 ```
 
-- `DONE` + all AC PASS + 0 failures:
+- `DONE` + all AC PASS + 0 failures is an implementation candidate, not a
+  completion approval:
   → **Runtime verification check:** do not accept the completion claim until repo state confirms it.
   Verify:
   - files listed as created/modified exist and appear in `git diff --name-only` or the relevant commit
   - deleted files are actually absent or removed in git diff
   - no unreported files changed without justification
   - claimed test/eval commands are present in the implementer report
+  - required test-first work includes an intended RED result, subsequent GREEN,
+    and broader verification evidence with exact commands or artifact paths
+  - every other resolved required governance gate has a real command/artifact
+    result; unavailable, missing, or failed required evidence stops completion
+  - high/critical work names the required human approver and durable approval
+    destination; final approval is checked after independent review
   - task state updates in `docs/CODEX_PROMPT.md` match the completed task and next task
   - risky writes have a runtime verification record or enough diff/hash evidence to reconstruct one
 
@@ -737,7 +802,7 @@ No review agent. Verify the repository state directly:
 - dependency metadata changes did not introduce runtime/security/cost policy changes without escalation
 
 If any item is uncertain, escalate to Light review. If deterministic review
-passes, continue to runtime verification and state updates.
+passes, continue to Step 4.4 Completion Authority Gate.
 
 ---
 
@@ -802,7 +867,7 @@ Report only violations of the above checklist.
 Return in exactly this format:
 
 LIGHT_REVIEW_RESULT: PASS
-All checks passed. [T##] complete.
+Review checks passed. Completion authority is unresolved.
 
 OR:
 
@@ -821,14 +886,15 @@ Actual: [what it is]
 ```
 
 Parse result:
-- `LIGHT_REVIEW_RESULT: PASS` → Step 7 (update state, loop)
+- `LIGHT_REVIEW_RESULT: PASS` → Step 4.4 Completion Authority Gate
 - `LIGHT_REVIEW_RESULT: ISSUES_FOUND` → Step 5 (implementer fixer), then re-check
 
 ---
 
 #### TIER 2: Deep Review (phase boundary or security-critical)
 
-4 steps, sequential. Each depends on previous output.
+Run META, ARCH, CODE, the conditional Test Critic, and CONSOLIDATED in sequence.
+Each depends on the previous evidence.
 
 **Step 4.0 — META**
 
@@ -872,7 +938,34 @@ Do NOT write a file — output findings directly in this session (CODE-N format)
 Done: "CODE review done. P0: [N], P1: [N], P2: [N]."
 ```
 
-Capture full findings output — pass to Step 4.3.
+Capture full findings output — pass through Step 4.2a to Step 4.3.
+
+**Step 4.2a — TEST CRITIC (conditional)**
+
+Run when Step 0-D1 resolved `Critic-Required` to `required`, or when a human
+explicitly requested an optional critic. Otherwise record
+`TEST_CRITIC_RESULT: NOT_REQUIRED` and continue.
+
+Use **Agent tool** (`general-purpose`) with fresh context:
+```
+You are the independent Test Critic for {{PROJECT_NAME}}.
+Project root: {{PROJECT_ROOT}}
+Read and execute docs/audit/PROMPT_TEST_CRITIC.md exactly.
+
+Inputs:
+- current canonical task and acceptance criteria
+- resolved test-governance route from Step 0-D1
+- exact changed-file/diff scope and Step 3 implementation result
+- baseline, RED/GREEN, broader verification, receipt, eval, and approval evidence
+- known pre-existing failures
+
+Do not modify files. Return the structured TEST_CRITIC_RESULT and TC findings
+in the current session.
+```
+
+Capture the full structured output for Step 4.3. A missing required output is
+`REQUIRED_EVIDENCE_MISSING`; a critic opinion without a permitted cited basis is
+advisory.
 
 **Step 4.3 — CONSOLIDATED**
 
@@ -887,8 +980,14 @@ CODE review findings (treat as your own — produced this cycle):
 [paste Step 4.2 output verbatim]
 ---
 
+TEST CRITIC findings (produced this cycle or NOT_REQUIRED):
+---
+[paste Step 4.2a output verbatim]
+---
+
 Inputs: docs/audit/META_ANALYSIS.md, docs/audit/ARCH_REPORT.md,
-        docs/tasks.md, docs/CODEX_PROMPT.md
+        docs/tasks.md, docs/CODEX_PROMPT.md, resolved governance route,
+        approval records if present
 
 Write all three artifacts:
 1. docs/audit/REVIEW_REPORT.md (overwrite)
@@ -900,8 +999,56 @@ Done:
 "REVIEW_REPORT.md: P0: X, P1: Y, P2: Z"
 "tasks.md: [N] tasks added"
 "CODEX_PROMPT.md: v[X.Y]"
+"Completion authority: evidence_complete | approval_required | approved | ready | stop_ship"
 "Stop-Ship: Yes | No"
 ```
+
+Parse the consolidated result:
+- `Stop-Ship: Yes` → Step 5 for a remediable evidence/code gap, or stop for a
+  non-remediable authority/policy block.
+- `Stop-Ship: No` → Step 4.4.
+
+**Step 4.4 — Completion Authority Gate (all review tiers)**
+
+Apply `docs/merge_authority.md` when present and these invariant floors:
+
+- implementer, reviewer, critic, receipt, and command output cannot self-approve
+- low/medium task state may advance under the selected workflow's standing
+  delegation only after every required gate and independent review passes
+- high/critical task readiness requires durable human approval for the exact
+  task/diff; critical also requires the recorded pre-execution approval
+- phase and merge readiness always require durable human approval for the exact
+  scope
+- a stop-ship condition cannot be converted to pass by an agent or approval
+
+Emit:
+```
+AUTHORITY_RESULT: APPROVED | APPROVAL_REQUIRED | STOP_SHIP
+Scope: task | phase | merge
+Risk: low | medium | high | critical
+Readiness state: evidence_complete | review_complete | approved | ready | blocked
+Evidence references: [commands/artifacts/review IDs]
+Required authority: [standing task delegation | named human role]
+Approval record: [durable path/ref | missing]
+Stop-ship basis: [none | exact policy code and evidence]
+```
+
+`APPROVAL_REQUIRED` is not a code failure: leave the task/phase/merge incomplete,
+save state, and stop for the named human decision. `STOP_SHIP` enters Step 5 only
+when a bounded correction can remediate it; otherwise mark blocked and stop.
+`AUTHORITY_RESULT: APPROVED` is valid for transition only when `Readiness state`
+is `ready` and the required standing delegation or exact-scope durable approval
+is cited. An `approved` readiness state means approval exists but the remaining
+evidence/review synthesis has not established `ready`; save state and do not
+advance. Reject an inconsistent `APPROVED`/non-`ready` pair as
+an invalid authority output, do not advance, and recompute Step 4.4. Use
+`APPROVAL_REQUIRED` when the only missing element is the named authority. Use
+`STOP_SHIP` only when the evidence supports the exact underlying policy code,
+such as `REQUIRED_EVIDENCE_MISSING` or `REPOSITORY_STATE_MISMATCH`; do not invent
+`AUTHORITY_OR_SCOPE_DRIFT` without observed scope/risk/privilege expansion. Only
+a valid `APPROVED` plus `ready` pair may update the governed state: after Deep
+task review go to Step 6; after Deterministic/Light task review or a ready phase
+report go to Step 7.
 
 ---
 
@@ -936,25 +1083,43 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 ```
 
 Re-run light reviewer on fixed files only.
-- PASS → Step 7
+- PASS → Step 4.4 Completion Authority Gate
 - Same issues again → mark `[!]`, stop, report to user
 
 ---
 
-**Deep review P0:**
+**Deep review remediable Stop-Ship (P0 or P1):**
+
+Route each missing/failed evidence item to its authorized owner before invoking
+any Fix agent:
+
+| Evidence owner | Remediation path |
+|----------------|------------------|
+| Implementer-owned code, public test, verifier, task artifact, or factual receipt | Bounded Fix agent below |
+| Independent Test Critic | Run Step 4.2a with fresh context; never ask the implementer to author critic evidence |
+| Restricted holdout | Authorized curator/runner reruns the protected gate; do not expose cases or route them through the implementer |
+| Human approval or accepted risk | Step 4.4 `APPROVAL_REQUIRED`; no Fix Queue code task |
+| Security/compliance/risk authority | Stop and escalate to the named human/domain owner |
+
+Do not invoke the Fix agent when no implementer-owned remediation remains.
 
 Write to `/tmp/orchestrator_codex_prompt.txt`:
 ```
 You are the Fix agent for {{PROJECT_NAME}}.
 Project root: {{PROJECT_ROOT}}
-Read: docs/audit/REVIEW_REPORT.md (P0 section), docs/CODEX_PROMPT.md (Fix Queue), docs/IMPLEMENTATION_CONTRACT.md
+Read: docs/audit/REVIEW_REPORT.md (Stop-Ship, P0, and P1 sections), docs/CODEX_PROMPT.md (Fix Queue), docs/IMPLEMENTATION_CONTRACT.md
 
-Fix every P0. Each fix needs a failing→passing test.
+Fix only implementer-owned findings whose validated policy basis makes them
+Stop-Ship. This may include P0 or P1 missing required evidence. Use a
+failing→passing test for a semantic defect and the declared deterministic
+verifier/evidence command for a non-semantic or missing-artifact gap. Do not
+create critic, restricted-holdout, human-approval, accepted-risk, or domain-owner
+evidence.
 Run: cd {{PROJECT_ROOT}} && [YOUR_TEST_COMMAND] — must be green.
 
 Return:
 FIXES_RESULT: DONE | PARTIAL
-[P0 ID → file:line]
+[Stop-Ship finding ID → file:line, command, or artifact]
 Baseline: [N passed, N skipped, N failed]
 ```
 
@@ -964,9 +1129,10 @@ PROMPT=$(cat /tmp/orchestrator_codex_prompt.txt)
 cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 ```
 
-Re-run Steps 4.2 + 4.3 (targeted at fixed files).
-- P0 resolved → Step 6
-- P0 still present after 2nd attempt → mark `[!]`, stop, show findings to user
+After every owner-specific remediation, re-run the affected gate, then Step 4.2,
+Step 4.2a when required, and Step 4.3 (targeted at fixed files).
+- All Stop-Ship bases resolved → Step 4.4
+- Any Stop-Ship basis still present after 2nd attempt → mark `[!]`, stop, show findings to user
 
 ---
 
@@ -1076,6 +1242,11 @@ if [ -n "$NOTIFICATION_TOKEN" ] && [ -n "$NOTIFICATION_TARGET" ]; then
 fi
 ```
 
+After writing the full phase report, invoke Step 4.4 with `Scope: phase`. The
+report is evidence for the human; it is not its own approval. Do not start the
+next phase until `AUTHORITY_RESULT: APPROVED` cites a durable human approval
+record for this phase.
+
 ---
 
 ### Step 7 — Rate Limit Checkpoint + Loop
@@ -1099,7 +1270,10 @@ Print one-line progress: `[T##] done. Baseline: N pass. Next: [T## — Title].`
 Return to Step 0.
 
 Stop when:
-- All tasks `✅` → generate final completion report (same format as Phase Report, titled "PROJECT COMPLETE") → send notification → stop.
+- All tasks `✅` → invoke Step 4.4 with `Scope: merge` (or project completion when
+  no merge exists). Only `APPROVED` may generate the final completion report
+  titled "PROJECT COMPLETE"; otherwise save the evidence-complete checkpoint and
+  stop for approval.
 - Task `[!]` → save checkpoint → print blocker → stop.
 - P0 unresolved after 2 attempts → save checkpoint → print findings → stop.
 - API rate limit (429 / "overloaded") → save checkpoint → send notification with suggested restart time (current time + 60 min) → print "RATE_LIMIT_HIT" → stop cleanly.
@@ -1199,6 +1373,7 @@ Notifications fire at two points: phase completion (Step 6.6) and rate limit hit
 | File | Purpose |
 |---|---|
 | `docs/CODEX_PROMPT.md` | Baseline, Fix Queue, open findings, current phase, version |
+| `docs/prompts/IMPLEMENTER_TDD.md` | Conditional direct prompt for tasks whose test-first applicability is required |
 | `docs/tasks.md` | Full task graph with phases and AC lists |
 | `docs/IMPLEMENTATION_CONTRACT.md` | Rules A–I that every implementer must follow |
 | `docs/ARCHITECTURE.md` | System architecture reference |

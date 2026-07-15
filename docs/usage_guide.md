@@ -339,6 +339,16 @@ Do not claim success without command evidence.
 If verification fails, fix within the correction budget or report BLOCKED.
 ```
 
+Before implementation, classify test-first applicability as `required`,
+`optional`, or `not_applicable` using
+`docs/testing/test_first_protocol.md`. Required work demonstrates the smallest
+useful public executable spec failing for the intended reason, makes it pass,
+and then runs broader project verification. Optional or non-applicable work
+records why and still runs a concrete verifier; it does not skip evidence.
+
+Public specs guide the implementation loop. They do not replace CI, capability
+evaluation, runtime verification, review, or human approval.
+
 For higher-risk tasks, run verification through a command receipt:
 
 ```bash

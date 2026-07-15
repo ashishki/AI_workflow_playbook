@@ -158,6 +158,70 @@
       ],
       "default": "conditional"
     },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "public_tests_required": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "conditional",
+        "required"
+      ],
+      "default": "conditional"
+    },
+    "critic_required": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "conditional",
+        "required"
+      ],
+      "default": "conditional"
+    },
+    "holdout_required": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "conditional",
+        "required"
+      ],
+      "default": "conditional"
+    },
+    "mutation_required": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "conditional",
+        "required"
+      ],
+      "default": "conditional"
+    },
+    "property_required": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "conditional",
+        "required"
+      ],
+      "default": "conditional"
+    },
+    "visual_contract": {
+      "type": "string",
+      "enum": [
+        "not_applicable",
+        "optional",
+        "required"
+      ],
+      "default": "optional"
+    },
     "correction_budget": {
       "type": "integer",
       "minimum": 0,

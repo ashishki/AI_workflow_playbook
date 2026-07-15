@@ -1,0 +1,27 @@
+PLAYBOOK.md                                       |  27 +-
+ README.md                                         |   9 +
+ companion/ai_workflow_harness_lab/README.md       |  71 +++
+ docs/PROJECT_PLAN.md                              |  20 +
+ docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md |  24 +
+ docs/evaluation/CI_EVAL_GATE.md                   |  13 +-
+ docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md  |  15 +-
+ docs/tasks.md                                     | 610 +++++++++++++++++++++-
+ docs/usage_guide.md                               |  10 +
+ prompts/ORCHESTRATOR.md                           | 205 +++++++-
+ prompts/PHASE1_VALIDATOR.md                       |   2 +
+ prompts/audit/AUDIT_INDEX.md                      |   9 +-
+ prompts/audit/PROMPT_2_CODE.md                    |  20 +-
+ prompts/audit/PROMPT_3_CONSOLIDATED.md            |  73 ++-
+ schemas/task.schema.json                          |  64 +++
+ templates/CODEX_PROMPT.md                         |  21 +-
+ templates/EVIDENCE_INDEX.md                       |  11 +-
+ templates/IMPLEMENTATION_CONTRACT.md              |  27 +-
+ templates/RETRIEVAL_EVAL_PLAN.md                  |  12 +
+ templates/ROUTER_EVAL.md                          |  13 +
+ templates/RUNTIME_VERIFICATION_RECORD.md          |  54 ++
+ templates/TASKS.md                                |  21 +
+ tests/unit/test_playbook_validate.py              | 104 ++++
+ tests/unit/test_receipt_and_evidence.py           |  18 +
+ tools/playbook_validate.py                        |  39 +-
+ tools/validate_harness_evidence.py                |  11 +-
+ 26 files changed, 1462 insertions(+), 41 deletions(-)

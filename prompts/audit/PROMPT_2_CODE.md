@@ -13,6 +13,10 @@ Your findings feed into PROMPT_3_CONSOLIDATED → REVIEW_REPORT.md.
 - docs/audit/META_ANALYSIS.md  (scope files listed here)
 - docs/audit/ARCH_REPORT.md
 - docs/dev-standards.md (if exists)
+- current task record, including resolved `Risk-Level`,
+  `Public-Tests-Required`, and `Visual-Contract`
+- runtime verification record and referenced UI artifacts when UI evidence is
+  required or supplied
 - Scope files from META_ANALYSIS.md PROMPT_2 Scope section
 
 ## Checklist (run for every file in scope)
@@ -27,7 +31,7 @@ SEC-2  Secrets scan — grep for hardcoded API keys/tokens/passwords in source f
 SEC-3  Auth — access control checks present and correct on sensitive operations
 SEC-4  Credentials from environment only — no hardcoded values
 QUAL-1 Error handling — no bare except without logging; external API errors handled
-QUAL-2 Test coverage — every new function/method has ≥1 test; every AC has a test case
+QUAL-2 Routed verification — changed executable behavior and each AC have the required test, deterministic verifier, or routed evidence; screenshots alone do not prove behavior
 CF     Carry-forward — for each open finding in META_ANALYSIS: still present? worsened?
 GOV-1 Solution-shape drift — code does not introduce higher-autonomy behavior than ARCHITECTURE.md declares without justification
 GOV-2 Deterministic ownership — deterministic-owned subproblems in ARCHITECTURE.md are not implemented as LLM behavior without architectural approval
@@ -42,6 +46,20 @@ GOV-10 README-first index — if the task or phase changed a repo, docs, product
 GOV-11 Cost budget — model escalation, retry expansion, tool-call expansion, agent fan-out, dynamic workflow execution, or recurring AI usage has a matching budget update and approval trigger in docs/COST_BUDGET.md or the selected mode's inline budget. Missing active budget = P1; unapproved material overrun risk = P0.
 GOV-12 Cost architecture — recurring/material AI usage, prompt caching, batch lanes, dynamic routing, cascades, output/effort caps, or model-tier changes are reflected in docs/ai_cost_architecture.md or an inline Lean equivalent. Dynamic routing/cascades require docs/router_eval.md. Missing architecture/eval = P1; unapproved high-risk cascade = P0.
 GOV-13 External skill security — any added/updated/enabled external agent skill, skill registry entry, MCP skill bundle, marketplace/vendor skill, or files under agent skill directories has a trust record under docs/security/skills/{skill-name}/TRUST_RECORD.md or justified Lean inline equivalent. Verify source pin/signature/hash, SkillSpector or equivalent scan, capability declaration, install scope, update policy, and triage of CRITICAL/HIGH findings. Missing trust record or unpinned executable external skill = P1; unresolved credential harvesting, tool poisoning, hidden instructions, remote script execution, or critical/high risk installed/enabled = P0.
+
+<!-- Run UI checks only when the task changes a rendered UI boundary, declares a visual AC, or Visual-Contract is not `not_applicable` -->
+UI-1 Route integrity — resolved Risk-Level/Visual-Contract matches task scope; high/critical user-facing UI is not silently downgraded
+UI-2 Behavior coverage — changed interactions, state transitions, validation, and errors have routed behavior checks; screenshots do not substitute
+UI-3 Visual coverage — resolved-required appearance has baseline/current/diff evidence for every AC-relevant state/viewport; DOM assertions do not substitute
+UI-4 Capture stability — viewport IDs/dimensions/device scale, browser/version, locale/timezone/theme/fonts/fixture/readiness, threshold, and targeted dynamic-region treatment are recorded; no broad or acceptance-critical masking
+UI-5 Baseline lifecycle — every new/changed baseline, viewport, threshold, mask, or capture environment has task rationale, prior/current/diff where available, and human review; no blind regeneration/deletion
+UI-6 Console evidence — browser console/resource artifact exists and new errors/rejections have a recorded disposition under project policy
+UI-7 Authority — required human visual review/approval is present; any vision critic is advisory and does not self-close evidence
+
+Missing a resolved-required UI layer, blindly regenerating baselines, or masking
+an acceptance-critical region is P1 and cites missing/invalid required evidence
+for consolidated stop-ship disposition. Incomplete optional visual evidence is at
+most advisory/P2 and does not block by itself.
 
 <!-- Run the following checks ONLY if RAG Status = ON in the ## Capability Profiles table in docs/ARCHITECTURE.md -->
 RET-1  insufficient_evidence path — retrieval-backed handlers return `insufficient_evidence` when evidence is inadequate; no hallucinated fallback

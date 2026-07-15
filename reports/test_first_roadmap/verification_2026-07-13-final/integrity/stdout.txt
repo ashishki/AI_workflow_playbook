@@ -1,0 +1,3 @@
+WARN: docs/COGNITION_MANIFEST.md:128: Missing referenced path `generated/cognition/index.json`
+WARN: docs/COGNITION_MANIFEST.md:129: Missing referenced path `docs/context-packets/`
+integrity_check: ok

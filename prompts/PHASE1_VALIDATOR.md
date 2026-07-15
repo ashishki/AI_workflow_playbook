@@ -155,6 +155,7 @@ Mode rules:
 
 - [ ] A4-01  Phase: 1 at top of document
 - [ ] A4-02  Baseline: 0 (or "pre-implementation") — matches Phase 1 initial state
+- [ ] A4-02a Project verification baseline records an exact runnable command or canonical command source plus its latest result, result date or evidence path, and known pre-existing failures. For a fresh project, `pending T02` is valid when T02 explicitly establishes the baseline. A missing result is a WARNING; a missing runnable command remains a BLOCKER under A3/A6.
 - [ ] A4-03  Next Task: T01 (or equivalent first task)
 - [ ] A4-04  Fix Queue: empty
 - [ ] A4-05  § Instructions for Codex present (pre-task protocol included)
@@ -451,6 +452,7 @@ _List all checks that passed, one line each: [check ID] — PASS_
 ---
 
 Severity rules:
+- A missing or stale A4-02a baseline result is a WARNING when a runnable command exists or T02 explicitly establishes it; no runnable command remains a BLOCKER under A3/A6
 - Any MISSING check in Part A for a mode-required artifact → BLOCKER (implementation cannot begin without the section)
 - Any MISSING check in Part A for an optional artifact → OPTIONAL_NOT_PRESENT or WARNING, not BLOCKER
 - Any INCONSISTENT check in Part B → BLOCKER (cross-document inconsistency invalidates the architecture package)
