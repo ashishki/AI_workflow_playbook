@@ -713,7 +713,7 @@ Verification:
 
 Owner: human + codex
 Type: evaluation evidence
-Status: implementation_reported 2026-07-15 - 12 runs captured; blind adjudication pending
+Status: done 2026-07-15 - adjudicated; no improvement claim supported
 Depends-On: TFA-7.1, TFA-7.2A, TFA-7.2B, TFA-7.2C
 Risk-Level: high
 Public-Tests-Required: not_required
@@ -724,9 +724,10 @@ Property-Required: not_required
 Visual-Contract: not_applicable
 
 Execution note: the approved external runner completed one 12-execution schedule
-for `shishki-tfa7-20260715`. The completed run is sealed and six blind review
-pairs are prepared. TFA-7.2 remains incomplete until human blind review,
-protected unblinding, adjudication, and a final adoption decision are recorded.
+for `shishki-tfa7-20260715`. Six blind review reports were frozen before
+protected unblinding. Adjudication admitted all six pairs: baseline 2 wins,
+playbook 1 win, and 3 ties. The adoption decision rejects using TFA-7 to promote
+the test-first additions as empirically better or default.
 
 Objective: |
   Execute the paired pilot and record auditable results rather than narrative
@@ -744,11 +745,48 @@ Integration-Points:
   - `reports/test_first_pilot/shishki_bot_v1/PREFLIGHT_2026-07-15.md`
   - `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/`
   - `reports/test_first_pilot/shishki_bot_v1/review/shishki-tfa7-20260715/`
+  - `reports/test_first_pilot/shishki_bot_v1/review/shishki-tfa7-20260715/adjudication_report.json`
 
 Verification:
   - Project-specific commands recorded in docs/evaluation/TEST_FIRST_PILOT_PLAN.md.
   - `find reports/test_first_pilot -name bundle.json -print0 | xargs -0 -n1 python3 tools/validate_harness_evidence.py`
   - `python3 tools/verify_playbook.py --root .`
+
+### TFA-7.3: Preregister Larger Pilot Before Any Improvement Claim
+
+Owner: human + codex
+Type: evaluation planning
+Status: planned
+Depends-On: TFA-7.2
+Risk-Level: high
+Public-Tests-Required: not_required
+Critic-Required: required
+Holdout-Required: conditional
+Mutation-Required: conditional
+Property-Required: conditional
+Visual-Contract: not_applicable
+
+Objective: |
+  Define the next empirical pilot only if the project still needs a test-first
+  improvement claim after TFA-7 rejected promotion from the six-pair result.
+
+Acceptance-Criteria:
+  - The plan includes independent role separation, more tasks or repositories,
+    preregistered precision or power rationale, and explicit claim thresholds.
+  - The TFA-7 `shishki_bot_ci_v1` result is treated as prior evidence, not as a
+    positive adoption result.
+  - No documentation or prompt claims TDD/test-first improves outcomes until a
+    supportive adjudicated pilot exists.
+
+Integration-Points:
+  - docs/evaluation/TEST_FIRST_PILOT_PLAN.md
+  - docs/evaluation/TEST_FIRST_PILOT_RESULTS.md
+  - docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md
+  - reports/test_first_pilot/
+
+Verification:
+  - `python3 tools/playbook_validate.py --root . --check tasks`
+  - Independent human approval before any new model-run budget.
 
 ### TFA-7.2A: Select And Approve Real Project Fixtures
 

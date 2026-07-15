@@ -1,12 +1,19 @@
 # Test-First Paired Pilot Plan
 
-Status: frozen candidate plan; exact-scope approvals pending; real-project pilot not run.
+Status: frozen plan executed once for `shishki_bot_ci_v1`; first pilot
+adjudicated with no supported empirical improvement claim.
 
 ## Claim Boundary
 
 This plan compares a frozen current Playbook workflow with a frozen test-first
 workflow on the same real project tasks. It defines evidence collection; it is
 not evidence that either condition is better.
+
+Outcome note: the first execution of this plan for `shishki_bot_ci_v1`
+completed and was adjudicated in
+`docs/evaluation/TEST_FIRST_PILOT_RESULTS.md`. It produced baseline 2 wins,
+playbook 1 win, and 3 ties across six admitted pairs. That result rejects using
+TFA-7 to promote the test-first additions as empirically better or default.
 
 Keep three claims separate:
 
@@ -37,10 +44,10 @@ pilot registry:
 
 Readiness also requires an external shell or CI runner, provider credentials,
 the data-retention record, project-specific scorer commands, and enough approved
-budget to execute both arms of every admitted pair. The candidate runner,
-ChatGPT-subscription login, scorers, and local storage exist, but their exact
-use and retention still require the frozen-scope approval. Until then, the run
-status is `blocked - not run` and valid pilot runs equal zero.
+budget to execute both arms of every admitted pair. For the completed
+`shishki_bot_ci_v1` run, these approvals were copied into the completed run
+record and TFA-7.2 is closed. Future pilots must repeat the same readiness gate
+under a new immutable pilot ID.
 
 ## Project Fixture Registry
 
@@ -74,7 +81,9 @@ Each task row in the frozen registry must contain:
 
 Captured tasks must reflect the project's real risk surface. Generic example
 tasks, generated placeholder fixtures, or the five `playbook_core_v1` mechanism
-tasks do not satisfy this registry.
+tasks do not satisfy this registry. The `shishki_bot_ci_v1` registry satisfied
+the minimum first-pilot boundary, but its adjudicated result was not positive
+evidence for promoting the test-first condition.
 
 ## Frozen Conditions
 

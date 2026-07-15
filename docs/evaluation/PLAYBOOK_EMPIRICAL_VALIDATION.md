@@ -1,6 +1,7 @@
 # Playbook Empirical Validation
 
-Status: mechanism implemented; paired real-project pilot not run.
+Status: mechanism implemented; first paired real-project pilot adjudicated with
+no supported empirical improvement claim.
 
 ## What Is Compared
 
@@ -18,10 +19,12 @@ For the paired real-project pilot, `baseline` means the frozen current Playbook
 workflow before the TFA-1 through TFA-6 additions and `playbook` means the same
 workflow with the applicable test-first additions. The conditions, pairing,
 minimum counts, metrics, budget, retention, and approval gates are defined in
-`docs/evaluation/TEST_FIRST_PILOT_PLAN.md`. A minimized two-task candidate from
-`ashishki/shishki_bot` is frozen for review, but its exact fixture, budget, and
-execution approvals are still pending. That pilot has not run; the scripted
-mechanism results below and the static candidate preflight are not pilot trials.
+`docs/evaluation/TEST_FIRST_PILOT_PLAN.md`. The minimized two-task
+`ashishki/shishki_bot` pilot ran once and was adjudicated in
+`docs/evaluation/TEST_FIRST_PILOT_RESULTS.md`: baseline 2 wins, playbook 1 win,
+and 3 ties across six admitted pairs. That result does not support an empirical
+improvement, productivity, quality, or adoption claim for the test-first
+condition.
 
 ## MVP Suite
 
@@ -63,6 +66,10 @@ and scorers with project-specific material.
 A minimum paired pilot is directional and scoped to its frozen task/model set.
 It does not establish general productivity or quality improvement without the
 preregistered rationale and achieved evidence required by the pilot plan.
+The completed `shishki_bot_ci_v1` pilot is also not positive directional
+evidence for promotion: it is a claim-control record showing that the current
+evidence is insufficient and mildly unfavorable to the test-first condition on
+blind preference counts.
 
 ## Valid And Invalid Runs
 

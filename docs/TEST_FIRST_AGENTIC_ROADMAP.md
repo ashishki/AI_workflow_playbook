@@ -529,7 +529,7 @@ Implementation notes:
   - Do not optimize for "more blocks"; optimize for calibrated precision and
     recall on the selected risk tier.
   - Include a small seeded-defect-bank structure but do not invent benchmark
-    claims before pilots run.
+    claims without a supportive adjudicated pilot.
 
 Acceptance criteria:
   - Calibration protocol defines dataset shape, metrics, run cadence, and
@@ -545,8 +545,9 @@ Verification:
 
 ## Phase TFA-7 - Empirical Pilot
 
-Objective: verify that the new method improves project outcomes rather than
-only adding ceremony.
+Objective: verify whether the new method improves project outcomes rather than
+only adding ceremony. The first six-pair `shishki_bot_ci_v1` pilot did not
+support an improvement claim.
 
 ### TFA-7.1: Add Paired Pilot Plan
 
@@ -581,8 +582,8 @@ Acceptance criteria:
   - Plan separates mechanism validation from claims about real productivity or
     quality improvement.
   - Plan includes budget, data retention, and human approval boundaries.
-  - No README/marketing claim says the new method is empirically better until
-    pilot results exist.
+  - No README/marketing claim says the new method is empirically better until a
+    supportive adjudicated pilot result exists.
 
 Verification:
   - `python3 tools/playbook_validate.py --root . --check placeholders`
@@ -595,6 +596,7 @@ Owner: human + codex
 Type: evaluation evidence
 Risk: high
 Dependencies: TFA-7.1
+Status: done 2026-07-15 - first pilot adjudicated; promotion claim rejected
 
 Objective:
   Execute the paired pilot and record results as evidence, not narrative.
@@ -610,6 +612,8 @@ Acceptance criteria:
   - Results include both wins and failures.
   - Adoption decision is recorded: default, Strict-only, optional, or rejected.
   - Follow-up tasks are created for gaps discovered during the pilot.
+  - Recorded first-pilot result: rejected for promoting test-first as
+    empirically better/default from TFA-7.
 
 Verification:
   - project-specific pilot commands from `TEST_FIRST_PILOT_PLAN.md`

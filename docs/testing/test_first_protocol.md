@@ -1,8 +1,8 @@
 # Test-First Implementation Protocol
 
 Status: documented governance protocol
-Empirical status: project outcome improvement is not established; paired pilot
-evidence is pending
+Empirical status: project outcome improvement is not established; first paired
+pilot did not support an improvement claim
 
 ## Purpose And Boundary
 
@@ -250,8 +250,9 @@ traceability. It uses four dispositions:
 The critic does not assign merge readiness or P-level severity, rewrite code,
 perform broad style/architecture review, or turn model confidence into a gate.
 Consolidated review validates its evidence and assigns any P-level finding.
-Until calibration and pilot evidence exist, no critic result supports an
-empirical quality or productivity claim.
+The first paired pilot did not support a test-first improvement claim. Until a
+larger preregistered pilot and calibration evidence support one, no critic result
+or public-test outcome supports an empirical quality or productivity claim.
 
 ## Failure And Escalation
 
@@ -280,7 +281,7 @@ Public-test evidence alone does not justify claims that the change is correct,
 safe, release-ready, empirically validated, or that this protocol improves
 quality, reliability, repair time, or productivity. Those claims require the
 applicable independent evidence and, for workflow improvement, a recorded paired
-pilot.
+pilot with a supportive adjudicated outcome.
 
 ## Related Protocols
 

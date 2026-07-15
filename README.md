@@ -31,7 +31,7 @@ consumer when enforcement exists.
 | Claude hooks are active only when installed | `templates/.claude/settings.json`, `hooks/*.sh` | `--install-claude-hooks` merge + smoke test | hook and initializer tests | pending | Tested |
 | Agent command claims need machine receipts | `schemas/command_receipt.schema.json` | `tools/receipt_run.py` | receipt success/failure/timeout tests | pending | Tested |
 | Evidence bundles are locally integrity-validated | `schemas/evidence_bundle.schema.json` | `tools/validate_harness_evidence.py` | hash tamper, path escape, schema mismatch tests | pending external attestation | Tested |
-| Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare` | scripted demonstration run | real-model run pending | Formalized / Tested for mechanism |
+| Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare` | scripted demonstration run + adjudicated first pilot | no improvement claim supported by TFA-7 | Formalized / Tested for mechanism |
 | Project-specific harness claims require project-specific fixtures | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, `docs/adoption_modes.md` | companion suite with project fixtures, traps, scorers | suite validation + EvidenceBundles | pending per project | Formalized |
 | Role separation and review duties | `prompts/ORCHESTRATOR.md`, audit prompts | prompt protocol and optional hooks | review prompt checks | pending | Documented / Formalized |
 | Immutable contract protection | `hooks/guard_files.sh`, contract docs | hook when installed | hook tests | pending | Tested when hooks installed |
@@ -71,7 +71,7 @@ when mode and task risk require them; low-risk prose/config work can use a
 concrete validator instead. The protocol is documented in
 `docs/testing/test_first_protocol.md`. Public tests are inner-loop specs, not
 empirical proof that the workflow improves project outcomes; paired pilot
-evidence is still pending.
+evidence from TFA-7 did not support an improvement claim.
 
 **Finding lifecycle.** P2 findings that survive three review cycles without
 resolution must be escalated, closed with justification, or deferred to v2. This

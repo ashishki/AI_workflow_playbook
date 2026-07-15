@@ -70,8 +70,9 @@ verification, and cognition integrity.
 
 - Define holdout, mutation/property, and UI evidence protocols as optional or
   risk-triggered layers, not mandatory runtime dependencies.
-- Calibrate critics and run a paired project pilot before making any claim that
-  the test-first workflow improves quality or productivity.
+- Calibrate critics and require a supportive adjudicated paired pilot before
+  making any claim that the test-first workflow improves quality or
+  productivity; the first TFA-7 pilot did not support that claim.
 - Preserve distinct Lean / Standard / Strict expectations and record the
   operational cost of stricter gates.
 

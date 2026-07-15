@@ -1,27 +1,29 @@
 # Test-First Paired Pilot Results
 
 Record date: 2026-07-15
-Status: `run captured - blind adjudication pending`
+Status: `adjudicated - no empirical improvement claim supported`
 Pilot plan: `docs/evaluation/TEST_FIRST_PILOT_PLAN.md`
 Frozen candidate registry: `reports/test_first_pilot/shishki_bot_v1/PILOT_REGISTRY.md`
 Static preflight: `reports/test_first_pilot/shishki_bot_v1/PREFLIGHT_2026-07-15.md`
 Completed run root: `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/`
 Blind review packages: `reports/test_first_pilot/shishki_bot_v1/review/shishki-tfa7-20260715/blind_review/`
 Protected mapping: `reports/test_first_pilot/shishki_bot_v1/review/shishki-tfa7-20260715/protected_mapping/mapping.json`
+Adjudication report: `reports/test_first_pilot/shishki_bot_v1/review/shishki-tfa7-20260715/adjudication_report.json`
 Valid real-model pilot runs: 12 machine-valid
-Valid paired units: 6 prepared; 0 adjudicated
+Valid paired units: 6 prepared; 6 adjudicated
 Empirical improvement claims: none
 
 ## Decision
 
-Adoption decision: `not eligible - blind adjudication pending`.
+Adoption decision: `rejected` for promoting the test-first additions as
+empirically better or default based on TFA-7.
 
-This is not one of the final adoption outcomes (`default`, `Strict-only`,
-`optional`, or `rejected`) because the completed run still requires condition-
-blind pair review and protected unblinding. The existing workflow remains
-unchanged. A human adoption authority must choose a final outcome only after the
-TFA-7.2 acceptance criteria are met; machine-valid bundles alone cannot be
-treated as a positive workflow result.
+The existing workflow is not expanded by this pilot. The documented test-first
+protocol remains a governance and evidence pattern under existing risk routing,
+but TFA-7 does not support a claim that the test-first condition improves
+quality, reliability, repair time, or productivity. A future improvement claim
+requires a larger preregistered pilot with independent role separation, more
+tasks/repositories, and a precision or power rationale.
 
 ## Readiness Result
 
@@ -54,15 +56,29 @@ passed with zero model invocations. The completed real run is sealed by
 |---------------|-----------|-------------|--------|
 | Public and holdout pass | 12 machine pass | 12 pilot trials | `machine_pass_before_adjudication` |
 | Mutation and property oracles | not observed | 0 applicable pilot trials | `not_measured` |
-| Critic false alarms/misses/calibration | not observed | 0 adjudicated pilot cases | `not_measured` |
-| Repair turns and time to green | event ledgers captured | 12 event ledgers | `pending_review` |
+| Critic false alarms/misses/calibration | not observed | 0 critic-calibration cases | `not_measured` |
+| Repair turns and time to green | process telemetry joined after unblinding | 12 event ledgers | `baseline fewer verifier attempts/failures in this pilot` |
 | Rollback/reopen | not observed | 0 eligible merges | `not_observed` |
 | UI behavior/visual defects | not observed | 0 routed UI pilot trials | `not_applicable` |
-| Cost, tokens, latency, and intervention | traces captured; exact provider tokens unavailable | 12 pilot attempts | `pending_review` |
+| Cost, tokens, latency, and intervention | traces captured; exact provider tokens unavailable | 12 pilot attempts | `tokens/cost unknown; human intervention false in mapping` |
 
-No workflow win/loss/tie conclusion is reported here. The protected mapping SHA
-is `b4f525d1b7d928386f09e608d79f67ce369159c8029375e3bd2785fdcb5879e4`; it must
-remain unavailable to the blind reviewer until all six pair reports are frozen.
+Blind adjudication admitted all six pairs. Preferences joined to the protected
+mapping produced baseline 2 wins, playbook 1 win, and 3 ties. Both conditions
+satisfied the rubric in all admitted pairs, and the blind review recorded 0
+blinding leaks. The protected mapping SHA is
+`b4f525d1b7d928386f09e608d79f67ce369159c8029375e3bd2785fdcb5879e4`; the
+adjudication report records the frozen review digests and completed-run seal.
+
+Per-pair outcome:
+
+| Pair | Task | Trial | A condition | B condition | Blind preference | Condition outcome |
+|------|------|-------|-------------|-------------|------------------|-------------------|
+| pair-001 | pin_ci_actions | 0 | playbook | baseline | tie | tie |
+| pair-002 | pin_ci_actions | 1 | playbook | baseline | tie | tie |
+| pair-003 | pin_ci_actions | 2 | baseline | playbook | tie | tie |
+| pair-004 | reject_unapproved_ci_actions | 0 | playbook | baseline | B | baseline |
+| pair-005 | reject_unapproved_ci_actions | 1 | baseline | playbook | A | baseline |
+| pair-006 | reject_unapproved_ci_actions | 2 | baseline | playbook | B | playbook |
 
 ## Excluded Mechanism Evidence
 
@@ -86,20 +102,18 @@ These artifacts are excluded from every pilot numerator and denominator:
 | TFA-7.2 acceptance criterion | State | Evidence |
 |-------------------------------|-------|----------|
 | Pilot command receipts, bundles, or equivalent artifacts | met | 12 validated real-model bundles under completed run root |
-| Results include wins and failures | pending | six blind pair packages prepared; human review not frozen |
-| Final adoption decision recorded | not met | decision is not eligible and pending adjudication |
-| Follow-up tasks created for gaps | met | TFA-7.2A through TFA-7.2C in `docs/tasks.md` |
+| Results include wins and failures | met | six blind pair reports frozen and joined to protected mapping |
+| Final adoption decision recorded | met | `rejected` for empirical/default promotion from this pilot |
+| Follow-up tasks created for gaps | met | TFA-7.3 records the larger-pilot requirement before any improvement claim |
 
-TFA-7.2 is no longer blocked on execution approval or model runs. It remains
-incomplete until blind reports are written, the protected mapping is joined by a
-separate custodian/adjudicator, and a final adoption decision is recorded.
+TFA-7.2 is complete for the `shishki-tfa7-20260715` pilot. The result is a
+negative claim-control result: it prevents a TDD/test-first improvement claim
+from this evidence rather than proving the opposite.
 
 ## Resume Conditions
 
-Resume TFA-7.2 by giving only
-`reports/test_first_pilot/shishki_bot_v1/review/shishki-tfa7-20260715/blind_review/`
-to the blind reviewer. Do not provide the protected mapping or raw run root to
-that reviewer. After six reports are frozen and digested, a separate custodian
-may use the protected mapping for adjudication. Any missing review, mapping
-access by the reviewer, version drift, invalid call, or unmet denominator remains
-`inconclusive`; no extra call is permitted under the zero-retry budget.
+Future pilots must repeat the same sequence: freeze blind reports before opening
+the protected mapping, then have a custodian/adjudicator join the labels and
+record an adoption decision. Any missing review, mapping access by the reviewer
+before freeze, version drift, invalid call, or unmet denominator remains
+`inconclusive`; no extra call is permitted without a new approved budget.
