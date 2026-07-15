@@ -20,6 +20,23 @@ def nonnegative_int(value: str) -> int:
     return parsed
 
 
+def positive_int(value: str) -> int:
+    parsed = int(value)
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError("must be positive")
+    return parsed
+
+
+def missing_identity_flags(values: dict[str, str]) -> list[str]:
+    invalid_values = {"unknown", "tbd", "todo", "placeholder", "not_applicable"}
+    missing: list[str] = []
+    for flag, value in values.items():
+        normalized = value.strip().lower()
+        if not normalized or normalized in invalid_values or "placeholder" in normalized:
+            missing.append(flag)
+    return missing
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="harness-lab")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -33,7 +50,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--adapter", required=True, choices=("scripted", "command"))
     run.add_argument("--command-template", default="")
     run.add_argument("--adapter-timeout", type=float, default=None)
-    run.add_argument("--trials", type=int, default=1)
+    run.add_argument("--trials", type=positive_int, default=1)
     run.add_argument("--trial-start", type=nonnegative_int, default=0)
     run.add_argument("--task-id", action="append", default=None)
     run.add_argument("--append", action="store_true")
@@ -58,7 +75,8 @@ def build_parser() -> argparse.ArgumentParser:
     cmp_parser.add_argument("--fail-on-hard-gate", action="store_true")
     cmp_parser.add_argument("--max-policy-violations", type=int, default=0)
     cmp_parser.add_argument("--max-false-success-rate", type=float, default=0.0)
-    cmp_parser.add_argument("--min-trials-per-task", type=int, default=2)
+    cmp_parser.add_argument("--min-trials-per-task", type=positive_int, default=2)
+    cmp_parser.add_argument("--require-empirical", action="store_true")
     return parser
 
 
@@ -84,10 +102,14 @@ def main(argv: list[str] | None = None) -> int:
             "--delivery-profile": args.delivery_profile,
         }
         if args.empirical_comparison:
-            missing = [flag for flag, value in empirical_required.items() if not value or value == "unknown"]
+            if args.adapter == "scripted":
+                print("empirical comparison requires the command adapter; scripted adapter is mechanism-only", file=sys.stderr)
+                return 2
+            missing = missing_identity_flags(empirical_required)
             if missing:
                 print(f"empirical comparison requires explicit identity flags: {', '.join(missing)}", file=sys.stderr)
                 return 2
+        identity_complete = not missing_identity_flags(empirical_required)
         metadata = {
             "model": {
                 "provider": args.provider or "unknown",
@@ -99,6 +121,8 @@ def main(argv: list[str] | None = None) -> int:
             "permission_policy_version": args.permission_policy or "adapter_default.v1",
             "delivery_profile": args.delivery_profile or "harness_lab_single_adapter",
             "empirical_comparison": args.empirical_comparison,
+            "evaluation_mode": "empirical" if args.empirical_comparison else "mechanism_demonstration",
+            "identity_source": "declared" if identity_complete else "unknown",
         }
         if args.adapter == "scripted":
             adapter = ScriptedAdapter(metadata)
@@ -151,8 +175,11 @@ def main(argv: list[str] | None = None) -> int:
             Path(args.candidate),
             Path(args.output),
             minimum_trials_per_task=args.min_trials_per_task,
+            require_empirical=args.require_empirical,
         )
         print(json.dumps({"output": str(Path(args.output)), "status": report["status"]}, indent=2))
+        if report.get("blocking_errors"):
+            return 1
         if args.fail_on_invalid_run and (
             report["baseline"]["invalid_runs"] or report["candidate"]["invalid_runs"] or report["compatibility_errors"]
         ):

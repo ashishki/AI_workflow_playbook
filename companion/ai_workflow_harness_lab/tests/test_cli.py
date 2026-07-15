@@ -110,6 +110,25 @@ def test_run_uses_logical_trial_start_and_rejects_negative_start(tmp_path: Path)
     assert "must be nonnegative" in rejected.stderr
 
 
+def test_run_rejects_zero_trials(tmp_path: Path) -> None:
+    result = run_cli(
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "scripted",
+        "--trials",
+        "0",
+        "--output",
+        str(tmp_path / "zero"),
+    )
+
+    assert result.returncode == 2
+    assert "must be positive" in result.stderr
+
+
 def test_run_append_accumulates_index_and_retains_evidence(tmp_path: Path) -> None:
     output = tmp_path / "append"
     common = (
@@ -288,6 +307,39 @@ def test_empirical_command_adapter_requires_identity(tmp_path: Path) -> None:
     assert "empirical comparison requires explicit identity flags" in result.stderr
 
 
+def test_empirical_mode_rejects_scripted_adapter(tmp_path: Path) -> None:
+    output = tmp_path / "empirical-scripted"
+    result = run_cli(
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "scripted",
+        "--task-id",
+        "fake_test_success",
+        "--output",
+        str(output),
+        "--empirical-comparison",
+        "--provider",
+        "openai",
+        "--model-id",
+        "gpt-test",
+        "--cli-version",
+        "codex-cli-test",
+        "--reasoning-profile",
+        "medium",
+        "--permission-policy",
+        "workspace-write",
+        "--delivery-profile",
+        "solo_verified",
+    )
+
+    assert result.returncode == 2
+    assert "scripted adapter is mechanism-only" in result.stderr
+
+
 def test_empirical_command_adapter_records_identity(tmp_path: Path) -> None:
     output = tmp_path / "empirical"
     result = run_cli(
@@ -322,6 +374,8 @@ def test_empirical_command_adapter_records_identity(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     eval_unit = json.loads((output / "fake_test_success/trial-0/harness_eval_unit.json").read_text(encoding="utf-8"))
     assert eval_unit["model"] == {"provider": "openai", "id": "gpt-test", "parameters": "medium"}
+    assert eval_unit["evaluation_mode"] == "empirical"
+    assert eval_unit["identity_source"] == "declared"
     assert eval_unit["cli_version"] == "codex-cli-test"
     assert eval_unit["permission_policy_version"] == "workspace-write"
     assert eval_unit["delivery_profile"] == "solo_verified"
@@ -480,6 +534,53 @@ def test_compare_validates_bundles_and_hard_gates(tmp_path: Path) -> None:
     report = json.loads((comparison / "comparison_report.json").read_text(encoding="utf-8"))
     assert report["hard_gates"]["single_run_stability_warning"] is True
     assert report["candidate"]["evidence_correctness"] == 1.0
+
+
+def test_compare_rejects_empty_inputs(tmp_path: Path) -> None:
+    baseline = tmp_path / "empty-baseline"
+    playbook = tmp_path / "empty-playbook"
+    comparison = tmp_path / "comparison"
+    baseline.mkdir()
+    playbook.mkdir()
+
+    result = run_cli(
+        "compare",
+        "--baseline",
+        str(baseline),
+        "--candidate",
+        str(playbook),
+        "--output",
+        str(comparison),
+    )
+
+    assert result.returncode == 1
+    report = json.loads((comparison / "comparison_report.json").read_text(encoding="utf-8"))
+    assert report["hard_gates"]["single_run_stability_warning"] is True
+    assert "baseline has no bundles" in report["blocking_errors"]
+    assert "candidate has no bundles" in report["blocking_errors"]
+
+
+def test_compare_require_empirical_rejects_mechanism_demo(tmp_path: Path) -> None:
+    baseline = tmp_path / "baseline"
+    playbook = tmp_path / "playbook"
+    comparison = tmp_path / "comparison"
+
+    assert run_cli("run", "--suite", str(SUITE), "--condition", "baseline", "--adapter", "scripted", "--trials", "1", "--output", str(baseline)).returncode == 0
+    assert run_cli("run", "--suite", str(SUITE), "--condition", "playbook", "--adapter", "scripted", "--trials", "1", "--output", str(playbook)).returncode == 0
+    result = run_cli(
+        "compare",
+        "--baseline",
+        str(baseline),
+        "--candidate",
+        str(playbook),
+        "--output",
+        str(comparison),
+        "--require-empirical",
+    )
+
+    assert result.returncode == 1
+    report = json.loads((comparison / "comparison_report.json").read_text(encoding="utf-8"))
+    assert any("is not empirical" in error for error in report["blocking_errors"])
 
 
 def test_compare_hard_gate_failure_returns_nonzero(tmp_path: Path) -> None:

@@ -8,6 +8,7 @@
   "release_ready_requires_current_verification": true,
   "notes": [
     "Initializer output is a scaffold until project-specific decisions are resolved.",
-    "Do not mark implementation_ready or release_ready while generated scaffold placeholders remain active."
+    "Do not mark implementation_ready, release_candidate, or release_ready while generated scaffold placeholders remain active.",
+    "Release readiness is resolved after tools/verify_project.py by tools/resolve_release_readiness.py."
   ]
 }

@@ -41,8 +41,12 @@ def run_suite(
 ) -> list[TrialResult]:
     if trial_start < 0:
         raise RunError("trial_start must be nonnegative")
+    if trials <= 0:
+        raise RunError("trials must be positive")
 
     tasks = select_tasks(suite, task_ids)
+    if not tasks:
+        raise RunError("task selection is empty")
     existing_bundles = prepare_output(output, append=append)
     trial_indices = range(trial_start, trial_start + trials)
     collisions = [
@@ -237,6 +241,8 @@ def write_harness_eval_unit(
         "timeout_seconds": timeout,
         "retry_policy": "single_attempt_no_retry",
         "delivery_profile": adapter_metadata.get("delivery_profile", "harness_lab_single_adapter"),
+        "evaluation_mode": adapter_metadata.get("evaluation_mode", "mechanism_demonstration"),
+        "identity_source": adapter_metadata.get("identity_source", "unknown"),
     }
     unit = {
         "schema_version": "playbook.harness_eval_unit.v1",
@@ -244,6 +250,8 @@ def write_harness_eval_unit(
         "task_id": task.task_id,
         "condition": condition,
         "trial_index": trial,
+        "evaluation_mode": compatibility["evaluation_mode"],
+        "identity_source": compatibility["identity_source"],
         "model": compatibility["model"],
         "cli_version": compatibility["cli_version"],
         "reasoning_profile": compatibility["reasoning_profile"],

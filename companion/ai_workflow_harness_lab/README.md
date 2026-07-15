@@ -37,8 +37,12 @@ harness-lab compare \
 ```
 
 The scripted adapter is for CI and mechanism tests. It is not evidence that the
-Playbook improves real LLM behavior. Real-model runs require an installed CLI,
-credentials, and an explicit budget.
+Playbook improves real LLM behavior, and it cannot be used with
+`--empirical-comparison`. Real-model runs require the command adapter, an
+installed CLI, credentials, positive `--trials`, explicit provider/model/CLI
+identity flags, and an explicit budget. Use `harness-lab compare
+--require-empirical` when the comparison is intended to support empirical
+claims.
 
 Command-adapter examples are launched by an external shell, CI job, or harness
 worker. Do not run them from inside an active Codex Direct project session,

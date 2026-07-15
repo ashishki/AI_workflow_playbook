@@ -68,9 +68,10 @@ is independent of the licenses used by the runtime and evaluation projects.
   mechanism enforces it.
 - Generated project scaffolds still require project-specific requirements,
   threat analysis, datasets, thresholds, and human decisions.
-- Generated projects start as `scaffold`; `implementation_ready` is blocked
-  while scaffold placeholders remain, and `release_ready` also requires current
-  green project verification for the exact commit.
+- Generated projects start as `scaffold`; `implementation_ready` and
+  `release_candidate` are blocked while scaffold placeholders remain. Release
+  readiness is a post-verification verdict resolved from current exact-HEAD
+  evidence, not a pre-verification state flag.
 - There is no hosted service, model provider, production dataset, external-user
   validation, or production reliability claim in this repository.
 - Optional tools and reference architectures are not implicit dependencies and
@@ -89,13 +90,14 @@ consumer when enforcement exists.
 | Task blocks are machine-readable | `schemas/task.schema.json`, `docs/tasks.md` | `tools/playbook_validate.py --check tasks` | `tests/unit/test_playbook_validate.py` | pending real-model comparison | Tested |
 | Unresolved placeholders block generated project readiness | `tools/playbook_validate.py` | `--check placeholders` outside fenced code | placeholder negative test | pending | Tested |
 | Generated project verification runs actual project checks | `.playbook/project_verification.json`, `schemas/project_verification.schema.json` | generated `tools/verify_project.py` | failing-project negative integration test | pending | Tested |
+| Release readiness depends on exact-HEAD evidence | `.playbook-artifacts/project_verification.json`, `schemas/project_verification_result.schema.json` | `tools/resolve_release_readiness.py` | stale/forged-result negative tests | pending | Tested |
 | Delivery operating model is explicit | `.playbook/delivery_execution_model.json`, `schemas/delivery_execution_model.schema.json` | `tools/playbook_validate.py --check delivery` | delivery negative tests + initializer generated matrix | pending | Tested for contract shape |
 | Context references are checked deterministically | `docs/tasks.md`, `tools/integrity_check.py` | `tools/playbook_validate.py --check references`, `tools/integrity_check.py` | missing-reference tests | pending | Tested |
 | Lean-Core stays lighter than Standard/Strict | `tools/init_playbook_project.py`, `docs/adoption_modes.md` | generated-project matrix in `tools/verify_playbook.py` | initializer tests | pending | Tested |
 | Claude hooks are active only when installed | `templates/.claude/settings.json`, `hooks/*.sh` | `--install-claude-hooks` merge + smoke test | hook and initializer tests | pending | Tested |
 | Agent command claims need machine receipts | `schemas/command_receipt.schema.json` | `tools/receipt_run.py` | receipt success/failure/timeout tests | pending | Tested |
 | Evidence bundles are locally integrity-validated | `schemas/evidence_bundle.schema.json` | `tools/validate_harness_evidence.py` | hash tamper, path escape, schema mismatch tests | pending external attestation | Tested |
-| Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare`, HarnessEvalUnit compatibility fingerprints, empirical identity flags | scripted demonstration run + adjudicated first pilot | no improvement claim supported by TFA-7 | Formalized / Tested for mechanism |
+| Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare`, HarnessEvalUnit compatibility fingerprints, empirical identity flags, `--require-empirical` | scripted demonstration run + adjudicated first pilot | no improvement claim supported by TFA-7 | Formalized / Tested for mechanism |
 | Project-specific harness claims require project-specific fixtures | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, `docs/adoption_modes.md` | companion suite with project fixtures, traps, scorers | suite validation + EvidenceBundles | pending per project | Formalized |
 | Role separation and review duties | `prompts/ORCHESTRATOR.md`, audit prompts | prompt protocol and optional hooks | review prompt checks | pending | Documented / Formalized |
 | Immutable contract protection | `hooks/guard_files.sh`, contract docs | hook when installed | hook tests | pending | Tested when hooks installed |

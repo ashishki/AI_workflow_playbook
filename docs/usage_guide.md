@@ -369,19 +369,33 @@ Generated projects include `.playbook/readiness_state.json` and
 
 `readiness_state.json` starts at `scaffold`. The initializer may preserve
 generated scaffold placeholders, but `tools/playbook_validate.py --check
-readiness` blocks `implementation_ready` and `release_ready` while those markers
-remain in active artifacts. `release_ready` also requires
-`.playbook-artifacts/project_verification.json` with `required_failures=0`, a
-`project_commit` matching current `HEAD`, and no dirty Git state outside
-`.playbook-artifacts/`. Required decisions are mode/profile/risk-triggered, not
-every universal template row.
+readiness` blocks `implementation_ready`, `release_candidate`, and
+`release_ready` while those markers remain in active artifacts. Treat
+`release_candidate` as the tracked pre-verification state. Do not use
+`release_ready` as manual authority.
+
+Release readiness is resolved after verification:
+
+```bash
+python3 tools/verify_project.py --root .
+python3 tools/resolve_release_readiness.py --root .
+```
+
+The resolver requires a Git repository, a clean working tree outside
+`.playbook-artifacts/`, a schema-valid
+`.playbook-artifacts/project_verification.json`, empty `configuration_errors`,
+`required_failures=0` recomputed from checks, at least one executed non-contract
+project check, no skipped required checks, a `project_commit` matching current
+`HEAD`, and valid stdout/stderr artifact hashes. Required decisions are
+mode/profile/risk-triggered, not every universal template row.
 
 `delivery_execution_model.json` records the active delivery profile. The default
 is `solo_verified`: one active Codex session may implement, deterministic
 verification must pass, and human or independent review gates still apply by risk
-policy. `tools/playbook_validate.py --check delivery` blocks self-completion
-authority, missing reviewer authority, missing `tools/verify_project.py`
-verifier binding, missing review triggers, and missing Codex Direct binding.
+policy. `tools/playbook_validate.py --check delivery` blocks missing delivery
+contracts in generated projects, self-completion authority, missing reviewer
+authority, missing structured `project_verifier` argv binding, missing review
+triggers, and missing Codex Direct binding.
 External `codex exec` remains for CI, harness runs, or a separate non-Codex
 orchestrator process.
 
@@ -399,12 +413,13 @@ prompts.
 Every harness trial emits `harness_eval_unit.json`, and each EvidenceBundle
 references it. Comparison checks a compatibility fingerprint covering model,
 adapter, tool/memory/permission policy, environment, scorer set, timeout/retry
-policy, dataset version, and delivery profile. Prompt hashes are recorded but not
-forced identical because baseline and candidate prompts are expected to differ.
-For real-model comparisons, run with `--empirical-comparison` and supply
-`--provider`, `--model-id`, `--cli-version`, `--reasoning-profile`,
-`--permission-policy`, and `--delivery-profile`; unknown identity is accepted
-only for scripted/mechanism demonstrations.
+policy, dataset version, delivery profile, evaluation mode, and identity source.
+Prompt hashes are recorded but not forced identical because baseline and
+candidate prompts are expected to differ. For real-model comparisons, run with
+the command adapter, `--empirical-comparison`, and supply `--provider`,
+`--model-id`, `--cli-version`, `--reasoning-profile`, `--permission-policy`, and
+`--delivery-profile`; unknown identity is accepted only for scripted/mechanism
+demonstrations. `--trials` and `--min-trials-per-task` must be positive.
 
 Recommended real-command comparison shape:
 
@@ -417,6 +432,13 @@ harness-lab run \
   --condition baseline \
   --adapter command \
   --command-template 'codex exec -s workspace-write "$(cat {prompt_file})"' \
+  --empirical-comparison \
+  --provider openai \
+  --model-id MODEL_ID \
+  --cli-version CODEX_CLI_VERSION \
+  --reasoning-profile REASONING_PROFILE \
+  --permission-policy workspace-write \
+  --delivery-profile solo_verified \
   --trials 3 \
   --output runs/baseline \
   --fail-on-invalid-run
@@ -426,6 +448,13 @@ harness-lab run \
   --condition playbook \
   --adapter command \
   --command-template 'codex exec -s workspace-write "$(cat {prompt_file})"' \
+  --empirical-comparison \
+  --provider openai \
+  --model-id MODEL_ID \
+  --cli-version CODEX_CLI_VERSION \
+  --reasoning-profile REASONING_PROFILE \
+  --permission-policy workspace-write \
+  --delivery-profile solo_verified \
   --trials 3 \
   --output runs/playbook \
   --fail-on-invalid-run
@@ -434,6 +463,7 @@ harness-lab compare \
   --baseline runs/baseline \
   --candidate runs/playbook \
   --output reports/comparison \
+  --require-empirical \
   --fail-on-invalid-run \
   --fail-on-hard-gate
 ```

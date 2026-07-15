@@ -19,6 +19,13 @@
   },
   "verifier": {
     "kind": "deterministic_project_verifier",
+    "binding_id": "project_verifier",
+    "argv": [
+      "{python}",
+      "tools/verify_project.py",
+      "--root",
+      "."
+    ],
     "command": "python tools/verify_project.py --root ."
   },
   "completion_authority": {

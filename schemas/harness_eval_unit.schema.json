@@ -9,6 +9,8 @@
     "task_id",
     "condition",
     "trial_index",
+    "evaluation_mode",
+    "identity_source",
     "model",
     "cli_version",
     "harness_version",
@@ -35,6 +37,14 @@
     "task_id": { "type": "string", "minLength": 1 },
     "condition": { "type": "string", "minLength": 1 },
     "trial_index": { "type": "integer", "minimum": 0 },
+    "evaluation_mode": {
+      "type": "string",
+      "enum": ["mechanism_demonstration", "empirical"]
+    },
+    "identity_source": {
+      "type": "string",
+      "enum": ["unknown", "declared", "probed", "attested"]
+    },
     "model": { "type": "object" },
     "cli_version": { "type": "string", "minLength": 1 },
     "harness_version": { "type": "string", "minLength": 1 },

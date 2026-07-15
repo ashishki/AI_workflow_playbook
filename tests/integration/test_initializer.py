@@ -48,6 +48,7 @@ def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
     assert (target / "docs/CONTRACT_LITE.md").exists()
     assert (target / "docs/PROBLEM_FIT.md").exists()
     assert (target / "tools/verify_project.py").exists()
+    assert (target / "tools/resolve_release_readiness.py").exists()
     assert (target / ".playbook/project_verification.json").exists()
     assert not (target / "PLAYBOOK.md").exists()
     assert not (target / "docs/ARCHITECTURE.md").exists()
@@ -89,6 +90,16 @@ def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
         "playbook_contract",
         "project_verification",
     }
+    release = subprocess.run(
+        [sys.executable, "tools/resolve_release_readiness.py", "--root", "."],
+        cwd=target,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert release.returncode == 1
+    assert "READINESS_RELEASE_GIT_REQUIRED" in release.stderr
 
 
 def test_install_claude_hooks_merges_settings(tmp_path: Path) -> None:

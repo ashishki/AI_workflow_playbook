@@ -158,4 +158,7 @@ repair rules.
 For empirical comparisons, the command adapter must be launched with explicit
 provider, model ID, CLI version, reasoning profile, permission policy, and
 delivery profile flags. Scripted mechanism demonstrations may record unknown
-identity; empirical runs fail closed when identity is unknown.
+identity; empirical runs fail closed when identity is unknown and cannot use the
+scripted adapter. Each HarnessEvalUnit records `evaluation_mode` and
+`identity_source`; comparison can require empirical artifacts with
+`--require-empirical`.

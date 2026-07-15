@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import hashlib
 import json
 import re
 import subprocess
@@ -689,14 +690,12 @@ def validate_readiness(root: Path) -> list[Finding]:
                 for error in errors
             ]
     state = data.get("state")
-    if state in {"implementation_ready", "release_ready"} and data.get(
+    if state in {"implementation_ready", "release_candidate", "release_ready"} and data.get(
         "implementation_ready_requires_no_scaffold_placeholders", True
     ):
         findings = active_scaffold_placeholder_findings(root)
     else:
         findings = []
-    if state == "release_ready" and data.get("release_ready_requires_current_verification", True):
-        findings.extend(validate_release_verification(root))
     return findings
 
 
@@ -730,6 +729,101 @@ def current_dirty_state(root: Path) -> list[str]:
     ]
 
 
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(65536), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def artifact_ref_findings(root: Path, ref: Any, ref_label: str) -> list[Finding]:
+    findings: list[Finding] = []
+    if not isinstance(ref, dict):
+        return [
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_ARTIFACT_REF_INVALID",
+                f"{ref_label} must be an artifact ref object",
+            )
+        ]
+    raw_path = ref.get("path")
+    expected_hash = ref.get("sha256")
+    if not isinstance(raw_path, str) or not raw_path:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_ARTIFACT_REF_INVALID",
+                f"{ref_label} path is missing",
+            )
+        )
+        return findings
+    path = Path(raw_path)
+    if path.is_absolute() or ".." in path.parts:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_ARTIFACT_REF_INVALID",
+                f"{ref_label} path must stay inside the project root",
+            )
+        )
+        return findings
+    resolved = (root / path).resolve()
+    try:
+        resolved.relative_to(root.resolve())
+    except ValueError:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_ARTIFACT_REF_INVALID",
+                f"{ref_label} path escapes the project root",
+            )
+        )
+        return findings
+    if not resolved.is_file():
+        findings.append(
+            Finding(
+                "error",
+                raw_path,
+                1,
+                "READINESS_RELEASE_ARTIFACT_REF_MISSING",
+                f"{ref_label} artifact is missing",
+            )
+        )
+        return findings
+    if not isinstance(expected_hash, str) or not re.fullmatch(r"[a-f0-9]{64}", expected_hash):
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_ARTIFACT_HASH_INVALID",
+                f"{ref_label} sha256 is invalid",
+            )
+        )
+        return findings
+    actual_hash = sha256_file(resolved)
+    if actual_hash != expected_hash:
+        findings.append(
+            Finding(
+                "error",
+                raw_path,
+                1,
+                "READINESS_RELEASE_ARTIFACT_HASH_MISMATCH",
+                f"{ref_label} artifact hash does not match project verification result",
+            )
+        )
+    return findings
+
+
 def validate_release_verification(root: Path) -> list[Finding]:
     result_path = root / ".playbook-artifacts/project_verification.json"
     if not result_path.is_file():
@@ -755,6 +849,52 @@ def validate_release_verification(root: Path) -> list[Finding]:
             )
         ]
     findings: list[Finding] = []
+    schema_path = root / "schemas/project_verification_result.schema.json"
+    if not schema_path.is_file():
+        findings.append(
+            Finding(
+                "error",
+                "schemas/project_verification_result.schema.json",
+                1,
+                "READINESS_RELEASE_RESULT_SCHEMA_MISSING",
+                "release readiness requires project verification result schema",
+            )
+        )
+    elif Draft202012Validator is None:
+        findings.append(
+            Finding(
+                "error",
+                "schemas/project_verification_result.schema.json",
+                1,
+                "READINESS_RELEASE_SCHEMA_VALIDATOR_UNAVAILABLE",
+                "release readiness requires jsonschema Draft202012Validator",
+            )
+        )
+    else:
+        try:
+            schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            findings.append(
+                Finding(
+                    "error",
+                    "schemas/project_verification_result.schema.json",
+                    exc.lineno,
+                    "READINESS_RELEASE_RESULT_SCHEMA_INVALID",
+                    f"project verification result schema is invalid JSON: {exc.msg}",
+                )
+            )
+        else:
+            validator = Draft202012Validator(schema)
+            for error in sorted(validator.iter_errors(result), key=lambda item: list(item.path)):
+                findings.append(
+                    Finding(
+                        "error",
+                        ".playbook-artifacts/project_verification.json",
+                        1,
+                        "READINESS_RELEASE_VERIFICATION_SCHEMA",
+                        f"project verification result schema violation: {error.message}",
+                    )
+                )
     if result.get("schema_version") != "playbook.project_verification_result.v1":
         findings.append(
             Finding(
@@ -763,6 +903,75 @@ def validate_release_verification(root: Path) -> list[Finding]:
                 1,
                 "READINESS_RELEASE_VERIFICATION_SCHEMA",
                 "project verification result has unsupported schema_version",
+            )
+        )
+    configuration_errors = result.get("configuration_errors")
+    if configuration_errors:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_CONFIGURATION_ERRORS",
+                "release_ready requires empty project verification configuration_errors",
+            )
+        )
+    checks = result.get("checks")
+    missing_project_check_reported = False
+    if not isinstance(checks, list) or not checks:
+        checks = []
+        missing_project_check_reported = True
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_PROJECT_CHECK_MISSING",
+                "release_ready requires at least one executed non-contract project verification check",
+            )
+        )
+    recomputed_required_failures = 0
+    executed_project_checks = 0
+    for check in checks:
+        if not isinstance(check, dict):
+            continue
+        required = check.get("required") is True
+        passed = check.get("passed") is True
+        skipped = check.get("skipped") is True
+        if required and not passed:
+            recomputed_required_failures += 1
+        if required and skipped:
+            findings.append(
+                Finding(
+                    "error",
+                    ".playbook-artifacts/project_verification.json",
+                    1,
+                    "READINESS_RELEASE_REQUIRED_CHECK_SKIPPED",
+                    f"required project verification check {check.get('id', '<unknown>')} was skipped",
+                )
+            )
+        if required and check.get("id") != "playbook_contract" and not skipped and check.get("exit_code") is not None:
+            executed_project_checks += 1
+        findings.extend(artifact_ref_findings(root, check.get("stdout_ref"), f"{check.get('id', '<unknown>')}.stdout_ref"))
+        findings.extend(artifact_ref_findings(root, check.get("stderr_ref"), f"{check.get('id', '<unknown>')}.stderr_ref"))
+    if executed_project_checks == 0 and not missing_project_check_reported:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_PROJECT_CHECK_MISSING",
+                "release_ready requires at least one executed non-contract project verification check",
+            )
+        )
+    if result.get("required_failures") != recomputed_required_failures:
+        findings.append(
+            Finding(
+                "error",
+                ".playbook-artifacts/project_verification.json",
+                1,
+                "READINESS_RELEASE_FAILURE_COUNT_MISMATCH",
+                "project verification required_failures does not match required check results",
             )
         )
     if result.get("required_failures") != 0:
@@ -776,7 +985,17 @@ def validate_release_verification(root: Path) -> list[Finding]:
             )
         )
     expected_commit = current_commit(root)
-    if result.get("project_commit") != expected_commit:
+    if expected_commit == "not-a-git-repository":
+        findings.append(
+            Finding(
+                "error",
+                ".",
+                1,
+                "READINESS_RELEASE_GIT_REQUIRED",
+                "release_ready exact-HEAD claims require a Git repository",
+            )
+        )
+    elif result.get("project_commit") != expected_commit:
         findings.append(
             Finding(
                 "error",
@@ -800,9 +1019,34 @@ def validate_release_verification(root: Path) -> list[Finding]:
     return findings
 
 
+def valid_project_verifier_argv(value: Any) -> bool:
+    if not isinstance(value, list) or len(value) < 2:
+        return False
+    if not all(isinstance(item, str) and item for item in value):
+        return False
+    python_tokens = {"{python}", "python", "python3", "python.exe", "python3.exe"}
+    for index, item in enumerate(value):
+        if item != "tools/verify_project.py" or index == 0:
+            continue
+        runner = Path(value[index - 1]).name
+        if value[index - 1] in python_tokens or runner in python_tokens:
+            return "--root" in value
+    return False
+
+
 def validate_delivery(root: Path) -> list[Finding]:
     path = root / ".playbook/delivery_execution_model.json"
     if not path.exists():
+        if (root / ".playbook/readiness_state.json").exists() or (root / ".playbook/project_verification.json").exists():
+            return [
+                Finding(
+                    "error",
+                    ".playbook/delivery_execution_model.json",
+                    1,
+                    "DELIVERY_CONTRACT_MISSING",
+                    "generated Playbook projects must include delivery_execution_model.json",
+                )
+            ]
         return []
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -858,15 +1102,15 @@ def validate_delivery(root: Path) -> list[Finding]:
                 "delivery model must name reviewer authority",
             )
         )
-    verifier_command = str(verifier.get("command", ""))
-    if "tools/verify_project.py" not in verifier_command:
+    verifier_argv = verifier.get("argv")
+    if verifier.get("binding_id") != "project_verifier" or not valid_project_verifier_argv(verifier_argv):
         findings.append(
             Finding(
                 "error",
                 ".playbook/delivery_execution_model.json",
                 1,
                 "DELIVERY_VERIFIER_MISSING",
-                "delivery model verifier must reference tools/verify_project.py",
+                "delivery model verifier must use structured project_verifier argv binding",
             )
         )
     triggers = data.get("independent_review_triggers")

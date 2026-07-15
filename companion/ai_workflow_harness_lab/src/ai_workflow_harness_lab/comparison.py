@@ -137,12 +137,18 @@ def trial_index_from_path(bundle_path: Path) -> int | None:
 
 
 def stability_warning(trials: list[dict[str, Any]], minimum_trials_per_task: int) -> bool:
+    if not trials:
+        return True
     by_task = Counter(trial["task_id"] for trial in trials)
     return any(count < minimum_trials_per_task for count in by_task.values())
 
 
-def compatibility_errors(baseline: list[dict[str, Any]], candidate: list[dict[str, Any]]) -> list[str]:
+def compatibility_errors(baseline: list[dict[str, Any]], candidate: list[dict[str, Any]], *, require_empirical: bool = False) -> list[str]:
     errors: list[str] = []
+    if not baseline:
+        errors.append("baseline has no bundles")
+    if not candidate:
+        errors.append("candidate has no bundles")
     baseline_keys = {(trial["task_id"], trial["trial_index"]) for trial in baseline}
     candidate_keys = {(trial["task_id"], trial["trial_index"]) for trial in candidate}
     if baseline_keys != candidate_keys:
@@ -158,6 +164,12 @@ def compatibility_errors(baseline: list[dict[str, Any]], candidate: list[dict[st
                 errors.append(f"{field} differs for {trial['task_id']} trial {trial['trial_index']}")
         if trial.get("compatibility_fingerprint") != other.get("compatibility_fingerprint"):
             errors.append(f"harness_eval_unit compatibility differs for {trial['task_id']} trial {trial['trial_index']}")
+    if require_empirical:
+        for label, trials in (("baseline", baseline), ("candidate", candidate)):
+            for trial in trials:
+                eval_unit = trial.get("harness_eval_unit")
+                if not isinstance(eval_unit, dict) or eval_unit.get("evaluation_mode") != "empirical":
+                    errors.append(f"{label} {trial['task_id']} trial {trial['trial_index']} is not empirical")
     return sorted(set(errors))
 
 
@@ -167,19 +179,26 @@ def compare(
     output_dir: Path,
     *,
     minimum_trials_per_task: int = 2,
+    require_empirical: bool = False,
 ) -> dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
     baseline = [load_trial(path) for path in find_bundles(baseline_dir)]
     candidate = [load_trial(path) for path in find_bundles(candidate_dir)]
     baseline_summary = summarize(baseline)
     candidate_summary = summarize(candidate)
-    compatibility = compatibility_errors(baseline, candidate)
+    compatibility = compatibility_errors(baseline, candidate, require_empirical=require_empirical)
+    blocking_errors = [
+        error
+        for error in compatibility
+        if error in {"baseline has no bundles", "candidate has no bundles"} or " is not empirical" in error
+    ]
     report = {
         "schema_version": "harness_lab.comparison_report.v1",
         "baseline": baseline_summary,
         "candidate": candidate_summary,
         "raw_trials": {"baseline": baseline, "candidate": candidate},
         "compatibility_errors": compatibility,
+        "blocking_errors": blocking_errors,
         "hard_gates": {
             "candidate_policy_violation_count": candidate_summary["policy_violation_count"],
             "candidate_policy_violation_rate": candidate_summary["policy_violation_rate"],
@@ -188,7 +207,7 @@ def compare(
             "single_run_stability_warning": stability_warning(candidate, minimum_trials_per_task)
             or stability_warning(baseline, minimum_trials_per_task),
         },
-        "status": "mechanism demonstration, not empirical proof of Playbook effectiveness",
+        "status": "empirical comparison" if require_empirical and not blocking_errors else "mechanism demonstration, not empirical proof of Playbook effectiveness",
     }
     (output_dir / "comparison_report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (output_dir / "comparison_report.md").write_text(render_markdown(report), encoding="utf-8")
@@ -210,6 +229,7 @@ def render_markdown(report: dict[str, Any]) -> str:
             f"- Candidate policy violation rate: {report['candidate']['policy_violation_rate']}",
             f"- Candidate evidence correctness: {report['candidate']['evidence_correctness']}",
             f"- Per-task stability warning: {report['hard_gates']['single_run_stability_warning']}",
+            f"- Blocking errors: {len(report.get('blocking_errors', []))}",
             "",
             "Raw trial details are in `comparison_report.json`.",
             "",

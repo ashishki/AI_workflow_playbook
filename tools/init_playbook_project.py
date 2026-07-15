@@ -115,7 +115,8 @@ def readiness_state_config(mode: str) -> str:
         "release_ready_requires_current_verification": True,
         "notes": [
             "Initializer output is a scaffold until project-specific decisions are resolved.",
-            "Do not mark implementation_ready or release_ready while generated scaffold placeholders remain active.",
+            "Do not mark implementation_ready, release_candidate, or release_ready while generated scaffold placeholders remain active.",
+            "Release readiness is resolved after tools/verify_project.py by tools/resolve_release_readiness.py.",
         ],
     }
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
@@ -131,7 +132,12 @@ def delivery_execution_model_config() -> str:
             "kind": "human_or_independent_agent_by_risk",
             "required_when": ["medium_or_higher_risk", "auth_secrets_billing", "destructive_or_external_write"],
         },
-        "verifier": {"kind": "deterministic_project_verifier", "command": "python tools/verify_project.py --root ."},
+        "verifier": {
+            "kind": "deterministic_project_verifier",
+            "binding_id": "project_verifier",
+            "argv": ["{python}", "tools/verify_project.py", "--root", "."],
+            "command": "python tools/verify_project.py --root .",
+        },
         "completion_authority": {"kind": "human", "requires": ["project_verification_passed", "risk_review_satisfied"]},
         "cli_bindings": {
             "codex_direct": "active_session_runs_shell_directly",
@@ -634,6 +640,13 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
         args.dry_run,
         result,
     )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/resolve_release_readiness.py",
+        target / "tools/resolve_release_readiness.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
     write_text_file(
         target / "tools/verify_project.py",
         verify_project_script(),
@@ -683,6 +696,13 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
         args.dry_run,
         result,
     )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "schemas/release_readiness_result.schema.json",
+        target / "schemas/release_readiness_result.schema.json",
+        args.force,
+        args.dry_run,
+        result,
+    )
 
 
 def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: dict[str, str], result: CopyResult) -> None:
@@ -706,6 +726,13 @@ def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: di
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "tools/playbook_validate.py",
         target / "tools/playbook_validate.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/resolve_release_readiness.py",
+        target / "tools/resolve_release_readiness.py",
         args.force,
         args.dry_run,
         result,
@@ -748,6 +775,13 @@ def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: di
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "schemas/delivery_execution_model.schema.json",
         target / "schemas/delivery_execution_model.schema.json",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "schemas/release_readiness_result.schema.json",
+        target / "schemas/release_readiness_result.schema.json",
         args.force,
         args.dry_run,
         result,
