@@ -14,6 +14,65 @@ The current playbook is strongest when read as a layered system:
 
 This repository is not trying to become a generic orchestration framework. Its center of gravity remains governance, contracts, reviews, and auditable repo artifacts.
 
+> **Current maturity:** repository mechanisms and generated-project contracts are
+> tested locally and in CI. Their effect on team productivity, delivery quality,
+> or adoption has not been established with independent users.
+
+> **Licensing boundary:** this repository is publicly readable reference material,
+> but it has no project-level open-source license and grants no additional
+> copyright permission beyond the GitHub Terms, applicable law, and any
+> file-specific license. See [Legal Status](docs/LEGAL_STATUS.md) before reuse.
+> Eval Ground Truth Lab and Agent Runtime Grid are separate Apache-2.0 projects;
+> their licenses do not apply here.
+
+## Five-Minute Reviewer Path
+
+1. Read [Guarantee Maturity](#guarantee-maturity) to distinguish documented,
+   enforced, tested, and empirically validated controls.
+2. Run the deterministic repository verifier:
+
+   ```bash
+   python3 -m venv .venv
+   .venv/bin/pip install -r requirements-dev.txt
+   .venv/bin/python tools/verify_playbook.py --root .
+   ```
+
+3. Inspect the CI-equivalent tests with `.venv/bin/python -m pytest -q`; these
+   exercise the initializer, validators, review contracts, cost tooling, and
+   security gates with repository fixtures.
+4. Read [Known Limits](#known-limits) and [Portfolio Role](#portfolio-role)
+   before interpreting a tested mechanism as evidence about a real team or
+   deployed workflow.
+
+## Portfolio Role
+
+AI Workflow Playbook is an independent governance companion for project
+contracts, receipts, and review discipline. It is not part of the runtime data
+path. Its [source-visible, non-open-source legal status](docs/LEGAL_STATUS.md)
+is independent of the licenses used by the runtime and evaluation projects.
+
+- [Eval Ground Truth Lab](https://github.com/ashishki/Eval-Ground-Truth-Lab)
+  owns versioned workflow regression evidence and release gates.
+- [Agent Runtime Grid](https://github.com/ashishki/Agent-Runtime-Grid) owns
+  queue-backed lifecycle and controlled-failure evidence.
+- [gdev-agent](https://github.com/ashishki/gdev-agent) is a reference workload;
+  it owns its application behavior, tenant controls, and local demo evidence.
+- The planned thin umbrella pins compatible component revisions. It does not
+  make the Playbook a runtime dependency or absorb repository histories.
+
+## Known Limits
+
+- Repository tests prove the behavior of validators, generators, and fixtures;
+  they do not prove that a team became faster or that a model became better.
+- Prompt-only guidance remains documented guidance unless a named executable
+  mechanism enforces it.
+- Generated project scaffolds still require project-specific requirements,
+  threat analysis, datasets, thresholds, and human decisions.
+- There is no hosted service, model provider, production dataset, external-user
+  validation, or production reliability claim in this repository.
+- Optional tools and reference architectures are not implicit dependencies and
+  should be adopted only when their own scope and evidence justify them.
+
 ---
 
 ## Guarantee Maturity
