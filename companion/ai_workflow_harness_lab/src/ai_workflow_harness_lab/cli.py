@@ -9,8 +9,15 @@ from .adapters.command import CommandAdapter
 from .adapters.scripted import ScriptedAdapter
 from .comparison import compare
 from .evidence import verify_bundle
-from .runner import run_suite
+from .runner import RunError, run_suite
 from .suite_loader import SuiteError, load_suite
+
+
+def nonnegative_int(value: str) -> int:
+    parsed = int(value)
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("must be nonnegative")
+    return parsed
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -27,6 +34,9 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--command-template", default="")
     run.add_argument("--adapter-timeout", type=float, default=None)
     run.add_argument("--trials", type=int, default=1)
+    run.add_argument("--trial-start", type=nonnegative_int, default=0)
+    run.add_argument("--task-id", action="append", default=None)
+    run.add_argument("--append", action="store_true")
     run.add_argument("--output", required=True)
     run.add_argument("--fail-on-invalid-run", action="store_true")
 
@@ -65,7 +75,20 @@ def main(argv: list[str] | None = None) -> int:
                 print("--command-template is required for command adapter", file=sys.stderr)
                 return 2
             adapter = CommandAdapter(args.command_template, timeout=args.adapter_timeout)
-        results = run_suite(suite, args.condition, adapter, args.trials, Path(args.output))
+        try:
+            results = run_suite(
+                suite,
+                args.condition,
+                adapter,
+                args.trials,
+                Path(args.output),
+                trial_start=args.trial_start,
+                task_ids=args.task_id,
+                append=args.append,
+            )
+        except RunError as exc:
+            print(f"run: failed: {exc}", file=sys.stderr)
+            return 1
         invalid = [result for result in results if not result.valid]
         print(
             json.dumps(

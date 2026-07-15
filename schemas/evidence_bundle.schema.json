@@ -38,6 +38,7 @@
     "condition": { "type": "string", "minLength": 1 },
     "adapter_version": { "type": "string", "minLength": 1 },
     "environment_digest": { "type": "string", "minLength": 1 },
+    "prompt_ref": { "$ref": "#/$defs/artifact_ref" },
     "command_receipts": {
       "type": "array",
       "items": { "$ref": "#/$defs/artifact_ref" }

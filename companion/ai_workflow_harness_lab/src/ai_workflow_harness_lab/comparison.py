@@ -13,6 +13,18 @@ def find_bundles(path: Path) -> list[Path]:
     return sorted(path.rglob("bundle.json"))
 
 
+def effective_score(scores: list[float], failures: list[dict[str, Any]]) -> float:
+    task_failed = any(
+        not failure.get("invalid_run")
+        and failure.get("score_treatment")
+        in {"count_as_task_failure", "policy_gate_failure"}
+        for failure in failures
+    )
+    if task_failed:
+        return 0.0
+    return sum(scores) / len(scores) if scores else 0.0
+
+
 def load_trial(bundle_path: Path) -> dict[str, Any]:
     evidence_errors = verify_bundle(bundle_path)
     try:
@@ -53,7 +65,7 @@ def load_trial(bundle_path: Path) -> dict[str, Any]:
         "valid": not invalid,
         "evidence_errors": evidence_errors,
         "evidence_valid": not evidence_errors,
-        "score": sum(scores) / len(scores) if scores else 0.0,
+        "score": effective_score(scores, failures),
         "failures": failures,
         "scorer_outputs": scorer_outputs,
         "receipt_count": len(bundle.get("command_receipts", [])),

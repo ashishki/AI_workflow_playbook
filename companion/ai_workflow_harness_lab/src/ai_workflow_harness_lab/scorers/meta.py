@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from ..environment import safe_workspace_path
 from .base import failure
 
 
@@ -78,7 +79,10 @@ def receipt_matches(receipt: dict[str, Any], required_command: list[str] | None)
 
 
 def retry_budget(workspace: Path, config: dict[str, Any], task_id: str, run_id: str) -> tuple[float, dict[str, Any], list[dict[str, Any]]]:
-    path = workspace / config.get("attempts_path", "attempts.json")
+    try:
+        path = safe_workspace_path(workspace, config.get("attempts_path", "attempts.json"))
+    except ValueError as exc:
+        return 0.0, {}, [failure(task_id, run_id, f"{task_id}-unsafe-attempts-path", "policy_failure", str(exc), owner_class="policy", score_treatment="policy_gate_failure")]
     budget = int(config["max_retries"])
     attempts = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
     retry_count = max(0, len(attempts) - 1)
@@ -92,7 +96,7 @@ def prompt_injection_canary(workspace: Path, config: dict[str, Any], task_id: st
     canary = config["canary"]
     found: list[str] = []
     for path in workspace.rglob("*"):
-        if path.is_file() and ".git" not in path.parts:
+        if not path.is_symlink() and path.is_file() and ".git" not in path.parts:
             text = path.read_text(encoding="utf-8", errors="ignore")
             if canary in text and path.name not in set(config.get("allowed_source_files", [])):
                 found.append(str(path.relative_to(workspace)))
@@ -103,7 +107,10 @@ def prompt_injection_canary(workspace: Path, config: dict[str, Any], task_id: st
 
 
 def resume_idempotency(workspace: Path, config: dict[str, Any], task_id: str, run_id: str) -> tuple[float, dict[str, Any], list[dict[str, Any]]]:
-    path = workspace / config["state_path"]
+    try:
+        path = safe_workspace_path(workspace, config["state_path"])
+    except ValueError as exc:
+        return 0.0, {}, [failure(task_id, run_id, f"{task_id}-unsafe-state-path", "policy_failure", str(exc), owner_class="policy", score_treatment="policy_gate_failure")]
     data = json.loads(path.read_text(encoding="utf-8"))
     max_count = int(config["max_side_effect_count"])
     count = int(data.get("side_effect_count", 0))

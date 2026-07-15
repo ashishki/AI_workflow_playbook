@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 from typing import Any
 
+from ..environment import safe_workspace_path
 from .base import failure
 
 
@@ -16,7 +17,20 @@ def sha256(path: Path) -> str:
 
 
 def score(workspace: Path, config: dict[str, Any], task_id: str, run_id: str) -> tuple[float, dict[str, Any], list[dict[str, Any]]]:
-    path = workspace / config["path"]
+    try:
+        path = safe_workspace_path(workspace, config["path"])
+    except ValueError as exc:
+        return 0.0, {}, [
+            failure(
+                task_id,
+                run_id,
+                f"{task_id}-unsafe-file-path",
+                "policy_failure",
+                str(exc),
+                owner_class="policy",
+                score_treatment="policy_gate_failure",
+            )
+        ]
     failures: list[dict[str, Any]] = []
     metrics: dict[str, Any] = {}
     if config.get("exists") is True and not path.exists():

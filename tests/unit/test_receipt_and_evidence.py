@@ -5,7 +5,10 @@ import json
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
+
+from ai_workflow_harness_lab.receipts import run_command_receipt
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -93,6 +96,31 @@ def test_receipt_run_timeout(tmp_path: Path) -> None:
     assert receipt["exit_code"] == 124
 
 
+def test_receipt_timeout_kills_child_even_after_new_session(tmp_path: Path) -> None:
+    output_dir = tmp_path / "receipt"
+    marker = tmp_path / "late-child.txt"
+    script = (
+        "import subprocess,sys,time; "
+        "subprocess.Popen([sys.executable, '-c', "
+        f"\"import time,pathlib; time.sleep(0.5); pathlib.Path({str(marker)!r}).write_text('late')\"], "
+        "start_new_session=True); "
+        "time.sleep(5)"
+    )
+
+    result = run_command_receipt(
+        "timeout-child",
+        output_dir,
+        [sys.executable, "-c", script],
+        tmp_path,
+        timeout=0.1,
+        inspect_git=False,
+    )
+    assert result.exit_code == 124
+    # A separate child process group must not survive the outer timeout.
+    time.sleep(0.7)
+    assert not marker.exists()
+
+
 def test_receipt_run_missing_command(tmp_path: Path) -> None:
     output_dir = tmp_path / "receipt"
     result = run_receipt(output_dir, "definitely-missing-playbook-command")
@@ -106,6 +134,24 @@ def test_receipt_run_missing_command(tmp_path: Path) -> None:
 def test_valid_bundle_fixture_passes() -> None:
     result = subprocess.run(
         [sys.executable, str(ROOT / "tools/validate_harness_evidence.py"), str(VALID_BUNDLE / "bundle.json")],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+
+
+def test_valid_bundle_flag_alias_passes() -> None:
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/validate_harness_evidence.py"),
+            "--bundle",
+            str(VALID_BUNDLE / "bundle.json"),
+        ],
         cwd=ROOT,
         text=True,
         stdout=subprocess.PIPE,
@@ -212,6 +258,29 @@ def test_bundle_path_escape_breaks_validation(tmp_path: Path) -> None:
 
     assert result.returncode == 1
     assert "ARTIFACT_PATH_ESCAPE" in result.stderr
+
+
+def test_bundle_symlink_artifact_breaks_validation(tmp_path: Path) -> None:
+    bundle_dir = tmp_path / "bundle"
+    shutil.copytree(VALID_BUNDLE, bundle_dir)
+    bundle_path = bundle_dir / "bundle.json"
+    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+    original = bundle_dir / bundle["command_receipts"][0]["path"]
+    linked = bundle_dir / "linked-receipt.json"
+    linked.symlink_to(original.relative_to(bundle_dir))
+    bundle["command_receipts"][0]["path"] = linked.name
+    rewrite_bundle(bundle_path, bundle)
+
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "tools/validate_harness_evidence.py"), str(bundle_path)],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "symbolic link forbidden" in result.stderr
 
 
 def test_manual_verdict_in_bundle_breaks_validation(tmp_path: Path) -> None:

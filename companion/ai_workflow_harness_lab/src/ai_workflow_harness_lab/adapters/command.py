@@ -34,13 +34,14 @@ class CommandAdapter(Adapter):
             trial=trial_index,
             output_dir=str(output_dir),
         )
-        argv = ["/bin/sh", "-lc", command]
+        argv = ["/bin/sh", "-c", command]
         execution = run_command_receipt(
             task.task_id,
             output_dir / "receipts/command",
             argv,
             workspace,
             timeout=self.timeout,
+            inspect_git=False,
         )
         output_path = output_dir / "agent_output.json"
         output_path.write_text(
@@ -59,11 +60,22 @@ class CommandAdapter(Adapter):
             + "\n",
             encoding="utf-8",
         )
+        trace_paths = [
+            output_dir / name
+            for name in (
+                "codex_events.jsonl",
+                "codex_stderr.txt",
+                "final_message.txt",
+                "event_ledger.jsonl",
+                "adapter_summary.json",
+            )
+            if (output_dir / name).is_file()
+        ]
         return AdapterResult(
             exit_code=execution.exit_code,
             output_path=output_path,
             receipt_paths=[execution.receipt_path],
-            trace_paths=[],
+            trace_paths=trace_paths,
             metadata={
                 "adapter": self.adapter_id,
                 "adapter_version": self.adapter_version,

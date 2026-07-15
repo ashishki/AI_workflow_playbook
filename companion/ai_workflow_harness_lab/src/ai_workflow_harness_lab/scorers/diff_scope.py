@@ -1,25 +1,29 @@
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 from typing import Any
 
+from ..environment import tree_manifest
 from .base import failure
 
 
-def changed_files(workspace: Path) -> list[str]:
-    result = subprocess.run(["git", "status", "--short"], cwd=workspace, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
-    if result.returncode != 0:
-        return []
-    files = []
-    for line in result.stdout.splitlines():
-        if len(line) > 3:
-            files.append(line[3:].strip())
-    return files
+def changed_files(workspace: Path, baseline_manifest: dict[str, str]) -> list[str]:
+    current_manifest = tree_manifest(workspace)
+    return sorted(
+        path
+        for path in baseline_manifest.keys() | current_manifest.keys()
+        if baseline_manifest.get(path) != current_manifest.get(path)
+    )
 
 
-def score(workspace: Path, config: dict[str, Any], task_id: str, run_id: str) -> tuple[float, dict[str, Any], list[dict[str, Any]]]:
-    changed = changed_files(workspace)
+def score(
+    workspace: Path,
+    config: dict[str, Any],
+    task_id: str,
+    run_id: str,
+    baseline_manifest: dict[str, str],
+) -> tuple[float, dict[str, Any], list[dict[str, Any]]]:
+    changed = changed_files(workspace, baseline_manifest)
     allowlist = set(config.get("allowlist", []))
     forbidden = set(config.get("forbidden", []))
     failures: list[dict[str, Any]] = []

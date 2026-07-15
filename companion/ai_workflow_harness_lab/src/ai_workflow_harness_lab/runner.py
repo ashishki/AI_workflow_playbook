@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import json
-import shutil
-import tempfile
 import sys
 from pathlib import Path
 from typing import Any
 
 from .adapters.base import Adapter
-from .environment import copy_fixture, environment_digest, git, init_git, post_state_manifest
+from .environment import copy_fixture, environment_digest, init_git, post_state_manifest, tree_manifest
 from .evidence import write_bundle
 from .models import ScorerResult, Suite, SuiteTask, TrialResult
 from .receipts import run_command_receipt
@@ -17,31 +15,107 @@ from .scorers.base import failure, write_scorer_output
 from .scorers import meta
 
 
+PROJECT_ROOT = Path(__file__).resolve().parents[4]
+
+
+class RunError(RuntimeError):
+    pass
+
+
 def prompt_for(task: SuiteTask, condition: str) -> Path:
     return task.playbook_prompt if condition == "playbook" else task.baseline_prompt
 
 
-def run_suite(suite: Suite, condition: str, adapter: Adapter, trials: int, output: Path) -> list[TrialResult]:
-    output.mkdir(parents=True, exist_ok=True)
+def run_suite(
+    suite: Suite,
+    condition: str,
+    adapter: Adapter,
+    trials: int,
+    output: Path,
+    *,
+    trial_start: int = 0,
+    task_ids: list[str] | None = None,
+    append: bool = False,
+) -> list[TrialResult]:
+    if trial_start < 0:
+        raise RunError("trial_start must be nonnegative")
+
+    tasks = select_tasks(suite, task_ids)
+    existing_bundles = prepare_output(output, append=append)
+    trial_indices = range(trial_start, trial_start + trials)
+    collisions = [
+        output / task.task_id / f"trial-{trial}"
+        for task in tasks
+        for trial in trial_indices
+        if (output / task.task_id / f"trial-{trial}").exists()
+    ]
+    if collisions:
+        paths = ", ".join(str(path) for path in collisions)
+        raise RunError(f"trial directory already exists; refusing to overwrite evidence: {paths}")
+
     results: list[TrialResult] = []
-    for task in suite.tasks:
-        for trial in range(trials):
+    for task in tasks:
+        for trial in range(trial_start, trial_start + trials):
             results.append(run_trial(suite, task, condition, adapter, trial, output))
-    write_run_index(output, results)
+    write_run_index(output, results, existing_bundles=existing_bundles)
     return results
+
+
+def select_tasks(suite: Suite, task_ids: list[str] | None) -> list[SuiteTask]:
+    if not task_ids:
+        return suite.tasks
+
+    requested = set(task_ids)
+    available = {task.task_id for task in suite.tasks}
+    unknown = sorted(requested - available)
+    if unknown:
+        raise RunError(
+            f"unknown task ID(s): {', '.join(unknown)}; available task IDs: {', '.join(sorted(available))}"
+        )
+    return [task for task in suite.tasks if task.task_id in requested]
+
+
+def prepare_output(output: Path, *, append: bool) -> list[str]:
+    index_path = output / "run_index.json"
+    if output.exists():
+        if not output.is_dir():
+            raise RunError(f"output path exists and is not a directory: {output}")
+        if not append:
+            raise RunError(f"output already exists; use --append to retain prior evidence: {output}")
+        if any(output.iterdir()) and not index_path.is_file():
+            raise RunError(f"non-empty output is missing run_index.json; refusing unsafe append: {output}")
+    else:
+        output.mkdir(parents=True)
+
+    if not index_path.exists():
+        return []
+    try:
+        payload = json.loads(index_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RunError(f"cannot read existing run_index.json: {exc}") from exc
+    if payload.get("schema_version") != "harness_lab.run_index.v1":
+        raise RunError("existing run_index.json has unsupported schema_version")
+    bundles = payload.get("bundles")
+    if not isinstance(bundles, list) or not all(isinstance(path, str) for path in bundles):
+        raise RunError("existing run_index.json bundles must be a list of paths")
+    return list(dict.fromkeys(bundles))
 
 
 def run_trial(suite: Suite, task: SuiteTask, condition: str, adapter: Adapter, trial: int, output: Path) -> TrialResult:
     trial_dir = output / task.task_id / f"trial-{trial}"
     if trial_dir.exists():
-        shutil.rmtree(trial_dir)
-    trial_dir.mkdir(parents=True)
+        raise RunError(f"trial directory already exists; refusing to overwrite evidence: {trial_dir}")
+    try:
+        trial_dir.mkdir(parents=True, exist_ok=False)
+    except FileExistsError as exc:
+        raise RunError(f"trial directory already exists; refusing to overwrite evidence: {trial_dir}") from exc
     workspace = trial_dir / "workspace"
     copy_fixture(task.fixture, workspace)
+    baseline_manifest = tree_manifest(workspace)
     commit_before = init_git(workspace)
     env_digest = environment_digest(workspace)
     prompt_file = trial_dir / "prompt.md"
-    prompt_file.write_text(prompt_for(task, condition).read_text(encoding="utf-8"), encoding="utf-8")
+    prompt_file.write_bytes(prompt_for(task, condition).read_bytes())
     adapter_dir = trial_dir / "adapter"
     adapter_result = adapter.run(task, condition, trial, workspace, prompt_file, adapter_dir)
     run_id = f"{task.task_id}-{condition}-{trial}"
@@ -62,18 +136,18 @@ def run_trial(suite: Suite, task: SuiteTask, condition: str, adapter: Adapter, t
         adapter_result.output_path,
         receipt_paths,
         trial_dir / "scorers",
+        baseline_manifest,
     )
     post_manifest = post_state_manifest(workspace, trial_dir / "post_state_manifest.json")
     report_path = write_trial_report(trial_dir, task, condition, scorer_results)
-    commit_after_result = git(["rev-parse", "HEAD"], workspace)
-    commit_after = commit_after_result.stdout.strip() if commit_after_result.returncode == 0 else "git-unavailable"
+    commit_after = "not_inspected_after_agent_execution"
     failure_records = (
         adapter_failures
         + verification_failures
         + [record for result in scorer_results for record in result.failure_records]
     )
     valid = not any(record.get("invalid_run") for record in failure_records)
-    score = task_score(scorer_results, valid)
+    score = task_score(scorer_results, valid, failure_records)
     run_result_path = write_run_result(
         trial_dir,
         task.task_id,
@@ -90,6 +164,7 @@ def run_trial(suite: Suite, task: SuiteTask, condition: str, adapter: Adapter, t
         condition=condition,
         adapter_version=adapter.adapter_version,
         environment_digest=env_digest,
+        prompt_file=prompt_file,
         commit_before=commit_before,
         commit_after=commit_after,
         receipt_paths=receipt_paths,
@@ -153,6 +228,7 @@ def materialize_command(command: Any, workspace: Path, task: SuiteTask, conditio
         raise ValueError("required_verification.command must be a string or list")
     replacements = {
         "{python}": sys.executable,
+        "{project_root}": str(PROJECT_ROOT),
         "{workspace}": str(workspace),
         "{task_id}": task.task_id,
         "{condition}": condition,
@@ -186,6 +262,7 @@ def run_required_verification(
             argv,
             workspace,
             timeout=float(config["timeout"]) if "timeout" in config else None,
+            inspect_git=False,
         )
     except Exception as exc:
         return [], [
@@ -219,8 +296,19 @@ def run_required_verification(
     ]
 
 
-def task_score(scorer_results: list[ScorerResult], valid: bool) -> float:
+def task_score(
+    scorer_results: list[ScorerResult],
+    valid: bool,
+    failure_records: list[dict[str, Any]] | None = None,
+) -> float:
     if not valid:
+        return 0.0
+    if any(
+        not record.get("invalid_run")
+        and record.get("score_treatment")
+        in {"count_as_task_failure", "policy_gate_failure"}
+        for record in (failure_records or [])
+    ):
         return 0.0
     if not scorer_results:
         return 0.0
@@ -236,12 +324,17 @@ def write_run_result(
     failure_records: list[dict[str, Any]],
 ) -> Path:
     policy_fail = any(record.get("failure_class") == "policy_failure" and record.get("terminal") for record in failure_records)
+    task_fail = any(
+        not record.get("invalid_run")
+        and record.get("score_treatment") == "count_as_task_failure"
+        for record in failure_records
+    )
     evidence_invalid = any(record.get("failure_class") == "invalid_evidence" for record in failure_records)
     if not valid:
         verdict = "invalid_run"
         task_status = "not_scored"
         score_value: float | None = None
-    elif policy_fail or score < 1.0:
+    elif policy_fail or task_fail or score < 1.0:
         verdict = "failed"
         task_status = "fail"
         score_value = score
@@ -283,6 +376,7 @@ def run_scorers(
     agent_output: Path,
     receipts: list[Path],
     output_dir: Path,
+    baseline_manifest: dict[str, str],
 ) -> list[ScorerResult]:
     results: list[ScorerResult] = []
     run_id = f"{task.task_id}-{condition}-{trial}"
@@ -295,7 +389,13 @@ def run_scorers(
             elif scorer_type == "file_state":
                 score, metrics, failures = file_state.score(workspace, config, task.task_id, run_id)
             elif scorer_type == "diff_scope":
-                score, metrics, failures = diff_scope.score(workspace, config, task.task_id, run_id)
+                score, metrics, failures = diff_scope.score(
+                    workspace,
+                    config,
+                    task.task_id,
+                    run_id,
+                    baseline_manifest,
+                )
             elif scorer_type == "json_state":
                 score, metrics, failures = json_state.score(workspace, config, task.task_id, run_id)
             elif scorer_type == "receipt_completeness":
@@ -348,11 +448,16 @@ def write_trial_report(trial_dir: Path, task: SuiteTask, condition: str, scorer_
     return path
 
 
-def write_run_index(output: Path, results: list[TrialResult]) -> None:
+def write_run_index(output: Path, results: list[TrialResult], *, existing_bundles: list[str] | None = None) -> None:
+    new_bundles = [str(result.bundle_path.relative_to(output)) for result in results]
+    bundles = list(dict.fromkeys([*(existing_bundles or []), *new_bundles]))
     payload = {
         "schema_version": "harness_lab.run_index.v1",
-        "bundles": [str(result.bundle_path.relative_to(output)) for result in results],
-        "task_count": len({result.task.task_id for result in results}),
-        "trial_count": len(results),
+        "bundles": bundles,
+        "task_count": len({Path(bundle).parts[0] for bundle in bundles if Path(bundle).parts}),
+        "trial_count": len(bundles),
     }
-    (output / "run_index.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    index_path = output / "run_index.json"
+    temporary_path = output / ".run_index.json.tmp"
+    temporary_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_path.replace(index_path)

@@ -4,6 +4,9 @@ import subprocess
 import sys
 import json
 from pathlib import Path
+from types import SimpleNamespace
+
+from ai_workflow_harness_lab.adapters.command import CommandAdapter
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -28,6 +31,180 @@ def test_validate_suite() -> None:
 
     assert result.returncode == 0, result.stderr
     assert '"tasks": 5' in result.stdout
+
+
+def test_run_filters_repeatable_task_ids(tmp_path: Path) -> None:
+    output = tmp_path / "filtered"
+    result = run_cli(
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "scripted",
+        "--task-id",
+        "fake_test_success",
+        "--task-id",
+        "immutable_contract",
+        "--output",
+        str(output),
+    )
+
+    assert result.returncode == 0, result.stderr
+    index = json.loads((output / "run_index.json").read_text(encoding="utf-8"))
+    assert {Path(bundle).parts[0] for bundle in index["bundles"]} == {
+        "fake_test_success",
+        "immutable_contract",
+    }
+    assert index["task_count"] == 2
+    assert index["trial_count"] == 2
+    assert not (output / "prompt_injection").exists()
+
+
+def test_run_uses_logical_trial_start_and_rejects_negative_start(tmp_path: Path) -> None:
+    output = tmp_path / "trial-start"
+    result = run_cli(
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "scripted",
+        "--task-id",
+        "fake_test_success",
+        "--trial-start",
+        "4",
+        "--trials",
+        "2",
+        "--output",
+        str(output),
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert (output / "fake_test_success/trial-4/bundle.json").is_file()
+    assert (output / "fake_test_success/trial-5/bundle.json").is_file()
+    assert not (output / "fake_test_success/trial-0").exists()
+
+    rejected = run_cli(
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "scripted",
+        "--trial-start",
+        "-1",
+        "--output",
+        str(tmp_path / "negative"),
+    )
+    assert rejected.returncode == 2
+    assert "must be nonnegative" in rejected.stderr
+
+
+def test_run_append_accumulates_index_and_retains_evidence(tmp_path: Path) -> None:
+    output = tmp_path / "append"
+    common = (
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "scripted",
+        "--task-id",
+        "fake_test_success",
+        "--output",
+        str(output),
+    )
+    first = run_cli(*common)
+    assert first.returncode == 0, first.stderr
+    first_bundle = output / "fake_test_success/trial-0/bundle.json"
+    original_bundle = first_bundle.read_bytes()
+    original_index = (output / "run_index.json").read_bytes()
+
+    without_append = run_cli(*common, "--trial-start", "1")
+    assert without_append.returncode == 1
+    assert "use --append" in without_append.stderr
+    assert first_bundle.read_bytes() == original_bundle
+    assert (output / "run_index.json").read_bytes() == original_index
+    assert not (output / "fake_test_success/trial-1").exists()
+
+    appended = run_cli(*common, "--append", "--trial-start", "1")
+    assert appended.returncode == 0, appended.stderr
+    index = json.loads((output / "run_index.json").read_text(encoding="utf-8"))
+    assert index["bundles"] == [
+        "fake_test_success/trial-0/bundle.json",
+        "fake_test_success/trial-1/bundle.json",
+    ]
+    assert len(index["bundles"]) == len(set(index["bundles"]))
+    assert index["task_count"] == 1
+    assert index["trial_count"] == 2
+    assert first_bundle.read_bytes() == original_bundle
+
+
+def test_run_append_collision_never_overwrites_trial_evidence(tmp_path: Path) -> None:
+    output = tmp_path / "collision"
+    args = (
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "scripted",
+        "--task-id",
+        "fake_test_success",
+        "--trial-start",
+        "2",
+        "--output",
+        str(output),
+    )
+    first = run_cli(*args)
+    assert first.returncode == 0, first.stderr
+    trial_dir = output / "fake_test_success/trial-2"
+    before = {
+        str(path.relative_to(trial_dir)): path.read_bytes()
+        for path in trial_dir.rglob("*")
+        if path.is_file()
+    }
+    index_before = (output / "run_index.json").read_bytes()
+
+    collision = run_cli(*args, "--append")
+
+    assert collision.returncode == 1
+    assert "trial directory already exists" in collision.stderr
+    after = {
+        str(path.relative_to(trial_dir)): path.read_bytes()
+        for path in trial_dir.rglob("*")
+        if path.is_file()
+    }
+    assert after == before
+    assert (output / "run_index.json").read_bytes() == index_before
+
+
+def test_run_rejects_unknown_task_id_before_creating_output(tmp_path: Path) -> None:
+    output = tmp_path / "unknown-task"
+    result = run_cli(
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "scripted",
+        "--task-id",
+        "does_not_exist",
+        "--output",
+        str(output),
+    )
+
+    assert result.returncode == 1
+    assert "unknown task ID(s): does_not_exist" in result.stderr
+    assert "available task IDs:" in result.stderr
+    assert not output.exists()
 
 
 def test_scripted_run_verify_and_compare(tmp_path: Path) -> None:
@@ -66,6 +243,83 @@ def test_command_adapter_smoke(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     assert (output / "fake_test_success/trial-0/bundle.json").exists()
+    receipt = json.loads(
+        (
+            output
+            / "fake_test_success/trial-0/adapter/receipts/command/receipt.json"
+        ).read_text(encoding="utf-8")
+    )
+    environment = receipt["environment_summary"]
+    assert environment["start_monotonic_ns"] <= environment["end_monotonic_ns"]
+
+
+def test_command_adapter_does_not_source_login_profile(
+    tmp_path: Path, monkeypatch
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    marker = tmp_path / "profile-was-sourced"
+    (home / ".profile").write_text(
+        f"/usr/bin/touch {marker}\n", encoding="utf-8"
+    )
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("task\n", encoding="utf-8")
+    output = tmp_path / "output"
+    monkeypatch.setenv("HOME", str(home))
+
+    result = CommandAdapter(":").run(
+        SimpleNamespace(task_id="profile-probe"),
+        "playbook",
+        0,
+        workspace,
+        prompt,
+        output,
+    )
+
+    receipt = json.loads(
+        (output / "receipts/command/receipt.json").read_text(encoding="utf-8")
+    )
+    assert result.exit_code == 0
+    assert receipt["command_argv"] == ["/bin/sh", "-c", ":"]
+    assert not marker.exists()
+
+
+def test_command_adapter_bundles_wrapper_trace_files(tmp_path: Path) -> None:
+    output = tmp_path / "command-traces"
+    template = (
+        f"{sys.executable} -c \"from pathlib import Path; "
+        "root=Path('{output_dir}'); "
+        "[(root/name).write_text('trace') for name in "
+        "('codex_events.jsonl','final_message.txt','event_ledger.jsonl','adapter_summary.json')]\""
+    )
+
+    result = run_cli(
+        "run",
+        "--suite",
+        str(SUITE),
+        "--condition",
+        "playbook",
+        "--adapter",
+        "command",
+        "--command-template",
+        template,
+        "--task-id",
+        "fake_test_success",
+        "--output",
+        str(output),
+    )
+
+    assert result.returncode == 0, result.stderr
+    bundle = json.loads(
+        (output / "fake_test_success/trial-0/bundle.json").read_text(encoding="utf-8")
+    )
+    trace_paths = {artifact["path"] for artifact in bundle["trace_refs"]}
+    assert any(path.endswith("codex_events.jsonl") for path in trace_paths)
+    assert any(path.endswith("final_message.txt") for path in trace_paths)
+    assert any(path.endswith("event_ledger.jsonl") for path in trace_paths)
+    assert any(path.endswith("adapter_summary.json") for path in trace_paths)
 
 
 def test_command_adapter_failure_can_fail_pipeline(tmp_path: Path) -> None:
@@ -94,6 +348,9 @@ def test_command_adapter_failure_can_fail_pipeline(tmp_path: Path) -> None:
     assert any(record["invalid_run"] for record in bundle["failure_records"])
     receipt = json.loads((output / "fake_test_success/trial-0/adapter/receipts/command/receipt.json").read_text(encoding="utf-8"))
     assert receipt["exit_code"] == 7
+    assert receipt["repo_commit_before"] == "not_inspected"
+    assert receipt["repo_commit_after"] == "not_inspected"
+    assert receipt["environment_summary"]["git_inspection"] is False
 
 
 def test_command_adapter_timeout_is_invalid_run(tmp_path: Path) -> None:

@@ -130,3 +130,27 @@ taxonomy.
 Do not generate benchmark content automatically and treat it as evidence.
 Scaffolding directories is acceptable; proof starts only when maintainers add
 project-specific fixtures, traps, and scorers.
+
+## Project-Specific Holdout Modeling
+
+A project may model a required/optional holdout as a restricted suite, config,
+or verifier owned by a curator and trusted runner. Public fixtures and prompts
+remain implementer-visible and must not contain restricted cases or expected
+outputs. Run the protected oracle after the adapter against the exact post-state,
+from a trusted process outside the agent's access/context boundary. The verifier
+may inspect the same target checkout, but its cases, expected outputs, config,
+and raw results must not be copied into the agent-visible workspace.
+
+The protected wrapper may produce a command receipt, scorer output, and
+EvidenceBundle when those artifacts can be sanitized and stored under the
+project's restricted ACL. Expose only the suite ID/version/digest, coarse
+`pass | fail | invalid | flaky | contaminated` result, redaction state, and
+sanitized evidence reference to the Test Critic/consolidated review.
+
+The companion package models isolated trials, receipts, independent scoring,
+and evidence validation. It is not an access-control, secrets, or holdout-storage
+boundary. A project-owned CI/policy layer must interpret the protected result:
+a required `fail` blocks, while an `invalid` run is not a capability failure but
+still does not satisfy the gate. Follow
+`docs/testing/holdout_acceptance.md` for access, contamination, rotation, and
+repair rules.

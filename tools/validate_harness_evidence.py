@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import stat
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -173,13 +174,26 @@ def validate_schema(data: dict[str, Any], name: str, path: Path) -> list[Finding
     return findings
 
 
-def resolve_ref(bundle_dir: Path, artifact_ref: dict[str, Any]) -> Path:
-    path = Path(str(artifact_ref.get("path", "")))
-    if path.is_absolute() or ".." in path.parts:
+def resolve_relative_path(parent: Path, raw_path: str) -> Path:
+    path = Path(raw_path)
+    if not path.parts or path.is_absolute() or ".." in path.parts:
         raise ValueError(f"path escape forbidden: {path}")
-    resolved = (bundle_dir / path).resolve()
-    resolved.relative_to(bundle_dir.resolve())
-    return resolved
+    current = parent.resolve()
+    for index, part in enumerate(path.parts):
+        current /= part
+        try:
+            mode = current.lstat().st_mode
+        except FileNotFoundError:
+            return current.joinpath(*path.parts[index + 1 :])
+        if stat.S_ISLNK(mode):
+            raise ValueError(f"symbolic link forbidden in artifact path: {path}")
+        if index < len(path.parts) - 1 and not stat.S_ISDIR(mode):
+            raise ValueError(f"non-directory artifact path component: {path}")
+    return current
+
+
+def resolve_ref(bundle_dir: Path, artifact_ref: dict[str, Any]) -> Path:
+    return resolve_relative_path(bundle_dir, str(artifact_ref.get("path", "")))
 
 
 def validate_artifact_ref(bundle_dir: Path, artifact_ref: dict[str, Any], check_id: str) -> list[Finding]:
@@ -193,6 +207,11 @@ def validate_artifact_ref(bundle_dir: Path, artifact_ref: dict[str, Any], check_
     expected = artifact_ref.get("sha256")
     if not path.exists():
         findings.append(Finding("error", check_id, f"referenced artifact missing: {path}", str(path)))
+        return findings
+    if not stat.S_ISREG(path.lstat().st_mode):
+        findings.append(
+            Finding("error", check_id, f"referenced artifact is not a regular file: {path}", str(path))
+        )
         return findings
     actual = sha256_file(path)
     if expected != actual:
@@ -270,9 +289,8 @@ def validate_receipt(bundle_dir: Path, ref: dict[str, Any], bundle_task_id: str)
                 )
             )
             continue
-        artifact_path = (path.parent / artifact_path).resolve()
         try:
-            artifact_path.relative_to(path.parent.resolve())
+            artifact_path = resolve_relative_path(path.parent, str(artifact_path))
         except ValueError:
             findings.append(
                 Finding(
@@ -286,6 +304,16 @@ def validate_receipt(bundle_dir: Path, ref: dict[str, Any], bundle_task_id: str)
         if not artifact_path.exists():
             findings.append(
                 Finding("error", "RECEIPT_ARTIFACT_MISSING", f"receipt artifact missing: {artifact_path}", str(path))
+            )
+            continue
+        if not stat.S_ISREG(artifact_path.lstat().st_mode):
+            findings.append(
+                Finding(
+                    "error",
+                    "RECEIPT_ARTIFACT_PATH_ESCAPE",
+                    f"receipt artifact is not a regular file: {artifact_path}",
+                    str(path),
+                )
             )
             continue
         actual = sha256_file(artifact_path)
@@ -400,6 +428,10 @@ def validate_bundle(bundle_path: Path, baseline_path: Path | None = None) -> dic
         if receipt is not None:
             receipts.append(receipt)
 
+    prompt_ref = bundle.get("prompt_ref")
+    if isinstance(prompt_ref, dict):
+        findings.extend(validate_artifact_ref(bundle_dir, prompt_ref, "ARTIFACT_HASH"))
+
     for key in ("trace_refs", "scorer_outputs"):
         refs = bundle.get(key, [])
         if not isinstance(refs, list):
@@ -506,16 +538,21 @@ def report(bundle_path: Path, findings: list[Finding], receipts: list[dict[str, 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("bundle_path")
+    parser.add_argument("bundle_path", nargs="?")
+    parser.add_argument("--bundle", dest="bundle_option")
     parser.add_argument("--json", dest="json_path")
     parser.add_argument("--baseline", dest="baseline_path")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if bool(args.bundle_path) == bool(args.bundle_option):
+        parser.error("provide exactly one bundle path, positionally or with --bundle")
+    bundle_path = args.bundle_option or args.bundle_path
     validation = validate_bundle(
-        Path(args.bundle_path),
+        Path(bundle_path),
         Path(args.baseline_path) if args.baseline_path else None,
     )
     if args.json_path:
