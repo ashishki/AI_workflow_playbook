@@ -43,6 +43,8 @@ Never delete history from this file. Append; do not replace.
 - **Task-scoped context:** read `Context-Refs` in `docs/tasks.md` before broad searching
 - **Generated context packets:** `docs/context-packets/` (if present; convenience only, canonical paths win)
 - **Test-first implementer prompt:** `docs/prompts/IMPLEMENTER_TDD.md` (use when applicability is `required`)
+- **Codex exec subagent renderer:** `tools/render_codex_exec_prompt.py` (use only
+  when the project has explicitly selected the task-loop subagent profile)
 
 ---
 
@@ -94,6 +96,26 @@ but that were deferred from the current task. Format:
   criteria.
 - Preserve the failed runtime verification record, relevant diff, and command
   output before any correction turn.
+
+---
+
+## Codex Exec Subagent Loop
+
+- Profile status: disabled / enabled
+- Required protocol: `docs/codex_exec_subagent_protocol.md` or project-local equivalent
+- Review policy: `docs/REVIEW_POLICY.md`
+- Prompt renderer: `tools/render_codex_exec_prompt.py`
+- Subagent report directory: `docs/verification/`
+- Human completion authority: required when delivery model or review policy says so
+
+When enabled, the main agent may launch isolated `codex exec` children for
+read-only review roles and scoped write roles. The active implementer child must
+not review itself. Review children must run read-only. Fix children must not
+edit review reports, mark tasks done, commit, or push. Documentation sync may
+update state docs only after required reviews and verification are green.
+
+Commit and push happen only in the main-agent step after final deterministic
+gates pass and required human approval is recorded.
 
 ---
 

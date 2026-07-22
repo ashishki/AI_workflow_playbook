@@ -610,6 +610,7 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
     copy_file("docs/cost_telemetry_protocol.md", target / "docs/cost_telemetry_protocol.md", replacements, args.force, args.dry_run, result)
     copy_file("docs/cache_context_layout.md", target / "docs/cache_context_layout.md", replacements, args.force, args.dry_run, result)
     copy_file("docs/external_skill_security_policy.md", target / "docs/external_skill_security_policy.md", replacements, args.force, args.dry_run, result)
+    copy_file("docs/codex_exec_subagent_protocol.md", target / "docs/codex_exec_subagent_protocol.md", replacements, args.force, args.dry_run, result)
     copy_file("templates/COST_BUDGET.md", target / "docs/COST_BUDGET.md", replacements, args.force, args.dry_run, result)
     copy_file("templates/README_INDEX.md", target / "docs/README.md", replacements, args.force, args.dry_run, result)
     copy_binary_or_text_file(
@@ -629,6 +630,13 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "tools/skill_security_gate.py",
         target / "tools/skill_security_gate.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/render_codex_exec_prompt.py",
+        target / "tools/render_codex_exec_prompt.py",
         args.force,
         args.dry_run,
         result,
@@ -726,6 +734,13 @@ def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: di
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "tools/playbook_validate.py",
         target / "tools/playbook_validate.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/render_codex_exec_prompt.py",
+        target / "tools/render_codex_exec_prompt.py",
         args.force,
         args.dry_run,
         result,

@@ -1,7 +1,7 @@
 # AI Workflow Playbook Tasks
 
 Status: active core framework task graph
-Last updated: 2026-07-15
+Last updated: 2026-07-22
 
 This file tracks framework work for the playbook itself. It is separate from
 project adoption tasks in downstream repositories.
@@ -1158,3 +1158,51 @@ Integration-Points:
 Verification:
   - `python3 tools/playbook_validate.py --root . --check tasks`
   - `python3 -m py_compile tools/*.py`
+
+### AWP-PI-008: Codex Exec Subagent Task Loop Protocol
+
+Owner: codex
+Type: tools protocol review
+Status: done 2026-07-22
+Risk-Level: medium
+Critic-Required: conditional
+
+Objective: |
+  Formalize the optional task-loop profile where a main Playbook agent invokes
+  isolated `codex exec` subagents for deep review, Test Critic, privacy review,
+  scoped fixes, and documentation sync before commit and push.
+
+Acceptance-Criteria:
+  - The protocol distinguishes Codex Direct bootstrap from the optional
+    task-loop subagent profile.
+  - Standard/Strict generated projects receive the protocol, role prompts, and
+    prompt renderer.
+  - Review roles are read-only; fix and doc-sync roles are scoped write roles;
+    no subagent commits, pushes, self-reviews, or grants human approval.
+  - Usage docs show reusable `codex exec` commands for Test Critic, privacy
+    review, fixes, and doc sync.
+  - Renderer tests prove task, review policy, result markers, and sandbox hints
+    appear in generated prompts.
+
+Integration-Points:
+  - `docs/codex_exec_subagent_protocol.md`
+  - `tools/render_codex_exec_prompt.py`
+  - `prompts/PROMPT_FIX_FROM_REVIEW.md`
+  - `prompts/PROMPT_DOC_SYNC_AFTER_TASK.md`
+  - `prompts/audit/PROMPT_0_META.md`
+  - `prompts/audit/PROMPT_1_ARCH.md`
+  - `prompts/audit/PROMPT_2_CODE.md`
+  - `prompts/audit/PROMPT_3_CONSOLIDATED.md`
+  - `prompts/audit/PROMPT_PRIVACY_REVIEW.md`
+  - `tools/init_playbook_project.py`
+  - `docs/usage_guide.md`
+  - `README.md`
+  - `prompts/ORCHESTRATOR.md`
+  - `reports/test_first_pilot/shishki_bot_v1/ASSET_MANIFEST.sha256`
+
+Verification:
+  - `.venv/bin/python -m pytest tests/unit/test_render_codex_exec_prompt.py -q`
+  - `.venv/bin/python -m pytest tests/integration/test_initializer.py -q`
+  - `.venv/bin/python tools/playbook_validate.py --root . --check tasks --check placeholders --check readiness --check delivery --check references`
+  - `python3 -m py_compile tools/render_codex_exec_prompt.py tests/unit/test_render_codex_exec_prompt.py`
+  - `.venv/bin/python -m pytest tests/unit/test_test_first_pilot_assets.py::test_frozen_asset_manifest_matches_full_execution_closure -q`

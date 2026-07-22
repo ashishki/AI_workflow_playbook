@@ -89,3 +89,21 @@ The gate discovers skills under `.codex/skills`, `.claude/skills`, and
 `skills`, requires `docs/security/skills/{skill-name}/TRUST_RECORD.md`, and
 runs `skillspector scan` when skills are present. Repositories with no external
 skills pass without requiring SkillSpector.
+
+## Render Codex Exec Subagent Prompts
+
+```bash
+python3 tools/render_codex_exec_prompt.py \
+  --root . \
+  --task T03 \
+  --role test_critic \
+  --output-path docs/verification/T03_test_critic.md
+```
+
+The renderer builds task-scoped prompts for the optional Codex exec subagent
+profile. It reads `docs/tasks.md`, `docs/REVIEW_POLICY.md`,
+`.playbook/delivery_execution_model.json`, project verification config, review
+reports, and copied role prompts. Use it when a main agent dispatches isolated
+`codex exec` children for deep review, Test Critic, privacy review, scoped
+fixes, or documentation sync. Review roles are read-only; write roles remain
+task-scoped and never commit, push, or grant human approval.

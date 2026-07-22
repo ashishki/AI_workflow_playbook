@@ -21,13 +21,77 @@ The currently supported default is **Codex Direct**:
 - Codex reads the copied Playbook files and the approved project brief;
 - Codex runs shell commands, initializer commands, validators, and tests
   directly from the active session;
-- Codex must not spawn a nested Codex process with `codex exec`, `codex run`,
-  or another Codex CLI invocation from inside that active Codex session.
+- during bootstrap and ordinary single-agent implementation, Codex must not
+  spawn a nested Codex process with `codex exec`, `codex run`, or another Codex
+  CLI invocation from inside the active implementation role.
 
-`codex exec` examples in this repository are external-orchestration examples
-only: CI, the standalone harness command adapter, or a separate non-Codex
-orchestrator process may use them from outside the active Codex session. They
-are not the bootstrap path for a Codex Direct project.
+`codex exec` examples in this repository are not the bootstrap path for a Codex
+Direct project. They are valid for CI, the standalone harness command adapter,
+or an explicit task-loop profile where the main agent is acting as an
+orchestrator and launches isolated subagents for review, fixes, and doc sync.
+
+### Optional Task Loop: Codex Exec Subagents
+
+Use this profile after bootstrap when the project wants the main agent to keep
+moving through tasks while preserving role separation.
+
+The profile is documented in
+`docs/codex_exec_subagent_protocol.md` and uses:
+
+```bash
+python3 tools/render_codex_exec_prompt.py --root . --task T03 --role test_critic
+```
+
+The loop is:
+
+```text
+main agent selects next ready task
+-> implementer writes scoped code/tests/docs
+-> deterministic gates run
+-> main agent resolves docs/REVIEW_POLICY.md
+-> read-only codex exec reviewers run as required
+-> fix_from_review runs only if findings require fixes
+-> required reviews rerun
+-> doc_sync updates task/evidence/session docs after green reviews
+-> human completion approval is recorded when required
+-> main agent commits and pushes
+-> main agent selects the next task
+```
+
+Example Test Critic command:
+
+```bash
+codex exec \
+  --cd "$PROJECT" \
+  --sandbox read-only \
+  --output-last-message "docs/verification/T03_test_critic.md" \
+  "$(python3 tools/render_codex_exec_prompt.py --root . --task T03 --role test_critic --output-path docs/verification/T03_test_critic.md)"
+```
+
+Example privacy review command:
+
+```bash
+codex exec \
+  --cd "$PROJECT" \
+  --sandbox read-only \
+  --output-last-message "docs/verification/T03_privacy_review.md" \
+  "$(python3 tools/render_codex_exec_prompt.py --root . --task T03 --role privacy_review --output-path docs/verification/T03_privacy_review.md)"
+```
+
+Example scoped fix command:
+
+```bash
+codex exec \
+  --cd "$PROJECT" \
+  --sandbox workspace-write \
+  --output-last-message "docs/verification/T03_fix_result.md" \
+  "$(python3 tools/render_codex_exec_prompt.py --root . --task T03 --role fix_from_review --review docs/verification/T03_test_critic.md --review docs/verification/T03_privacy_review.md --output-path docs/verification/T03_fix_result.md)"
+```
+
+Do not let the same child agent implement and review its own work. Review
+children are read-only; fixer children write only scoped fixes; doc-sync
+children update state docs only after required gates are green. No child agent
+commits, pushes, or grants human approval.
 
 ### Human-Filled Brief Gate
 

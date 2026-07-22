@@ -13,6 +13,9 @@ Mode: Lean
 - Keep changes inside the task file scope.
 - Run the task's `test:` or `verify:` command before completion.
 - Do not self-review meaningful implementation changes.
+- Use `codex exec` subagents only when the project explicitly enables the
+  task-loop subagent profile. Review subagents are read-only; fix subagents do
+  not review; no subagent commits, pushes, or grants human approval.
 - Stop for human approval before auth, secrets, billing, destructive actions,
   runtime expansion, or material model-cost escalation.
 - Do not silently work around missing data, credentials, permissions, approval,

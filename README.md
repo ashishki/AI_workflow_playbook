@@ -99,7 +99,7 @@ consumer when enforcement exists.
 | Evidence bundles are locally integrity-validated | `schemas/evidence_bundle.schema.json` | `tools/validate_harness_evidence.py` | hash tamper, path escape, schema mismatch tests | pending external attestation | Tested |
 | Capability/evaluation claims require paired experiment evidence | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, companion lab | `harness-lab run`, `harness-lab compare`, HarnessEvalUnit compatibility fingerprints, empirical identity flags, `--require-empirical` | scripted demonstration run + adjudicated first pilot | no improvement claim supported by TFA-7 | Formalized / Tested for mechanism |
 | Project-specific harness claims require project-specific fixtures | `docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md`, `docs/adoption_modes.md` | companion suite with project fixtures, traps, scorers | suite validation + EvidenceBundles | pending per project | Formalized |
-| Role separation and review duties | `prompts/ORCHESTRATOR.md`, audit prompts | prompt protocol and optional hooks | review prompt checks | pending | Documented / Formalized |
+| Role separation and review duties | `docs/codex_exec_subagent_protocol.md`, `prompts/ORCHESTRATOR.md`, audit prompts | prompt protocol, `tools/render_codex_exec_prompt.py`, optional hooks | renderer tests + review prompt checks | pending | Formalized / Tested for renderer |
 | Immutable contract protection | `hooks/guard_files.sh`, contract docs | hook when installed | hook tests | pending | Tested when hooks installed |
 
 ## Why This Playbook Is Different
@@ -204,16 +204,25 @@ declared capabilities, SkillSpector or equivalent scan evidence, finding triage,
 install scope, and risk acceptance. Clean scans and signatures are evidence, not
 proof of safety.
 
-**Codex Direct execution.** The current supported default is a direct Codex
-session in the target repository. Codex reads the approved brief and Playbook
-artifacts, runs shell commands directly, writes code directly, and records
-evidence through receipts and validators. Do not ask an active Codex session to
-spawn nested `codex exec`, `codex run`, or another Codex CLI process.
+**Codex Direct execution.** The current supported bootstrap default is a direct
+Codex session in the target repository. Codex reads the approved brief and
+Playbook artifacts, runs shell commands directly, writes code directly, and
+records evidence through receipts and validators. During bootstrap and ordinary
+single-agent implementation, do not ask the active implementation agent to spawn
+nested `codex exec`, `codex run`, or another Codex CLI process.
+
+**Codex exec subagent profile.** After bootstrap, a project may explicitly
+select an external/task-loop orchestration profile where the main agent uses
+isolated `codex exec` subagents for read-only deep review, Test Critic,
+privacy/security review, scoped fixes, and documentation sync. This is
+formalized in `docs/codex_exec_subagent_protocol.md` and rendered by
+`tools/render_codex_exec_prompt.py`. Review agents stay read-only, fix agents do
+not review, no subagent commits or pushes, and human completion authority is not
+automated.
 
 **External orchestration is separate.** `codex exec` remains valid for CI, the
-standalone harness command adapter, or a separate non-Codex orchestrator process
-running outside the active Codex session. It is not the current bootstrap path
-for new Codex Direct projects.
+standalone harness command adapter, or a task-loop orchestrator process. It is
+not the brief-first bootstrap path for new Codex Direct projects.
 
 ---
 

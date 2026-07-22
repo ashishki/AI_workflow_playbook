@@ -28,12 +28,16 @@ cycle.
 ## How to use
 
 This is a legacy/external Claude Code orchestration prompt. Paste it only into
-Claude Code or another non-Codex orchestrator that will launch Codex as a
-separate external process.
+Claude Code, another external orchestrator, or a Codex session explicitly acting
+as the main-agent task-loop orchestrator under
+`docs/codex_exec_subagent_protocol.md`.
 
-Do not paste this file into an active Codex Direct implementation session. In
-Codex Direct mode, the running Codex agent is already the implementer and must
-not call nested `codex exec`, `codex run`, or another Codex CLI process.
+Do not paste this file into an active Codex Direct implementation session. In a
+plain Codex Direct implementation role, the running Codex agent is already the
+implementer and must not call nested `codex exec`, `codex run`, or another
+Codex CLI process. In the optional task-loop profile, only the main agent may
+launch isolated `codex exec` children rendered by
+`tools/render_codex_exec_prompt.py`.
 
 The orchestrator reads all state from `docs/CODEX_PROMPT.md` and
 `docs/tasks.md` at runtime.
@@ -52,12 +56,13 @@ The orchestrator reads all state from `docs/CODEX_PROMPT.md` and
 <!-- {{CODEX_COMMAND}} is the implementation agent invocation.
      This placeholder is for legacy/external orchestration only.
 
-     Current default for new projects is Codex Direct: the active Codex session
-     runs shell commands directly and does not spawn nested Codex CLI processes.
+     Current default for new projects is Codex Direct: the active Codex
+     implementation session runs shell commands directly and does not spawn
+     nested Codex CLI processes.
 
      Use a command such as `codex exec -s workspace-write` only when a separate
-     non-Codex orchestrator or harness process is launching Codex from outside
-     the active Codex session.
+     orchestrator, harness process, or explicitly selected main-agent task-loop
+     profile is launching isolated Codex child agents.
 
      The command must accept a prompt string as its final argument, be able to read/write
      files under {{PROJECT_ROOT}}, and execute shell commands (test runner, linter). -->
@@ -1338,8 +1343,9 @@ Replace every `{{PLACEHOLDER}}` before using this template. The table below list
 
 **`{{CODEX_COMMAND}}` - external implementation agent options:**
 
-Do not use these options from inside an active Codex Direct session. They are
-for a separate orchestrator or harness process.
+Do not use these options from inside an active Codex Direct implementation
+session. They are for a separate orchestrator, harness process, or explicitly
+selected main-agent task-loop profile.
 
 The orchestrator expects a command that:
 1. Accepts a prompt string as its final argument (via shell variable, not stdin)
