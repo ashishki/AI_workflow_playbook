@@ -13,6 +13,10 @@ Status: active-core-framework
 - Latest completed tasks: `AWP-ZT-001`, `AWP-ZT-002`, `AWP-ZT-003`,
   `AWP-ZT-004`, `AWP-PI-008`.
 - Working rule: protocols must remain artifact-first and runtime-optional.
+- RAG Eval v2: active framework implementation on branch `feat/rag-eval-v2`;
+  machine contracts live under `schemas/` and the CLI tools are
+  `tools/rag_eval_validate.py`, `tools/rag_eval_score.py`, and
+  `tools/rag_eval_compare.py`.
 
 ## Active Inputs
 
@@ -36,6 +40,18 @@ empty
 ## Open Findings
 
 none
+
+## RAG State
+
+- RAG shape: fixed_pipeline fixture plus conditional routed/graph support in schemas.
+- Manifest path/hash: `tests/fixtures/rag_eval/valid/manifest.json` (fixture hash checked by tools).
+- Current baseline result: `.playbook-artifacts/rag-eval/baseline_result.json` when local smoke is run.
+- Current candidate result: `.playbook-artifacts/rag-eval/candidate_result.json` when local smoke is run.
+- Current comparison result: `.playbook-artifacts/rag-eval/comparison.json` when local smoke is run.
+- Corpus/dataset versions: fixture `2026-07-26`; synthetic mechanism-only.
+- Harness/delivery profile: fixed pipeline / inline for fixture; agentic delivery fields are schema-supported.
+- Open RAG findings: baseline environment still has pre-existing frozen Codex/toolchain drift unrelated to RAG eval.
+- Last eval status/date: local focused RAG tests passed on 2026-07-26; full final verification pending.
 
 ## Runtime Verification
 

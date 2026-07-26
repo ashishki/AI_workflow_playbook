@@ -210,6 +210,34 @@ python3 "$PLAYBOOK/tools/init_playbook_project.py" . \
   --install-claude-hooks
 ```
 
+Standard with the optional offline RAG eval kit:
+
+```bash
+python3 "$PLAYBOOK/tools/init_playbook_project.py" . \
+  --mode standard \
+  --project-name "Project Name" \
+  --operational-pain "Concrete pain from docs/PROJECT_BRIEF.md" \
+  --current-workaround "Current workaround from docs/PROJECT_BRIEF.md" \
+  --first-proof-metric "First proof metric from docs/PROJECT_BRIEF.md" \
+  --verify-argv '["{python}", "-m", "pytest", "-q"]' \
+  --with-rag-eval
+```
+
+The flag creates `.playbook/rag_eval_manifest.json`,
+`.playbook/rag_eval_cases.jsonl`, offline scorer/comparator tools, schemas, and
+`docs/retrieval_eval.md`. The generated cases are mechanism fixtures only.
+Replace them with project-specific representative data before making empirical
+or production quality claims.
+
+Generated RAG smoke commands:
+
+```bash
+python3 tools/playbook_validate.py --root . --check rag
+python3 tools/rag_eval_score.py --root . --manifest .playbook/rag_eval_manifest.json --observations .playbook/rag_eval_baseline_observations.jsonl --condition lexical_baseline --json .playbook-artifacts/rag-eval/baseline.json --report reports/rag_eval/baseline.md
+python3 tools/rag_eval_score.py --root . --manifest .playbook/rag_eval_manifest.json --observations .playbook/rag_eval_candidate_observations.jsonl --condition production_candidate --json .playbook-artifacts/rag-eval/candidate.json --report reports/rag_eval/candidate.md
+python3 tools/rag_eval_compare.py --root . --baseline .playbook-artifacts/rag-eval/baseline.json --candidate .playbook-artifacts/rag-eval/candidate.json --manifest .playbook/rag_eval_manifest.json --json .playbook-artifacts/rag-eval/comparison.json --report reports/rag_eval/comparison.md
+```
+
 The initializer skips existing files by default, so a filled
 `docs/PROJECT_BRIEF.md` is not overwritten unless `--force` is explicitly used.
 Do not use `--force` during bootstrap unless the human explicitly approves

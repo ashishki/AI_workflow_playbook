@@ -229,7 +229,7 @@ Compatibility notes:
 - Retrieval semantics are owned by RAG: if an agentic system performs retrieval, RAG profile
   (not Agentic) governs ingestion, indexing, corpus isolation, and insufficient_evidence.
 - The Orchestrator dispatches deep review on task type tags — keep tags in tasks.md accurate:
-  rag:ingestion, rag:query, tool:schema, tool:unsafe, agent:loop, agent:handoff, plan:schema,
+  rag:data-readiness, rag:ingestion, rag:query, rag:eval, rag:routing, rag:harness, rag:graph, rag:attribution, tool:schema, tool:unsafe, agent:loop, agent:handoff, plan:schema,
   compliance:control, compliance:audit, compliance:evidence.
 -->
 
@@ -272,6 +272,21 @@ If RAG Status = OFF, delete from here through the end of this profile.
 
 #### RAG Architecture
 
+| RAG evaluation field | Decision |
+|----------------------|----------|
+| RAG shape | {{fixed_pipeline \| agentic_search \| routed \| graph \| hybrid}} |
+| Lexical baseline | {{grep \| BM25 \| sparse equivalent \| justified exception}} |
+| Production retriever | {{lexical \| dense \| hybrid \| routed \| graph + version}} |
+| Routing/topology status | {{off \| conditional \| active with taxonomy/version/fallback}} |
+| Harness/delivery profile | {{fixed pipeline inline \| custom/provider harness + inline/file/progressive_disclosure}} |
+| Corpus/dataset/config identity | {{manifest/cases/corpus refs and hashes}} |
+| Machine eval manifest | `.playbook/rag_eval_manifest.json` / n/a |
+| No-answer policy | {{insufficient_evidence trigger and owner}} |
+| Eval tiers | {{diagnostic \| release-gated \| empirical with holdout}} |
+| Optional graph attribution | {{off \| perturbation with human/independent oracle and cost budget}} |
+| Rollback/re-index path | {{how index/model/router/prompt change is reverted}} |
+| Online monitoring | {{no-answer, fallback, latency, index age, corrections, drift triggers}} |
+
 **Ingestion pipeline** (offline / scheduled):
 ```
 extract → normalize → chunk → embed → index
@@ -300,6 +315,11 @@ query analyze → retrieve → rerank/filter → assemble evidence → answer | 
 
 The `insufficient_evidence` path is **not optional**. When retrieved evidence does not support an answer, the system must return `insufficient_evidence` rather than fabricating a response.
 
+For agentic RAG, the evaluated unit is retriever + harness + delivery profile +
+context-consumption loop. Record files/artifacts opened and read, returned
+results actually consumed, retries, termination reason, tokens, latency, cost,
+and unsuccessful read/integration paths.
+
 #### Corpus Description
 
 | Property | Value |
@@ -323,6 +343,7 @@ or an equivalent project section.
 | Access-control metadata | {{ACL source and enforcement plan}} |
 | PII/regulated data | {{classification, redaction, retention}} |
 | Gold evidence seed | {{query-to-document/span examples}} |
+| Corpus snapshot identity | {{snapshot ref and SHA-256}} |
 
 Do not treat retrieval metrics as valid if data readiness is unknown.
 
@@ -330,14 +351,20 @@ Do not treat retrieval metrics as valid if data readiness is unknown.
 
 | Decision | Selection | Why |
 |----------|-----------|-----|
-| Retrieval mode | {{text-only \| multimodal}} | {{Why this is the minimum sufficient retrieval mode}} |
+| Retrieval mode | {{lexical \| dense \| hybrid \| routed \| graph}} | {{Why this is the minimum sufficient retrieval mode}} |
 | Modalities in scope | {{e.g., text only \| text + images \| text + PDFs}} | {{Which modalities are truly required now}} |
-| Text-only baseline considered? | {{yes \| no}} | {{If no, explain why not; if multimodal, comparison is expected}} |
+| Lexical baseline considered? | {{yes \| no}} | {{If no, justify; dense retrieval must not be accepted without a comparable lexical baseline}} |
 | Embedding provider / model | {{provider-neutral description + concrete model/version in project docs}} | {{Why this option fits quality, cost, and latency constraints}} |
 | Stability status | {{stable \| preview \| experimental}} | {{Risk posture for this choice}} |
 | Fallback / migration path | {{text-only fallback, prior model, or re-index plan}} | {{How retrieval continues if the model changes or is withdrawn}} |
 
 Bias toward `text-only` unless multimodal retrieval is clearly justified by product behavior. If `multimodal` is selected, explain why extracting text or metadata alone is insufficient.
+
+Do not enable routed/domain topology unless real maintained domain boundaries,
+ACL/owner boundaries, costly route errors, or persistent cross-domain
+distractors justify the taxonomy. Do not enable graph perturbation unless the
+system has structured evidence and an independent oracle for high-risk
+attribution claims.
 
 #### Index Strategy
 

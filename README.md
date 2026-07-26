@@ -154,7 +154,7 @@ readiness and empirical comparison claims must say CI status is unknown.
 
 | Profile | Governs | Review checks | Evaluation artifact |
 |---------|---------|---------------|---------------------|
-| **RAG** | Document retrieval: ingestion pipeline, query-time retrieval, explicit embedding strategy, `insufficient_evidence` path | RET-1..9 | `retrieval_eval.md` |
+| **RAG** | Document retrieval: corpus readiness, query routing, retrieval, context assembly, generation/citations, harness/delivery behavior, drift, `insufficient_evidence` path | RET-1..19 | `retrieval_eval.md` plus optional `.playbook/rag_eval_manifest.json` |
 | **Tool-Use** | LLM-directed tool calls: schemas, side effects, unsafe-action gates, idempotency | TOOL-1..5 | `tool_eval.md` |
 | **Agentic** | Multi-step decision loops: roles, authority boundaries, loop termination contract | AGENT-1..5 | `agent_eval.md` |
 | **Planning** | Structured plan output as primary deliverable: schema, validation gate, plan-to-execution contract | PLAN-1..4 | `plan_eval.md` |
@@ -579,6 +579,14 @@ models or claiming agent reliability.
 separate corpus readiness from retrieval metrics and downstream answer quality.
 RAG failures should be localized to data, retrieval, generation, or E2E workflow
 rather than hidden behind one final answer score.
+
+**RAG Evaluation v2** adds optional machine-readable contracts and offline
+tools: manifest/case/observation/result/comparison schemas under `schemas/`,
+`tools/rag_eval_validate.py`, `tools/rag_eval_score.py`, and
+`tools/rag_eval_compare.py`. Enable downstream scaffolding with
+`tools/init_playbook_project.py ... --with-rag-eval`. The offline smoke path is
+provider-neutral and mechanism-only; it does not prove a specific production
+RAG system without project-specific empirical evidence.
 
 **templates/COST_ARCHITECTURE.md** turns AI cost from a policy note into an architecture artifact: workload classes, model tiers, prompt-cache layout, batch lanes, routing maturity, cascade rules, and cost-per-successful-task. Use it for recurring/material AI usage or any dynamic routing/cascade plan.
 

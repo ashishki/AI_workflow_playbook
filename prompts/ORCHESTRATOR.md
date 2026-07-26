@@ -92,12 +92,12 @@ cd {{PROJECT_ROOT}} && {{CODEX_COMMAND}} "$PROMPT"
 
 | Profile | Trigger tags |
 |---------|-------------|
-| RAG | `rag:ingestion`, `rag:query` |
+| RAG | `rag:data-readiness`, `rag:ingestion`, `rag:query`, `rag:eval`, `rag:routing`, `rag:harness`, `rag:graph`, `rag:attribution` |
 | Tool-Use | `tool:schema`, `tool:unsafe` |
 | Agentic | `agent:loop`, `agent:handoff`, `agent:termination` |
 | Planning | `plan:schema`, `plan:validation` |
 
-- Task changes retrieval semantics (when RAG = ON) — regardless of implementation mechanism: retrieval policy, chunking, index/metadata schema, evidence/citation format, corpus isolation, reindex/delete/lifecycle logic, or `insufficient_evidence` behavior (semantic ownership rule)
+- Task changes retrieval semantics (when RAG = ON) — regardless of implementation mechanism: retrieval policy, query routing, chunking, index/metadata schema, evidence/citation format, harness/delivery profile, corpus isolation, reindex/delete/lifecycle logic, or `insufficient_evidence` behavior (semantic ownership rule)
 - Task changes retrieval mode or modality scope (text-only vs multimodal, supported modalities, embedding model stability, fallback path)
 - Task changes model routing, model class, budget limits, agent fan-out, retry limits, tool-call breadth, or dynamic workflow execution policy
 
@@ -175,6 +175,8 @@ Read in full:
 9. `docs/external_skill_security_policy.md` if it exists
 10. `docs/security/skills/**/TRUST_RECORD.md` if present
 11. `reports/ai_cost_rollup.md` if it exists
+12. `.playbook/rag_eval_manifest.json`, `.playbook-artifacts/rag-eval/*.json`,
+    and `reports/rag_eval/*.md` if RAG eval is active
 
 **Compaction check.**
 
@@ -331,7 +333,7 @@ review may be added, but is never an automatic requirement.
 
 | File path pattern (substring match) | Profile | Confidence |
 |--------------------------------------|---------|------------|
-| `retrieval/`, `embedding`, `chunk`, `index`, `corpus`, `ingestion`, `rerank` | RAG | HIGH |
+| `retrieval/`, `embedding`, `chunk`, `index`, `corpus`, `ingestion`, `rerank`, `rag_eval`, `routing`, `attribution`, `perturbation`, `delivery_profile` | RAG | HIGH |
 | `RAG_DATA_READINESS`, `DATA_QUALITY_CHECKLIST`, `data_readiness`, `data_quality`, `gold_evidence` | RAG | HIGH |
 | `tools/`, `tool_schema`, `function_call`, `@tool`, `tool_catalog` | Tool-Use | HIGH |
 | `plan_schema`, `plan_graph`, `plan_valid` | Planning | HIGH |
@@ -444,6 +446,16 @@ Stop on the following:
 - RAG Profile = ON, or task is `rag:*`, and there is no data readiness evidence
   for source inventory, parser coverage, freshness, metadata, ACL, and gold
   evidence seed before retrieval-quality claims are made.
+- RAG Profile = ON for Standard/Strict recurring or user-facing RAG, and there
+  is no machine manifest/result path or explicitly approved diagnostic-only
+  manual mode.
+- Agentic RAG lacks harness type/version, delivery profile, context-consumption
+  loop, returned/consumed result accounting, retries, termination, latency, and
+  cost fields.
+- Routed RAG lacks taxonomy/router/fallback/eval declaration, including a test
+  where a wrong route hides otherwise retrievable gold evidence.
+- Graph/attribution RAG lacks perturbation scenarios, independent oracle/human
+  sample for high-risk claims, or regeneration cost budget.
 - Tool-Use or Agentic Profile = ON and the task changes model, prompt, tools,
   memory/state, retry/recovery, permissions, traces, HITL, or termination
   without a harness card or architecture harness boundary.
@@ -459,7 +471,7 @@ If stopped, print one of:
 ```
 DATA_READINESS_WARNING
 Task: [T## — Title]
-Missing: [source inventory | parser coverage | freshness | metadata | ACL | gold evidence]
+Missing: [source inventory | parser coverage | freshness | metadata | ACL | gold evidence | machine manifest | lexical baseline | harness delivery profile | route eval | perturbation oracle]
 Action required: add/update RAG data readiness before claiming retrieval readiness.
 ```
 
@@ -742,7 +754,7 @@ Evaluation trigger tags (check the `Type:` field of the current task in `docs/ta
 
 | Profile | Tags that require evaluation |
 |---------|------------------------------|
-| RAG | `rag:data-readiness`, `rag:ingestion`, `rag:query`, `rag:generation` |
+| RAG | `rag:data-readiness`, `rag:ingestion`, `rag:query`, `rag:generation`, `rag:eval`, `rag:routing`, `rag:harness`, `rag:graph`, `rag:attribution` |
 | Tool-Use | `tool:schema`, `tool:unsafe`, `tool:call` |
 | Agentic | `agent:harness`, `agent:trace`, `agent:recovery`, `agent:loop`, `agent:handoff`, `agent:termination` |
 | Planning | `plan:schema`, `plan:validation` |
@@ -756,7 +768,10 @@ Evaluation trigger tags (check the `Type:` field of the current task in `docs/ta
 The Orchestrator does NOT run evaluation. The implementation agent (Codex) is responsible for updating the evaluation artifact as part of its post-task protocol. Step 3.5 is a verification-only step.
 
 1. Read `docs/CODEX_PROMPT.md §Evaluation State` — was the Last Evaluation entry updated for this task?
-2. If yes: read the evaluation artifact (e.g. `docs/retrieval_eval.md`) to confirm results are recorded.
+2. If yes: read the evaluation artifact (e.g. `docs/retrieval_eval.md`) and,
+   when machine eval is active, `.playbook/rag_eval_manifest.json`,
+   `.playbook-artifacts/rag-eval/*.json`, and `reports/rag_eval/*.md`.
+   Confirm current results are recorded for the exact inputs.
 
 If evaluation was **NOT** performed (Codex skipped it):
 - Do NOT proceed to Step 4.
@@ -775,13 +790,16 @@ If evaluation was **NOT** performed (Codex skipped it):
   Return IMPLEMENTATION_RESULT: DONE when complete.
   ```
 - Re-enter Step 3.5 after the agent responds.
+- If machine comparison is present, verify baseline/candidate compatibility.
+  `invalid` is never PASS. `diagnostic` is not release evidence. Apply manifest
+  P1/P0 regression thresholds and stop-ship findings.
 
 If evaluation was **performed**:
 - Verify `Eval Source` field is present and non-blank in both the evaluation artifact entry and in `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation`. If absent or blank → treat as "evaluation NOT performed" (see remediation prompt below).
 - Verify `Date` / timestamp is present and non-blank in both locations. If absent → same treatment.
 - **Regression check** — compare the current primary metric against the baseline row in `docs/CODEX_PROMPT.md §Evaluation State §Regression Thresholds`:
-  - Drop > **15 %** vs. baseline → add **P0 finding** (Stop-Ship); do NOT proceed to Step 4 until resolved.
-  - Drop > **5 %** vs. baseline → add **P1 finding**; add to Fix Queue; proceed to Step 4 (regression will be addressed before next phase gate).
+  - Drop > **15 %** vs. baseline on a release-significant metric → add **P0 finding** (Stop-Ship); do NOT proceed to Step 4 until resolved.
+  - Drop > **5 %** vs. baseline on a release-significant metric → add **P1 finding**; add to Fix Queue; proceed to Step 4 (regression will be addressed before next phase gate).
   - Drop ≤ **5 %** or metric improved → no finding; proceed to Step 4.
   - If `§Regression Thresholds` field is absent in `docs/CODEX_PROMPT.md` → use 15 % / 5 % defaults above and add a P2 note to set explicit thresholds.
   - Document any regression (regardless of severity) in the evaluation artifact §Regression Notes with root cause classification: `code-change-induced` or `corpus-change-induced`.
@@ -1189,8 +1207,12 @@ Rules:
 - Every change must be traceable to something in REVIEW_REPORT.md or the implementer completion report.
 - Do not update docs/tasks.md — that was already patched by Consolidation Agent.
 - For each active profile with work completed this phase, update its state block in docs/CODEX_PROMPT.md:
-  - `## RAG State` (RAG = ON): refresh retrieval baseline, open retrieval findings, index schema version, pending reindex actions. If retrieval behavior changed, note whether docs/retrieval_eval.md was updated.
-    Also refresh retrieval mode (`text-only` or `multimodal`), active modalities, and any preview-model fallback note if applicable.
+  - `## RAG State` (RAG = ON): refresh RAG shape, manifest path/hash,
+    current baseline result, candidate result, comparison result,
+    corpus/dataset versions, harness/delivery profile, retrieval baseline, open
+    RAG findings, index schema version, pending reindex actions, and last eval
+    status/date. If retrieval behavior changed, note whether
+    docs/retrieval_eval.md and machine artifacts were updated.
   - `## Tool-Use State` (Tool-Use = ON): refresh registered tool schemas, unsafe-action guardrails, open tool findings.
   - `## Agentic State` (Agentic = ON): refresh agent roles in use, loop termination contract version, open agent findings.
   - `## Planning State` (Planning = ON): refresh plan schema version, open plan validation findings.

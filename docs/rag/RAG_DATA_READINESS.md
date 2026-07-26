@@ -6,13 +6,15 @@ RAG readiness starts before embeddings. A corpus that is stale, duplicated,
 poorly parsed, missing metadata, or access-control ambiguous will produce weak
 retrieval no matter which model or vector database is selected.
 
-Use this gate before `docs/retrieval_eval.md`.
+Use this gate before `docs/retrieval_eval.md` and before any
+`.playbook/rag_eval_manifest.json` result is treated as release evidence.
 
 ## Readiness Flow
 
 ```text
 source inventory -> parser coverage -> quality checks -> metadata/ACL check
--> gold evidence slices -> retrieval eval -> generation eval -> E2E acceptance
+-> corpus snapshot identity -> gold evidence slices -> machine eval manifest
+-> retrieval eval -> generation eval -> harness/E2E eval -> online drift
 ```
 
 ## Required Inventory
@@ -27,6 +29,24 @@ source inventory -> parser coverage -> quality checks -> metadata/ACL check
 | Retention | What must be deleted, archived, or redacted? |
 | Language/locale | Languages, encodings, transliteration, terminology |
 | Metadata | Required fields for filtering, citations, freshness, ACL, and ontology |
+
+## Stage 0 Contract
+
+RAG Evaluation v2 treats corpus and ingestion readiness as Stage 0. Record:
+
+- source inventory and owner approval;
+- parser/OCR/table/form coverage by format;
+- empty and near-empty document handling;
+- duplicate and near-duplicate policy;
+- source canonicalization and tombstone/deletion handling;
+- metadata and ACL completeness;
+- PII/regulated-data handling and logging boundary;
+- chunk/source/span traceability;
+- ontology/synonym readiness or an explicit decision not to use one;
+- corpus snapshot ref plus SHA-256.
+
+Generic fixtures can prove the validator/scorer mechanism. They do not prove a
+project corpus is ready.
 
 ## Data Quality Gate
 
@@ -59,8 +79,9 @@ Do not proceed to production RAG when:
 ## Artifact Links
 
 - Use `templates/RAG_DATA_READINESS.md` for project-specific readiness.
+- Use `.playbook/rag_eval_manifest.json` for machine-readable dataset/corpus
+  identity when the optional RAG eval kit is enabled.
 - Use `docs/rag/DATA_QUALITY_CHECKLIST.md` for a concrete pass/fail checklist.
 - Use `docs/rag/RETRIEVAL_EVAL_PLAN.md` for retriever metrics.
 - Use `docs/rag/GENERATION_EVAL_PLAN.md` for answer quality.
 - Use `docs/rag/RAG_ACCEPTANCE_CRITERIA.md` for release gates.
-

@@ -47,6 +47,36 @@ Version: {{N}}
 Last updated: {{DATE}}
 Changed by: {{TASK_ID}} — {{TASK_TITLE}}
 
+## Machine Artifact Registry
+
+Human-readable summary remains in this file. Machine contracts/results live
+separately and are never silently rewritten by CLI tools.
+
+| Artifact | Path | SHA-256 / status |
+|----------|------|------------------|
+| Manifest | `.playbook/rag_eval_manifest.json` | |
+| Cases JSONL | `.playbook/rag_eval_cases.jsonl` | |
+| Baseline observations | `.playbook/rag_eval_baseline_observations.jsonl` | |
+| Candidate observations | `.playbook/rag_eval_candidate_observations.jsonl` | |
+| Baseline result | `.playbook-artifacts/rag-eval/baseline.json` | |
+| Candidate result | `.playbook-artifacts/rag-eval/candidate.json` | |
+| Comparison | `.playbook-artifacts/rag-eval/comparison.json` | |
+| Markdown report | `reports/rag_eval/comparison.md` | |
+
+Quick start:
+
+```bash
+python tools/rag_eval_validate.py --root . --manifest .playbook/rag_eval_manifest.json
+python tools/rag_eval_score.py --root . --manifest .playbook/rag_eval_manifest.json --observations .playbook/rag_eval_baseline_observations.jsonl --condition lexical_baseline --json .playbook-artifacts/rag-eval/baseline.json --report reports/rag_eval/baseline.md
+python tools/rag_eval_score.py --root . --manifest .playbook/rag_eval_manifest.json --observations .playbook/rag_eval_candidate_observations.jsonl --condition production_candidate --json .playbook-artifacts/rag-eval/candidate.json --report reports/rag_eval/candidate.md
+python tools/rag_eval_compare.py --root . --baseline .playbook-artifacts/rag-eval/baseline.json --candidate .playbook-artifacts/rag-eval/candidate.json --manifest .playbook/rag_eval_manifest.json --json .playbook-artifacts/rag-eval/comparison.json --report reports/rag_eval/comparison.md
+```
+
+Maturity: documented | formalized | enforced | tested | empirically_validated
+
+This file may summarize generic mechanism fixtures, but production claims
+require project-specific empirical evidence.
+
 ## Data Readiness Gate
 
 <!--
@@ -64,6 +94,7 @@ material.
 | ACL metadata present for restricted data | {{path or note}} | pass / fail / n/a |
 | PII/regulated data classified and redacted as required | {{path or note}} | pass / fail / n/a |
 | Gold query-to-document/span evidence seeded | {{path or note}} | pass / fail / n/a |
+| Corpus snapshot ref and hash recorded | {{path or note}} | pass / fail / n/a |
 
 If a required data readiness check fails, retrieval eval can be recorded only as
 diagnostic evidence. It is not a production readiness signal.
@@ -72,10 +103,13 @@ diagnostic evidence. It is not a production readiness signal.
 
 | Property | Value |
 |----------|-------|
-| Retrieval mode | {{text-only \| multimodal}} |
+| RAG shape | {{fixed_pipeline \| agentic_search \| routed \| graph \| hybrid}} |
+| Retrieval mode | {{lexical \| dense \| hybrid \| routed \| graph}} |
 | Modalities evaluated | {{text only \| text + images \| text + PDFs \| ...}} |
-| Text-only baseline available? | {{yes \| no}} |
+| Lexical baseline available? | {{grep \| BM25 \| sparse equivalent \| no with justified exception}} |
 | Baseline comparison target | {{task / run / artifact ref \| n/a with reason}} |
+| Harness type/version | {{fixed_pipeline \| custom_agent \| provider_native_cli \| workflow_runner}} |
+| Delivery profile | {{inline \| file \| progressive_disclosure}} |
 | Stability status | {{stable \| preview \| experimental}} |
 | Fallback path | {{fallback model / text-only path / re-index plan}} |
 
@@ -155,7 +189,49 @@ Use this section when retrieval mode is `multimodal`, and optionally for text-on
 | Text-only baseline latency/cost | {{summary}} | {{summary}} | {{trade-off note}} |
 | Fallback behavior | {{what the system does when the target modality underperforms}} | {{current result}} | {{acceptable / not acceptable}} |
 
-If no text-only baseline exists for a multimodal system, explain why that comparison is not feasible.
+If no lexical baseline exists for a text RAG system, explain why that comparison is not feasible.
+
+## Harness and Delivery Behavior
+
+| Metric | Baseline | Current | Evidence |
+|--------|----------|---------|----------|
+| retrieval calls per case | | | |
+| returned results consumed ratio | | | |
+| files/artifacts opened | | | |
+| files/artifacts read | | | |
+| retries | | | |
+| termination distribution | | | |
+| returned not opened failures | | | |
+| opened not used failures | | | |
+| context overflow/truncation failures | | | |
+
+## Routing and Topology
+
+| Metric | Baseline | Current | Evidence |
+|--------|----------|---------|----------|
+| domain match accuracy | | | |
+| collection match accuracy | | | |
+| route coverage | | | |
+| fallback rate | | | |
+| wrong-route rate | | | |
+| cross-domain leakage rate | | | |
+| taxonomy/version drift | | | |
+
+Use only when routed/domain topology is activated by real corpus boundaries,
+ACL/owner boundaries, cross-domain distractors, costly route errors, or a
+maintained hierarchy.
+
+## Noise and Perturbation
+
+| Profile | Metric | Baseline | Current | Evidence |
+|---------|--------|----------|---------|----------|
+| noise robustness | degradation by clean/low/medium/high/hard distractor | | | |
+| text perturbation | required evidence deletion sensitivity | | | |
+| text perturbation | irrelevant evidence invariance | | | |
+| graph perturbation | node/edge deletion sensitivity | | | |
+| graph perturbation | synonym/paraphrase invariance | | | |
+| graph perturbation | dedup ablation delta | | | |
+| attribution validity | agreement with human or independent labels | | | |
 
 ---
 

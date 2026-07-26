@@ -278,6 +278,45 @@ state `Not applicable`.
   high-risk outputs without calibration evidence.
 - Cost-saving changes must preserve the declared eval/quality and latency
   thresholds.
+
+### RAG Evaluation Rules
+
+_Applies when RAG Profile is ON. Lean discovery may keep the rule inline, but
+Standard/Strict release-significant RAG changes need machine eval artifacts or a
+documented diagnostic-only exception._
+
+- RAG remains a governance/evidence control plane. Do not introduce a production
+  vector database, embedding service, graph runtime, hosted dashboard, or
+  vendor scorer dependency merely to satisfy the Playbook.
+- Corpus readiness precedes embeddings and retrieval metrics. Source inventory,
+  parser/OCR/table coverage, duplicate/stale handling, metadata, ACL, PII, gold
+  evidence, and corpus snapshot identity must be recorded.
+- Text RAG declares a lexical baseline (`grep`, BM25, or sparse equivalent) or a
+  justified exception. Dense retrieval is not accepted without comparison.
+- Agentic RAG evaluates retriever + harness + delivery profile +
+  context-consumption loop. Retriever-only evidence cannot certify agentic
+  search quality.
+- Release-significant Standard/Strict changes record manifest, cases,
+  observations, result, and baseline comparison refs/hashes.
+- Routed/domain topology is conditional. If active, taxonomy, router,
+  confidence/fallback, wrong-route, no-route/ambiguous behavior, cross-domain
+  leakage, route latency/cost, and route drift are evaluated.
+- Graph/structured attribution is conditional. Perturbation claims require
+  node/edge/synonym/dedup metrics plus a human or independent oracle for
+  high-risk claims; answer semantic shift alone is not ground truth.
+- Blocking LLM judges without calibration are invalid. Advisory judge output is
+  an external scorer artifact with hash/version and cannot approve release.
+- No single aggregate score may hide safety, retrieval, generation, latency,
+  cost, or stop-ship findings.
+- Results may be `pass`, `fail`, `invalid`, or `diagnostic`. They must not set
+  `release_ready`, `accepted`, or `human_approved`.
+- Stop-ship: ACL leak, unauthorized retrieved/assembled/cited evidence, stale
+  document winning when freshness is required, citation mismatch in high-risk
+  workflow, missing/bypassed `insufficient_evidence`, contaminated holdout,
+  hash mismatch, invalid run treated as pass, E2E score hiding retrieval
+  failure, routed cross-domain/ACL leakage, self-referential graph attribution,
+  release-significant change without compatible baseline comparison, or
+  production claim from generic/synthetic mechanism fixture.
 - Cost optimization must be measured as cost per successful task, not only cost
   per call. Failed cheap attempts, verifier calls, retries, tool costs, and
   estimated human rework count toward total cost.

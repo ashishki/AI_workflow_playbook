@@ -198,6 +198,14 @@ Retrieval-driven tasks: tasks created as a direct result of open retrieval findi
 -->
 
 - RAG Status: OFF
+- RAG shape: n/a
+- Manifest path/hash: n/a
+- Current baseline result: n/a
+- Current candidate result: n/a
+- Current comparison result: n/a
+- Corpus/dataset versions: n/a
+- Harness/delivery profile: n/a
+- Last eval status/date: n/a
 - Active corpora: n/a
 - Retrieval baseline: n/a
 - Open retrieval findings: none

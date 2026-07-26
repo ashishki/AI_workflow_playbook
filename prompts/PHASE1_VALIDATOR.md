@@ -49,7 +49,9 @@ Read when present or required by mode:
 17. docs/external_skill_security_policy.md and docs/security/skills/**/TRUST_RECORD.md when external skills are installed, enabled, or planned
 18. docs/evaluation/** when eval gates, judge calibration, human review, or material eval cost are declared
 19. docs/rag/** or docs/retrieval_eval.md when RAG/data readiness is declared or RAG Profile is ON
-20. docs/agent_harness/** or equivalent harness card when Tool-Use/Agentic behavior is declared
+20. .playbook/rag_eval_manifest.json and the RAG eval schemas under `schemas/`
+    when RAG machine eval is declared or generated
+21. docs/agent_harness/** or equivalent harness card when Tool-Use/Agentic behavior is declared
 
 Lean mode must not fail only because optional Standard/Strict artifacts are
 missing.
@@ -91,6 +93,10 @@ Mode rules:
   user-facing, or capability-profile governed.
 - RAG data readiness: RAG Profile ON requires data readiness evidence before
   retrieval-readiness claims. Lean may keep a short checklist inline.
+- RAG machine eval: Standard/Strict recurring or user-facing RAG should have a
+  manifest/result path or an explicitly documented diagnostic-only manual mode.
+  Agentic RAG must declare harness/delivery fields. Routed and graph profiles
+  require the conditional eval fields below.
 - Agent harness: Tool-Use or Agentic behavior needs a harness boundary covering
   model, prompt, tools, memory/state, retry/recovery, permissions, trace, HITL,
   and termination. Lean may keep it in ARCHITECTURE.md or AGENTS.md.
@@ -120,6 +126,10 @@ Mode rules:
 - [ ] A1-17  § Non-Goals — explicit list present (at minimum one item, including over-architecture non-goal)
 - [ ] A1-18  RAG Profile declared ON or OFF — if ON, §RAG Architecture, §Corpus Description, §Retrieval / Embedding Strategy, §Index Strategy, §Risks all present
 - [ ] A1-18a If RAG Profile = ON: data readiness gate present with source inventory, parser coverage, duplicate/stale handling, metadata, ACL, PII/regulated data, and gold evidence seed
+- [ ] A1-18b If RAG Profile = ON: RAG shape, lexical baseline or exception, production retriever, no-answer policy, corpus/dataset/config identity, eval tier, and rollback/re-index path are declared
+- [ ] A1-18c If RAG shape is agentic_search or hybrid agentic: harness type/version, delivery profile, context-consumption loop, retry/termination, result consumption, latency, and cost fields are declared
+- [ ] A1-18d If routed profile is active: taxonomy/router/fallback/eval metrics are declared, including wrong-route and cross-domain leakage tests
+- [ ] A1-18e If graph attribution is active: perturbation scenarios, independent human/oracle validation sample, and regeneration cost budget are declared
 - [ ] A1-19  For each active profile declared ON: a justification paragraph is present below the Capability Profiles table
 - [ ] A1-20  Compliance Profile declared ON or OFF — if ON, §Applicable Frameworks, §Data Classification, §Audit Log Requirements, §Risks all present
 
@@ -190,6 +200,8 @@ Mode rules:
 - [ ] A5-18  If Compliance Profile = ON: `docs/compliance_eval.md` file present and contains at least one control row with framework, description, and status fields
 - [ ] A5-19  If Tool-Use or Agentic Profile = ON: harness card or architecture harness boundary exists and includes trace, recovery, permissions, HITL, and eval contract
 - [ ] A5-20  If an LLM judge is used for release/eval authority: judge calibration artifact exists or judge is explicitly advisory-only
+- [ ] A5-21  If RAG Profile = ON in Standard/Strict recurring or user-facing mode: `.playbook/rag_eval_manifest.json` exists or diagnostic-only manual mode is explicitly approved
+- [ ] A5-22  If `.playbook/rag_eval_manifest.json` exists: `python tools/playbook_validate.py --root . --check rag` is a valid command target and unsupported schema versions/unknown fields are rejected
 
 ### A5b — Continuity artifacts
 
@@ -249,6 +261,8 @@ Mode rules:
 - [ ] A5g-04 If an LLM judge is used: status is disabled, advisory, blocking_allowed, or human_confirmed_blocking with evidence
 - [ ] A5g-05 If Tool-Use/Agentic is active: harness boundary and trace requirements are declared
 - [ ] A5g-06 If an autonomous routine is planned: trigger, idempotency, secret source, timeout, retry/fallback, monitoring, and budget are declared
+- [ ] A5g-07 If RAG is active: dataset source, thresholds, stop-ship rules, sample policy, and synthetic/holdout limits are declared
+- [ ] A5g-08 If judge status is blocking_allowed or human_confirmed_blocking: calibration artifact, human sample, false-pass/false-fail, and stale-calibration policy are present
 
 ### A6 — .github/workflows/ci.yml
 

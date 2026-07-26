@@ -5,6 +5,10 @@
 Generation eval measures the answer produced from retrieved evidence. It must be
 separate from retrieval eval so failures can be localized.
 
+In RAG Evaluation v2 this is Stage 4. A generation metric is not allowed to mask
+Stage 0-3 failures such as missing evidence, wrong route, ACL leakage, stale
+evidence, or truncated context.
+
 ## Inputs
 
 Each case should record:
@@ -31,12 +35,20 @@ check whether the answer is supported by retrieved context.
 | No-answer correctness | Model refuses or returns insufficient evidence when context is weak |
 | Unsafe answer rate | Output violates policy or regulated-data constraints |
 | Human correction rate | Operator had to fix or reject the answer |
+| Irrelevant-context invariance | Answer remains stable when irrelevant distractors are added |
+| Required-evidence sensitivity | Answer changes or degrades when required gold evidence is removed |
 
 ## Judge Use
 
 LLM judges may score faithfulness, completeness, and relevance after calibration
 against human labels. Before calibration, judge scores are advisory and should
 not be the only release gate.
+
+Blocking judge authority requires exact model ID, prompt/rubric version, human
+sample, agreement metric, false-pass and false-fail rates, zero stop-ship false
+negatives for the declared sample, disagreement slices, recalibration triggers,
+and cost accounting. Judge output is a hashed external scorer artifact. It does
+not assign `release_ready`, `accepted`, or `human_approved`.
 
 ## Failure Slices
 
@@ -51,4 +63,3 @@ Track at least these slices when relevant:
 - scanned documents/OCR
 - restricted data
 - unsupported user request
-

@@ -37,6 +37,8 @@ When uncertain about how to structure a document or define a task, consult the t
 - `docs/cache_context_layout.md` — stable-prefix / volatile-suffix prompt cache layout rules
 - `docs/evaluation/EVAL_FIRST_DEVELOPMENT.md` — proof metric, eval dataset, thresholds, judge calibration, human review, and cost gates
 - `docs/rag/RAG_DATA_READINESS.md` — corpus/source readiness before retrieval eval
+- `docs/rag/RETRIEVAL_EVAL_PLAN.md` — RAG Evaluation v2 stage model, lexical baseline, harness/delivery matrix, routing, noise, perturbation
+- `docs/rag/RAG_EVAL_TOOL_ADAPTERS.md` — provider-neutral external scorer adapter guidance
 - `docs/agent_harness/AGENT_HARNESS_DESIGN.md` — model + prompt + tools + memory/state + recovery + permissions + trace + HITL boundary
 - `docs/autonomous_workflows/AUTONOMOUS_WORKFLOW_DEPLOYMENT.md` — trigger/runtime/secrets/fallback contract for bounded routines
 - `docs/cost_telemetry_protocol.md` — provider-agnostic AI cost telemetry entry and rollup contract
@@ -53,7 +55,7 @@ When uncertain about how to structure a document or define a task, consult the t
 - `templates/HARNESS_BENCHMARK_CARD.md` — baseline/candidate harness comparison
 - `templates/JUDGE_CALIBRATION_PROTOCOL.md` — human-vs-judge calibration report
 - `templates/RAG_DATA_READINESS.md` — RAG corpus readiness artifact
-- `templates/RETRIEVAL_EVAL_PLAN.md` — retrieval query set and metrics
+- `templates/RETRIEVAL_EVAL_PLAN.md` — retrieval query set, baseline matrix, harness/delivery, routing, perturbation, and online drift metrics
 - `templates/AUTONOMOUS_WORKFLOW_DEPLOYMENT.md` — bounded routine deployment card
 - `templates/USE_CASE_CARD.md` — workflow candidate/use-case scoring card
 - `templates/ROUTER_EVAL.md` — dynamic router and cascade evaluation artifact
@@ -65,7 +67,14 @@ When uncertain about how to structure a document or define a task, consult the t
 
 Adapt the templates to your project. Do not copy specifics from any example project.
 
-If retrieval is needed, bias toward text-only retrieval unless the project description shows that non-text evidence must be retrieved as a first-class signal. Multimodal retrieval is an advanced path and must be justified in value, cost, latency, evaluation burden, and fallback planning.
+If retrieval is needed, choose the RAG shape before choosing infrastructure:
+fixed-pipeline text RAG, agentic search, routed/domain RAG, GraphRAG/structured
+evidence, or hybrid. Bias toward the smallest shape that matches the workflow.
+Do not select a vector database before stating the lexical baseline hypothesis
+and corpus/data readiness status. Text RAG needs a lexical baseline (`grep`,
+BM25, or sparse equivalent) or a justified exception. Multimodal retrieval,
+routed topology, and graph attribution are advanced paths and must be justified
+in value, cost, latency, evaluation burden, and fallback planning.
 
 When making a non-trivial technology, compliance, or runtime choice, you may invoke the experimental Research Companion (`reference/research_companion.md`) to produce a source-grounded `docs/research/{slug}.md`. Cite it from the consuming ADR or `docs/DECISION_LOG.md` row as `(research: docs/research/{slug}.md#R-N)`. The research file is a retrieval surface, not authority — canonical documents win on conflict. Skip this when an existing canonical document already answers the question.
 
@@ -81,6 +90,10 @@ You receive a project description. It should include (ask if missing):
 - **Adoption proof metric** — what measurable signal proves the system is useful in practice?
 - **Evaluation dataset/source** — human labels, replay logs, production sample, synthetic seed set, or unknown
 - **Data readiness** — source owners, formats, parser/OCR quality, freshness, metadata, ACL, and gold evidence if RAG/data-grounded behavior is in scope
+- **RAG eval readiness** — RAG shape, lexical baseline, production retriever,
+  dataset source, manifest/results policy, harness/delivery profile for
+  agentic search, route taxonomy/fallback if routed, perturbation/oracle/cost if
+  graph/attribution is in scope
 - **Harness concerns** — model, prompt, tools, memory/state, retries, recovery, permissions, trace, HITL if Tool-Use/Agentic behavior is in scope
 - **Human review budget** — reviewer role, sample size, minutes per item, escalation path when evaluation needs judgment
 - **Service delta** — cycle time, SLA, error rate, throughput, coverage, or operator correction improvement
@@ -107,6 +120,9 @@ You must also establish:
 - **Cost of inference / agent work** — per-run budget, recurring monthly budget if applicable, attribution fields, escalation approval threshold
 - **Cost of evaluation / judge / human review** — budget for eval inference, judge calls, and review minutes
 - **Data readiness status** — whether source inventory, parsing, freshness, metadata, ACL, and gold evidence exist
+- **RAG topology/attribution status** — whether routed/domain or graph
+  perturbation profiles are justified by trigger criteria; otherwise keep them
+  out of scope
 - **Harness boundary status** — whether agent/tool behavior has a harness card, trace schema, permission policy, recovery policy, and HITL boundary
 - **Autonomous routine fit** — whether any work should run on cron/webhook/event triggers, and what trigger/runtime/secrets/fallback contract is needed
 - **Heavy-task candidates** — which planned tasks should use a proof-first path because tests + ordinary review are not enough evidence
@@ -124,6 +140,9 @@ First produce a concise **Mode Decision**:
 - whether `docs/COST_BUDGET.md` is required now or whether an inline Lean budget is enough
 - whether RAG data readiness, harness card, judge calibration, or autonomous
   workflow contract is required now or can stay inline/advisory
+- when RAG is active: RAG shape, lexical baseline, production retriever,
+  dataset/source maturity, and whether `.playbook/rag_eval_manifest.json` is
+  needed now or manual diagnostic mode is sufficient
 - whether external skills are in scope and whether a trust record is required now
 
 Then produce only the artifacts required by the selected mode.
@@ -171,7 +190,11 @@ System architecture document. Include:
 - **Harness Boundary** — when Tool-Use or Agentic is active: model, prompt,
   tools, memory/state, retry/recovery, permissions, trace schema, HITL, and
   termination
-- **Retrieval / Embedding Strategy** — if retrieval exists: no retrieval vs text-only vs multimodal, modality scope, why multimodal is or is not justified, fallback path, and what will be measured
+- **Retrieval / RAG Evaluation Strategy** — if retrieval exists: RAG shape,
+  lexical baseline, production retriever, corpus/dataset/config identity,
+  machine artifact path, harness/delivery profile, no-answer policy, eval tiers,
+  optional routing/graph profiles and activation criteria, fallback/re-index
+  path, and what will be measured
 - **RAG Data Readiness** — if retrieval exists: source inventory, parser
   coverage, duplicates/staleness, metadata, ACL, PII/regulated data, and gold
   evidence seed

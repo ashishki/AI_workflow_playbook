@@ -584,10 +584,19 @@ If the Strategist declares RAG Status ON, the following additional artifacts mus
 | Profile contract rules | `docs/IMPLEMENTATION_CONTRACT.md §Profile Rules: RAG` | Corpus isolation, schema versioning, stale-index handling policy |
 | Profile state block | `docs/CODEX_PROMPT.md §Profile State: RAG` | Retrieval baseline, open retrieval findings, index schema version, pending reindex |
 | Evaluation artifact | `docs/retrieval_eval.md` | Retrieval quality metrics with own lifecycle (separate from code quality) |
+| Machine eval contract | `.playbook/rag_eval_manifest.json`, `.playbook-artifacts/rag-eval/*.json` | Optional provider-neutral manifest/results/comparison with exact paths, hashes, and regression gates |
 
 #### Retrieval / Embedding Strategy
 
-When RAG Status = ON, embedding strategy is an architectural decision, not an implementation footnote.
+When RAG Status = ON, embedding strategy is an architectural decision, not an implementation footnote. For text RAG, declare a lexical baseline (`grep`, BM25, or sparse equivalent) before accepting dense retrieval. This is baseline discipline, not a claim that lexical search always wins.
+
+RAG Evaluation v2 uses a six-stage evaluation model after corpus readiness:
+query/routing, candidate retrieval, reranking/context assembly,
+generation/citations/abstention, harness/E2E behavior, and online drift.
+Agentic RAG evaluates retriever + harness + delivery profile +
+context-consumption loop. Routed/domain topology and graph perturbation
+attribution are conditional profiles activated only when their trigger criteria
+are met.
 
 The Strategist must declare one of:
 

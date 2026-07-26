@@ -39,6 +39,7 @@ only the copier/scaffolder.
 | `docs/EVIDENCE_INDEX.md` | Optional | Optional unless recurring evidence exists | Required |
 | Capability eval artifacts | Only for active capability behavior | Only for active capability behavior | Required for active capability behavior |
 | RAG data readiness | Inline when RAG/data risk exists | Required when RAG Profile is ON or corpus quality is unknown | Required before retrieval metrics support release |
+| RAG machine eval contract | Optional diagnostic scaffold via `--with-rag-eval` | Required for recurring/user-facing RAG unless diagnostic-only manual mode is approved | Required for release-significant RAG changes |
 | Agent harness card | Inline when Tool-Use/Agentic is simple | Required when Tool-Use/Agentic behavior is material or compared | Required for privileged/high-autonomy agent behavior |
 | Project-specific harness benchmark suite | Optional; only when making project-specific agent reliability claims | Required when Tool-Use/Agentic behavior is material, recurring, or compared | Required before claiming reliability, safety, or false-success reduction |
 | Judge calibration | Advisory-only unless calibrated | Required before judge can block release | Required before any release-significant judge authority |
@@ -100,6 +101,8 @@ All modes keep these invariants:
 - no external skill is installed, enabled, updated, or globally exposed without
   trust evidence
 - no RAG release claim without data readiness and retrieval/generation eval
+- no release-significant text RAG claim without lexical baseline or justified exception
+- no agentic RAG claim from retriever-only evidence; harness and delivery path are part of the evaluated unit
 - no agent reliability claim without harness boundary and trace evidence
 - no blocking LLM judge without calibration against human labels
 - human approval at meaningful risk boundaries
