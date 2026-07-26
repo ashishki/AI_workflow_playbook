@@ -1,0 +1,630 @@
+{
+  "baseline_result_ref": {
+    "kind": "rag_eval_result",
+    "path": "examples/rag_eval/minimal/baseline_result.json",
+    "sha256": "b4491615343557320e66939e5f8b06897123184d541406e66c58341ab97a49bc"
+  },
+  "candidate_result_ref": {
+    "kind": "rag_eval_result",
+    "path": "examples/rag_eval/minimal/candidate_result.json",
+    "sha256": "891bf2f1e432e512d0fc152df273287138465ce5a703d25827e3938b9f732667"
+  },
+  "changed_factors": [
+    "retrieval_strategy",
+    "reranker",
+    "router_version",
+    "entity_dedup_version"
+  ],
+  "comparison_id": "lexical_baseline..production_candidate",
+  "compatibility_errors": [],
+  "compatible": true,
+  "generated_at": "2026-07-26T09:58:20Z",
+  "manifest_ref": {
+    "kind": "rag_eval_manifest",
+    "path": "examples/rag_eval/minimal/manifest.json",
+    "sha256": "80907f2c4a2fb914432aef924febfd7283c204ed754f3015a70fc3d9ca466bf4"
+  },
+  "markdown_report_ref": {
+    "kind": "markdown_report",
+    "path": "examples/rag_eval/minimal/comparison.md",
+    "sha256": "30017bba0089803b09d51354423d4dd2c6dc2b8d7c52e0b00aab0b233a384134"
+  },
+  "metric_deltas": [
+    {
+      "absolute_delta": 0.1428571428571429,
+      "baseline": 0.8571428571428571,
+      "candidate": 1.0,
+      "direction": "higher_is_better",
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": -0.16666666666666674,
+      "severity": "none"
+    },
+    {
+      "absolute_delta": 0.0714285714285714,
+      "baseline": 0.7857142857142857,
+      "candidate": 0.8571428571428571,
+      "direction": "higher_is_better",
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": -0.09090909090909087,
+      "severity": "none"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "direction": "lower_is_better",
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "direction": "higher_is_better",
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none"
+    },
+    {
+      "absolute_delta": 0.1428571428571429,
+      "baseline": 0.8571428571428571,
+      "candidate": 1.0,
+      "direction": "higher_is_better",
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": -0.16666666666666674,
+      "severity": "none"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.6363636363636364,
+      "candidate": 0.6363636363636364,
+      "direction": "higher_is_better",
+      "message": "",
+      "metric_id": "harness.returned_results_consumed_ratio",
+      "relative_delta": 0.0,
+      "severity": "none"
+    },
+    {
+      "absolute_delta": 12.599999999999994,
+      "baseline": 48.25,
+      "candidate": 60.849999999999994,
+      "direction": "lower_is_better",
+      "message": "",
+      "metric_id": "latency.e2e_p95_ms",
+      "relative_delta": 0.2611398963730569,
+      "severity": "none"
+    }
+  ],
+  "per_slice_deltas": [
+    {
+      "absolute_delta": 0.19999999999999996,
+      "baseline": 0.8,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": -0.24999999999999994,
+      "severity": "none",
+      "slice": "clean"
+    },
+    {
+      "absolute_delta": 0.09999999999999998,
+      "baseline": 0.8,
+      "candidate": 0.9,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": -0.12499999999999997,
+      "severity": "none",
+      "slice": "clean"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "clean"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "clean"
+    },
+    {
+      "absolute_delta": 0.19999999999999996,
+      "baseline": 0.8,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": -0.24999999999999994,
+      "severity": "none",
+      "slice": "clean"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "freshness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "freshness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "freshness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "freshness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "freshness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "graph"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "graph"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "graph"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "graph"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "graph"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "high_noise"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.5,
+      "candidate": 0.5,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "high_noise"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "high_noise"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "high_noise"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "high_noise"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "no-answer"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "no-answer"
+    },
+    {
+      "absolute_delta": 1.0,
+      "baseline": 0.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "paraphrase"
+    },
+    {
+      "absolute_delta": 1.0,
+      "baseline": 0.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "paraphrase"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "paraphrase"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "paraphrase"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "paraphrase"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "permission"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "permission"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "permission"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "permission"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "permission"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "perturbation"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "perturbation"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "perturbation"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "perturbation"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "perturbation"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "robustness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.5,
+      "candidate": 0.5,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "robustness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "robustness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "robustness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "robustness"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "routing"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "routing"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "routing"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "routing"
+    },
+    {
+      "absolute_delta": 1.0,
+      "baseline": 0.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "routing"
+    },
+    {
+      "absolute_delta": 0.5,
+      "baseline": 0.5,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "retrieval.hit_at_3",
+      "relative_delta": -1.0,
+      "severity": "none",
+      "slice": "simple"
+    },
+    {
+      "absolute_delta": 0.25,
+      "baseline": 0.5,
+      "candidate": 0.75,
+      "message": "",
+      "metric_id": "retrieval.mrr",
+      "relative_delta": -0.5,
+      "severity": "none",
+      "slice": "simple"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "message": "",
+      "metric_id": "retrieval.acl_leak_rate",
+      "relative_delta": null,
+      "severity": "none",
+      "slice": "simple"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "generation.no_answer_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "simple"
+    },
+    {
+      "absolute_delta": 0.0,
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "message": "",
+      "metric_id": "routing.domain_match_accuracy",
+      "relative_delta": 0.0,
+      "severity": "none",
+      "slice": "simple"
+    }
+  ],
+  "regression_findings": [],
+  "schema_version": "playbook.rag_eval_comparison.v1",
+  "status": "pass",
+  "stop_ship_findings": []
+}

@@ -1,0 +1,263 @@
+{
+  "schema_version": "playbook.rag_eval_manifest.v1",
+  "suite_id": "fixture_support_kb_rag_eval",
+  "suite_version": "2026-07-26",
+  "owner": "playbook-fixtures",
+  "risk_level": "medium",
+  "evaluation_mode": "mechanism_demonstration",
+  "identity_source": "declared",
+  "repository": "ashishki/AI_workflow_playbook",
+  "project_commit": "ee487b2d2c83301933aff8a8b5ecb78050623346",
+  "dirty_state_policy": "record_only",
+  "created_at": "2026-07-26T00:00:00Z",
+  "dataset": {
+    "dataset_id": "fixture_support_kb_cases",
+    "dataset_version": "2026-07-26",
+    "dataset_source": "synthetic_seed",
+    "dataset_path": "examples/rag_eval/minimal/cases.jsonl",
+    "dataset_sha256": "c0b901ac1d8f3db6fedf45890faee4b56fbd32bfea4bdd167ea33e1a0ddc4563",
+    "case_count": 8,
+    "public_case_count": 8,
+    "protected_case_count": 0,
+    "holdout_policy": "none - public mechanism fixture",
+    "contamination_policy": "fixture is visible to implementers and cannot support empirical claims",
+    "minimum_sample_policy": "diagnostic seed only; no statistical claim",
+    "protected_holdout": {
+      "status": "none",
+      "public_boundary": "no protected cases in this fixture",
+      "contamination_status": "clean"
+    }
+  },
+  "corpus": {
+    "corpus_id": "fixture_support_kb",
+    "corpus_version": "2026-07-26",
+    "corpus_snapshot_ref": "examples/rag_eval/minimal/corpus_snapshot.txt",
+    "corpus_sha256": "355598f4a04140c070ec5015658e03cc504a5be84a12093409da0585d5f3e90f",
+    "index_schema_version": "fixture-index-v1",
+    "source_inventory_version": "fixture-inventory-v1",
+    "freshness_cutoff": "2026-01-01"
+  },
+  "conditions": [
+    {
+      "condition_id": "lexical_baseline",
+      "rag_shape": "fixed_pipeline",
+      "retrieval_strategy": "lexical",
+      "retriever_version": "grep-fixture-v1",
+      "chunking_version": "fixture-chunks-v1",
+      "embedding": {
+        "provider": "not_applicable",
+        "name": "not_applicable",
+        "version": "not_applicable"
+      },
+      "index": {
+        "provider": "filesystem",
+        "name": "line-scan",
+        "version": "fixture-v1"
+      },
+      "reranker": {
+        "provider": "not_applicable",
+        "name": "not_applicable",
+        "version": "not_applicable"
+      },
+      "top_k": 3,
+      "candidate_k": 3,
+      "filter_policy_version": "fixture-filter-v1",
+      "router_taxonomy_version": "not_applicable",
+      "router_version": "not_applicable",
+      "graph_builder_version": "not_applicable",
+      "entity_dedup_version": "not_applicable",
+      "context_assembly_version": "fixture-context-v1",
+      "generator_model": "scripted-fixture",
+      "generator_prompt_version": "fixture-prompt-v1",
+      "citation_contract_version": "fixture-citations-v1",
+      "abstention_policy_version": "fixture-abstain-v1",
+      "harness": {
+        "harness_type": "fixed_pipeline",
+        "harness_version": "fixture-harness-v1",
+        "tool_registry_version": "not_applicable",
+        "delivery_profile": "inline",
+        "context_policy_version": "fixture-context-policy-v1",
+        "memory_policy_version": "not_applicable",
+        "permission_policy_version": "fixture-permissions-v1",
+        "retry_policy": "no-retry",
+        "termination_policy": "single-pass",
+        "max_iterations": 1,
+        "timeout_seconds": 30
+      },
+      "compatibility_fingerprint": "3e269189a9ece14d01d4a7252be20173099b7b63b2f6acea5121345639026a61"
+    },
+    {
+      "condition_id": "production_candidate",
+      "rag_shape": "hybrid",
+      "retrieval_strategy": "hybrid",
+      "retriever_version": "hybrid-fixture-v1",
+      "chunking_version": "fixture-chunks-v1",
+      "embedding": {
+        "provider": "fixture",
+        "name": "dense-paraphrase-fixture",
+        "version": "v1"
+      },
+      "index": {
+        "provider": "fixture",
+        "name": "hybrid-index",
+        "version": "fixture-v1"
+      },
+      "reranker": {
+        "provider": "fixture",
+        "name": "simple-rerank",
+        "version": "v1"
+      },
+      "top_k": 3,
+      "candidate_k": 3,
+      "filter_policy_version": "fixture-filter-v1",
+      "router_taxonomy_version": "fixture-taxonomy-v1",
+      "router_version": "fixture-router-v1",
+      "graph_builder_version": "conditional-graph-fixture-v1",
+      "entity_dedup_version": "fixture-dedup-v1",
+      "context_assembly_version": "fixture-context-v1",
+      "generator_model": "scripted-fixture",
+      "generator_prompt_version": "fixture-prompt-v1",
+      "citation_contract_version": "fixture-citations-v1",
+      "abstention_policy_version": "fixture-abstain-v1",
+      "harness": {
+        "harness_type": "fixed_pipeline",
+        "harness_version": "fixture-harness-v1",
+        "tool_registry_version": "not_applicable",
+        "delivery_profile": "inline",
+        "context_policy_version": "fixture-context-policy-v1",
+        "memory_policy_version": "not_applicable",
+        "permission_policy_version": "fixture-permissions-v1",
+        "retry_policy": "no-retry",
+        "termination_policy": "single-pass",
+        "max_iterations": 1,
+        "timeout_seconds": 30
+      },
+      "compatibility_fingerprint": "0c2906ccee390538dec0ca40fe0ff6b1279b3016a04540ab1c16ac3367d1adbb"
+    }
+  ],
+  "experiment_design": {
+    "question_slices": [
+      "simple",
+      "no-answer",
+      "permission",
+      "freshness",
+      "routing",
+      "robustness",
+      "graph"
+    ],
+    "noise_scenarios": [
+      "clean",
+      "high_noise",
+      "hard_semantic_distractors"
+    ],
+    "perturbation_scenarios": [
+      "none",
+      "node_deletion",
+      "required_evidence_deletion",
+      "irrelevant_evidence_deletion"
+    ],
+    "trial_count": 1,
+    "controlled_factors": [
+      "dataset",
+      "corpus",
+      "generator_model",
+      "citation_contract"
+    ],
+    "changed_factors": [
+      "retrieval_strategy",
+      "reranker",
+      "router_version",
+      "entity_dedup_version"
+    ],
+    "baseline_condition_ref": "lexical_baseline",
+    "cost_budget_note": "offline fixture has zero provider cost; graph perturbation observation records synthetic regeneration cost"
+  },
+  "evaluation_policy": {
+    "metrics": [
+      {
+        "metric_id": "retrieval.hit_at_3",
+        "stage": "candidate_retrieval",
+        "direction": "higher_is_better",
+        "release_significant": true
+      },
+      {
+        "metric_id": "retrieval.mrr",
+        "stage": "candidate_retrieval",
+        "direction": "higher_is_better",
+        "release_significant": true
+      },
+      {
+        "metric_id": "retrieval.acl_leak_rate",
+        "stage": "candidate_retrieval",
+        "direction": "lower_is_better",
+        "release_significant": true
+      },
+      {
+        "metric_id": "generation.no_answer_accuracy",
+        "stage": "generation_citations_abstention",
+        "direction": "higher_is_better",
+        "release_significant": true
+      },
+      {
+        "metric_id": "routing.domain_match_accuracy",
+        "stage": "query_routing",
+        "direction": "higher_is_better",
+        "release_significant": false
+      },
+      {
+        "metric_id": "harness.returned_results_consumed_ratio",
+        "stage": "harness_e2e",
+        "direction": "higher_is_better",
+        "release_significant": false
+      },
+      {
+        "metric_id": "latency.e2e_p95_ms",
+        "stage": "harness_e2e",
+        "direction": "lower_is_better",
+        "release_significant": false
+      }
+    ],
+    "minimum_thresholds": {
+      "retrieval.acl_leak_rate": 0.0
+    },
+    "absolute_regression_thresholds": {
+      "p1": 0.05,
+      "p0": 0.15
+    },
+    "relative_regression_thresholds": {
+      "p1": 0.05,
+      "p0": 0.15
+    },
+    "slice_thresholds": {
+      "permission": {
+        "retrieval.acl_leak_rate": 0.0
+      }
+    },
+    "required_stop_ship_rules": [
+      "ACL_LEAK",
+      "STALE_REQUIRED_DOC_WINS",
+      "NO_ANSWER_PATH_MISSING",
+      "UNCALIBRATED_BLOCKING_JUDGE",
+      "HASH_MISMATCH",
+      "INVALID_RUN_AS_PASS"
+    ],
+    "uncertainty_policy": "report N and mark mechanism fixture descriptive only"
+  },
+  "judge_policy": {
+    "judge_status": "disabled",
+    "judge_model": null,
+    "judge_prompt_version": null,
+    "rubric_version": null,
+    "calibration_ref": null,
+    "calibration_sha256": null,
+    "human_sample_ref": null,
+    "eval_cost_budget": "not_applicable"
+  },
+  "outputs": {
+    "result_path": ".playbook-artifacts/rag-eval/result.json",
+    "report_path": "reports/rag_eval/result.md",
+    "trace_refs": [],
+    "evidence_bundle_path": null,
+    "harness_eval_unit_ref": null
+  }
+}

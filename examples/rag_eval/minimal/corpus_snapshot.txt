@@ -1,0 +1,4 @@
+corpus_id=fixture_support_kb
+corpus_version=2026-07-26
+docs=doc-exact,doc-semantic,doc-public,doc-current,doc-route,doc-file,doc-noise
+This is a synthetic mechanism fixture, not an empirical benchmark.
