@@ -140,6 +140,8 @@ def generated_project_checks(root: Path, output_dir: Path) -> list[CheckResult]:
             ]
             if mode == "strict":
                 init_cmd.append("--install-claude-hooks")
+            if mode in {"standard", "strict"}:
+                init_cmd.append("--with-rag-eval")
             checks.append(run_check(root, output_dir, f"initializer_{mode}", init_cmd))
             if checks[-1].exit_code != 0:
                 continue
@@ -160,6 +162,22 @@ def generated_project_checks(root: Path, output_dir: Path) -> list[CheckResult]:
                     ],
                 )
             )
+            if mode in {"standard", "strict"}:
+                checks.append(
+                    run_check(
+                        root,
+                        output_dir,
+                        f"generated_validate_rag_{mode}",
+                        [
+                            sys.executable,
+                            str(root / "tools/playbook_validate.py"),
+                            "--root",
+                            str(target),
+                            "--check",
+                            "rag",
+                        ],
+                    )
+                )
             checks.append(
                 run_check(
                     root,
@@ -176,6 +194,9 @@ def generated_project_checks(root: Path, output_dir: Path) -> list[CheckResult]:
                     "docs/EVIDENCE_INDEX.md",
                     "docs/ai_cost_architecture.md",
                     "docs/router_eval.md",
+                    ".playbook/rag_eval_manifest.json",
+                    "tools/rag_eval_score.py",
+                    "docs/retrieval_eval.md",
                 ]
                 stdout = ""
                 failures = []
@@ -300,6 +321,113 @@ def main(argv: list[str] | None = None) -> int:
                 "tests/fixtures/evidence/valid_bundle/bundle.json",
                 "--json",
                 str(artifact_root / "evidence_fixture_validation.json"),
+            ],
+        )
+    )
+    rag_fixture_dir = root / "tests/fixtures/rag_eval/valid"
+    checks.append(
+        run_check(
+            root,
+            run_dir,
+            "rag_eval_fixture_validate",
+            [
+                sys.executable,
+                "tools/rag_eval_validate.py",
+                "--root",
+                str(root),
+                "--manifest",
+                "tests/fixtures/rag_eval/valid/manifest.json",
+                "--observations",
+                "tests/fixtures/rag_eval/valid/candidate_observations.jsonl",
+            ],
+        )
+    )
+    invalid_manifest = run_dir / "rag_eval_invalid_hash_manifest.json"
+    if (rag_fixture_dir / "manifest.json").exists():
+        invalid_data = json.loads((rag_fixture_dir / "manifest.json").read_text(encoding="utf-8"))
+        invalid_data["dataset"]["dataset_sha256"] = "f" * 64
+        invalid_manifest.write_text(json.dumps(invalid_data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        checks.append(
+            run_expected_failure_check(
+                root,
+                run_dir,
+                "rag_eval_invalid_hash_rejected",
+                [
+                    sys.executable,
+                    "tools/rag_eval_validate.py",
+                    "--root",
+                    str(root),
+                    "--manifest",
+                    str(invalid_manifest),
+                ],
+            )
+        )
+    baseline_result = artifact_root / "rag-eval" / "verify_baseline_result.json"
+    candidate_result = artifact_root / "rag-eval" / "verify_candidate_result.json"
+    comparison_result = artifact_root / "rag-eval" / "verify_comparison.json"
+    comparison_report = root / "reports/rag_eval/verify_comparison.md"
+    checks.append(
+        run_check(
+            root,
+            run_dir,
+            "rag_eval_score_baseline",
+            [
+                sys.executable,
+                "tools/rag_eval_score.py",
+                "--root",
+                str(root),
+                "--manifest",
+                "tests/fixtures/rag_eval/valid/manifest.json",
+                "--observations",
+                "tests/fixtures/rag_eval/valid/baseline_observations.jsonl",
+                "--condition",
+                "lexical_baseline",
+                "--json",
+                str(baseline_result),
+            ],
+        )
+    )
+    checks.append(
+        run_check(
+            root,
+            run_dir,
+            "rag_eval_score_candidate",
+            [
+                sys.executable,
+                "tools/rag_eval_score.py",
+                "--root",
+                str(root),
+                "--manifest",
+                "tests/fixtures/rag_eval/valid/manifest.json",
+                "--observations",
+                "tests/fixtures/rag_eval/valid/candidate_observations.jsonl",
+                "--condition",
+                "production_candidate",
+                "--json",
+                str(candidate_result),
+            ],
+        )
+    )
+    checks.append(
+        run_check(
+            root,
+            run_dir,
+            "rag_eval_compare_fixture",
+            [
+                sys.executable,
+                "tools/rag_eval_compare.py",
+                "--root",
+                str(root),
+                "--baseline",
+                str(baseline_result),
+                "--candidate",
+                str(candidate_result),
+                "--manifest",
+                "tests/fixtures/rag_eval/valid/manifest.json",
+                "--json",
+                str(comparison_result),
+                "--report",
+                str(comparison_report),
             ],
         )
     )

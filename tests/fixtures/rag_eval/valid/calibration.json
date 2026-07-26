@@ -1,0 +1,5 @@
+{
+  "schema_version": "playbook.judge_calibration_fixture.v1",
+  "status": "not_used",
+  "note": "The valid fixture disables the judge. This file exists for hash/ref tests only."
+}

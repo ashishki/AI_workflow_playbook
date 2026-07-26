@@ -51,6 +51,7 @@ jobs:
             --verify-argv '["{python}", "-c", "raise SystemExit(0)"]' \
             --with-cost-architecture \
             --with-router-eval \
+            --with-rag-eval \
             --with-cost-adapter \
             --external-skill smoke-skill
 

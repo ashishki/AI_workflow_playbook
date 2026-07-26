@@ -1,0 +1,4 @@
+{
+  "schema_version": "playbook.rag_eval_manifest.v999",
+  "note": "Intentionally incomplete negative fixture. Full semantic negative tests mutate the valid fixture in temporary repositories."
+}

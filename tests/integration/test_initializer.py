@@ -102,6 +102,269 @@ def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
     assert "READINESS_RELEASE_GIT_REQUIRED" in release.stderr
 
 
+def test_standard_with_rag_eval_creates_valid_portable_kit(tmp_path: Path) -> None:
+    target = tmp_path / "standard-rag"
+    result = run_init(
+        target,
+        "--mode",
+        "standard",
+        "--project-name",
+        "Standard RAG",
+        "--operational-pain",
+        "RAG changes need deterministic eval evidence.",
+        "--current-workaround",
+        "Manual retrieval spot checks.",
+        "--first-proof-metric",
+        "RAG eval scaffold validates and scores offline.",
+        "--verify-argv",
+        passing_verify_argv(),
+        "--with-rag-eval",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert (target / ".playbook/rag_eval_manifest.json").exists()
+    assert (target / ".playbook/rag_eval_cases.jsonl").exists()
+    assert (target / "tools/rag_eval_score.py").exists()
+    assert (target / "schemas/rag_eval_manifest.schema.json").exists()
+    assert (target / "docs/rag_data_readiness.md").exists()
+    assert (target / "docs/retrieval_eval.md").exists()
+    config = json.loads((target / ".playbook/project_verification.json").read_text(encoding="utf-8"))
+    assert "rag_eval_contract" in {check["id"] for check in config["checks"]}
+
+    validation = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/playbook_validate.py"),
+            "--root",
+            str(target),
+            "--check",
+            "rag",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert validation.returncode == 0, validation.stderr
+
+    baseline = subprocess.run(
+        [
+            sys.executable,
+            "tools/rag_eval_score.py",
+            "--root",
+            ".",
+            "--manifest",
+            ".playbook/rag_eval_manifest.json",
+            "--observations",
+            ".playbook/rag_eval_baseline_observations.jsonl",
+            "--condition",
+            "lexical_baseline",
+            "--json",
+            ".playbook-artifacts/rag-eval/baseline.json",
+        ],
+        cwd=target,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert baseline.returncode == 0, baseline.stderr
+
+    candidate = subprocess.run(
+        [
+            sys.executable,
+            "tools/rag_eval_score.py",
+            "--root",
+            ".",
+            "--manifest",
+            ".playbook/rag_eval_manifest.json",
+            "--observations",
+            ".playbook/rag_eval_candidate_observations.jsonl",
+            "--condition",
+            "production_candidate",
+            "--json",
+            ".playbook-artifacts/rag-eval/candidate.json",
+        ],
+        cwd=target,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert candidate.returncode == 0, candidate.stderr
+
+    comparison = subprocess.run(
+        [
+            sys.executable,
+            "tools/rag_eval_compare.py",
+            "--root",
+            ".",
+            "--baseline",
+            ".playbook-artifacts/rag-eval/baseline.json",
+            "--candidate",
+            ".playbook-artifacts/rag-eval/candidate.json",
+            "--manifest",
+            ".playbook/rag_eval_manifest.json",
+            "--json",
+            ".playbook-artifacts/rag-eval/comparison.json",
+            "--report",
+            "reports/rag_eval/comparison.md",
+        ],
+        cwd=target,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert comparison.returncode == 0, comparison.stderr
+    assert json.loads((target / ".playbook-artifacts/rag-eval/comparison.json").read_text(encoding="utf-8"))["status"] == "pass"
+
+
+def test_strict_with_rag_eval_verifier_passes(tmp_path: Path) -> None:
+    target = tmp_path / "strict-rag"
+    result = run_init(
+        target,
+        "--mode",
+        "strict",
+        "--project-name",
+        "Strict RAG",
+        "--operational-pain",
+        "Strict RAG projects need machine eval provenance.",
+        "--current-workaround",
+        "Manual release checklist.",
+        "--first-proof-metric",
+        "Generated project verifier includes RAG contract.",
+        "--verify-argv",
+        passing_verify_argv(),
+        "--with-rag-eval",
+    )
+
+    assert result.returncode == 0, result.stderr
+    verification = subprocess.run(
+        [sys.executable, "tools/verify_project.py", "--root", "."],
+        cwd=target,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert verification.returncode == 0, verification.stderr
+    result_path = target / ".playbook-artifacts/project_verification.json"
+    executed = json.loads(result_path.read_text(encoding="utf-8"))
+    assert "rag_eval_contract" in {check["id"] for check in executed["checks"]}
+
+
+def test_lean_core_with_rag_eval_remains_proportional(tmp_path: Path) -> None:
+    target = tmp_path / "lean-rag"
+    result = run_init(
+        target,
+        "--mode",
+        "lean-core",
+        "--project-name",
+        "Lean RAG",
+        "--operational-pain",
+        "Lean project needs only RAG eval smoke artifacts.",
+        "--current-workaround",
+        "Manual spot checks.",
+        "--first-proof-metric",
+        "RAG manifest validates offline.",
+        "--verify-argv",
+        passing_verify_argv(),
+        "--with-rag-eval",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert not (target / "PLAYBOOK.md").exists()
+    assert not (target / "docs/ARCHITECTURE.md").exists()
+    assert (target / ".playbook/rag_eval_manifest.json").exists()
+    assert (target / "tools/rag_eval_validate.py").exists()
+
+
+def test_rag_eval_dry_run_does_not_write(tmp_path: Path) -> None:
+    target = tmp_path / "dry-run-rag"
+    result = run_init(
+        target,
+        "--mode",
+        "standard",
+        "--project-name",
+        "Dry Run RAG",
+        "--operational-pain",
+        "Dry-run should show outputs without writing.",
+        "--current-workaround",
+        "Manual planning.",
+        "--first-proof-metric",
+        "Target directory remains absent.",
+        "--verify-argv",
+        passing_verify_argv(),
+        "--with-rag-eval",
+        "--dry-run",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert not target.exists()
+    assert ".playbook/rag_eval_manifest.json" in result.stdout
+
+
+def test_rag_eval_force_overwrites_invalid_manifest(tmp_path: Path) -> None:
+    target = tmp_path / "force-rag"
+    first = run_init(
+        target,
+        "--mode",
+        "standard",
+        "--project-name",
+        "Force RAG",
+        "--operational-pain",
+        "Force should repair stale scaffold files.",
+        "--current-workaround",
+        "Manual overwrite.",
+        "--first-proof-metric",
+        "Manifest validates after force.",
+        "--verify-argv",
+        passing_verify_argv(),
+        "--with-rag-eval",
+    )
+    assert first.returncode == 0, first.stderr
+    (target / ".playbook/rag_eval_manifest.json").write_text("{bad json\n", encoding="utf-8")
+
+    second = run_init(
+        target,
+        "--mode",
+        "standard",
+        "--project-name",
+        "Force RAG",
+        "--operational-pain",
+        "Force should repair stale scaffold files.",
+        "--current-workaround",
+        "Manual overwrite.",
+        "--first-proof-metric",
+        "Manifest validates after force.",
+        "--verify-argv",
+        passing_verify_argv(),
+        "--with-rag-eval",
+        "--force",
+    )
+
+    assert second.returncode == 0, second.stderr
+    validation = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/playbook_validate.py"),
+            "--root",
+            str(target),
+            "--check",
+            "rag",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert validation.returncode == 0, validation.stderr
+
+
 def test_install_claude_hooks_merges_settings(tmp_path: Path) -> None:
     target = tmp_path / "standard"
     settings_path = target / ".claude/settings.json"

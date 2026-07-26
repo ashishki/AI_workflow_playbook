@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -9,6 +10,7 @@ from tools import playbook_validate
 
 
 ROOT = Path(__file__).resolve().parents[2]
+RAG_FIXTURE = ROOT / "tests/fixtures/rag_eval/valid"
 
 
 def write_tasks(root: Path, text: str) -> None:
@@ -46,6 +48,18 @@ def artifact_ref(root: Path, path: Path) -> dict[str, str]:
     return {"path": str(path.relative_to(root)), "sha256": digest}
 
 
+def copy_rag_fixture(root: Path) -> None:
+    shutil.copytree(RAG_FIXTURE, root / "tests/fixtures/rag_eval/valid")
+    (root / "schemas").mkdir(exist_ok=True)
+    for schema in ROOT.glob("schemas/rag_eval_*.schema.json"):
+        shutil.copy2(schema, root / "schemas" / schema.name)
+    (root / ".playbook").mkdir(exist_ok=True)
+    shutil.copy2(
+        root / "tests/fixtures/rag_eval/valid/manifest.json",
+        root / ".playbook/rag_eval_manifest.json",
+    )
+
+
 def test_task_parser_accepts_valid_task(tmp_path: Path) -> None:
     write_tasks(
         tmp_path,
@@ -81,6 +95,34 @@ Context-Refs:
     assert tasks[0]["phase"] == "Phase 1 - Bootstrap"
     assert tasks[0]["runtime_verification"] == "required"
     assert tasks[0]["correction_budget"] == 2
+
+
+def test_rag_check_noops_when_manifest_absent(tmp_path: Path) -> None:
+    report = playbook_validate.run_checks(tmp_path, ["rag"])
+
+    assert report["summary"]["errors"] == 0
+    assert report["findings"] == []
+
+
+def test_rag_check_accepts_valid_manifest(tmp_path: Path) -> None:
+    copy_rag_fixture(tmp_path)
+
+    report = playbook_validate.run_checks(tmp_path, ["rag"])
+
+    assert report["summary"]["errors"] == 0
+
+
+def test_rag_check_fails_closed_for_invalid_manifest(tmp_path: Path) -> None:
+    copy_rag_fixture(tmp_path)
+    manifest_path = tmp_path / ".playbook/rag_eval_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["dataset"]["dataset_sha256"] = "f" * 64
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    report = playbook_validate.run_checks(tmp_path, ["rag"])
+
+    assert report["summary"]["errors"] > 0
+    assert any(finding["check_id"] == "RAG_HASH_MISMATCH" for finding in report["findings"])
 
 
 def test_task_without_verifier_fails(tmp_path: Path) -> None:

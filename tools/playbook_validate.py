@@ -1320,10 +1320,33 @@ def validate_modes(root: Path) -> list[Finding]:
     return findings
 
 
+def validate_rag(root: Path) -> list[Finding]:
+    manifest_path = root / ".playbook" / "rag_eval_manifest.json"
+    if not manifest_path.exists():
+        return []
+    try:
+        from tools.rag_eval_lib import validate_contract
+    except ImportError:  # pragma: no cover - script execution path.
+        from rag_eval_lib import validate_contract  # type: ignore
+
+    findings: list[Finding] = []
+    for rag_finding in validate_contract(root, manifest_path):
+        findings.append(
+            Finding(
+                rag_finding.severity,
+                rag_finding.path or relative(root, manifest_path),
+                1,
+                rag_finding.check_id,
+                rag_finding.message,
+            )
+        )
+    return findings
+
+
 def run_checks(root: Path, checks: list[str]) -> dict[str, Any]:
     findings: list[Finding] = []
     tasks: list[dict[str, Any]] = []
-    expanded = checks if checks != ["all"] else ["schemas", "tasks", "placeholders", "readiness", "delivery", "references", "modes"]
+    expanded = checks if checks != ["all"] else ["schemas", "tasks", "placeholders", "readiness", "delivery", "references", "modes", "rag"]
     for check in expanded:
         if check == "schemas":
             findings.extend(validate_json_schemas(root))
@@ -1340,6 +1363,8 @@ def run_checks(root: Path, checks: list[str]) -> dict[str, Any]:
             findings.extend(validate_reference_integrity(root))
         elif check == "modes":
             findings.extend(validate_modes(root))
+        elif check == "rag":
+            findings.extend(validate_rag(root))
         else:
             findings.append(
                 Finding("error", ".", 1, "CHECK_UNKNOWN", f"unknown check {check}")
@@ -1363,7 +1388,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--check",
         action="append",
-        choices=("all", "schemas", "tasks", "placeholders", "readiness", "delivery", "references", "modes"),
+        choices=("all", "schemas", "tasks", "placeholders", "readiness", "delivery", "references", "modes", "rag"),
         default=None,
         help="Run only this check. Repeatable. Defaults to all checks.",
     )

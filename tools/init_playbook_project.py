@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import os
 import re
@@ -104,6 +105,27 @@ def project_verification_config(verify_argvs: list[list[str]]) -> str:
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
+def add_rag_eval_project_check(config_text: str) -> str:
+    payload = json.loads(config_text)
+    payload["checks"].append(
+        {
+            "id": "rag_eval_contract",
+            "argv": [
+                "{python}",
+                "tools/playbook_validate.py",
+                "--root",
+                ".",
+                "--check",
+                "rag",
+            ],
+            "required": True,
+            "expected_exit_code": 0,
+            "timeout_seconds": 60,
+        }
+    )
+    return json.dumps(payload, indent=2, sort_keys=True) + "\n"
+
+
 def readiness_state_config(mode: str) -> str:
     payload = {
         "schema_version": "playbook.readiness_state.v1",
@@ -152,6 +174,398 @@ def delivery_execution_model_config() -> str:
         ],
     }
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
+
+
+def sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def canonical_json_hash(data: object) -> str:
+    return hashlib.sha256(
+        json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+
+def rag_eval_case_jsonl() -> str:
+    rows = [
+        {
+            "schema_version": "playbook.rag_eval_case.v1",
+            "case_id": "RAG-SMOKE-001",
+            "query": "What is the documented support code?",
+            "slices": ["simple", "clean"],
+            "tags": ["lexical_baseline", "mechanism_fixture"],
+            "principal": {"principal_id": "public-smoke", "authorization_scope": ["public"]},
+            "language": "en",
+            "locale": "en-US",
+            "expected_route": {
+                "domain": "support",
+                "collection": "public",
+                "ambiguous": False,
+                "fallback_allowed": True,
+            },
+            "expected_evidence": [
+                {
+                    "doc_id": "rag-smoke-doc",
+                    "chunk_id": "c1",
+                    "span_id": "s1",
+                    "source_version": "scaffold-v1",
+                    "domain": "support",
+                    "collection": "public",
+                }
+            ],
+            "acceptable_evidence": [],
+            "forbidden_evidence": [],
+            "distractors": [],
+            "no_answer_expected": False,
+            "freshness_expectation": {
+                "requires_current": False,
+                "current_after": None,
+                "stale_doc_ids": [],
+            },
+            "required_modalities": ["text"],
+            "expected_answer": "The support code is RAG-SMOKE.",
+            "protected_expected_answer_ref": None,
+            "rubric_ref": "docs/retrieval_eval.md",
+            "pair_group_id": None,
+            "noise_scenario": "clean",
+            "visibility": "public",
+            "provenance": {
+                "source": "synthetic_seed",
+                "created_by": "init_playbook_project",
+                "created_at": "2026-07-26",
+                "generator_model": None,
+                "generator_prompt_version": None,
+            },
+            "validation_status": "validated",
+        },
+        {
+            "schema_version": "playbook.rag_eval_case.v1",
+            "case_id": "RAG-SMOKE-NA-001",
+            "query": "What is the unavailable launch code?",
+            "slices": ["no-answer", "clean"],
+            "tags": ["insufficient_evidence", "mechanism_fixture"],
+            "principal": {"principal_id": "public-smoke", "authorization_scope": ["public"]},
+            "language": "en",
+            "locale": "en-US",
+            "expected_route": {
+                "domain": None,
+                "collection": None,
+                "ambiguous": False,
+                "fallback_allowed": True,
+            },
+            "expected_evidence": [],
+            "acceptable_evidence": [],
+            "forbidden_evidence": [],
+            "distractors": [],
+            "no_answer_expected": True,
+            "freshness_expectation": {
+                "requires_current": False,
+                "current_after": None,
+                "stale_doc_ids": [],
+            },
+            "required_modalities": ["text"],
+            "expected_answer": None,
+            "protected_expected_answer_ref": None,
+            "rubric_ref": "docs/retrieval_eval.md",
+            "pair_group_id": None,
+            "noise_scenario": "clean",
+            "visibility": "public",
+            "provenance": {
+                "source": "synthetic_seed",
+                "created_by": "init_playbook_project",
+                "created_at": "2026-07-26",
+                "generator_model": None,
+                "generator_prompt_version": None,
+            },
+            "validation_status": "validated",
+        },
+    ]
+    return "\n".join(json.dumps(row, sort_keys=True) for row in rows) + "\n"
+
+
+def rag_eval_observations_jsonl(condition_id: str, run_id: str) -> str:
+    rows = [
+        {
+            "schema_version": "playbook.rag_eval_observation.v1",
+            "run_id": run_id,
+            "trial_id": "t1",
+            "condition_id": condition_id,
+            "case_id": "RAG-SMOKE-001",
+            "route_decision": {
+                "domain": "support",
+                "collection": "public",
+                "confidence": 1.0,
+                "fallback_used": False,
+                "no_route": False,
+                "ambiguous": False,
+                "latency_ms": 0,
+                "cost_usd": 0,
+            },
+            "retrieved_items": [
+                {
+                    "doc_id": "rag-smoke-doc",
+                    "chunk_id": "c1",
+                    "span_id": "s1",
+                    "source_version": "scaffold-v1",
+                    "rank": 1,
+                    "retrieval_score": 1.0,
+                    "source_timestamp": "2026-07-26",
+                    "fresh": True,
+                    "acl_scope": ["public"],
+                    "acl_result": "allowed",
+                    "domain": "support",
+                    "collection": "public",
+                    "consumed": True,
+                }
+            ],
+            "assembled_context": {
+                "items": [
+                    {
+                        "doc_id": "rag-smoke-doc",
+                        "chunk_id": "c1",
+                        "span_id": "s1",
+                        "order": 1,
+                        "token_count": 8,
+                    }
+                ],
+                "token_count": 8,
+                "truncated": False,
+            },
+            "answer": "The support code is RAG-SMOKE.",
+            "answer_correct": True,
+            "citations": [
+                {
+                    "doc_id": "rag-smoke-doc",
+                    "chunk_id": "c1",
+                    "span_id": "s1",
+                    "claim_id": "claim-1",
+                    "supports_claim": True,
+                }
+            ],
+            "abstained": False,
+            "insufficient_evidence": False,
+            "harness_events": {
+                "retrieval_calls": 1,
+                "search_queries": ["support code"],
+                "search_query_refs": [],
+                "artifacts": [],
+                "returned_result_count": 1,
+                "consumed_result_count": 1,
+                "retries": 0,
+                "termination_reason": "completed",
+            },
+            "latency_ms": {"retrieval": 1, "reranking": 0, "generation": 1, "e2e": 2},
+            "tokens": {"input": 20, "output": 5},
+            "cost": {"total_usd": 0},
+            "errors": [],
+            "failure_stage": None,
+        },
+        {
+            "schema_version": "playbook.rag_eval_observation.v1",
+            "run_id": run_id,
+            "trial_id": "t1",
+            "condition_id": condition_id,
+            "case_id": "RAG-SMOKE-NA-001",
+            "route_decision": {
+                "domain": None,
+                "collection": None,
+                "confidence": None,
+                "fallback_used": True,
+                "no_route": True,
+                "ambiguous": False,
+                "latency_ms": 0,
+                "cost_usd": 0,
+            },
+            "retrieved_items": [],
+            "assembled_context": {"items": [], "token_count": 0, "truncated": False},
+            "answer": None,
+            "answer_correct": True,
+            "citations": [],
+            "abstained": True,
+            "insufficient_evidence": True,
+            "harness_events": {
+                "retrieval_calls": 1,
+                "search_queries": ["unavailable launch code"],
+                "search_query_refs": [],
+                "artifacts": [],
+                "returned_result_count": 0,
+                "consumed_result_count": 0,
+                "retries": 0,
+                "termination_reason": "insufficient_evidence",
+            },
+            "latency_ms": {"retrieval": 1, "reranking": 0, "generation": 1, "e2e": 2},
+            "tokens": {"input": 20, "output": 1},
+            "cost": {"total_usd": 0},
+            "errors": [],
+            "failure_stage": None,
+        },
+    ]
+    return "\n".join(json.dumps(row, sort_keys=True) for row in rows) + "\n"
+
+
+def rag_condition(condition_id: str, retrieval_strategy: str, retriever_version: str) -> dict[str, object]:
+    condition: dict[str, object] = {
+        "condition_id": condition_id,
+        "rag_shape": "fixed_pipeline",
+        "retrieval_strategy": retrieval_strategy,
+        "retriever_version": retriever_version,
+        "chunking_version": "scaffold-chunks-v1",
+        "embedding": {
+            "provider": "not_applicable" if retrieval_strategy == "lexical" else "project_defined",
+            "name": "not_applicable" if retrieval_strategy == "lexical" else "project_defined",
+            "version": "not_applicable" if retrieval_strategy == "lexical" else "project_defined",
+        },
+        "index": {"provider": "project_defined", "name": "scaffold-index", "version": "v1"},
+        "reranker": {"provider": "not_applicable", "name": "not_applicable", "version": "not_applicable"},
+        "top_k": 3,
+        "candidate_k": 3,
+        "filter_policy_version": "scaffold-filter-v1",
+        "router_taxonomy_version": "not_applicable",
+        "router_version": "not_applicable",
+        "graph_builder_version": "not_applicable",
+        "entity_dedup_version": "not_applicable",
+        "context_assembly_version": "scaffold-context-v1",
+        "generator_model": "project_defined",
+        "generator_prompt_version": "scaffold-prompt-v1",
+        "citation_contract_version": "scaffold-citations-v1",
+        "abstention_policy_version": "scaffold-abstention-v1",
+        "harness": {
+            "harness_type": "fixed_pipeline",
+            "harness_version": "scaffold-harness-v1",
+            "tool_registry_version": "not_applicable",
+            "delivery_profile": "inline",
+            "context_policy_version": "scaffold-context-policy-v1",
+            "memory_policy_version": "not_applicable",
+            "permission_policy_version": "scaffold-permissions-v1",
+            "retry_policy": "no-retry",
+            "termination_policy": "single-pass",
+            "max_iterations": 1,
+            "timeout_seconds": 30,
+        },
+    }
+    condition["compatibility_fingerprint"] = canonical_json_hash(condition)
+    return condition
+
+
+def rag_eval_manifest_config() -> str:
+    cases = rag_eval_case_jsonl()
+    corpus = (
+        "corpus_id=scaffold_rag_eval_corpus\n"
+        "corpus_version=scaffold-v1\n"
+        "This generated corpus snapshot is a mechanism fixture, not empirical evidence.\n"
+    )
+    baseline_condition = rag_condition("lexical_baseline", "lexical", "scaffold-lexical-v1")
+    candidate_condition = rag_condition("production_candidate", "hybrid", "scaffold-candidate-v1")
+    payload = {
+        "schema_version": "playbook.rag_eval_manifest.v1",
+        "suite_id": "scaffold_rag_eval",
+        "suite_version": "scaffold-v1",
+        "owner": "project-owner",
+        "risk_level": "medium",
+        "evaluation_mode": "mechanism_demonstration",
+        "identity_source": "declared",
+        "repository": "project-local",
+        "project_commit": "0" * 40,
+        "dirty_state_policy": "record_only",
+        "created_at": "2026-07-26T00:00:00Z",
+        "dataset": {
+            "dataset_id": "scaffold_rag_eval_cases",
+            "dataset_version": "scaffold-v1",
+            "dataset_source": "synthetic_seed",
+            "dataset_path": ".playbook/rag_eval_cases.jsonl",
+            "dataset_sha256": sha256_text(cases),
+            "case_count": 2,
+            "public_case_count": 2,
+            "protected_case_count": 0,
+            "holdout_policy": "none - public mechanism scaffold",
+            "contamination_policy": "visible scaffold cannot support empirical claims",
+            "minimum_sample_policy": "diagnostic smoke only; replace before release evidence",
+            "protected_holdout": {
+                "status": "none",
+                "public_boundary": "no protected cases in scaffold",
+                "contamination_status": "clean",
+            },
+        },
+        "corpus": {
+            "corpus_id": "scaffold_rag_eval_corpus",
+            "corpus_version": "scaffold-v1",
+            "corpus_snapshot_ref": ".playbook/rag_eval_corpus_snapshot.txt",
+            "corpus_sha256": sha256_text(corpus),
+            "index_schema_version": "scaffold-index-v1",
+            "source_inventory_version": "scaffold-inventory-v1",
+            "freshness_cutoff": "2026-01-01",
+        },
+        "conditions": [baseline_condition, candidate_condition],
+        "experiment_design": {
+            "question_slices": ["simple", "no-answer"],
+            "noise_scenarios": ["clean"],
+            "perturbation_scenarios": ["none"],
+            "trial_count": 1,
+            "controlled_factors": ["dataset", "corpus", "generator_model"],
+            "changed_factors": ["retrieval_strategy"],
+            "baseline_condition_ref": "lexical_baseline",
+            "cost_budget_note": "offline scaffold only",
+        },
+        "evaluation_policy": {
+            "metrics": [
+                {
+                    "metric_id": "retrieval.hit_at_3",
+                    "stage": "candidate_retrieval",
+                    "direction": "higher_is_better",
+                    "release_significant": True,
+                },
+                {
+                    "metric_id": "retrieval.acl_leak_rate",
+                    "stage": "candidate_retrieval",
+                    "direction": "lower_is_better",
+                    "release_significant": True,
+                },
+                {
+                    "metric_id": "generation.no_answer_accuracy",
+                    "stage": "generation_citations_abstention",
+                    "direction": "higher_is_better",
+                    "release_significant": True,
+                },
+            ],
+            "minimum_thresholds": {"retrieval.acl_leak_rate": 0.0},
+            "absolute_regression_thresholds": {"p1": 0.05, "p0": 0.15},
+            "relative_regression_thresholds": {"p1": 0.05, "p0": 0.15},
+            "slice_thresholds": {},
+            "required_stop_ship_rules": [
+                "ACL_LEAK",
+                "NO_ANSWER_PATH_MISSING",
+                "HASH_MISMATCH",
+                "INVALID_RUN_AS_PASS",
+            ],
+            "uncertainty_policy": "report N; scaffold is mechanism-only",
+        },
+        "judge_policy": {
+            "judge_status": "disabled",
+            "judge_model": None,
+            "judge_prompt_version": None,
+            "rubric_version": None,
+            "calibration_ref": None,
+            "calibration_sha256": None,
+            "human_sample_ref": None,
+            "eval_cost_budget": "not_applicable",
+        },
+        "outputs": {
+            "result_path": ".playbook-artifacts/rag-eval/result.json",
+            "report_path": "reports/rag_eval/result.md",
+            "trace_refs": [],
+            "evidence_bundle_path": None,
+            "harness_eval_unit_ref": None,
+        },
+    }
+    return json.dumps(payload, indent=2, sort_keys=True) + "\n"
+
+
+def rag_eval_corpus_snapshot() -> str:
+    return (
+        "corpus_id=scaffold_rag_eval_corpus\n"
+        "corpus_version=scaffold-v1\n"
+        "This generated corpus snapshot is a mechanism fixture, not empirical evidence.\n"
+    )
 
 
 def readiness_value(value: str) -> str:
@@ -978,6 +1392,92 @@ def add_optional_files(args: argparse.Namespace, target: Path, replacements: dic
         )
 
 
+def add_rag_eval_files(args: argparse.Namespace, target: Path, replacements: dict[str, str], result: CopyResult) -> None:
+    if not args.with_rag_eval:
+        return
+    for schema_name in (
+        "rag_eval_manifest.schema.json",
+        "rag_eval_case.schema.json",
+        "rag_eval_observation.schema.json",
+        "rag_eval_result.schema.json",
+        "rag_eval_comparison.schema.json",
+    ):
+        copy_binary_or_text_file(
+            PLAYBOOK_ROOT / "schemas" / schema_name,
+            target / "schemas" / schema_name,
+            args.force,
+            args.dry_run,
+            result,
+        )
+    for tool_name in (
+        "rag_eval_lib.py",
+        "rag_eval_validate.py",
+        "rag_eval_score.py",
+        "rag_eval_compare.py",
+    ):
+        copy_binary_or_text_file(
+            PLAYBOOK_ROOT / "tools" / tool_name,
+            target / "tools" / tool_name,
+            args.force,
+            args.dry_run,
+            result,
+        )
+    copy_file(
+        "templates/RAG_DATA_READINESS.md",
+        target / "docs/rag_data_readiness.md",
+        replacements,
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_file(
+        "templates/RETRIEVAL_EVAL.md",
+        target / "docs/retrieval_eval.md",
+        replacements,
+        args.force,
+        args.dry_run,
+        result,
+    )
+    write_text_file(
+        target / ".playbook/rag_eval_manifest.json",
+        rag_eval_manifest_config(),
+        force=args.force,
+        dry_run=args.dry_run,
+        result=result,
+    )
+    write_text_file(
+        target / ".playbook/rag_eval_cases.jsonl",
+        rag_eval_case_jsonl(),
+        force=args.force,
+        dry_run=args.dry_run,
+        result=result,
+    )
+    write_text_file(
+        target / ".playbook/rag_eval_corpus_snapshot.txt",
+        rag_eval_corpus_snapshot(),
+        force=args.force,
+        dry_run=args.dry_run,
+        result=result,
+    )
+    write_text_file(
+        target / ".playbook/rag_eval_baseline_observations.jsonl",
+        rag_eval_observations_jsonl("lexical_baseline", "scaffold-baseline-run"),
+        force=args.force,
+        dry_run=args.dry_run,
+        result=result,
+    )
+    write_text_file(
+        target / ".playbook/rag_eval_candidate_observations.jsonl",
+        rag_eval_observations_jsonl("production_candidate", "scaffold-candidate-run"),
+        force=args.force,
+        dry_run=args.dry_run,
+        result=result,
+    )
+    if not args.dry_run:
+        (target / "reports/rag_eval").mkdir(parents=True, exist_ok=True)
+        (target / ".playbook-artifacts/rag-eval").mkdir(parents=True, exist_ok=True)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Bootstrap a project with AI Workflow Playbook artifacts.")
     parser.add_argument("target", help="Target repository directory.")
@@ -1000,6 +1500,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--with-cost-architecture", action="store_true")
     parser.add_argument("--with-router-eval", action="store_true")
+    parser.add_argument("--with-rag-eval", action="store_true", help="Add optional portable RAG eval schemas, CLI tools, and mechanism fixture.")
     parser.add_argument("--with-cost-adapter", action="store_true")
     parser.add_argument("--external-skill", action="append", default=[], help="Create trust record for this external skill.")
     parser.add_argument("--install-claude-hooks", action="store_true", help="Merge .claude/settings.json and install hook scripts.")
@@ -1066,9 +1567,13 @@ def main(argv: list[str] | None = None) -> int:
         if mode == "strict":
             args.with_cost_architecture = True
     add_optional_files(args, target, replacements, result)
+    add_rag_eval_files(args, target, replacements, result)
+    project_verification_text = project_verification_config(verify_argvs)
+    if args.with_rag_eval:
+        project_verification_text = add_rag_eval_project_check(project_verification_text)
     write_text_file(
         target / ".playbook/project_verification.json",
-        project_verification_config(verify_argvs),
+        project_verification_text,
         force=args.force,
         dry_run=args.dry_run,
         result=result,
