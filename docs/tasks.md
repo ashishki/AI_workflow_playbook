@@ -127,6 +127,45 @@ Evidence:
 
 ## Phase EL-1 - Evidence Layer
 
+### AWP-EL-004: RAG Evaluation v2
+
+Owner: codex
+Type: rag:eval rag:routing rag:harness rag:graph rag:attribution
+Status: done 2026-07-26
+
+Objective: |
+  Add a portable, provider-neutral RAG evaluation control plane with strict
+  machine contracts, offline deterministic scoring/comparison, optional
+  initializer scaffolding, governance prompts, and mechanism fixtures.
+
+Acceptance-Criteria:
+  - `schemas/rag_eval_manifest.schema.json`, `schemas/rag_eval_case.schema.json`,
+    `schemas/rag_eval_observation.schema.json`,
+    `schemas/rag_eval_result.schema.json`, and
+    `schemas/rag_eval_comparison.schema.json` define strict versioned contracts
+    with path/hash refs.
+  - `tools/rag_eval_validate.py`, `tools/rag_eval_score.py`, and
+    `tools/rag_eval_compare.py` validate, score, and compare offline without
+    network calls or model providers.
+  - `tools/init_playbook_project.py --with-rag-eval` creates a valid optional
+    downstream kit without changing non-RAG bootstrap output.
+  - RAG docs, templates, Strategist, Phase 1 Validator, Orchestrator, and code
+    review prompts cover lexical baselines, harness/delivery identity, routed
+    topology, perturbation attribution, judge calibration, and stop-ship rules.
+  - Generic fixtures remain mechanism demonstrations and do not claim empirical
+    production value.
+
+Verification:
+  - `.venv/bin/python -m pytest tests/unit/test_rag_eval_tools.py tests/unit/test_playbook_validate.py tests/integration/test_initializer.py -q`
+  - `.venv/bin/python tools/playbook_validate.py --root . --check rag`
+  - `.venv/bin/python tools/verify_playbook.py --root .`
+
+Known-Limit:
+  - Full repository pytest/verify remains red only because the pre-existing
+    frozen Codex/toolchain environment checks do not match the current host.
+    RAG Eval v2 targeted tests, generated-project matrix, validator, scorer,
+    comparator, and verifier RAG checks pass offline.
+
 ### AWP-EL-001: Playbook-Native Receipt Schemas
 
 Owner: codex
