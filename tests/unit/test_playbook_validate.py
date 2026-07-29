@@ -6,6 +6,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from tools import approve_feature_design
 from tools import playbook_validate
 
 
@@ -16,6 +17,24 @@ RAG_FIXTURE = ROOT / "tests/fixtures/rag_eval/valid"
 def write_tasks(root: Path, text: str) -> None:
     (root / "docs").mkdir(parents=True, exist_ok=True)
     (root / "docs/tasks.md").write_text(text, encoding="utf-8")
+
+
+def approve_design_fixture(root: Path, registry: Path, payload: dict[str, object]) -> dict[str, object]:
+    (root / "docs/design" / f"{payload['feature_id']}.md").write_text("# Feature Design\n", encoding="utf-8")
+    registry.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    approved = approve_feature_design.approve_registry_payload(
+        root=root,
+        registry_path=registry,
+        payload=payload,
+        human_id="human:tester",
+        approval_method="test_harness",
+        approval_ref="tests/unit/test_playbook_validate.py",
+        approved_at="2026-07-29",
+        review_refs=[],
+        advisory_acknowledgement="none",
+    )
+    registry.write_text(json.dumps(approved, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return approved
 
 
 def copy_project_verification_result_schema(root: Path) -> None:
@@ -533,23 +552,44 @@ def test_designed_slice_requires_existing_slice(tmp_path: Path) -> None:
     docs = tmp_path / "docs/design"
     docs.mkdir(parents=True)
     (tmp_path / "docs/PROJECT_BRIEF.md").write_text("# Brief\n", encoding="utf-8")
-    (docs / "F01.design.json").write_text(
-        json.dumps(
-            {
+    approve_design_fixture(
+        tmp_path,
+        docs / "F01.design.json",
+        {
                 "schema_version": "playbook.feature_design.v1",
                 "feature_id": "F01",
-                "status": "approved",
+                "status": "review_required",
                 "planning_depth": "designed_slices",
                 "risk_level": "high",
                 "brief_ref": "docs/PROJECT_BRIEF.md",
                 "architecture_refs": [],
                 "approval_policy": "human_required",
-                "approved_by": "human",
-                "approved_at": "2026-07-29",
-                "slices": [],
-            }
-        ),
-        encoding="utf-8",
+                "slices": [
+                    {
+                        "slice_id": "S02",
+                        "status": "planned",
+                        "user_visible_outcome": "Different slice.",
+                        "scope": "Different scope.",
+                        "allowed_files": ["app/**"],
+                        "forbidden_files": ["secrets/**"],
+                        "expected_interfaces": ["other()"],
+                        "verification": [
+                            {
+                                "id": "slice_tests",
+                                "argv": ["{python}", "-m", "pytest"],
+                                "cwd": ".",
+                                "required": True,
+                                "expected_exit_code": 0,
+                                "timeout_seconds": 600,
+                            }
+                        ],
+                        "review_checkpoint": "slice_review",
+                        "dependencies": [],
+                        "change_budget": "files<=2",
+                        "rollback": "revert",
+                    }
+                ],
+            },
     )
     write_tasks(
         tmp_path,
@@ -694,20 +734,18 @@ def test_readiness_implementation_ready_accepts_approved_required_design(tmp_pat
     docs = tmp_path / "docs/design"
     docs.mkdir(parents=True)
     (tmp_path / "docs/PROJECT_BRIEF.md").write_text("# Brief\n", encoding="utf-8")
-    design = {
+    design: dict[str, object] = {
         "schema_version": "playbook.feature_design.v1",
         "feature_id": "F01",
-        "status": "approved",
+        "status": "review_required",
         "planning_depth": "compact_design",
         "risk_level": "medium",
         "brief_ref": "docs/PROJECT_BRIEF.md",
         "architecture_refs": [],
         "approval_policy": "human_or_authorized_reviewer",
-        "approved_by": "human:alice",
-        "approved_at": "2026-07-29",
         "slices": [],
     }
-    (docs / "F01.design.json").write_text(json.dumps(design), encoding="utf-8")
+    approve_design_fixture(tmp_path, docs / "F01.design.json", design)
     playbook = tmp_path / ".playbook"
     playbook.mkdir()
     readiness = {

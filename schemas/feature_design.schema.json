@@ -84,8 +84,70 @@
       "type": "string",
       "minLength": 1
     },
+    "approval_method": {
+      "type": "string",
+      "enum": [
+        "interactive_tty",
+        "test_harness"
+      ]
+    },
     "approval_notes": {
       "type": "string"
+    },
+    "advisory_acknowledgement": {
+      "type": "string"
+    },
+    "approved_markdown_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "approved_registry_payload_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "approved_review_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "path",
+          "sha256",
+          "verdict"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "product_design_review",
+              "program_design_review",
+              "slice_review",
+              "maintainability_review"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "PASS",
+              "ADVISORY"
+            ]
+          },
+          "marker": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "default": []
     },
     "slices": {
       "type": "array",
@@ -155,8 +217,51 @@
             "type": "array",
             "minItems": 1,
             "items": {
-              "type": "string",
-              "minLength": 1
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "argv"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "argv": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "cwd": {
+                      "type": "string",
+                      "default": "."
+                    },
+                    "required": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "expected_exit_code": {
+                      "type": "integer",
+                      "default": 0
+                    },
+                    "timeout_seconds": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "default": 600
+                    }
+                  }
+                }
+              ]
             }
           },
           "review_checkpoint": {

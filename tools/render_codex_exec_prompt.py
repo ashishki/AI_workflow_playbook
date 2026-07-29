@@ -60,6 +60,7 @@ ROLE_PROMPTS = {
     "program_design_review": [],
     "slice_review": [],
     "maintainability_review": [],
+    "design_author": [],
 }
 
 READ_ONLY_ROLES = {
@@ -82,6 +83,8 @@ DESIGN_REVIEW_ROLES = {
     "maintainability_review",
 }
 
+DESIGN_AUTHOR_ROLES = {"design_author"}
+
 ROLE_MARKERS = {
     "test_critic": "TEST_CRITIC_RESULT: NO_FINDING | ADVISORY | STOP_SHIP",
     "privacy_review": "PRIVACY_REVIEW_RESULT: PASS | ADVISORY | STOP_SHIP",
@@ -91,6 +94,7 @@ ROLE_MARKERS = {
     "program_design_review": "PROGRAM_DESIGN_REVIEW: PASS | ADVISORY | STOP_SHIP",
     "slice_review": "SLICE_REVIEW: PASS | ADVISORY | STOP_SHIP",
     "maintainability_review": "MAINTAINABILITY_REVIEW: PASS | ADVISORY | STOP_SHIP",
+    "design_author": "DESIGN_AUTHOR_RESULT: DRAFTED | BLOCKED",
 }
 
 
@@ -153,6 +157,7 @@ def default_output_path(task_id: str, role: str) -> str:
         "program_design_review": "program_design_review",
         "slice_review": "slice_review",
         "maintainability_review": "maintainability_review",
+        "design_author": "design_author",
     }[role]
     return f"docs/verification/{task_id}_{suffix}.md"
 
@@ -245,6 +250,48 @@ def design_context_block(root: Path, task_record: dict[str, Any]) -> str:
     return "\n\n".join(parts) if parts else "[No Design-Refs declared on this task.]"
 
 
+def feature_id_from_task_or_args(task_record: dict[str, Any], requested: str) -> str:
+    if requested:
+        return requested
+    for ref in task_record.get("design_refs", []):
+        raw = str(ref).strip().strip("`")
+        name = Path(raw).name
+        if name.endswith(".design.json"):
+            return name.removesuffix(".design.json")
+    return "F01"
+
+
+def read_planning_decision(root: Path, task_id: str, explicit_path: str) -> str:
+    path = Path(explicit_path) if explicit_path else root / ".playbook-artifacts/planning" / task_id / "planning_decision.json"
+    if not path.is_absolute():
+        path = root / path
+    return read_text_if_exists(path, limit=16000) or "[planning decision not present]"
+
+
+def repository_inventory_block(root: Path, feature_id: str) -> str:
+    candidates = [
+        root / ".playbook-artifacts/planning" / feature_id / "repository_inventory.json",
+        root / ".playbook/repository_inventory.json",
+    ]
+    for path in candidates:
+        text = read_text_if_exists(path, limit=16000)
+        if text:
+            return text
+    return "[repository inventory not present]"
+
+
+def existing_patterns_block(root: Path, task_record: dict[str, Any]) -> str:
+    refs = ["docs/ARCHITECTURE.md", "templates/ARCHITECTURE.md", "templates/AGENTS.md"]
+    parts: list[str] = []
+    for ref in refs + list(task_record.get("context_refs", [])):
+        raw = str(ref).strip().strip("`")
+        path = feature_design_lib.safe_repo_path(root, raw)
+        if path is None or not path.exists():
+            continue
+        parts.append(f"### {raw}\n\n{read_text_if_exists(path, limit=10000)}")
+    return "\n\n".join(parts) if parts else "[no existing pattern refs found]"
+
+
 def output_contract(role: str) -> str:
     marker = ROLE_MARKERS.get(role)
     if not marker:
@@ -264,6 +311,8 @@ def command_hint(args: argparse.Namespace, output_path: str) -> str:
         if args.human_approval_ref
         else ""
     )
+    feature = f" --feature-id {args.feature_id}" if args.feature_id else ""
+    planning = f" --planning-decision {args.planning_decision}" if args.planning_decision else ""
     return (
         "codex exec \\\n"
         f"  --cd {json.dumps(str(args.root))} \\\n"
@@ -273,6 +322,8 @@ def command_hint(args: argparse.Namespace, output_path: str) -> str:
         f"--root . --task {args.task} --role {args.role}"
         + (f" {reviews}" if reviews else "")
         + approval
+        + feature
+        + planning
         + f" --output-path {output_path})\""
     )
 
@@ -294,6 +345,125 @@ def render(args: argparse.Namespace) -> str:
         if args.role in READ_ONLY_ROLES
         else "WRITE-SCOPED: modify only files allowed by this role and task scope."
     )
+    if args.role in DESIGN_AUTHOR_ROLES:
+        feature_id = feature_id_from_task_or_args(task_record, args.feature_id)
+        template = read_text_if_exists(root / "templates/FEATURE_DESIGN.md", limit=24000)
+        planning_decision = read_planning_decision(root, args.task, args.planning_decision)
+        current_registry = read_text_if_exists(root / "docs/design" / f"{feature_id}.design.json", limit=20000)
+        current_markdown = read_text_if_exists(root / "docs/design" / f"{feature_id}.md", limit=24000)
+        brief = read_text_if_exists(root / "docs/PROJECT_BRIEF.md", limit=12000)
+        return f"""# Codex Design Author Prompt
+
+Project root: {root}
+Task: {args.task}
+Feature: {feature_id}
+Role: design_author
+Expected report path: {output_path}
+
+## Access Rule
+
+WRITE-SCOPED: modify only:
+
+- `docs/design/{feature_id}.md`
+- `docs/design/{feature_id}.design.json`
+- `docs/tasks.md`
+
+Do not write application code. Do not edit migrations, CI, security policy,
+production dependencies, release approval artifacts, or runtime code. Do not
+approve the design. Do not set `status=approved`, `approved_by`, `approved_at`,
+approval hashes, or release/completion authority.
+
+## Suggested Invocation
+
+```bash
+{command_hint(args, output_path)}
+```
+
+## Output Contract
+
+{output_contract(args.role)}
+
+Allowed final design statuses after your draft work:
+
+- `draft`
+- `review_required`
+
+## Approved Brief
+
+```markdown
+{brief.strip() if brief else "[docs/PROJECT_BRIEF.md not present]"}
+```
+
+## Canonical Task Section
+
+```markdown
+{raw_task}
+```
+
+## Machine Task Record
+
+```json
+{json.dumps(task_record, indent=2, sort_keys=True)}
+```
+
+## Planning Decision
+
+```json
+{planning_decision.strip()}
+```
+
+## Repository Inventory
+
+```json
+{repository_inventory_block(root, feature_id).strip()}
+```
+
+## Existing Architecture Refs And Patterns
+
+```markdown
+{existing_patterns_block(root, task_record).strip()}
+```
+
+## Feature Design Template
+
+```markdown
+{template.strip() if template else "[templates/FEATURE_DESIGN.md not present]"}
+```
+
+## Current Feature Design Registry
+
+```json
+{current_registry.strip() if current_registry else "[registry not present]"}
+```
+
+## Current Feature Design Markdown
+
+```markdown
+{current_markdown.strip() if current_markdown else "[markdown not present]"}
+```
+
+## Required Design Content
+
+Fill or update:
+
+- Product Outcome
+- Existing System Context
+- System Impact
+- File Tree Diff
+- Key Types
+- Interfaces And Signatures
+- Control Flow
+- Invariants
+- Failure Paths
+- Patterns To Reuse
+- Patterns Not To Introduce
+- Maintainability Risks
+- Verification Strategy
+- Vertical Slices
+
+Vertical slices must be vertical user-visible increments, not horizontal layer
+batches.
+"""
     if args.role in DESIGN_REVIEW_ROLES:
         return f"""# Codex Exec Design Review Prompt
 
@@ -433,6 +603,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--role", required=True, choices=sorted(ROLE_PROMPTS))
     parser.add_argument("--review", action="append", default=[])
     parser.add_argument("--human-approval-ref", default="")
+    parser.add_argument("--feature-id", default="")
+    parser.add_argument("--planning-decision", default="")
     parser.add_argument("--output-path", default="")
     parser.add_argument("--parse-report", type=Path, default=None)
     return parser.parse_args(argv)

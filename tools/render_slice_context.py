@@ -128,7 +128,11 @@ def render_packet(
         "## Verification Commands",
         "",
     ]
-    lines.extend(f"- `{command}`" for command in slice_item.get("verification", []))
+    for command in slice_item.get("verification", []):
+        if isinstance(command, dict):
+            lines.extend(["```json", json.dumps(command, indent=2, sort_keys=True), "```", ""])
+        else:
+            lines.append(f"- `{command}`")
     lines.extend(
         [
             "",
@@ -186,7 +190,7 @@ def main(argv: list[str] | None = None) -> int:
         for finding in errors:
             print(f"{finding.path}: {finding.check_id}: {finding.message}", file=sys.stderr)
         return 1
-    if not feature_design_lib.design_is_approved(design):
+    if not feature_design_lib.design_is_approved(design, root, registry_path):
         print("render_slice_context: approved feature design is required", file=sys.stderr)
         return 1
     assert design is not None

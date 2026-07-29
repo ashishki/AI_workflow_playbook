@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from tools import approve_feature_design
+
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -20,19 +22,15 @@ def write_feature(root: Path) -> None:
         "# Feature Design F01\n\nApproved program design.\n",
         encoding="utf-8",
     )
-    (root / "docs/design/F01.design.json").write_text(
-        json.dumps(
-            {
+    registry_payload = {
                 "schema_version": "playbook.feature_design.v1",
                 "feature_id": "F01",
-                "status": "approved",
+                "status": "review_required",
                 "planning_depth": "designed_slices",
                 "risk_level": "high",
                 "brief_ref": "docs/PROJECT_BRIEF.md",
                 "architecture_refs": ["docs/ARCHITECTURE.md"],
                 "approval_policy": "human_required",
-                "approved_by": "human",
-                "approved_at": "2026-07-29",
                 "slices": [
                     {
                         "slice_id": "S01",
@@ -42,20 +40,37 @@ def write_feature(root: Path) -> None:
                         "allowed_files": ["app/**", "tests/**"],
                         "forbidden_files": ["docs/secret.md"],
                         "expected_interfaces": ["create_smoke()"],
-                        "verification": ["python -m pytest tests/test_smoke.py -q"],
+                        "verification": [
+                            {
+                                "id": "slice_tests",
+                                "argv": ["{python}", "-m", "pytest", "tests/test_smoke.py", "-q"],
+                                "cwd": ".",
+                                "required": True,
+                                "expected_exit_code": 0,
+                                "timeout_seconds": 600,
+                            }
+                        ],
                         "review_checkpoint": "slice_review",
                         "dependencies": [],
                         "change_budget": "files<=4, lines<=200",
                         "rollback": "revert S01 diff",
                     }
                 ],
-            },
-            indent=2,
-            sort_keys=True,
-        )
-        + "\n",
-        encoding="utf-8",
+            }
+    registry_path = root / "docs/design/F01.design.json"
+    registry_path.write_text(json.dumps(registry_payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    approved = approve_feature_design.approve_registry_payload(
+        root=root,
+        registry_path=registry_path,
+        payload=registry_payload,
+        human_id="human:tester",
+        approval_method="test_harness",
+        approval_ref="tests/unit/test_slice_context.py",
+        approved_at="2026-07-29",
+        review_refs=[],
+        advisory_acknowledgement="none",
     )
+    registry_path.write_text(json.dumps(approved, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def write_manifest(root: Path) -> None:

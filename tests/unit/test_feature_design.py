@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from tools import approve_feature_design
 from tools import feature_design_lib
 from tools import planning_depth
 
@@ -28,14 +29,12 @@ def valid_design(**overrides: object) -> dict[str, object]:
     payload: dict[str, object] = {
         "schema_version": "playbook.feature_design.v1",
         "feature_id": "F01",
-        "status": "approved",
+        "status": "review_required",
         "planning_depth": "designed_slices",
         "risk_level": "high",
         "brief_ref": "docs/PROJECT_BRIEF.md",
         "architecture_refs": [],
         "approval_policy": "human_required",
-        "approved_by": "human",
-        "approved_at": "2026-07-29",
         "slices": [
             {
                 "slice_id": "S01",
@@ -45,7 +44,16 @@ def valid_design(**overrides: object) -> dict[str, object]:
                 "allowed_files": ["app/**", "tests/**"],
                 "forbidden_files": ["secrets/**"],
                 "expected_interfaces": ["run_smoke()"],
-                "verification": ["python -m pytest tests/test_smoke.py -q"],
+                "verification": [
+                    {
+                        "id": "slice_tests",
+                        "argv": ["{python}", "-m", "pytest", "tests/test_smoke.py", "-q"],
+                        "cwd": ".",
+                        "required": True,
+                        "expected_exit_code": 0,
+                        "timeout_seconds": 600,
+                    }
+                ],
                 "review_checkpoint": "closed",
                 "dependencies": [],
                 "change_budget": "files<=4, lines<=200",
@@ -57,18 +65,83 @@ def valid_design(**overrides: object) -> dict[str, object]:
     return payload
 
 
+def approve_payload(root: Path, registry: Path) -> dict[str, object]:
+    payload = json.loads(registry.read_text(encoding="utf-8"))
+    approved = approve_feature_design.approve_registry_payload(
+        root=root,
+        registry_path=registry,
+        payload=payload,
+        human_id="human:tester",
+        approval_method="test_harness",
+        approval_ref="tests/unit/test_feature_design.py",
+        approved_at="2026-07-29",
+        review_refs=[],
+        advisory_acknowledgement="none",
+    )
+    registry.write_text(json.dumps(approved, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return approved
+
+
 def test_feature_design_accepts_valid_approved_human_design(tmp_path: Path) -> None:
     registry = write_design(tmp_path, valid_design())
+    approve_payload(tmp_path, registry)
 
     findings, design = feature_design_lib.validate_design_file(tmp_path, registry)
 
     assert findings == []
     assert design is not None
     assert design["feature_id"] == "F01"
+    assert feature_design_lib.design_is_approved(design, tmp_path, registry)
+
+
+def test_markdown_edit_makes_approval_stale(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+    approve_payload(tmp_path, registry)
+    (tmp_path / "docs/design/F01.md").write_text("# Feature Design\n\nChanged control flow.\n", encoding="utf-8")
+
+    findings, design = feature_design_lib.validate_design_file(tmp_path, registry)
+
+    assert design is not None
+    assert any(f.check_id == "DESIGN_APPROVAL_STALE" for f in findings)
+    assert not feature_design_lib.design_is_approved(design, tmp_path, registry)
+
+
+def test_registry_design_edit_makes_approval_stale(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+    payload = approve_payload(tmp_path, registry)
+    payload["slices"][0]["allowed_files"].append("extra/**")  # type: ignore[index,union-attr]
+    registry.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    findings, design = feature_design_lib.validate_design_file(tmp_path, registry)
+
+    assert design is not None
+    assert any(f.check_id == "DESIGN_APPROVAL_STALE" for f in findings)
+    assert not feature_design_lib.design_is_approved(design, tmp_path, registry)
+
+
+def test_slice_status_update_does_not_make_approval_stale(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+    payload = approve_payload(tmp_path, registry)
+    payload["slices"][0]["status"] = "in_progress"  # type: ignore[index]
+    registry.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    findings, design = feature_design_lib.validate_design_file(tmp_path, registry)
+
+    assert findings == []
+    assert feature_design_lib.design_is_approved(design, tmp_path, registry)
 
 
 def test_feature_design_rejects_model_self_approval(tmp_path: Path) -> None:
-    registry = write_design(tmp_path, valid_design(approved_by="codex"))
+    registry = write_design(
+        tmp_path,
+        valid_design(
+            status="approved",
+            approved_by="codex",
+            approved_at="2026-07-29",
+            approved_markdown_sha256="0" * 64,
+            approved_registry_payload_sha256="0" * 64,
+        ),
+    )
 
     findings, _ = feature_design_lib.validate_design_file(tmp_path, registry)
 
@@ -76,8 +149,7 @@ def test_feature_design_rejects_model_self_approval(tmp_path: Path) -> None:
 
 
 def test_feature_design_rejects_missing_approval_provenance(tmp_path: Path) -> None:
-    payload = valid_design()
-    payload.pop("approved_by")
+    payload = valid_design(status="approved")
     registry = write_design(tmp_path, payload)
 
     findings, _ = feature_design_lib.validate_design_file(tmp_path, registry)
@@ -122,6 +194,73 @@ def test_feature_design_rejects_repo_escape_ref(tmp_path: Path) -> None:
     findings, _ = feature_design_lib.validate_design_file(tmp_path, registry)
 
     assert any(f.check_id == "DESIGN_REF_UNSAFE" for f in findings)
+
+
+def test_legacy_slice_verification_string_is_warning(tmp_path: Path) -> None:
+    payload = valid_design()
+    payload["slices"][0]["verification"] = ["python -m pytest tests/test_smoke.py -q"]  # type: ignore[index]
+    registry = write_design(tmp_path, payload)
+
+    findings, _ = feature_design_lib.validate_design_file(tmp_path, registry)
+
+    assert any(f.check_id == "LEGACY_SLICE_VERIFICATION_STRING" and f.severity == "warning" for f in findings)
+
+
+def test_noninteractive_approval_cli_fails(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+
+    result = approve_feature_design.main(["--root", str(tmp_path), "--feature-id", "F01"])
+
+    assert result == 2
+    assert registry.exists()
+
+
+def test_stop_ship_review_blocks_approval(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+    report = tmp_path / ".playbook-artifacts/reports/F01/program_design_review.md"
+    report.parent.mkdir(parents=True)
+    report.write_text("PROGRAM_DESIGN_REVIEW: STOP_SHIP\nBoundary violation.\n", encoding="utf-8")
+
+    with pytest.raises(approve_feature_design.ApprovalError, match="STOP_SHIP"):
+        approve_feature_design.approve_registry_payload(
+            root=tmp_path,
+            registry_path=registry,
+            payload=json.loads(registry.read_text(encoding="utf-8")),
+            human_id="human:tester",
+            approval_method="test_harness",
+            approval_ref="tests",
+            approved_at="2026-07-29",
+            review_refs=[{"role": "program_design_review", "path": ".playbook-artifacts/reports/F01/program_design_review.md"}],
+            advisory_acknowledgement="",
+        )
+
+
+def test_advisory_review_requires_acknowledgement(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+    report = tmp_path / ".playbook-artifacts/reports/F01/program_design_review.md"
+    report.parent.mkdir(parents=True)
+    report.write_text("PROGRAM_DESIGN_REVIEW: ADVISORY\nConsider smaller interface.\n", encoding="utf-8")
+
+    kwargs = {
+        "root": tmp_path,
+        "registry_path": registry,
+        "payload": json.loads(registry.read_text(encoding="utf-8")),
+        "human_id": "human:tester",
+        "approval_method": "test_harness",
+        "approval_ref": "tests",
+        "approved_at": "2026-07-29",
+        "review_refs": [{"role": "program_design_review", "path": ".playbook-artifacts/reports/F01/program_design_review.md"}],
+    }
+    with pytest.raises(approve_feature_design.ApprovalError, match="ADVISORY"):
+        approve_feature_design.approve_registry_payload(**kwargs, advisory_acknowledgement="")
+
+    approved = approve_feature_design.approve_registry_payload(
+        **kwargs,
+        advisory_acknowledgement="human accepts advisory risk for v1",
+    )
+
+    assert approved["approved_review_refs"][0]["verdict"] == "ADVISORY"  # type: ignore[index]
+    assert approved["advisory_acknowledgement"]
 
 
 @pytest.mark.parametrize(

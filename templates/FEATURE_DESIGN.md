@@ -142,6 +142,12 @@ Allowed-Files:
 Forbidden-Files:
 Expected Interfaces:
 Verification:
+  - id: slice_tests
+    argv: ["{python}", "-m", "pytest", "tests/test_feature.py", "-q"]
+    cwd: "."
+    required: true
+    expected_exit_code: 0
+    timeout_seconds: 600
 Review-Checkpoint:
 Dependencies:
 Change-Budget:

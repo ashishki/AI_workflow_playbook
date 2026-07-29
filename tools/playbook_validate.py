@@ -751,7 +751,7 @@ def validate_task_design_requirements(tasks: list[TaskBlock], root: Path) -> lis
             if design is None:
                 continue
             loaded_designs.append(design)
-            if feature_design_lib.design_is_approved(design):
+            if feature_design_lib.design_is_approved(design, root, registry_path):
                 approved_designs.append(design)
         if not loaded_designs:
             continue
@@ -843,7 +843,7 @@ def validate_task_design_requirements(tasks: list[TaskBlock], root: Path) -> lis
                     )
                 )
         if is_completed_status(record):
-            if not feature_design_lib.design_is_approved(design):
+            if not feature_design_lib.design_is_approved(design, root, registry_path):
                 findings.append(
                     Finding(
                         "error",
@@ -1055,7 +1055,7 @@ def validate_readiness(root: Path) -> list[Finding]:
                 continue
             design_findings, design = feature_design_lib.validate_design_file(root, design_path)
             findings.extend(design_finding_to_task_finding(root, finding) for finding in design_findings)
-            if feature_design_lib.design_is_approved(design):
+            if feature_design_lib.design_is_approved(design, root, design_path):
                 approved = True
         if not approved:
             findings.append(
