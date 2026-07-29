@@ -516,20 +516,44 @@ designs, but it must not set its own design to approved.
 Useful commands:
 
 ```bash
-python3 tools/planning_depth.py --risk-level high --user-visible-feature
-python3 tools/create_feature_design.py --root . --feature-id F01 --planning-depth designed_slices --risk-level high
-python3 tools/validate_feature_design.py --root . --design docs/design/F01.design.json
-python3 tools/render_slice_context.py --root . --feature-id F01 --slice-id S01
-python3 tools/check_maintainability.py --root . --task T01
+python3 tools/feature_workflow.py --root . plan --task T14
+python3 tools/feature_workflow.py --root . draft --task T14 --feature-id F01
+python3 tools/feature_workflow.py --root . review --task T14 --feature-id F01 --role auto
+python3 tools/feature_workflow.py --root . approve --feature-id F01
+python3 tools/feature_workflow.py --root . next --feature-id F01
+python3 tools/feature_workflow.py --root . start --feature-id F01 --slice-id F01-S1
+python3 tools/feature_workflow.py --root . context --task T14 --feature-id F01 --slice-id F01-S1
+python3 tools/feature_workflow.py --root . check --task T14 --feature-id F01 --slice-id F01-S1
 ```
+
+Canonical personal-use actor model:
+
+1. Human fills and approves `docs/PROJECT_BRIEF.md`.
+2. Main Codex inspects the task/repository and proposes Planning Facts.
+3. `feature_workflow plan` runs deterministic Planning Depth recommendation.
+4. Human accepts or overrides Planning Depth with a reason.
+5. Main Codex acts as `design_author` and drafts Feature Design only.
+6. Isolated read-only Codex reviewers challenge the draft when required.
+7. Human approves the exact hashed design in an interactive TTY.
+8. `feature_workflow next` selects the first dependency-ready slice.
+9. Main Codex implements only that slice from the bounded context packet.
+10. `feature_workflow check` runs receipt-backed verification, scope, budget,
+    and maintainability checks.
+11. Isolated reviewers check slice/maintainability when required.
+12. Existing human/release authority accepts final completion; the workflow
+    never grants release readiness.
 
 Future unified CLI mapping:
 
-- `playbook design create` -> `tools/create_feature_design.py`
-- `playbook design validate` -> `tools/validate_feature_design.py`
-- `playbook design approve` -> human-authored registry approval update
-- `playbook slice context` -> `tools/render_slice_context.py`
-- `playbook slice status` and `playbook slice next` -> design registry readers
+- `playbook feature plan` -> `tools/feature_workflow.py plan`
+- `playbook feature draft` -> `tools/feature_workflow.py draft`
+- `playbook feature review` -> `tools/feature_workflow.py review`
+- `playbook feature status` -> `tools/feature_workflow.py status`
+- `playbook feature approve` -> `tools/feature_workflow.py approve`
+- `playbook slice next` -> `tools/feature_workflow.py next`
+- `playbook slice start` -> `tools/feature_workflow.py start`
+- `playbook slice context` -> `tools/feature_workflow.py context`
+- `playbook slice check` -> `tools/feature_workflow.py check`
 
 ### Harness And Evaluation
 

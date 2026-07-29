@@ -277,7 +277,8 @@ For practical setup and adoption, use:
 - [docs/cost_telemetry_protocol.md](docs/cost_telemetry_protocol.md) — provider-agnostic AI cost telemetry JSONL and rollup protocol
 - [docs/external_skill_security_policy.md](docs/external_skill_security_policy.md) — external agent skill trust gate, scan/signature policy, and approval rules
 - [tools/init_playbook_project.py](tools/init_playbook_project.py) — deterministic Lean-Core / Standard / Strict project initializer
-- [tools/planning_depth.py](tools/planning_depth.py), [tools/create_feature_design.py](tools/create_feature_design.py), [tools/validate_feature_design.py](tools/validate_feature_design.py), [tools/render_slice_context.py](tools/render_slice_context.py) — deterministic Planning Depth, Feature Design, and slice-context helpers
+- [tools/feature_workflow.py](tools/feature_workflow.py) — thin coordinator for `plan -> draft -> review -> approve -> next -> start -> context -> check`
+- [tools/planning_depth.py](tools/planning_depth.py), [tools/create_feature_design.py](tools/create_feature_design.py), [tools/approve_feature_design.py](tools/approve_feature_design.py), [tools/validate_feature_design.py](tools/validate_feature_design.py), [tools/render_slice_context.py](tools/render_slice_context.py) — deterministic Planning Depth, Feature Design, approval, and slice-context helpers
 - [tools/skill_security_gate.py](tools/skill_security_gate.py) — CI-friendly external skill trust-record and SkillSpector wrapper
 - [templates/cost_adapters/](templates/cost_adapters/) — provider-neutral starter adapter for writing AI cost telemetry
 

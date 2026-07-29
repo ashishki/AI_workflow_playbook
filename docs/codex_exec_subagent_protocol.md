@@ -20,6 +20,7 @@ orchestrate specialized child agents.
 | Role | Writes files | Purpose | Completion authority |
 |------|--------------|---------|----------------------|
 | main_agent | yes | Select next task, dispatch subagents, run final gates, commit and push after approval | no |
+| design_author | yes, design-only | Draft or revise Feature Design and vertical slices before implementation | no |
 | implementer | yes | Implement one scoped task, tests, and implementation evidence | no |
 | meta_review | no | Run existing `PROMPT_0_META.md` scope and state snapshot | no |
 | arch_review | no | Run existing `PROMPT_1_ARCH.md` architecture drift review | no |
@@ -37,6 +38,11 @@ orchestrate specialized child agents.
 Review agents are read-only. Fix agents do not review. Documentation sync does
 not approve completion. Commit and push happen only after required gates are
 green and required human approval is recorded.
+
+`design_author` is not a reviewer. It may write only
+`docs/design/<feature-id>.md`, `docs/design/<feature-id>.design.json`, and the
+relevant `docs/tasks.md` block. It must not write application code or set
+approval fields.
 
 ## Task Loop
 
@@ -60,6 +66,12 @@ green and required human approval is recorded.
     human records approval.
 11. Main agent commits and pushes.
 12. Main agent moves to the next ready task.
+
+For Feature Design and vertical slices, prefer `tools/feature_workflow.py
+review` to resolve required `product_design_review`, `program_design_review`,
+`slice_review`, and `maintainability_review` prompts. The tool writes prompt
+files and suggested `codex exec --sandbox read-only` commands, then parses
+required markers when reports exist.
 
 ## Standard Commands
 
@@ -149,6 +161,7 @@ Additional task-loop reports must start with one of these markers:
 
 - `TEST_CRITIC_RESULT: NO_FINDING | ADVISORY | STOP_SHIP`
 - `PRIVACY_REVIEW_RESULT: PASS | ADVISORY | STOP_SHIP`
+- `DESIGN_AUTHOR_RESULT: DRAFTED | BLOCKED`
 - `PRODUCT_DESIGN_REVIEW: PASS | ADVISORY | STOP_SHIP`
 - `PROGRAM_DESIGN_REVIEW: PASS | ADVISORY | STOP_SHIP`
 - `SLICE_REVIEW: PASS | ADVISORY | STOP_SHIP`

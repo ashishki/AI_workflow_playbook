@@ -39,19 +39,23 @@ use can add `--retrofit` to record `.playbook/repository_inventory.json` and
 ## Plan Feature Design
 
 ```bash
-python3 tools/planning_depth.py --risk-level high --user-visible-feature
-python3 tools/create_feature_design.py --root . --feature-id F01 --planning-depth designed_slices --risk-level high
-python3 tools/validate_feature_design.py --root . --design docs/design/F01.design.json
+python3 tools/feature_workflow.py --root . plan --task T14
+python3 tools/feature_workflow.py --root . draft --task T14 --feature-id F01
+python3 tools/feature_workflow.py --root . review --task T14 --feature-id F01 --role auto
+python3 tools/feature_workflow.py --root . approve --feature-id F01
 ```
 
 Feature Design uses paired artifacts: `docs/design/F01.md` for human design and
 `docs/design/F01.design.json` for deterministic metadata, approval provenance,
-and slice registry. The tools never self-approve a design.
+and slice registry. Approval is hash-bound and interactive; the tools never
+self-approve a design.
 
 ## Render Slice Context
 
 ```bash
-python3 tools/render_slice_context.py --root . --feature-id F01 --slice-id S01
+python3 tools/feature_workflow.py --root . next --feature-id F01
+python3 tools/feature_workflow.py --root . start --feature-id F01 --slice-id F01-S1
+python3 tools/feature_workflow.py --root . context --task T14 --feature-id F01 --slice-id F01-S1
 ```
 
 The slice packet is written under `.playbook-artifacts/context/` and includes

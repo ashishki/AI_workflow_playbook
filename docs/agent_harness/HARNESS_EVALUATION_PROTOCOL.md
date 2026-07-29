@@ -84,6 +84,12 @@ before a small change, tool calls, tokens, latency, policy violations, and
 architecture/scope violations. The bundled synthetic sequence is a mechanism
 fixture, not proof of real-system maintainability.
 
+A real future changeability experiment must execute Task A through a concrete
+repository state, then Task B against state A, then Task C against state B. For
+Playbook-managed work, those steps should align with
+`feature_workflow start/context/check` so slice scope, receipts, and review
+artifacts are comparable across the sequence.
+
 Safety, false completion, and immutable-policy violations are hard gates.
 
 ## Evidence Rule

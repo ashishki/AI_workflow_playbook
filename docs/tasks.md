@@ -1282,3 +1282,35 @@ Acceptance-Criteria:
 Verification:
   - `.venv/bin/python -m pytest tests/unit/test_feature_design.py tests/unit/test_playbook_validate.py tests/unit/test_slice_context.py tests/unit/test_render_codex_exec_prompt.py tests/unit/test_maintainability_check.py tests/integration/test_initializer.py companion/ai_workflow_harness_lab/tests/test_cli.py -q`
   - `.venv/bin/python tools/playbook_validate.py --root . --check schemas --check tasks --check design --check instructions --check modes`
+
+### AWP-PI-010: Real Sequential Changeability Runner
+
+Owner: codex
+Type: harness evaluation
+Status: planned
+Risk-Level: medium
+Planning-Depth: oneshot
+Public-Tests-Required: required
+Critic-Required: conditional
+Context-Refs:
+  - `reports/design/feature_workflow_completion_plan.md`
+
+Objective: |
+  Replace the current synthetic-only changeability mechanism with a real
+  sequential runner that executes Task A, persists state A, executes Task B,
+  persists state B, and executes Task C against the evolved repository state.
+
+Acceptance-Criteria:
+  - Runner contract records per-step commit/state, diff size, files touched,
+    verification receipts, tool calls, tokens, latency, and policy/scope
+    violations.
+  - Runner can execute a local command adapter without hosted services,
+    database, Web UI, or paid model calls by default.
+  - Existing `changeability_synthetic_v1` remains clearly labeled as mechanism
+    demonstration and is not rebranded as empirical evidence.
+  - Documentation explains how sequential changeability runs relate to
+    `feature_workflow start/context/check`.
+
+Verification:
+  - `.venv/bin/python -m pytest companion/ai_workflow_harness_lab/tests/test_cli.py -q`
+  - `.venv/bin/python tools/playbook_validate.py --root . --check tasks --check references`

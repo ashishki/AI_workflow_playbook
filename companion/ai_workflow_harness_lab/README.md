@@ -78,6 +78,11 @@ The bundled `changeability_synthetic_v1` suite is a runnable mechanism
 demonstration only. It does not prove maintainability of real systems and is not
 a normal Playbook task gate.
 
+Future empirical changeability runs should execute Task A through
+`feature_workflow start/context/check`, persist state A, execute Task B against
+that state, persist state B, then execute Task C. The current synthetic fixture
+only exercises result shape and reporting.
+
 ## Project-Specific Suites
 
 `suites/playbook_core_v1` demonstrates the shared Playbook evaluation

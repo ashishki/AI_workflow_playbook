@@ -24,6 +24,11 @@ must happen before implementation.
 Lean-Core can still use `oneshot`. Strict can still use `oneshot` for a tiny
 docs fix. The dimensions are orthogonal.
 
+When a task uses `compact_design` or `designed_slices`, use
+`tools/feature_workflow.py` for the end-to-end planning path. The detailed
+actor model and command sequence live in `docs/usage_guide.md`; this document
+only defines proportional adoption.
+
 ## Mode Selection
 
 | Mode | Use When | Do Not Use When |

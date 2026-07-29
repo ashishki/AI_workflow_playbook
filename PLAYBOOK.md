@@ -1054,6 +1054,17 @@ Feature Design uses `docs/design/<feature-id>.md` for human review and
 registry validation. A model may draft or revise the design, but it cannot mark
 the design approved or grant completion/release authority.
 
+Use `tools/feature_workflow.py` as the canonical thin entrypoint for the
+personal-use flow:
+
+`plan -> draft -> review -> approve -> next -> start -> context -> check`.
+
+The design author may write only `docs/design/<feature-id>.md`,
+`docs/design/<feature-id>.design.json`, `docs/tasks.md`, and generated planning
+artifacts. Approval is bound to the exact Markdown hash, canonical registry
+payload hash, and required review report hashes. Slice status changes and
+execution receipts do not stale approval; design content changes do.
+
 Readiness states are `scaffold`, `brief_ready`, `design_required`,
 `implementation_ready`, and `release_candidate`; `bootstrap_ready` and
 `release_ready` remain compatibility states. `release_ready` is still resolved
