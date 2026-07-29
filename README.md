@@ -224,6 +224,13 @@ automated.
 standalone harness command adapter, or a task-loop orchestrator process. It is
 not the brief-first bootstrap path for new Codex Direct projects.
 
+**Mode != Planning Depth.** Playbook Mode (`lean-core`, `standard`, `strict`)
+controls governance, evidence, review strictness, and release requirements.
+Planning Depth (`oneshot`, `compact_design`, `designed_slices`) controls how
+much feature/program design is required before implementation. A Strict docs fix
+can stay `oneshot`; a Lean-Core high-blast-radius retrofit can require
+`designed_slices`.
+
 ---
 
 ## What This Playbook Is
@@ -270,6 +277,7 @@ For practical setup and adoption, use:
 - [docs/cost_telemetry_protocol.md](docs/cost_telemetry_protocol.md) — provider-agnostic AI cost telemetry JSONL and rollup protocol
 - [docs/external_skill_security_policy.md](docs/external_skill_security_policy.md) — external agent skill trust gate, scan/signature policy, and approval rules
 - [tools/init_playbook_project.py](tools/init_playbook_project.py) — deterministic Lean-Core / Standard / Strict project initializer
+- [tools/planning_depth.py](tools/planning_depth.py), [tools/create_feature_design.py](tools/create_feature_design.py), [tools/validate_feature_design.py](tools/validate_feature_design.py), [tools/render_slice_context.py](tools/render_slice_context.py) — deterministic Planning Depth, Feature Design, and slice-context helpers
 - [tools/skill_security_gate.py](tools/skill_security_gate.py) — CI-friendly external skill trust-record and SkillSpector wrapper
 - [templates/cost_adapters/](templates/cost_adapters/) — provider-neutral starter adapter for writing AI cost telemetry
 

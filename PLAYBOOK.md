@@ -1036,6 +1036,29 @@ Typical triggers:
 Recommended heavy-task add-ons live in task-local artifacts and are documented in `docs/heavy_task_mode.md`.
 This is a selective extension, not a mandatory mode for every task.
 
+### Planning Depth
+
+Planning Depth is orthogonal to Playbook Mode. Mode controls governance,
+verification, security, evidence, review strictness, and release requirements.
+Planning Depth controls how much design is required before application code is
+written.
+
+| Depth | Flow | Use when |
+|-------|------|----------|
+| `oneshot` | Task -> implementation -> verification -> completion decision | typo, docs/config fix, obvious local bugfix, clear verifier |
+| `compact_design` | Task -> compact Feature Design -> approval when required -> implementation -> verification -> review | medium-risk changes with several files, new internal interface, or nontrivial control flow |
+| `designed_slices` | Product outcome -> system impact -> program design -> vertical slice plan -> human approval -> slice implementation/review loop -> release decision | user-visible feature, multi-layer change, RAG/tool/agent workflow, API + persistence, migration, high blast radius |
+
+Feature Design uses `docs/design/<feature-id>.md` for human review and
+`docs/design/<feature-id>.design.json` for deterministic approval and slice
+registry validation. A model may draft or revise the design, but it cannot mark
+the design approved or grant completion/release authority.
+
+Readiness states are `scaffold`, `brief_ready`, `design_required`,
+`implementation_ready`, and `release_candidate`; `bootstrap_ready` and
+`release_ready` remain compatibility states. `release_ready` is still resolved
+post-verification by `tools/resolve_release_readiness.py`, not set manually.
+
 ---
 
 ## 3. Phase Structure

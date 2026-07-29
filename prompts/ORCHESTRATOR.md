@@ -237,6 +237,18 @@ Determine:
 
 **B. Next task** — task ID, title, AC list from tasks.md.
 
+**B0. Planning Depth gate** — inspect `Planning-Depth`, `Design-Refs`, and
+`Slice-ID`.
+
+- `oneshot`: continue with normal task execution.
+- `compact_design`: every `Design-Ref` must exist and be approved with human or
+  authorized-reviewer provenance before implementation.
+- `designed_slices`: the approved design must contain the current `Slice-ID`,
+  user touchpoint, verification, review checkpoint, allowed/forbidden files,
+  change budget, and satisfied slice dependencies.
+- If design is missing, draft, self-approved, or slice-invalid, stop at
+  `design_required`. Do not ask an implementer to write application code.
+
 **B1. Continuity retrieval check** — inspect the task's `Context-Refs` field.
 
 - If `Context-Refs` is present, read every referenced item before dispatching the implementer.

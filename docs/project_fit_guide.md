@@ -112,3 +112,17 @@ Use this short verdict before bootstrapping:
 | Use as governance overlay | External runtime or scheduler is needed; playbook governs contracts, proof, and review |
 | Measure first | Pain exists, but data readiness, eval readiness, or service delta is not yet known |
 | Do not use yet | Pain, owner, current workaround, or proof metric is unclear |
+
+## Planning Depth Fit
+
+After the brief is approved, choose Planning Depth separately from Playbook Mode:
+
+- `oneshot` for low-risk local changes with a clear verifier.
+- `compact_design` for medium-risk changes where files, interfaces, invariants,
+  failure paths, and verification need to be fixed before implementation.
+- `designed_slices` for new user-visible features, multi-layer changes, API plus
+  persistence, migrations, security/privacy boundaries, and RAG/tool/agent
+  behavior.
+
+Use `tools/planning_depth.py` for deterministic recommendation rules. Human
+overrides are allowed, but the reason should be recorded.

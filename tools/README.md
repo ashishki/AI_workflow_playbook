@@ -29,6 +29,46 @@ Project verification must be declared with one or more structured
 Use `--external-skill NAME` to create a trust-record stub before any third-party
 skill is installed or enabled.
 
+Planning Depth can be declared with `--planning-depth oneshot|compact_design|designed_slices`.
+Use `--planning-depth recommend` with risk/profile flags such as
+`--risk-level high`, `--user-visible-feature`, `--api-change`, or
+`--persistence-change` to apply deterministic recommendation rules. Retrofit
+use can add `--retrofit` to record `.playbook/repository_inventory.json` and
+`docs/playbook_retrofit_plan.md` without rewriting application code.
+
+## Plan Feature Design
+
+```bash
+python3 tools/planning_depth.py --risk-level high --user-visible-feature
+python3 tools/create_feature_design.py --root . --feature-id F01 --planning-depth designed_slices --risk-level high
+python3 tools/validate_feature_design.py --root . --design docs/design/F01.design.json
+```
+
+Feature Design uses paired artifacts: `docs/design/F01.md` for human design and
+`docs/design/F01.design.json` for deterministic metadata, approval provenance,
+and slice registry. The tools never self-approve a design.
+
+## Render Slice Context
+
+```bash
+python3 tools/render_slice_context.py --root . --feature-id F01 --slice-id S01
+```
+
+The slice packet is written under `.playbook-artifacts/context/` and includes
+only the approved feature design, current slice, relevant brief/architecture
+refs, allowed/forbidden files, verification commands, and manifest-selected
+contract excerpts.
+
+## Check Maintainability Signals
+
+```bash
+python3 tools/check_maintainability.py --root . --task T01
+```
+
+This reports measurable advisory/stop-ship signals such as changed file count,
+change-budget overflow, forbidden-file drift, and approved-slice scope drift. It
+does not emit an aggregate maintainability score.
+
 ## Build a Manifest
 
 ```bash

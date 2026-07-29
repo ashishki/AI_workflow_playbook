@@ -491,6 +491,46 @@ triggers, and missing Codex Direct binding.
 External `codex exec` remains for CI, harness runs, or a separate non-Codex
 orchestrator process.
 
+### Planning Depth And Feature Design
+
+The proportional flow is:
+
+`intake brief -> approve brief -> choose mode -> choose planning depth -> create/approve design when required -> execute vertical slice -> verify -> targeted review -> next slice -> release resolver`.
+
+Mode and Planning Depth are separate. Mode decides evidence and governance
+strictness. Planning Depth decides how much design is required before
+implementation:
+
+- `oneshot`: task -> implementation -> verification -> completion decision.
+- `compact_design`: task -> compact Feature Design -> approval when required ->
+  implementation -> verification -> review.
+- `designed_slices`: product outcome -> system impact -> program design ->
+  vertical slice plan -> human approval -> slice implementation -> verification
+  and review per slice.
+
+Generated projects use `docs/design/<feature-id>.md` for the human-readable
+Feature Design and `docs/design/<feature-id>.design.json` for deterministic
+metadata, approval provenance, and slice registry. The model may draft or revise
+designs, but it must not set its own design to approved.
+
+Useful commands:
+
+```bash
+python3 tools/planning_depth.py --risk-level high --user-visible-feature
+python3 tools/create_feature_design.py --root . --feature-id F01 --planning-depth designed_slices --risk-level high
+python3 tools/validate_feature_design.py --root . --design docs/design/F01.design.json
+python3 tools/render_slice_context.py --root . --feature-id F01 --slice-id S01
+python3 tools/check_maintainability.py --root . --task T01
+```
+
+Future unified CLI mapping:
+
+- `playbook design create` -> `tools/create_feature_design.py`
+- `playbook design validate` -> `tools/validate_feature_design.py`
+- `playbook design approve` -> human-authored registry approval update
+- `playbook slice context` -> `tools/render_slice_context.py`
+- `playbook slice status` and `playbook slice next` -> design registry readers
+
 ### Harness And Evaluation
 
 The companion harness is not required for ordinary Lean-Core or Standard use.

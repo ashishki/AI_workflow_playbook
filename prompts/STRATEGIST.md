@@ -110,6 +110,9 @@ If the project description is ambiguous on any of these points, ask clarifying q
 
 You must also establish:
 - **Selected adoption mode** — Lean, Standard, or Strict, with justification and rejected heavier/lighter mode
+- **Planning Depth recommendation** — `oneshot`, `compact_design`, or
+  `designed_slices`, with deterministic risk/file/interface/slice reasons and
+  any human override reason
 - **Problem-first entry fit** — why this project needs the playbook now, rather than only a checklist, CI improvement, one-off script, or discovery spike
 - **Adoption reality boundaries** — which claims are out of bounds until evidence exists, and what human work AI will not replace
 - **Required autonomy level** — deterministic, workflow, bounded ReAct/tool-using agent, higher-autonomy agent, or hybrid
@@ -146,6 +149,10 @@ First produce a concise **Mode Decision**:
 - whether external skills are in scope and whether a trust record is required now
 
 Then produce only the artifacts required by the selected mode.
+Do not turn the brief into a program design. When Planning Depth is
+`compact_design` or `designed_slices`, create or request a Feature Design
+scaffold under `docs/design/` and stop before application code until approval is
+recorded.
 
 Lean output package:
 

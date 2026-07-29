@@ -9,6 +9,21 @@ validators, review gates, and evidence records are justified for the project.
 Do not use Strict mode language to run a Lean-Core project. Do not create placeholder
 artifacts only to satisfy a checklist.
 
+## Mode Is Not Planning Depth
+
+Playbook Mode controls governance, verification, security, evidence, review
+strictness, and release requirements. Planning Depth controls how much design
+must happen before implementation.
+
+| Planning Depth | Use When | Required Before Implementation |
+|----------------|----------|--------------------------------|
+| `oneshot` | typo, docs/config fix, obvious local bugfix, clear verifier | no separate design |
+| `compact_design` | medium-risk change, several files, new internal interface, nontrivial control flow | approved `docs/design/<feature-id>.design.json` |
+| `designed_slices` | user-visible feature, multi-layer change, RAG/tool/agent behavior, API + persistence, migration, high blast radius | approved design plus valid vertical slice registry and slice task fields |
+
+Lean-Core can still use `oneshot`. Strict can still use `oneshot` for a tiny
+docs fix. The dimensions are orthogonal.
+
 ## Mode Selection
 
 | Mode | Use When | Do Not Use When |

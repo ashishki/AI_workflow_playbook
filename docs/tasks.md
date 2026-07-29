@@ -1245,3 +1245,40 @@ Verification:
   - `.venv/bin/python tools/playbook_validate.py --root . --check tasks --check placeholders --check readiness --check delivery --check references`
   - `python3 -m py_compile tools/render_codex_exec_prompt.py tests/unit/test_render_codex_exec_prompt.py`
   - `.venv/bin/python -m pytest tests/unit/test_test_first_pilot_assets.py::test_frozen_asset_manifest_matches_full_execution_closure -q`
+
+### AWP-PI-009: Program Design And Vertical Slices
+
+Owner: codex
+Type: tools protocol review
+Status: done 2026-07-29
+Risk-Level: high
+Public-Tests-Required: required
+Critic-Required: conditional
+Context-Refs:
+  - `reports/design/program_design_vertical_slices_plan.md`
+
+Objective: |
+  Add Planning Depth, Feature Design, vertical slice registry, slice context,
+  targeted review roles, readiness gates, retrofit scaffolding, and a
+  mechanism-only changeability sequence without weakening release truthfulness
+  or making low-risk oneshot tasks heavy.
+
+Acceptance-Criteria:
+  - Planning Depth is orthogonal to Playbook Mode and supports `oneshot`,
+    `compact_design`, and `designed_slices`.
+  - Feature Design uses Markdown plus companion JSON registry with deterministic
+    approval and slice validation.
+  - Readiness blocks implementation when required design is missing or
+    unapproved, while legacy tasks default to `oneshot`.
+  - Slice context packets load only approved current-feature/current-slice
+    artifacts from the instruction manifest.
+  - Codex exec design/slice/maintainability review roles are read-only and use
+    fail-closed markers.
+  - Retrofit initialization preserves existing files and records inventory and
+    next steps without writing application code.
+  - Changeability sequence support is a synthetic Harness Lab mechanism only,
+    not a real-system maintainability claim.
+
+Verification:
+  - `.venv/bin/python -m pytest tests/unit/test_feature_design.py tests/unit/test_playbook_validate.py tests/unit/test_slice_context.py tests/unit/test_render_codex_exec_prompt.py tests/unit/test_maintainability_check.py tests/integration/test_initializer.py companion/ai_workflow_harness_lab/tests/test_cli.py -q`
+  - `.venv/bin/python tools/playbook_validate.py --root . --check schemas --check tasks --check design --check instructions --check modes`
