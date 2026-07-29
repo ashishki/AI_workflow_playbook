@@ -87,23 +87,23 @@ POST /corrections
 
 ### Invariants
 
-- 
+- TBD
 
 ### Failure Paths
 
-- 
+- TBD
 
 ### Patterns To Reuse
 
-- 
+- TBD
 
 ### Patterns Not To Introduce
 
-- 
+- TBD
 
 ### Rollback / Recovery
 
-- 
+- TBD
 
 ## 5. Maintainability Risks
 
@@ -150,7 +150,7 @@ Rollback:
 
 ## 8. Open Decisions
 
-- 
+- TBD
 
 ## 9. Human Approval
 
