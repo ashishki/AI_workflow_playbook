@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/changeability_result.schema.json",
+  "title": "AI Workflow Playbook Changeability Result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "suite_id",
+    "suite_version",
+    "evaluation_mode",
+    "status",
+    "sequence_results",
+    "summary"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "const": "playbook.changeability_result.v1" },
+    "suite_id": { "type": "string", "minLength": 1 },
+    "suite_version": { "type": "string", "minLength": 1 },
+    "evaluation_mode": { "type": "string", "enum": ["mechanism_demonstration", "empirical"] },
+    "status": { "type": "string", "minLength": 1 },
+    "sequence_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "sequence_id",
+          "success_each_step",
+          "diff_lines_each_step",
+          "files_touched_each_step",
+          "new_test_failures",
+          "required_refactor_before_small_change",
+          "tool_calls",
+          "tokens",
+          "latency_ms",
+          "policy_violations",
+          "architecture_violations"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "sequence_id": { "type": "string", "minLength": 1 },
+          "success_each_step": { "type": "array", "items": { "type": "boolean" } },
+          "diff_lines_each_step": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+          "files_touched_each_step": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+          "new_test_failures": { "type": "integer", "minimum": 0 },
+          "required_refactor_before_small_change": { "type": "boolean" },
+          "tool_calls": { "type": "integer", "minimum": 0 },
+          "tokens": { "type": "integer", "minimum": 0 },
+          "latency_ms": { "type": "integer", "minimum": 0 },
+          "policy_violations": { "type": "array", "items": { "type": "string" } },
+          "architecture_violations": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["sequence_count", "all_steps_succeeded", "total_diff_lines", "total_files_touched"],
+      "additionalProperties": false,
+      "properties": {
+        "sequence_count": { "type": "integer", "minimum": 0 },
+        "all_steps_succeeded": { "type": "boolean" },
+        "total_diff_lines": { "type": "integer", "minimum": 0 },
+        "total_files_touched": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

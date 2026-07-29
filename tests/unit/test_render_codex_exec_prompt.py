@@ -24,6 +24,13 @@ Type: security, privacy, test
 Status: review_pending
 Risk-Level: high
 Critic-Required: required
+Planning-Depth: designed_slices
+Design-Refs:
+  - `docs/design/F01.design.json`
+Slice-ID: S01
+User-Touchpoint: User can create a privacy event.
+Review-Checkpoint: slice_review
+Change-Budget: files<=4, lines<=200
 
 Objective: |
   Convert raw updates to privacy-safe event records.
@@ -50,6 +57,42 @@ Context-Refs:
     )
     (docs / "EVIDENCE_INDEX.md").write_text("# Evidence\n", encoding="utf-8")
     (docs / "CODEX_PROMPT.md").write_text("# State\n", encoding="utf-8")
+    (docs / "PROJECT_BRIEF.md").write_text("# Brief\n\nUser outcome.\n", encoding="utf-8")
+    (docs / "ARCHITECTURE.md").write_text("# Architecture\n\nReuse local services.\n", encoding="utf-8")
+    (docs / "design").mkdir()
+    (docs / "design/F01.md").write_text("# Feature Design\n\nProgram design body.\n", encoding="utf-8")
+    (docs / "design/F01.design.json").write_text(
+        """{
+  "schema_version": "playbook.feature_design.v1",
+  "feature_id": "F01",
+  "status": "approved",
+  "planning_depth": "designed_slices",
+  "risk_level": "high",
+  "brief_ref": "docs/PROJECT_BRIEF.md",
+  "architecture_refs": ["docs/ARCHITECTURE.md"],
+  "approval_policy": "human_required",
+  "approved_by": "human",
+  "approved_at": "2026-07-29",
+  "slices": [
+    {
+      "slice_id": "S01",
+      "status": "planned",
+      "user_visible_outcome": "User can create a privacy event.",
+      "scope": "API through privacy event tests.",
+      "allowed_files": ["src/**", "tests/**"],
+      "forbidden_files": ["docs/secret.md"],
+      "expected_interfaces": ["create_privacy_event()"],
+      "verification": ["python3 -m pytest tests/test_privacy_events.py -q"],
+      "review_checkpoint": "slice_review",
+      "dependencies": [],
+      "change_budget": "files<=4, lines<=200",
+      "rollback": "revert S01 diff"
+    }
+  ]
+}
+""",
+        encoding="utf-8",
+    )
     playbook = root / ".playbook"
     playbook.mkdir()
     (playbook / "delivery_execution_model.json").write_text(
@@ -124,3 +167,77 @@ def test_render_fix_prompt_includes_review_report_and_write_scope(tmp_path: Path
     assert "FIX_RESULT: APPLIED | BLOCKED" in result.stdout
     assert "raw content leak" in result.stdout
     assert "--sandbox workspace-write" in result.stdout
+
+
+def test_render_program_design_review_prompt_is_read_only_and_design_scoped(tmp_path: Path) -> None:
+    write_project(tmp_path)
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/render_codex_exec_prompt.py"),
+            "--root",
+            str(tmp_path),
+            "--task",
+            "T03",
+            "--role",
+            "program_design_review",
+        ],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "--sandbox read-only" in result.stdout
+    assert "PROGRAM_DESIGN_REVIEW: PASS | ADVISORY | STOP_SHIP" in result.stdout
+    assert "Program design body." in result.stdout
+    assert "User can create a privacy event." in result.stdout
+    assert "## Project Verification Config" not in result.stdout
+
+
+def test_required_marker_parser_fails_closed_for_missing_marker(tmp_path: Path) -> None:
+    report = tmp_path / "review.md"
+    report.write_text("Looks fine but no marker.\n", encoding="utf-8")
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/render_codex_exec_prompt.py"),
+            "--role",
+            "slice_review",
+            "--parse-report",
+            str(report),
+        ],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "missing required marker" in result.stderr
+
+
+def test_required_marker_parser_accepts_valid_marker(tmp_path: Path) -> None:
+    report = tmp_path / "review.md"
+    report.write_text("SLICE_REVIEW: PASS\nNo findings.\n", encoding="utf-8")
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/render_codex_exec_prompt.py"),
+            "--role",
+            "slice_review",
+            "--parse-report",
+            str(report),
+        ],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert '"verdict": "PASS"' in result.stdout

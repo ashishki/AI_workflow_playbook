@@ -34,6 +34,10 @@ harness-lab compare \
   --output reports/comparison \
   --fail-on-invalid-run \
   --fail-on-hard-gate
+
+harness-lab changeability-run \
+  --suite suites/changeability_synthetic_v1/suite.json \
+  --output reports/changeability
 ```
 
 The scripted adapter is for CI and mechanism tests. It is not evidence that the
@@ -61,6 +65,18 @@ a merge gate; project CI must evaluate the protected result explicitly.
 Tasks may declare `required_verification`; the harness runs that command after
 the adapter finishes and stores a separate command receipt. Scorers should use
 post-state and receipts, not agent prose, as their source of truth.
+
+## Changeability Sequences
+
+`changeability_sequence` suites model a sequence such as initial implementation,
+small extension, and one business-rule change. The synthetic bundled suite
+records success per step, diff size, files touched, test failures, required
+refactor before a small change, tool calls, tokens, latency, policy violations,
+and architecture/scope violations.
+
+The bundled `changeability_synthetic_v1` suite is a runnable mechanism
+demonstration only. It does not prove maintainability of real systems and is not
+a normal Playbook task gate.
 
 ## Project-Specific Suites
 

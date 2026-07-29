@@ -26,6 +26,10 @@ orchestrate specialized child agents.
 | code_review | no | Run existing `PROMPT_2_CODE.md` code/security review | no |
 | test_critic | no | Audit whether tests and evidence prove acceptance criteria | no |
 | privacy_review | no | Audit privacy, raw-content, PII, logs, storage, and fail-closed behavior | no |
+| product_design_review | no | Check product outcome, brief alignment, non-goals, proof metric, and user touchpoint before implementation | no |
+| program_design_review | no | Check file tree, interfaces, invariants, failure paths, reuse, migration, rollback, and vertical slice quality before implementation | no |
+| slice_review | no | Check implemented slice scope, user-visible outcome, tests, approved-design conformance, file/change budget, and evidence | no |
+| maintainability_review | no | Check coupling, duplication, new dependencies, public interface drift, hidden global state, and disproportionate diff risk | no |
 | fix_from_review | yes | Apply scoped fixes for frozen review findings | no |
 | doc_sync | yes | Update task state, evidence index, journal, decision log, and session state after green gates | no |
 | human | n/a | Accept task completion when policy requires it | yes |
@@ -145,6 +149,10 @@ Additional task-loop reports must start with one of these markers:
 
 - `TEST_CRITIC_RESULT: NO_FINDING | ADVISORY | STOP_SHIP`
 - `PRIVACY_REVIEW_RESULT: PASS | ADVISORY | STOP_SHIP`
+- `PRODUCT_DESIGN_REVIEW: PASS | ADVISORY | STOP_SHIP`
+- `PROGRAM_DESIGN_REVIEW: PASS | ADVISORY | STOP_SHIP`
+- `SLICE_REVIEW: PASS | ADVISORY | STOP_SHIP`
+- `MAINTAINABILITY_REVIEW: PASS | ADVISORY | STOP_SHIP`
 
 Fix and doc sync reports must start with:
 
@@ -157,6 +165,8 @@ reports, or missing result markers as not complete.
 ## Authority Boundaries
 
 - A review subagent must run read-only and must not write files.
+- Design and maintainability reviewers are read-only. They may propose findings
+  or alternatives but must not edit the design, approve it, or patch code.
 - A fix subagent may write only within the task scope and docs required to
   explain the fix.
 - A doc-sync subagent may update task/evidence/session docs only after green

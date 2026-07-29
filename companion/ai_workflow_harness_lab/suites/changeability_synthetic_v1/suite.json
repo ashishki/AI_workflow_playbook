@@ -1,0 +1,56 @@
+{
+  "schema_version": "playbook.changeability_suite.v1",
+  "suite_id": "changeability_synthetic_v1",
+  "version": "0.1.0",
+  "evaluation_mode": "mechanism_demonstration",
+  "sequences": [
+    {
+      "sequence_id": "correction_flow_sequence",
+      "title": "Synthetic correction flow changeability sequence",
+      "tasks": [
+        {
+          "task_id": "A_initial_implementation",
+          "description": "Initial implementation of a small correction flow.",
+          "success": true,
+          "diff_lines": 120,
+          "files_touched": 4,
+          "new_test_failures": 0,
+          "required_refactor_before_change": false,
+          "tool_calls": 5,
+          "tokens": 12000,
+          "latency_ms": 90000,
+          "policy_violations": [],
+          "architecture_violations": []
+        },
+        {
+          "task_id": "B_small_extension",
+          "description": "Add a small extension that reuses the approved interface.",
+          "success": true,
+          "diff_lines": 28,
+          "files_touched": 2,
+          "new_test_failures": 0,
+          "required_refactor_before_change": false,
+          "tool_calls": 3,
+          "tokens": 5000,
+          "latency_ms": 45000,
+          "policy_violations": [],
+          "architecture_violations": []
+        },
+        {
+          "task_id": "C_business_rule_change",
+          "description": "Change one business rule without broad rewrite.",
+          "success": true,
+          "diff_lines": 18,
+          "files_touched": 2,
+          "new_test_failures": 0,
+          "required_refactor_before_change": false,
+          "tool_calls": 2,
+          "tokens": 3800,
+          "latency_ms": 30000,
+          "policy_violations": [],
+          "architecture_violations": []
+        }
+      ]
+    }
+  ]
+}

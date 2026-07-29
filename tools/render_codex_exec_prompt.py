@@ -17,6 +17,11 @@ try:
 except ImportError as exc:  # pragma: no cover
     raise SystemExit(f"failed to import playbook_validate: {exc}") from exc
 
+try:
+    import feature_design_lib
+except ImportError as exc:  # pragma: no cover
+    raise SystemExit(f"failed to import feature_design_lib: {exc}") from exc
+
 
 ROLE_PROMPTS = {
     "meta_review": [
@@ -51,6 +56,10 @@ ROLE_PROMPTS = {
         "docs/audit/PROMPT_3_CONSOLIDATED.md",
         "prompts/audit/PROMPT_3_CONSOLIDATED.md",
     ],
+    "product_design_review": [],
+    "program_design_review": [],
+    "slice_review": [],
+    "maintainability_review": [],
 }
 
 READ_ONLY_ROLES = {
@@ -60,6 +69,28 @@ READ_ONLY_ROLES = {
     "test_critic",
     "privacy_review",
     "consolidated_review",
+    "product_design_review",
+    "program_design_review",
+    "slice_review",
+    "maintainability_review",
+}
+
+DESIGN_REVIEW_ROLES = {
+    "product_design_review",
+    "program_design_review",
+    "slice_review",
+    "maintainability_review",
+}
+
+ROLE_MARKERS = {
+    "test_critic": "TEST_CRITIC_RESULT: NO_FINDING | ADVISORY | STOP_SHIP",
+    "privacy_review": "PRIVACY_REVIEW_RESULT: PASS | ADVISORY | STOP_SHIP",
+    "fix_from_review": "FIX_RESULT: APPLIED | BLOCKED",
+    "doc_sync": "DOC_SYNC_RESULT: UPDATED | BLOCKED",
+    "product_design_review": "PRODUCT_DESIGN_REVIEW: PASS | ADVISORY | STOP_SHIP",
+    "program_design_review": "PROGRAM_DESIGN_REVIEW: PASS | ADVISORY | STOP_SHIP",
+    "slice_review": "SLICE_REVIEW: PASS | ADVISORY | STOP_SHIP",
+    "maintainability_review": "MAINTAINABILITY_REVIEW: PASS | ADVISORY | STOP_SHIP",
 }
 
 
@@ -118,8 +149,32 @@ def default_output_path(task_id: str, role: str) -> str:
         "fix_from_review": "fix_result",
         "doc_sync": "doc_sync_result",
         "consolidated_review": "consolidated_review",
+        "product_design_review": "product_design_review",
+        "program_design_review": "program_design_review",
+        "slice_review": "slice_review",
+        "maintainability_review": "maintainability_review",
     }[role]
     return f"docs/verification/{task_id}_{suffix}.md"
+
+
+def marker_prefix(role: str) -> str | None:
+    marker = ROLE_MARKERS.get(role)
+    return marker.split(":", 1)[0] if marker else None
+
+
+def parse_required_marker(role: str, text: str) -> dict[str, str]:
+    prefix = marker_prefix(role)
+    if prefix is None:
+        return {"role": role, "verdict": "NOT_REQUIRED"}
+    for line in text.splitlines():
+        if not line.startswith(prefix + ":"):
+            continue
+        verdict = line.split(":", 1)[1].strip().split()[0]
+        allowed = [part.strip() for part in ROLE_MARKERS[role].split(":", 1)[1].split("|")]
+        if verdict not in allowed:
+            raise ValueError(f"invalid marker verdict {verdict}; expected one of {', '.join(allowed)}")
+        return {"role": role, "marker": prefix, "verdict": verdict}
+    raise ValueError(f"missing required marker {prefix}:")
 
 
 def review_report_block(root: Path, reports: list[str]) -> str:
@@ -134,6 +189,71 @@ def review_report_block(root: Path, reports: list[str]) -> str:
         else:
             parts.append(f"### {report}\n\n[missing or unreadable]")
     return "\n\n".join(parts)
+
+
+def design_context_block(root: Path, task_record: dict[str, Any]) -> str:
+    parts: list[str] = []
+    for ref in task_record.get("design_refs", []):
+        path, raw = playbook_validate.design_registry_path(root, ref)
+        if path is None or not path.exists():
+            parts.append(f"### {raw}\n\n[missing or unsafe design ref]")
+            continue
+        findings, design = feature_design_lib.validate_design_file(root, path)
+        if findings:
+            rendered_findings = "\n".join(
+                f"- {finding.severity}: {finding.check_id}: {finding.message}" for finding in findings
+            )
+            parts.append(f"### {raw} Validation Findings\n\n{rendered_findings}")
+        if design is None:
+            continue
+        feature_id = str(design.get("feature_id", path.stem.replace(".design", "")))
+        markdown = root / "docs/design" / f"{feature_id}.md"
+        brief_path = feature_design_lib.safe_repo_path(root, str(design.get("brief_ref", "")))
+        parts.extend(
+            [
+                f"### Design Registry: {raw}",
+                "",
+                "```json",
+                json.dumps(design, indent=2, sort_keys=True),
+                "```",
+                "",
+                f"### Feature Design Markdown: docs/design/{feature_id}.md",
+                "",
+                "```markdown",
+                read_text_if_exists(markdown, limit=20000) or "[feature design markdown not present]",
+                "```",
+                "",
+                f"### Brief Ref: {design.get('brief_ref')}",
+                "",
+                "```markdown",
+                read_text_if_exists(brief_path, limit=8000) if brief_path else "[unsafe or missing brief ref]",
+                "```",
+            ]
+        )
+        slice_id = str(task_record.get("slice_id", "")).strip()
+        if slice_id:
+            slice_item = feature_design_lib.find_slice(design, slice_id)
+            parts.extend(
+                [
+                    f"### Current Slice: {slice_id}",
+                    "",
+                    "```json",
+                    json.dumps(slice_item or {"missing_slice": slice_id}, indent=2, sort_keys=True),
+                    "```",
+                ]
+            )
+    return "\n\n".join(parts) if parts else "[No Design-Refs declared on this task.]"
+
+
+def output_contract(role: str) -> str:
+    marker = ROLE_MARKERS.get(role)
+    if not marker:
+        return "Use the role prompt's existing output contract."
+    return (
+        f"The first non-empty line of the report must start with:\n\n`{marker}`\n\n"
+        "Use `STOP_SHIP` only for blockers grounded in the provided task, design, "
+        "slice, contracts, or evidence. Advisory findings must not be presented as completion authority."
+    )
 
 
 def command_hint(args: argparse.Namespace, output_path: str) -> str:
@@ -174,6 +294,60 @@ def render(args: argparse.Namespace) -> str:
         if args.role in READ_ONLY_ROLES
         else "WRITE-SCOPED: modify only files allowed by this role and task scope."
     )
+    if args.role in DESIGN_REVIEW_ROLES:
+        return f"""# Codex Exec Design Review Prompt
+
+Project root: {root}
+Task: {args.task}
+Role: {args.role}
+Expected report path: {output_path}
+Prompt source: inline renderer fallback
+
+## Access Rule
+
+{access_rule}
+
+Do not modify files. Do not approve the design. Do not approve completion or release.
+
+## Suggested Invocation
+
+```bash
+{command_hint(args, output_path)}
+```
+
+## Output Contract
+
+{output_contract(args.role)}
+
+## Review Focus
+
+- Product fit and observable outcome for product design review.
+- Reuse of existing patterns, module boundaries, signatures, invariants, failure paths, migration, and rollback for program design review.
+- Slice verticality, allowed/forbidden files, acceptance criteria, verification, and review checkpoint for slice review.
+- Coupling, duplicate domain logic, new dependencies, interface drift, hidden global state, file-tree drift, and disproportionate diff risk for maintainability review.
+
+## Canonical Task Section
+
+```markdown
+{raw_task}
+```
+
+## Machine Task Record
+
+```json
+{json.dumps(task_record, indent=2, sort_keys=True)}
+```
+
+## Feature Design Context
+
+{design_context_block(root, task_record)}
+
+## Review Policy
+
+```markdown
+{review_policy.strip() if review_policy else "[docs/REVIEW_POLICY.md not present]"}
+```
+"""
 
     return f"""# Codex Exec Subagent Prompt
 
@@ -199,6 +373,10 @@ external when the delivery model or review policy requires it.
 ## Role Instructions
 
 {prompt_text.strip() if prompt_text else "[No role prompt found. Use the access rule and task scope only.]"}
+
+## Output Contract
+
+{output_contract(args.role)}
 
 ## Canonical Task Section
 
@@ -251,16 +429,31 @@ external when the delivery model or review policy requires it.
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("."))
-    parser.add_argument("--task", required=True)
+    parser.add_argument("--task", default="")
     parser.add_argument("--role", required=True, choices=sorted(ROLE_PROMPTS))
     parser.add_argument("--review", action="append", default=[])
     parser.add_argument("--human-approval-ref", default="")
     parser.add_argument("--output-path", default="")
+    parser.add_argument("--parse-report", type=Path, default=None)
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
+    if args.parse_report is not None:
+        try:
+            parsed = parse_required_marker(
+                args.role,
+                args.parse_report.read_text(encoding="utf-8", errors="replace"),
+            )
+        except (OSError, ValueError) as exc:
+            print(f"render_codex_exec_prompt: {exc}", file=sys.stderr)
+            return 1
+        print(json.dumps(parsed, indent=2, sort_keys=True))
+        return 0
+    if not args.task:
+        print("render_codex_exec_prompt: --task is required unless --parse-report is used", file=sys.stderr)
+        return 2
     sys.stdout.write(render(args))
     return 0
 

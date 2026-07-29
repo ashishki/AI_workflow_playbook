@@ -13,6 +13,7 @@ from ai_workflow_harness_lab.receipts import sha256_file
 
 ROOT = Path(__file__).resolve().parents[3]
 SUITE = ROOT / "companion/ai_workflow_harness_lab/suites/playbook_core_v1"
+CHANGEABILITY_SUITE = ROOT / "companion/ai_workflow_harness_lab/suites/changeability_synthetic_v1/suite.json"
 PYTHONPATH = str(ROOT / "companion/ai_workflow_harness_lab/src")
 
 
@@ -37,6 +38,19 @@ def test_validate_suite() -> None:
 
     assert result.returncode == 0, result.stderr
     assert '"tasks": 5' in result.stdout
+
+
+def test_changeability_run_writes_mechanism_result(tmp_path: Path) -> None:
+    output = tmp_path / "changeability"
+    result = run_cli("changeability-run", "--suite", str(CHANGEABILITY_SUITE), "--output", str(output))
+
+    assert result.returncode == 0, result.stderr
+    report = json.loads((output / "changeability_result.json").read_text(encoding="utf-8"))
+    assert report["schema_version"] == "playbook.changeability_result.v1"
+    assert report["evaluation_mode"] == "mechanism_demonstration"
+    assert report["summary"]["all_steps_succeeded"] is True
+    assert "not empirical proof" in report["status"]
+    assert (output / "changeability_result.md").exists()
 
 
 def test_run_filters_repeatable_task_ids(tmp_path: Path) -> None:

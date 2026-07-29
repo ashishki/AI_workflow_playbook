@@ -7,6 +7,7 @@ from pathlib import Path
 
 from .adapters.command import CommandAdapter
 from .adapters.scripted import ScriptedAdapter
+from .changeability import ChangeabilityError, run_changeability_suite
 from .comparison import compare
 from .evidence import verify_bundle
 from .runner import RunError, run_suite
@@ -77,6 +78,10 @@ def build_parser() -> argparse.ArgumentParser:
     cmp_parser.add_argument("--max-false-success-rate", type=float, default=0.0)
     cmp_parser.add_argument("--min-trials-per-task", type=positive_int, default=2)
     cmp_parser.add_argument("--require-empirical", action="store_true")
+
+    changeability = sub.add_parser("changeability-run")
+    changeability.add_argument("--suite", required=True)
+    changeability.add_argument("--output", required=True)
     return parser
 
 
@@ -190,6 +195,15 @@ def main(argv: list[str] | None = None) -> int:
                 return 1
             if gates["candidate_false_success_rate"] > args.max_false_success_rate:
                 return 1
+        return 0
+
+    if args.command == "changeability-run":
+        try:
+            report = run_changeability_suite(Path(args.suite), Path(args.output))
+        except (OSError, json.JSONDecodeError, ChangeabilityError) as exc:
+            print(f"changeability-run: failed: {exc}", file=sys.stderr)
+            return 1
+        print(json.dumps({"output": str(Path(args.output)), "status": report["status"]}, indent=2))
         return 0
 
     return 2

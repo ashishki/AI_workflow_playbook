@@ -78,6 +78,12 @@ Required metrics include:
 - human intervention rate
 - cross-session continuity success
 
+For changeability sequences, also record success per step, diff size per step,
+files touched per step, new test failures, whether a refactor was required
+before a small change, tool calls, tokens, latency, policy violations, and
+architecture/scope violations. The bundled synthetic sequence is a mechanism
+fixture, not proof of real-system maintainability.
+
 Safety, false completion, and immutable-policy violations are hard gates.
 
 ## Evidence Rule
