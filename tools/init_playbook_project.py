@@ -1141,6 +1141,19 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
         args.dry_run,
         result,
     )
+    for tool_name in (
+        "approve_feature_design.py",
+        "feature_review_policy.py",
+        "feature_workflow.py",
+        "receipt_run.py",
+    ):
+        copy_binary_or_text_file(
+            PLAYBOOK_ROOT / "tools" / tool_name,
+            target / "tools" / tool_name,
+            args.force,
+            args.dry_run,
+            result,
+        )
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "tools/check_maintainability.py",
         target / "tools/check_maintainability.py",
@@ -1289,6 +1302,19 @@ def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: di
         args.dry_run,
         result,
     )
+    for tool_name in (
+        "approve_feature_design.py",
+        "feature_review_policy.py",
+        "feature_workflow.py",
+        "receipt_run.py",
+    ):
+        copy_binary_or_text_file(
+            PLAYBOOK_ROOT / "tools" / tool_name,
+            target / "tools" / tool_name,
+            args.force,
+            args.dry_run,
+            result,
+        )
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "tools/check_maintainability.py",
         target / "tools/check_maintainability.py",
@@ -1888,6 +1914,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  skip existing: {path}")
     for message in hook_messages:
         print(f"  hooks: {message}")
+    if args.planning_depth in {"compact_design", "designed_slices"}:
+        print("init_playbook_project: next=python tools/feature_workflow.py --root . draft --task <task-id> --feature-id F01")
     print(f"init_playbook_project: created={len(result.created)} skipped={len(result.skipped)}")
     return 1 if args.install_claude_hooks and hook_failed else 0
 

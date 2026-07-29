@@ -47,6 +47,9 @@ Never delete history from this file. Append; do not replace.
   when the project has explicitly selected the task-loop subagent profile)
 - **Feature designs:** `docs/design/*.md` plus `docs/design/*.design.json`
 - **Slice context packets:** `.playbook-artifacts/context/<feature-id>/<slice-id>.md`
+- **Feature workflow coordinator:** `tools/feature_workflow.py`; use for
+  planning facts, design-author prompts, hash-bound approval, next slice,
+  start/context/check lifecycle, and required review prompts.
 
 ---
 

@@ -124,7 +124,12 @@ def test_standard_compact_design_creates_draft_and_design_required_state(tmp_pat
     )
 
     assert result.returncode == 0, result.stderr
+    assert "feature_workflow.py --root . draft --task <task-id> --feature-id F01" in result.stdout
     assert (target / "docs/design/F01.md").exists()
+    assert (target / "tools/feature_workflow.py").exists()
+    assert (target / "tools/approve_feature_design.py").exists()
+    assert (target / "tools/feature_review_policy.py").exists()
+    assert (target / "tools/receipt_run.py").exists()
     registry = json.loads((target / "docs/design/F01.design.json").read_text(encoding="utf-8"))
     assert registry["status"] == "draft"
     assert registry["planning_depth"] == "compact_design"
