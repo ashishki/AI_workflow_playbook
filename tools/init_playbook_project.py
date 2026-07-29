@@ -16,6 +16,11 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+try:
+    import planning_depth as planning_depth_rules
+except ImportError:  # pragma: no cover
+    planning_depth_rules = None  # type: ignore[assignment]
+
 
 PLAYBOOK_ROOT = Path(__file__).resolve().parents[1]
 UNKNOWN_PLACEHOLDER_RE = re.compile(r"(?<!\$)\{\{[^{}\n]+\}\}")
@@ -81,6 +86,10 @@ def project_verification_config(verify_argvs: list[list[str]]) -> str:
                 "--check",
                 "readiness",
                 "--check",
+                "design",
+                "--check",
+                "instructions",
+                "--check",
                 "delivery",
             ],
             "required": True,
@@ -126,20 +135,53 @@ def add_rag_eval_project_check(config_text: str) -> str:
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
-def readiness_state_config(mode: str) -> str:
+def readiness_state_config(mode: str, planning_depth: str, risk_level: str, planning_depth_source: str) -> str:
+    design_required = planning_depth in {"compact_design", "designed_slices"}
+    approval_required = (
+        "human_required"
+        if planning_depth == "designed_slices" and risk_level in {"high", "critical"}
+        else "human_or_authorized_reviewer"
+        if design_required
+        else "not_required"
+    )
     payload = {
         "schema_version": "playbook.readiness_state.v1",
         "mode": mode,
-        "state": "scaffold",
+        "state": "design_required" if design_required else "scaffold",
+        "planning_depth": planning_depth,
+        "planning_depth_source": planning_depth_source,
+        "design_approval_required": approval_required,
+        "required_design_refs": ["docs/design/F01.design.json"] if design_required else [],
         "required_decision_policy": "mode_profile_risk_triggered",
         "unresolved_decision_marker": "scaffold placeholder",
         "implementation_ready_requires_no_scaffold_placeholders": True,
         "release_ready_requires_current_verification": True,
         "notes": [
             "Initializer output is a scaffold until project-specific decisions are resolved.",
+            "If state is design_required, do not begin implementation until the required feature design is approved.",
             "Do not mark implementation_ready, release_candidate, or release_ready while generated scaffold placeholders remain active.",
             "Release readiness is resolved after tools/verify_project.py by tools/resolve_release_readiness.py.",
         ],
+    }
+    return json.dumps(payload, indent=2, sort_keys=True) + "\n"
+
+
+def feature_design_registry_config(planning_depth: str, risk_level: str) -> str:
+    approval_policy = (
+        "human_required"
+        if planning_depth == "designed_slices" and risk_level in {"high", "critical"}
+        else "human_or_authorized_reviewer"
+    )
+    payload = {
+        "schema_version": "playbook.feature_design.v1",
+        "feature_id": "F01",
+        "status": "draft",
+        "planning_depth": planning_depth,
+        "risk_level": risk_level,
+        "brief_ref": "docs/PROJECT_BRIEF.md",
+        "architecture_refs": [],
+        "approval_policy": approval_policy,
+        "slices": [],
     }
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
@@ -1018,6 +1060,8 @@ Last updated: {{DATE}}
 def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[str, str], result: CopyResult) -> None:
     copy_file("templates/PROJECT_BRIEF.md", target / "docs/PROJECT_BRIEF.md", replacements, args.force, args.dry_run, result)
     copy_file("templates/TASKS.md", target / "docs/tasks.md", replacements, args.force, args.dry_run, result)
+    copy_file("templates/FEATURE_DESIGN.md", target / "templates/FEATURE_DESIGN.md", replacements, args.force, args.dry_run, result)
+    copy_file("templates/INSTRUCTION_MANIFEST.json", target / "templates/INSTRUCTION_MANIFEST.json", replacements, args.force, args.dry_run, result)
     copy_file("docs/project_fit_guide.md", target / "docs/project_fit_guide.md", replacements, args.force, args.dry_run, result)
     copy_file("docs/adoption_modes.md", target / "docs/adoption_modes.md", replacements, args.force, args.dry_run, result)
     copy_file("docs/cost_budget_guardrails.md", target / "docs/cost_budget_guardrails.md", replacements, args.force, args.dry_run, result)
@@ -1063,6 +1107,48 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
         result,
     )
     copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/feature_design_lib.py",
+        target / "tools/feature_design_lib.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/planning_depth.py",
+        target / "tools/planning_depth.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/create_feature_design.py",
+        target / "tools/create_feature_design.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/validate_feature_design.py",
+        target / "tools/validate_feature_design.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/render_slice_context.py",
+        target / "tools/render_slice_context.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/check_maintainability.py",
+        target / "tools/check_maintainability.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
         PLAYBOOK_ROOT / "tools/resolve_release_readiness.py",
         target / "tools/resolve_release_readiness.py",
         args.force,
@@ -1086,6 +1172,20 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "schemas/task.schema.json",
         target / "schemas/task.schema.json",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "schemas/feature_design.schema.json",
+        target / "schemas/feature_design.schema.json",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "schemas/instruction_manifest.schema.json",
+        target / "schemas/instruction_manifest.schema.json",
         args.force,
         args.dry_run,
         result,
@@ -1129,6 +1229,8 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
 
 def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: dict[str, str], result: CopyResult) -> None:
     copy_file("templates/TASKS.md", target / "docs/tasks.md", replacements, args.force, args.dry_run, result)
+    copy_file("templates/FEATURE_DESIGN.md", target / "templates/FEATURE_DESIGN.md", replacements, args.force, args.dry_run, result)
+    copy_file("templates/INSTRUCTION_MANIFEST.json", target / "templates/INSTRUCTION_MANIFEST.json", replacements, args.force, args.dry_run, result)
     copy_file("templates/CONTRACT_LITE.md", target / "docs/CONTRACT_LITE.md", replacements, args.force, args.dry_run, result)
     copy_file("templates/AGENTS.md", target / "AGENTS.md", replacements, args.force, args.dry_run, result)
     write_text_file(
@@ -1148,6 +1250,48 @@ def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: di
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "tools/playbook_validate.py",
         target / "tools/playbook_validate.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/feature_design_lib.py",
+        target / "tools/feature_design_lib.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/planning_depth.py",
+        target / "tools/planning_depth.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/create_feature_design.py",
+        target / "tools/create_feature_design.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/validate_feature_design.py",
+        target / "tools/validate_feature_design.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/render_slice_context.py",
+        target / "tools/render_slice_context.py",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "tools/check_maintainability.py",
+        target / "tools/check_maintainability.py",
         args.force,
         args.dry_run,
         result,
@@ -1176,6 +1320,20 @@ def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: di
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "schemas/task.schema.json",
         target / "schemas/task.schema.json",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "schemas/feature_design.schema.json",
+        target / "schemas/feature_design.schema.json",
+        args.force,
+        args.dry_run,
+        result,
+    )
+    copy_binary_or_text_file(
+        PLAYBOOK_ROOT / "schemas/instruction_manifest.schema.json",
+        target / "schemas/instruction_manifest.schema.json",
         args.force,
         args.dry_run,
         result,
@@ -1478,11 +1636,112 @@ def add_rag_eval_files(args: argparse.Namespace, target: Path, replacements: dic
         (target / ".playbook-artifacts/rag-eval").mkdir(parents=True, exist_ok=True)
 
 
+def add_feature_design_scaffold(args: argparse.Namespace, target: Path, replacements: dict[str, str], result: CopyResult) -> None:
+    if args.planning_depth == "oneshot":
+        return
+    design_replacements = dict(replacements)
+    design_replacements.update(
+        {
+            "DATE": replacements["DATE"],
+        }
+    )
+    markdown = render(read_template("templates/FEATURE_DESIGN.md"), design_replacements)
+    markdown = (
+        markdown.replace("Feature-ID:\n", "Feature-ID: F01\n")
+        .replace("Planning-Depth:\n", f"Planning-Depth: {args.planning_depth}\n")
+        .replace("Owner:\n", "Owner: human\n")
+        .replace("Risk-Level:\n", f"Risk-Level: {args.risk_level}\n")
+    )
+    write_text_file(
+        target / "docs/design/F01.md",
+        markdown,
+        force=args.force,
+        dry_run=args.dry_run,
+        result=result,
+    )
+    write_text_file(
+        target / "docs/design/F01.design.json",
+        feature_design_registry_config(args.planning_depth, args.risk_level),
+        force=args.force,
+        dry_run=args.dry_run,
+        result=result,
+    )
+
+
+def recommend_or_declared_planning_depth(args: argparse.Namespace) -> tuple[str, str, list[str]]:
+    if args.planning_depth != "recommend":
+        return args.planning_depth, "declared", []
+    if planning_depth_rules is None:
+        return "compact_design", "recommended", ["planning_depth.py unavailable; defaulted to compact_design"]
+    recommendation = planning_depth_rules.recommend_planning_depth(
+        risk_level=args.risk_level,
+        estimated_components=args.estimated_components,
+        expected_file_count=args.expected_file_count,
+        api_change=args.api_change,
+        persistence_change=args.persistence_change,
+        security_change=args.security_change,
+        rag_or_agentic=args.rag_or_agentic,
+        migration_required=args.migration_required,
+        user_visible_feature=args.user_visible_feature,
+    )
+    return str(recommendation["recommended_planning_depth"]), "recommended", list(recommendation["reasons"])
+
+
+def repository_inventory(target: Path) -> str:
+    skip = {".git", ".venv", "__pycache__", ".pytest_cache", "node_modules", ".playbook-artifacts"}
+    files: list[str] = []
+    for path in sorted(target.rglob("*")):
+        if path.is_dir() or any(part in skip for part in path.relative_to(target).parts):
+            continue
+        files.append(str(path.relative_to(target)))
+    payload = {
+        "schema_version": "playbook.repository_inventory.v1",
+        "file_count": len(files),
+        "sample_files": files[:200],
+    }
+    return json.dumps(payload, indent=2, sort_keys=True) + "\n"
+
+
+def retrofit_plan_text(project_name: str, mode: str, planning_depth: str, reasons: list[str]) -> str:
+    reason_lines = "\n".join(f"- {reason}" for reason in reasons) if reasons else "- declared by operator"
+    return f"""# Playbook Retrofit Plan
+
+Project: {project_name}
+Mode: {mode}
+Planning-Depth: {planning_depth}
+
+## Recommendation Basis
+
+{reason_lines}
+
+## Migration Strategy
+
+- Existing files are preserved unless `--force` is explicitly used.
+- Application code is not generated or rewritten by this initializer.
+- The repository inventory is recorded at `.playbook/repository_inventory.json`.
+- If Planning Depth requires design, complete and approve `docs/design/F01.md`
+  with companion registry `docs/design/F01.design.json` before implementation.
+- Run `python3 tools/playbook_validate.py --root .` to see remaining contract
+  and readiness findings.
+"""
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Bootstrap a project with AI Workflow Playbook artifacts.")
     parser.add_argument("target", help="Target repository directory.")
     parser.add_argument("--mode", choices=("lean-core", "lean", "standard", "strict"), default="standard")
+    parser.add_argument("--planning-depth", choices=("oneshot", "compact_design", "designed_slices", "recommend"), default="oneshot")
+    parser.add_argument("--risk-level", choices=("low", "medium", "high", "critical"), default="medium")
+    parser.add_argument("--expected-file-count", type=int, default=1)
+    parser.add_argument("--estimated-components", type=int, default=1)
+    parser.add_argument("--api-change", action="store_true")
+    parser.add_argument("--persistence-change", action="store_true")
+    parser.add_argument("--security-change", action="store_true")
+    parser.add_argument("--rag-or-agentic", action="store_true")
+    parser.add_argument("--migration-required", action="store_true")
+    parser.add_argument("--user-visible-feature", action="store_true")
     parser.add_argument("--project-name", default="")
+    parser.add_argument("--retrofit", action="store_true", help="Record repository inventory and retrofit migration plan without overwriting existing files by default.")
     parser.add_argument("--answers-file", help="JSON file with initializer readiness answers.")
     parser.add_argument("--operational-pain", default="")
     parser.add_argument("--current-workaround", default="")
@@ -1530,6 +1789,8 @@ def main(argv: list[str] | None = None) -> int:
     target = Path(args.target).resolve()
     project_name = args.project_name or target.name
     mode = "lean-core" if args.mode == "lean" else args.mode
+    resolved_planning_depth, planning_depth_source, planning_reasons = recommend_or_declared_planning_depth(args)
+    args.planning_depth = resolved_planning_depth
     today = dt.date.today().isoformat()
     replacements = {
         "PROJECT_NAME": project_name,
@@ -1568,6 +1829,7 @@ def main(argv: list[str] | None = None) -> int:
             args.with_cost_architecture = True
     add_optional_files(args, target, replacements, result)
     add_rag_eval_files(args, target, replacements, result)
+    add_feature_design_scaffold(args, target, replacements, result)
     project_verification_text = project_verification_config(verify_argvs)
     if args.with_rag_eval:
         project_verification_text = add_rag_eval_project_check(project_verification_text)
@@ -1580,7 +1842,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     write_text_file(
         target / ".playbook/readiness_state.json",
-        readiness_state_config(mode),
+        readiness_state_config(mode, args.planning_depth, args.risk_level, planning_depth_source),
         force=args.force,
         dry_run=args.dry_run,
         result=result,
@@ -1592,11 +1854,34 @@ def main(argv: list[str] | None = None) -> int:
         dry_run=args.dry_run,
         result=result,
     )
+    write_text_file(
+        target / ".playbook/instruction_manifest.json",
+        render(read_template("templates/INSTRUCTION_MANIFEST.json"), replacements),
+        force=args.force,
+        dry_run=args.dry_run,
+        result=result,
+    )
+    if args.retrofit:
+        write_text_file(
+            target / ".playbook/repository_inventory.json",
+            repository_inventory(target),
+            force=args.force,
+            dry_run=args.dry_run,
+            result=result,
+        )
+        write_text_file(
+            target / "docs/playbook_retrofit_plan.md",
+            retrofit_plan_text(project_name, mode, args.planning_depth, planning_reasons),
+            force=args.force,
+            dry_run=args.dry_run,
+            result=result,
+        )
     if args.install_claude_hooks:
         hook_messages, hook_failed = install_claude_hooks(args, target, result)
 
     print(f"init_playbook_project: target={target}")
     print(f"init_playbook_project: mode={mode}")
+    print(f"init_playbook_project: planning_depth={args.planning_depth} source={planning_depth_source}")
     for path in result.created:
         print(f"  create: {path}")
     for path in result.skipped:

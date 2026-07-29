@@ -45,6 +45,8 @@ Never delete history from this file. Append; do not replace.
 - **Test-first implementer prompt:** `docs/prompts/IMPLEMENTER_TDD.md` (use when applicability is `required`)
 - **Codex exec subagent renderer:** `tools/render_codex_exec_prompt.py` (use only
   when the project has explicitly selected the task-loop subagent profile)
+- **Feature designs:** `docs/design/*.md` plus `docs/design/*.design.json`
+- **Slice context packets:** `.playbook-artifacts/context/<feature-id>/<slice-id>.md`
 
 ---
 
@@ -61,10 +63,14 @@ Before implementation, the orchestrator should hand Codex a narrow task digest i
 - immediate pipeline / flow if one matters
 - test-first applicability (`required`, `optional`, or `not_applicable`) and its
   rationale
+- planning depth (`oneshot`, `compact_design`, or `designed_slices`), design
+  refs, and current slice when applicable
 - focused and broader verification commands plus the receipt/output path when
   available
 
 Only send Codex to full documents when the task is architecture-shaping, security-sensitive, ambiguous, or otherwise too risky to compress safely.
+For `compact_design` and `designed_slices`, do not start implementation until
+the referenced design registry is approved with non-model provenance.
 
 When the digest marks test-first applicability as `required`, use
 `docs/prompts/IMPLEMENTER_TDD.md` as the task-specific implementation prompt.

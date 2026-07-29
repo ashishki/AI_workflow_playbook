@@ -14,7 +14,7 @@ RAG_FIXTURE = ROOT / "tests/fixtures/rag_eval/valid"
 
 
 def write_tasks(root: Path, text: str) -> None:
-    (root / "docs").mkdir(parents=True)
+    (root / "docs").mkdir(parents=True, exist_ok=True)
     (root / "docs/tasks.md").write_text(text, encoding="utf-8")
 
 
@@ -384,6 +384,204 @@ Verification:
     )
 
 
+def test_task_parser_accepts_planning_depth_fields_and_aliases(tmp_path: Path) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Designed Slice Task
+
+Owner: codex
+Type: feature
+Planning-Depth: designed_slices
+Design-Refs:
+  - `docs/design/F01.design.json`
+Slice-ID: S01
+User-Touchpoint: User can run the smoke command.
+Review-Checkpoint: slice_review
+Change-Budget: files<=4, lines<=200
+Maintainability-Risk: high
+Objective: |
+  Implement one verified vertical slice.
+Acceptance-Criteria:
+  - User-visible smoke path exists.
+Verification:
+  - `python -m pytest tests/test_smoke.py -q`
+""",
+    )
+
+    findings, tasks = playbook_validate.validate_tasks(tmp_path)
+
+    assert any(finding.check_id == "REFERENCE_MISSING_CONTEXT" for finding in findings) is False
+    assert tasks[0]["planning_depth"] == "designed_slices"
+    assert tasks[0]["design_refs"] == ["`docs/design/F01.design.json`"]
+    assert tasks[0]["slice_id"] == "S01"
+    assert tasks[0]["user_touchpoint"] == "User can run the smoke command."
+    assert tasks[0]["review_checkpoint"] == "slice_review"
+    assert tasks[0]["change_budget"] == "files<=4, lines<=200"
+    assert tasks[0]["maintainability_risk"] == "high"
+
+
+def test_task_parser_applies_legacy_planning_depth_default(tmp_path: Path) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Historical Task
+
+Owner: codex
+Type: docs
+Objective: |
+  Preserve legacy task records.
+Acceptance-Criteria:
+  - Legacy records remain valid.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, tasks = playbook_validate.validate_tasks(tmp_path)
+
+    assert findings == []
+    assert tasks[0]["planning_depth"] == "oneshot"
+    assert tasks[0]["planning_depth_source"] == "legacy_default"
+
+
+def test_misspelled_design_field_fails_closed(tmp_path: Path) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Misspelled Design Field
+
+Owner: codex
+Type: feature
+Planning-Depht: designed_slices
+Objective: |
+  Reject misspelled design governance.
+Acceptance-Criteria:
+  - Typo is reported.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, _ = playbook_validate.validate_tasks(tmp_path)
+
+    assert any(finding.check_id == "TASK_CONTROLLED_FIELD_UNKNOWN" for finding in findings)
+
+
+def test_invalid_change_budget_syntax_fails(tmp_path: Path) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Bad Budget
+
+Owner: codex
+Type: feature
+Change-Budget: many files
+Objective: |
+  Reject vague change budgets.
+Acceptance-Criteria:
+  - Invalid budget is reported.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, _ = playbook_validate.validate_tasks(tmp_path)
+
+    assert any(finding.check_id == "TASK_CHANGE_BUDGET_INVALID" for finding in findings)
+
+
+def test_compact_design_requires_existing_design_ref(tmp_path: Path) -> None:
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Missing Design
+
+Owner: codex
+Type: feature
+Planning-Depth: compact_design
+Objective: |
+  Require a design reference.
+Acceptance-Criteria:
+  - Missing design is blocked.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, _ = playbook_validate.validate_tasks(tmp_path)
+
+    assert any(finding.check_id == "TASK_DESIGN_REF_REQUIRED" for finding in findings)
+
+
+def test_designed_slice_requires_existing_slice(tmp_path: Path) -> None:
+    docs = tmp_path / "docs/design"
+    docs.mkdir(parents=True)
+    (tmp_path / "docs/PROJECT_BRIEF.md").write_text("# Brief\n", encoding="utf-8")
+    (docs / "F01.design.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "playbook.feature_design.v1",
+                "feature_id": "F01",
+                "status": "approved",
+                "planning_depth": "designed_slices",
+                "risk_level": "high",
+                "brief_ref": "docs/PROJECT_BRIEF.md",
+                "architecture_refs": [],
+                "approval_policy": "human_required",
+                "approved_by": "human",
+                "approved_at": "2026-07-29",
+                "slices": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    write_tasks(
+        tmp_path,
+        """# Tasks
+
+## Phase 1
+
+### T01: Unknown Slice
+
+Owner: codex
+Type: feature
+Planning-Depth: designed_slices
+Design-Refs:
+  - `docs/design/F01.design.json`
+Slice-ID: S01
+User-Touchpoint: User sees smoke output.
+Review-Checkpoint: slice_review
+Change-Budget: files<=2
+Objective: |
+  Require a valid slice registry entry.
+Acceptance-Criteria:
+  - Unknown slice is blocked.
+Verification:
+  - `echo ok`
+""",
+    )
+
+    findings, _ = playbook_validate.validate_tasks(tmp_path)
+
+    assert any(finding.check_id == "TASK_SLICE_MISSING" for finding in findings)
+
+
 def test_placeholder_detection_ignores_fenced_code(tmp_path: Path) -> None:
     docs = tmp_path / "docs"
     docs.mkdir()
@@ -440,6 +638,86 @@ def test_readiness_release_candidate_is_pre_verification_state(tmp_path: Path) -
         "schema_version": "playbook.readiness_state.v1",
         "mode": "lean-core",
         "state": "release_candidate",
+        "required_decision_policy": "mode_profile_risk_triggered",
+        "unresolved_decision_marker": "scaffold placeholder",
+        "implementation_ready_requires_no_scaffold_placeholders": True,
+        "release_ready_requires_current_verification": True,
+    }
+    (playbook / "readiness_state.json").write_text(json.dumps(readiness), encoding="utf-8")
+
+    assert playbook_validate.validate_readiness(tmp_path) == []
+
+
+def test_readiness_design_required_allows_draft_but_blocks_implementation_ready(tmp_path: Path) -> None:
+    docs = tmp_path / "docs/design"
+    docs.mkdir(parents=True)
+    (tmp_path / "docs/PROJECT_BRIEF.md").write_text("# Brief\n", encoding="utf-8")
+    design = {
+        "schema_version": "playbook.feature_design.v1",
+        "feature_id": "F01",
+        "status": "draft",
+        "planning_depth": "compact_design",
+        "risk_level": "medium",
+        "brief_ref": "docs/PROJECT_BRIEF.md",
+        "architecture_refs": [],
+        "approval_policy": "human_or_authorized_reviewer",
+        "slices": [],
+    }
+    (docs / "F01.design.json").write_text(json.dumps(design), encoding="utf-8")
+    playbook = tmp_path / ".playbook"
+    playbook.mkdir()
+    readiness = {
+        "schema_version": "playbook.readiness_state.v1",
+        "mode": "standard",
+        "state": "design_required",
+        "planning_depth": "compact_design",
+        "planning_depth_source": "declared",
+        "design_approval_required": "human_or_authorized_reviewer",
+        "required_design_refs": ["docs/design/F01.design.json"],
+        "required_decision_policy": "mode_profile_risk_triggered",
+        "unresolved_decision_marker": "scaffold placeholder",
+        "implementation_ready_requires_no_scaffold_placeholders": True,
+        "release_ready_requires_current_verification": True,
+    }
+    (playbook / "readiness_state.json").write_text(json.dumps(readiness), encoding="utf-8")
+
+    assert playbook_validate.validate_readiness(tmp_path) == []
+
+    readiness["state"] = "implementation_ready"
+    (playbook / "readiness_state.json").write_text(json.dumps(readiness), encoding="utf-8")
+    findings = playbook_validate.validate_readiness(tmp_path)
+
+    assert any(finding.check_id == "READINESS_DESIGN_APPROVAL_REQUIRED" for finding in findings)
+
+
+def test_readiness_implementation_ready_accepts_approved_required_design(tmp_path: Path) -> None:
+    docs = tmp_path / "docs/design"
+    docs.mkdir(parents=True)
+    (tmp_path / "docs/PROJECT_BRIEF.md").write_text("# Brief\n", encoding="utf-8")
+    design = {
+        "schema_version": "playbook.feature_design.v1",
+        "feature_id": "F01",
+        "status": "approved",
+        "planning_depth": "compact_design",
+        "risk_level": "medium",
+        "brief_ref": "docs/PROJECT_BRIEF.md",
+        "architecture_refs": [],
+        "approval_policy": "human_or_authorized_reviewer",
+        "approved_by": "human:alice",
+        "approved_at": "2026-07-29",
+        "slices": [],
+    }
+    (docs / "F01.design.json").write_text(json.dumps(design), encoding="utf-8")
+    playbook = tmp_path / ".playbook"
+    playbook.mkdir()
+    readiness = {
+        "schema_version": "playbook.readiness_state.v1",
+        "mode": "standard",
+        "state": "implementation_ready",
+        "planning_depth": "compact_design",
+        "planning_depth_source": "declared",
+        "design_approval_required": "human_or_authorized_reviewer",
+        "required_design_refs": ["docs/design/F01.design.json"],
         "required_decision_policy": "mode_profile_risk_triggered",
         "unresolved_decision_marker": "scaffold placeholder",
         "implementation_ready_requires_no_scaffold_placeholders": True,

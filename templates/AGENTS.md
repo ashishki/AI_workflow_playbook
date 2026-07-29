@@ -8,9 +8,15 @@ Mode: Lean
 
 - Repository files are the source of truth.
 - Read `docs/tasks.md` before implementation.
+- Check `Planning-Depth`. For `compact_design` or `designed_slices`, do not
+  implement until the referenced Feature Design registry is approved by a human
+  or authorized reviewer.
 - Read `docs/CONTRACT_LITE.md` or the project contract-lite boundary before
   editing.
 - Keep changes inside the task file scope.
+- For `designed_slices`, keep changes inside the current slice's allowed files,
+  avoid forbidden files, and preserve the declared change budget unless a human
+  approves an override.
 - Run the task's `test:` or `verify:` command before completion.
 - Do not self-review meaningful implementation changes.
 - Use `codex exec` subagents only when the project explicitly enables the

@@ -67,6 +67,14 @@ Strategist design a discovery task.
 
 - **In scope for v1:**
 - **Out of scope / non-goals:**
+- **User-visible outcome:**
+- **Expected system impact:** none / local subsystem / multiple modules /
+  API / persistence / security boundary / migration / RAG-tool-agent workflow /
+  unknown
+- **Preferred planning depth:** oneshot / compact_design / designed_slices /
+  recommend
+- **Design approval required:** human_required /
+  human_or_authorized_reviewer / not_required / unknown
 
 ## 4. AI Scope
 

@@ -7,6 +7,7 @@
     "schema_version",
     "mode",
     "state",
+    "planning_depth",
     "required_decision_policy",
     "unresolved_decision_marker",
     "implementation_ready_requires_no_scaffold_placeholders",
@@ -18,8 +19,25 @@
     "mode": { "type": "string", "enum": ["lean-core", "standard", "strict"] },
     "state": {
       "type": "string",
-      "enum": ["scaffold", "bootstrap_ready", "implementation_ready", "release_candidate", "release_ready"]
+      "enum": ["scaffold", "bootstrap_ready", "brief_ready", "design_required", "implementation_ready", "release_candidate", "release_ready"]
     },
+    "planning_depth": {
+      "type": "string",
+      "enum": ["oneshot", "compact_design", "designed_slices"]
+    },
+    "planning_depth_source": {
+      "type": "string",
+      "enum": ["declared", "recommended", "override", "legacy_default"]
+    },
+    "design_approval_required": {
+      "type": "string",
+      "enum": ["human_required", "human_or_authorized_reviewer", "not_required"]
+    },
+    "required_design_refs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "planning_override_reason": { "type": "string" },
     "required_decision_policy": {
       "type": "string",
       "const": "mode_profile_risk_triggered"

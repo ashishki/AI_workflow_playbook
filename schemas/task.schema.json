@@ -222,6 +222,58 @@
       ],
       "default": "optional"
     },
+    "planning_depth": {
+      "type": "string",
+      "enum": [
+        "oneshot",
+        "compact_design",
+        "designed_slices"
+      ],
+      "default": "oneshot"
+    },
+    "planning_depth_source": {
+      "type": "string",
+      "enum": [
+        "declared",
+        "legacy_default",
+        "recommended",
+        "override"
+      ],
+      "default": "legacy_default"
+    },
+    "design_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "default": []
+    },
+    "slice_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "user_touchpoint": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_checkpoint": {
+      "type": "string",
+      "minLength": 1
+    },
+    "change_budget": {
+      "type": "string",
+      "minLength": 1
+    },
+    "maintainability_risk": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
     "correction_budget": {
       "type": "integer",
       "minimum": 0,

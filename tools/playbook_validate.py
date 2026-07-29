@@ -25,6 +25,11 @@ try:
 except ImportError:  # pragma: no cover - exercised by environments without dev deps.
     Draft202012Validator = None  # type: ignore[assignment]
 
+try:
+    import feature_design_lib
+except ImportError:  # pragma: no cover - script execution path.
+    from tools import feature_design_lib  # type: ignore
+
 
 FIELD_RE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):(?:\s*(.*))?$")
 TASK_HEADING_RE = re.compile(r"^###\s+([A-Za-z][A-Za-z0-9._-]*):\s*(.+?)\s*$")
@@ -44,6 +49,8 @@ FIELD_ALIASES = {
     "cost_budget": "cost_budget",
     "critic-required": "critic_required",
     "critic_required": "critic_required",
+    "design-refs": "design_refs",
+    "design_refs": "design_refs",
     "depends-on": "dependencies",
     "depends_on": "dependencies",
     "evidence": "evidence",
@@ -58,6 +65,8 @@ FIELD_ALIASES = {
     "objective": "objective",
     "owner": "owner",
     "phase": "phase",
+    "planning-depth": "planning_depth",
+    "planning_depth": "planning_depth",
     "property-required": "property_required",
     "property_required": "property_required",
     "public-tests-required": "public_tests_required",
@@ -68,13 +77,23 @@ FIELD_ALIASES = {
     "risk_level": "risk_level",
     "runtime-verification": "runtime_verification",
     "runtime_verification": "runtime_verification",
+    "review-checkpoint": "review_checkpoint",
+    "review_checkpoint": "review_checkpoint",
+    "slice-id": "slice_id",
+    "slice_id": "slice_id",
     "status": "status",
     "test": "test",
     "type": "type_tags",
+    "user-touchpoint": "user_touchpoint",
+    "user_touchpoint": "user_touchpoint",
     "verification": "verify",
     "verify": "verify",
     "visual-contract": "visual_contract",
     "visual_contract": "visual_contract",
+    "change-budget": "change_budget",
+    "change_budget": "change_budget",
+    "maintainability-risk": "maintainability_risk",
+    "maintainability_risk": "maintainability_risk",
 }
 
 TEST_GOVERNANCE_DEFAULTS = {
@@ -95,10 +114,13 @@ GOVERNANCE_FIELD_KEYS = tuple(
     )
 )
 
+CONTROLLED_FIELD_KEYS = tuple(sorted(FIELD_ALIASES))
+
 LIST_FIELDS = {
     "acceptance_criteria",
     "context_refs",
     "dependencies",
+    "design_refs",
     "evidence",
     "files",
     "test",
@@ -132,6 +154,23 @@ ACTIVE_PLACEHOLDER_FILES = {
     "docs/runtime_verification_protocol.md",
     "docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md",
     "docs/evaluation/PLAYBOOK_EMPIRICAL_VALIDATION.md",
+}
+
+IMPLEMENTATION_STARTED_STATUSES = {
+    "in_progress",
+    "review_pending",
+    "implemented",
+    "done",
+    "done_pending_review",
+    "completed",
+    "release_candidate",
+}
+
+COMPLETED_STATUSES = {
+    "done",
+    "implemented",
+    "completed",
+    "release_candidate",
 }
 
 
@@ -186,7 +225,22 @@ class TaskBlock:
             "runtime_verification": normalize_runtime_verification(
                 self.fields.get("runtime_verification")
             ),
+            "planning_depth": normalize_planning_depth(self.fields.get("planning_depth")),
+            "planning_depth_source": "declared"
+            if self.fields.get("planning_depth") not in (None, "")
+            else "legacy_default",
+            "design_refs": listify(self.fields.get("design_refs")),
         }
+        for optional_string in (
+            "slice_id",
+            "user_touchpoint",
+            "review_checkpoint",
+            "change_budget",
+            "maintainability_risk",
+        ):
+            value = self.fields.get(optional_string)
+            if value not in (None, ""):
+                record[optional_string] = str(value).strip().lower().replace("-", "_") if optional_string == "maintainability_risk" else str(value).strip()
         for field_name, default in TEST_GOVERNANCE_DEFAULTS.items():
             record[field_name] = normalize_governance_value(
                 self.fields.get(field_name), default
@@ -227,6 +281,17 @@ def governance_field_suggestion(raw: str) -> str | None:
     matches = difflib.get_close_matches(
         normalized,
         GOVERNANCE_FIELD_KEYS,
+        n=1,
+        cutoff=0.8,
+    )
+    return matches[0] if matches else None
+
+
+def controlled_field_suggestion(raw: str) -> str | None:
+    normalized = raw.strip().lower().replace(" ", "-")
+    matches = difflib.get_close_matches(
+        normalized,
+        CONTROLLED_FIELD_KEYS,
         n=1,
         cutoff=0.8,
     )
@@ -277,6 +342,17 @@ def normalize_runtime_verification(value: Any) -> str:
     if raw in {"not_required", "none", "no", "false"}:
         return "not_required"
     return "conditional"
+
+
+def normalize_planning_depth(value: Any) -> str:
+    raw = str(value or "").strip().lower().replace("-", "_")
+    if raw in {"compact", "compactdesign", "compact_design"}:
+        return "compact_design"
+    if raw in {"designed", "designed_slice", "designed_slices", "sliced", "vertical_slices"}:
+        return "designed_slices"
+    if raw in {"oneshot", "one_shot", "none", "not_required", ""}:
+        return "oneshot"
+    return raw or "oneshot"
 
 
 def normalize_governance_value(value: Any, default: str) -> str:
@@ -336,13 +412,17 @@ def parse_task_blocks(path: Path) -> list[TaskBlock]:
             raw_field_name = field_match.group(1)
             field_name = canonical_field(raw_field_name)
             if field_name is None:
-                suggestion = governance_field_suggestion(raw_field_name)
+                governance_suggestion = governance_field_suggestion(raw_field_name)
+                suggestion = governance_suggestion or controlled_field_suggestion(raw_field_name)
                 if suggestion is not None:
                     current.parse_findings.append(
                         (
                             line_no,
-                            "TASK_GOVERNANCE_FIELD_UNKNOWN",
-                            f"task {current.task_id} has unknown governance field "
+                            "TASK_GOVERNANCE_FIELD_UNKNOWN"
+                            if governance_suggestion
+                            else "TASK_CONTROLLED_FIELD_UNKNOWN",
+                            f"task {current.task_id} has unknown "
+                            f"{'governance' if governance_suggestion else 'controlled'} field "
                             f"{raw_field_name}; did you mean {suggestion}?",
                         )
                     )
@@ -429,6 +509,16 @@ def validate_task_record(task: TaskBlock, root: Path, schema_validator: Any | No
                 task.line,
                 "TASK_VERIFIER_REQUIRED",
                 f"task {task.task_id} must declare Verification/Verify or Test",
+            )
+        )
+    if record.get("change_budget") and not feature_design_lib.validate_change_budget(record.get("change_budget")):
+        findings.append(
+            Finding(
+                "error",
+                relative(root, task.path),
+                task.field_lines.get("change_budget", task.line),
+                "TASK_CHANGE_BUDGET_INVALID",
+                f"task {task.task_id} Change-Budget must use entries like files<=4, lines<=200",
             )
         )
     if schema_validator is not None:
@@ -551,6 +641,242 @@ def validate_context_refs(tasks: list[TaskBlock], root: Path) -> list[Finding]:
     return findings
 
 
+def task_status_key(record: dict[str, Any]) -> str:
+    return str(record.get("status", "")).strip().lower().replace("-", "_").replace(" ", "_")
+
+
+def is_completed_status(record: dict[str, Any]) -> bool:
+    status = task_status_key(record)
+    return status in COMPLETED_STATUSES or status.startswith("done")
+
+
+def is_implementation_started(record: dict[str, Any]) -> bool:
+    status = task_status_key(record)
+    return status in IMPLEMENTATION_STARTED_STATUSES or status.startswith("done")
+
+
+def design_registry_path(root: Path, ref: str) -> tuple[Path | None, str]:
+    refs = referenced_paths(ref)
+    raw = refs[0] if refs else ref
+    path = feature_design_lib.safe_repo_path(root, raw)
+    return path, raw.strip().strip("`")
+
+
+def design_finding_to_task_finding(root: Path, finding: feature_design_lib.DesignFinding) -> Finding:
+    return Finding(finding.severity, finding.path, finding.line, finding.check_id, finding.message)
+
+
+def review_checkpoint_closed(root: Path, value: str) -> bool:
+    raw = value.strip().strip("`")
+    normalized = raw.lower().replace("-", "_").replace(" ", "_")
+    if normalized in {"closed", "complete", "completed", "passed", "review_closed"}:
+        return True
+    path = feature_design_lib.safe_repo_path(root, raw)
+    if path and path.is_file():
+        text = path.read_text(encoding="utf-8", errors="replace")
+        return any(
+            marker in text
+            for marker in (
+                "SLICE_REVIEW: PASS",
+                "PROGRAM_DESIGN_REVIEW: PASS",
+                "MAINTAINABILITY_REVIEW: PASS",
+                "TEST_CRITIC_RESULT: NO_FINDING",
+                "PRIVACY_REVIEW_RESULT: PASS",
+            )
+        )
+    return False
+
+
+def has_real_verification_evidence(record: dict[str, Any]) -> bool:
+    commands = listify(record.get("verify")) + listify(record.get("test"))
+    if not commands:
+        return False
+    weak = {"manual review", "manual", "tbd", "todo", "unknown", "n/a"}
+    for command in commands:
+        raw = command.strip().strip("`").lower()
+        if raw in weak:
+            return False
+        if any(token in raw for token in ("python", "pytest", "tools/", "git ", "npm ", "pnpm ", "uv ", "make ", "harness", "verify")):
+            return True
+    return False
+
+
+def validate_task_design_requirements(tasks: list[TaskBlock], root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    for task in tasks:
+        record = task.to_record()
+        depth = record.get("planning_depth", "oneshot")
+        if depth == "oneshot":
+            continue
+        design_refs = record.get("design_refs", [])
+        if not design_refs:
+            findings.append(
+                Finding(
+                    "error",
+                    relative(root, task.path),
+                    task.field_lines.get("design_refs", task.line),
+                    "TASK_DESIGN_REF_REQUIRED",
+                    f"task {task.task_id} with Planning-Depth {depth} requires Design-Refs",
+                )
+            )
+            continue
+        loaded_designs: list[dict[str, Any]] = []
+        approved_designs: list[dict[str, Any]] = []
+        for ref in design_refs:
+            registry_path, raw = design_registry_path(root, ref)
+            if registry_path is None:
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("design_refs", task.line),
+                        "TASK_DESIGN_REF_UNSAFE",
+                        f"task {task.task_id} Design-Ref must stay inside repository: {raw}",
+                    )
+                )
+                continue
+            if not registry_path.exists():
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("design_refs", task.line),
+                        "TASK_DESIGN_REF_MISSING",
+                        f"task {task.task_id} Design-Ref missing: {raw}",
+                    )
+                )
+                continue
+            design_findings, design = feature_design_lib.validate_design_file(root, registry_path)
+            findings.extend(design_finding_to_task_finding(root, finding) for finding in design_findings)
+            if design is None:
+                continue
+            loaded_designs.append(design)
+            if feature_design_lib.design_is_approved(design):
+                approved_designs.append(design)
+        if not loaded_designs:
+            continue
+        if not approved_designs:
+            findings.append(
+                Finding(
+                    "error",
+                    relative(root, task.path),
+                    task.field_lines.get("design_refs", task.line),
+                    "TASK_DESIGN_APPROVAL_REQUIRED",
+                    f"task {task.task_id} requires an approved design before implementation",
+                )
+            )
+            continue
+        design = approved_designs[0]
+        if depth == "designed_slices":
+            slice_id = str(record.get("slice_id", "")).strip()
+            if not slice_id:
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("slice_id", task.line),
+                        "TASK_SLICE_ID_REQUIRED",
+                        f"task {task.task_id} with designed_slices requires Slice-ID",
+                    )
+                )
+                continue
+            slice_item = feature_design_lib.find_slice(design, slice_id)
+            if slice_item is None:
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("slice_id", task.line),
+                        "TASK_SLICE_MISSING",
+                        f"task {task.task_id} references missing slice {slice_id}",
+                    )
+                )
+                continue
+            for required_field, check_id in (
+                ("user_touchpoint", "TASK_USER_TOUCHPOINT_REQUIRED"),
+                ("review_checkpoint", "TASK_REVIEW_CHECKPOINT_REQUIRED"),
+                ("change_budget", "TASK_CHANGE_BUDGET_REQUIRED"),
+            ):
+                if not record.get(required_field):
+                    findings.append(
+                        Finding(
+                            "error",
+                            relative(root, task.path),
+                            task.field_lines.get(required_field, task.line),
+                            check_id,
+                            f"task {task.task_id} with designed_slices requires {required_field}",
+                        )
+                    )
+            missing_deps = feature_design_lib.slice_dependencies_satisfied(design, slice_item)
+            for dep in missing_deps:
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("slice_id", task.line),
+                        "TASK_SLICE_DEPENDENCY_UNSATISFIED",
+                        f"task {task.task_id} slice {slice_id} dependency {dep} is not implemented/reviewed",
+                    )
+                )
+            outside_allowed, forbidden_hits = feature_design_lib.task_files_within_slice(
+                listify(record.get("files")),
+                slice_item,
+            )
+            for path in outside_allowed:
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("files", task.line),
+                        "TASK_SLICE_SCOPE_MISMATCH",
+                        f"task {task.task_id} file outside slice allowed files: {path}",
+                    )
+                )
+            for path in forbidden_hits:
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("files", task.line),
+                        "TASK_SLICE_FORBIDDEN_FILE",
+                        f"task {task.task_id} file is forbidden by slice {slice_id}: {path}",
+                    )
+                )
+        if is_completed_status(record):
+            if not feature_design_lib.design_is_approved(design):
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("design_refs", task.line),
+                        "TASK_COMPLETED_DESIGN_NOT_APPROVED",
+                        f"completed task {task.task_id} cannot reference an unapproved design",
+                    )
+                )
+            checkpoint = str(record.get("review_checkpoint", "")).strip()
+            if checkpoint and not review_checkpoint_closed(root, checkpoint):
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("review_checkpoint", task.line),
+                        "TASK_REVIEW_CHECKPOINT_OPEN",
+                        f"completed task {task.task_id} required review checkpoint is not closed",
+                    )
+                )
+            if not has_real_verification_evidence(record):
+                findings.append(
+                    Finding(
+                        "error",
+                        relative(root, task.path),
+                        task.field_lines.get("verify", task.line),
+                        "TASK_COMPLETED_VERIFICATION_WEAK",
+                        f"completed task {task.task_id} requires concrete verification evidence",
+                    )
+                )
+    return findings
+
+
 def validate_tasks(root: Path) -> tuple[list[Finding], list[dict[str, Any]]]:
     tasks_path = root / "docs" / "tasks.md"
     if not tasks_path.exists():
@@ -574,6 +900,7 @@ def validate_tasks(root: Path) -> tuple[list[Finding], list[dict[str, Any]]]:
         findings.extend(validate_task_record(task, root, schema_validator))
     findings.extend(validate_dependency_graph(tasks, root))
     findings.extend(validate_context_refs(tasks, root))
+    findings.extend(validate_task_design_requirements(tasks, root))
     return findings, [task.to_record() for task in tasks]
 
 
@@ -696,6 +1023,50 @@ def validate_readiness(root: Path) -> list[Finding]:
         findings = active_scaffold_placeholder_findings(root)
     else:
         findings = []
+    planning_depth = data.get("planning_depth", "oneshot")
+    if state in {"implementation_ready", "release_candidate", "release_ready"} and planning_depth in {"compact_design", "designed_slices"}:
+        refs = data.get("required_design_refs", [])
+        if not isinstance(refs, list) or not refs:
+            findings.append(
+                Finding(
+                    "error",
+                    ".playbook/readiness_state.json",
+                    1,
+                    "READINESS_DESIGN_REF_REQUIRED",
+                    "implementation_ready requires required_design_refs when planning depth requires design",
+                )
+            )
+            return findings
+        approved = False
+        for ref in refs:
+            if not isinstance(ref, str):
+                continue
+            design_path = feature_design_lib.safe_repo_path(root, ref)
+            if design_path is None:
+                findings.append(
+                    Finding(
+                        "error",
+                        ".playbook/readiness_state.json",
+                        1,
+                        "READINESS_DESIGN_REF_UNSAFE",
+                        f"required design ref must stay inside repository: {ref}",
+                    )
+                )
+                continue
+            design_findings, design = feature_design_lib.validate_design_file(root, design_path)
+            findings.extend(design_finding_to_task_finding(root, finding) for finding in design_findings)
+            if feature_design_lib.design_is_approved(design):
+                approved = True
+        if not approved:
+            findings.append(
+                Finding(
+                    "error",
+                    ".playbook/readiness_state.json",
+                    1,
+                    "READINESS_DESIGN_APPROVAL_REQUIRED",
+                    "implementation_ready requires an approved feature design",
+                )
+            )
     return findings
 
 
@@ -1343,10 +1714,98 @@ def validate_rag(root: Path) -> list[Finding]:
     return findings
 
 
+def validate_designs(root: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    design_dir = root / "docs/design"
+    if not design_dir.exists():
+        task_findings, _ = validate_tasks(root)
+        return [finding for finding in task_findings if finding.check_id.startswith(("TASK_DESIGN", "TASK_SLICE"))]
+    for registry_path in sorted(design_dir.glob("*.design.json")):
+        design_findings, _ = feature_design_lib.validate_design_file(root, registry_path)
+        findings.extend(design_finding_to_task_finding(root, finding) for finding in design_findings)
+    task_findings, _ = validate_tasks(root)
+    findings.extend(
+        finding
+        for finding in task_findings
+        if finding.check_id.startswith(("TASK_DESIGN", "TASK_SLICE", "TASK_USER_TOUCHPOINT", "TASK_REVIEW_CHECKPOINT", "TASK_CHANGE_BUDGET"))
+    )
+    return findings
+
+
+def validate_instruction_manifest(root: Path) -> list[Finding]:
+    path = root / ".playbook/instruction_manifest.json"
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return [
+            Finding(
+                "error",
+                ".playbook/instruction_manifest.json",
+                exc.lineno,
+                "INSTRUCTION_MANIFEST_JSON_INVALID",
+                f"instruction manifest is invalid JSON: {exc.msg}",
+            )
+        ]
+    findings: list[Finding] = []
+    schema_path = root / "schemas/instruction_manifest.schema.json"
+    if schema_path.exists() and Draft202012Validator is not None:
+        validator = Draft202012Validator(json.loads(schema_path.read_text(encoding="utf-8")))
+        for error in sorted(validator.iter_errors(data), key=lambda item: list(item.path)):
+            findings.append(
+                Finding(
+                    "error",
+                    ".playbook/instruction_manifest.json",
+                    1,
+                    "INSTRUCTION_MANIFEST_SCHEMA",
+                    f"instruction manifest schema violation: {error.message}",
+                )
+            )
+    seen: set[str] = set()
+    for artifact in data.get("artifacts", []) if isinstance(data, dict) else []:
+        if not isinstance(artifact, dict):
+            continue
+        raw = str(artifact.get("path", ""))
+        if raw in seen:
+            findings.append(
+                Finding(
+                    "error",
+                    ".playbook/instruction_manifest.json",
+                    1,
+                    "INSTRUCTION_MANIFEST_DUPLICATE_PATH",
+                    f"duplicate artifact path {raw}",
+                )
+            )
+        seen.add(raw)
+        resolved = feature_design_lib.safe_repo_path(root, raw)
+        if resolved is None:
+            findings.append(
+                Finding(
+                    "error",
+                    ".playbook/instruction_manifest.json",
+                    1,
+                    "INSTRUCTION_MANIFEST_REF_UNSAFE",
+                    f"artifact path must stay inside repository: {raw}",
+                )
+            )
+        elif not resolved.exists() and artifact.get("load_policy") == "always":
+            findings.append(
+                Finding(
+                    "warning",
+                    ".playbook/instruction_manifest.json",
+                    1,
+                    "INSTRUCTION_MANIFEST_REF_MISSING",
+                    f"manifest artifact does not exist yet: {raw}",
+                )
+            )
+    return findings
+
+
 def run_checks(root: Path, checks: list[str]) -> dict[str, Any]:
     findings: list[Finding] = []
     tasks: list[dict[str, Any]] = []
-    expanded = checks if checks != ["all"] else ["schemas", "tasks", "placeholders", "readiness", "delivery", "references", "modes", "rag"]
+    expanded = checks if checks != ["all"] else ["schemas", "tasks", "design", "instructions", "placeholders", "readiness", "delivery", "references", "modes", "rag"]
     for check in expanded:
         if check == "schemas":
             findings.extend(validate_json_schemas(root))
@@ -1365,6 +1824,10 @@ def run_checks(root: Path, checks: list[str]) -> dict[str, Any]:
             findings.extend(validate_modes(root))
         elif check == "rag":
             findings.extend(validate_rag(root))
+        elif check == "design":
+            findings.extend(validate_designs(root))
+        elif check == "instructions":
+            findings.extend(validate_instruction_manifest(root))
         else:
             findings.append(
                 Finding("error", ".", 1, "CHECK_UNKNOWN", f"unknown check {check}")
@@ -1388,7 +1851,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--check",
         action="append",
-        choices=("all", "schemas", "tasks", "placeholders", "readiness", "delivery", "references", "modes", "rag"),
+        choices=("all", "schemas", "tasks", "design", "instructions", "placeholders", "readiness", "delivery", "references", "modes", "rag"),
         default=None,
         help="Run only this check. Repeatable. Defaults to all checks.",
     )

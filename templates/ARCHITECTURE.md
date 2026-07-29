@@ -725,6 +725,15 @@ Rules:
 └── README.md
 ```
 
+## Feature Design Boundary
+
+Architecture records durable system decisions and constraints. For medium- or
+high-risk implementation work, put file tree diff, key signatures, control flow,
+failure paths, maintainability risks, and vertical slices in
+`docs/design/<feature-id>.md` with companion registry
+`docs/design/<feature-id>.design.json`. Do not duplicate the full Feature Design
+inside this architecture document.
+
 ---
 
 ## Runtime Contract

@@ -54,6 +54,7 @@ def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
     assert not (target / "docs/ARCHITECTURE.md").exists()
     assert not (target / "docs/EVIDENCE_INDEX.md").exists()
     assert not (target / "docs/ai_cost_architecture.md").exists()
+    assert not (target / "docs/design/F01.md").exists()
 
     validation = subprocess.run(
         [
@@ -100,6 +101,140 @@ def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
     )
     assert release.returncode == 1
     assert "READINESS_RELEASE_GIT_REQUIRED" in release.stderr
+
+
+def test_standard_compact_design_creates_draft_and_design_required_state(tmp_path: Path) -> None:
+    target = tmp_path / "standard-compact"
+    result = run_init(
+        target,
+        "--mode",
+        "standard",
+        "--project-name",
+        "Standard Compact",
+        "--operational-pain",
+        "Medium-risk workflow changes need a design checkpoint.",
+        "--current-workaround",
+        "Reviewers infer file scope from large diffs.",
+        "--first-proof-metric",
+        "Draft design blocks implementation readiness until approved.",
+        "--verify-argv",
+        passing_verify_argv(),
+        "--planning-depth",
+        "compact_design",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert (target / "docs/design/F01.md").exists()
+    registry = json.loads((target / "docs/design/F01.design.json").read_text(encoding="utf-8"))
+    assert registry["status"] == "draft"
+    assert registry["planning_depth"] == "compact_design"
+    readiness = json.loads((target / ".playbook/readiness_state.json").read_text(encoding="utf-8"))
+    assert readiness["state"] == "design_required"
+    assert readiness["planning_depth"] == "compact_design"
+    assert readiness["required_design_refs"] == ["docs/design/F01.design.json"]
+
+    validation = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/playbook_validate.py"),
+            "--root",
+            str(target),
+            "--check",
+            "readiness",
+            "--check",
+            "design",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert validation.returncode == 0, validation.stderr
+
+    readiness["state"] = "implementation_ready"
+    (target / ".playbook/readiness_state.json").write_text(json.dumps(readiness), encoding="utf-8")
+    blocked = subprocess.run(
+        [sys.executable, str(ROOT / "tools/playbook_validate.py"), "--root", str(target), "--check", "readiness"],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert blocked.returncode == 1
+    assert "READINESS_DESIGN_APPROVAL_REQUIRED" in blocked.stderr
+
+
+def test_strict_designed_slices_requires_human_design_approval(tmp_path: Path) -> None:
+    target = tmp_path / "strict-designed"
+    result = run_init(
+        target,
+        "--mode",
+        "strict",
+        "--project-name",
+        "Strict Designed",
+        "--operational-pain",
+        "High-risk multi-layer features need slice-level review.",
+        "--current-workaround",
+        "Large diffs are reviewed after the architecture is already encoded.",
+        "--first-proof-metric",
+        "Slice context can be generated from an approved design.",
+        "--verify-argv",
+        passing_verify_argv(),
+        "--planning-depth",
+        "designed_slices",
+        "--risk-level",
+        "high",
+    )
+
+    assert result.returncode == 0, result.stderr
+    registry = json.loads((target / "docs/design/F01.design.json").read_text(encoding="utf-8"))
+    assert registry["approval_policy"] == "human_required"
+    readiness = json.loads((target / ".playbook/readiness_state.json").read_text(encoding="utf-8"))
+    assert readiness["design_approval_required"] == "human_required"
+    assert readiness["state"] == "design_required"
+
+
+def test_retrofit_preserves_existing_agents_and_writes_inventory_and_plan(tmp_path: Path) -> None:
+    target = tmp_path / "retrofit"
+    target.mkdir()
+    (target / "AGENTS.md").write_text("existing agent rules\n", encoding="utf-8")
+    (target / "app.py").write_text("print('app')\n", encoding="utf-8")
+
+    result = run_init(
+        target,
+        "--retrofit",
+        "--mode",
+        "standard",
+        "--project-name",
+        "Retrofit",
+        "--operational-pain",
+        "Existing repo needs planning checkpoints without rewriting app code.",
+        "--current-workaround",
+        "Manual architectural review after implementation.",
+        "--first-proof-metric",
+        "Initializer writes design scaffold and next steps only.",
+        "--verify-argv",
+        passing_verify_argv(),
+        "--planning-depth",
+        "recommend",
+        "--risk-level",
+        "high",
+        "--user-visible-feature",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert (target / "AGENTS.md").read_text(encoding="utf-8") == "existing agent rules\n"
+    assert (target / "app.py").read_text(encoding="utf-8") == "print('app')\n"
+    assert (target / ".playbook/repository_inventory.json").exists()
+    inventory = json.loads((target / ".playbook/repository_inventory.json").read_text(encoding="utf-8"))
+    assert "app.py" in inventory["sample_files"]
+    assert (target / "docs/playbook_retrofit_plan.md").exists()
+    assert (target / "docs/design/F01.design.json").exists()
+    readiness = json.loads((target / ".playbook/readiness_state.json").read_text(encoding="utf-8"))
+    assert readiness["planning_depth"] == "designed_slices"
+    assert readiness["planning_depth_source"] == "recommended"
 
 
 def test_standard_with_rag_eval_creates_valid_portable_kit(tmp_path: Path) -> None:
