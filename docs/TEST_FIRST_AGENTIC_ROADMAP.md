@@ -1,7 +1,7 @@
 # Test-First Agentic SWE Roadmap
 
 Status: proposed implementation roadmap
-Source: `deep-research-report(1).md`
+Source: `reference/research/test_first_agentic_swe_report.md`
 Created: 2026-07-13
 
 ## Purpose
@@ -50,8 +50,8 @@ Use this file as the backlog, not as permission to do everything at once.
 
 Before starting a task:
 
-1. Read `docs/tasks.md`, `docs/PROJECT_PLAN.md`, `deep-research-report(1).md`,
-   and this roadmap.
+1. Read `docs/tasks.md`, `docs/PROJECT_PLAN.md`,
+   `reference/research/test_first_agentic_swe_report.md`, and this roadmap.
 2. Run `python3 tools/playbook_validate.py --root . --check tasks`.
 3. Keep changes scoped to the selected roadmap task and its direct integration
    points.
@@ -656,7 +656,7 @@ Start with TFA-0.1 unless it is already complete and verified.
 
 Read:
 - `docs/TEST_FIRST_AGENTIC_ROADMAP.md`
-- `deep-research-report(1).md`
+- `reference/research/test_first_agentic_swe_report.md`
 - `docs/tasks.md`
 - `docs/PROJECT_PLAN.md`
 - `schemas/task.schema.json`

@@ -39,7 +39,7 @@ When uncertain about how to structure a document or define a task, consult the t
 - `docs/rag/RAG_DATA_READINESS.md` — corpus/source readiness before retrieval eval
 - `docs/rag/RETRIEVAL_EVAL_PLAN.md` — RAG Evaluation v2 stage model, lexical baseline, harness/delivery matrix, routing, noise, perturbation
 - `docs/rag/RAG_EVAL_TOOL_ADAPTERS.md` — provider-neutral external scorer adapter guidance
-- `docs/agent_harness/AGENT_HARNESS_DESIGN.md` — model + prompt + tools + memory/state + recovery + permissions + trace + HITL boundary
+- `docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md` — model + prompt + tools + memory/state + recovery + permissions + trace + HITL boundary
 - `docs/autonomous_workflows/AUTONOMOUS_WORKFLOW_DEPLOYMENT.md` — trigger/runtime/secrets/fallback contract for bounded routines
 - `docs/cost_telemetry_protocol.md` — provider-agnostic AI cost telemetry entry and rollup contract
 - `docs/external_skill_security_policy.md` — external skill supply-chain gate, trust records, scan/signature policy

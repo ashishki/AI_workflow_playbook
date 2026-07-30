@@ -16,72 +16,36 @@ verification, and cognition integrity.
 
 ## Near-Term Roadmap
 
-### P0 - Consolidate Zero-Trust Execution
+### P0 - Keep The Core Workflow Legible
 
-- Integrate Runtime Verification Protocol into default task templates.
-- Add README-first knowledge index as a phase-gate navigation artifact.
-- Keep AI/model cost guardrails first-class in bootstrap, validator,
-  orchestrator, and review prompts.
-- Keep AI cost architecture first-class where spend is recurring/material or
-  uses prompt caching, batch lanes, dynamic routing, or cascades.
-- Treat external agent skills as supply-chain artifacts with trust records,
-  scan/provenance/signature evidence, and explicit install scope before they
-  enter project or global agent context.
-- Keep the project initializer and external skill security gate as deterministic
-  helpers so bootstrap and skill review are not only procedural instructions.
+- Keep `docs/README.md`, `docs/EVIDENCE_INDEX.md`, and `reports/README.md`
+  current so agents can distinguish authority, optional references, and
+  historical evidence without broad-loading the repository.
+- Keep the current Codex Direct path and Feature Workflow path synchronized
+  across `README.md`, `PLAYBOOK.md`, `docs/usage_guide.md`,
+  `docs/adoption_modes.md`, and `tools/README.md`.
+- Remove or archive root-level research dumps, stale reports, and compatibility
+  wrappers only after their current authority is mapped.
+- Do not add placeholder artifacts only to satisfy a checklist.
+
+### P1 - Complete Remaining Mechanism Work
+
+- Implement the real sequential changeability runner described by
+  `AWP-PI-010` once the Feature Workflow lifecycle remains green.
 - Add examples of `runtime_verification`, `decision_receipt`, and
-  `risk_acceptance_record`.
-- Add CI example for `tools/integrity_check.py`.
-- Add reviewer checklist rows for stale cognition packets and broken
-  Context-Refs.
+  `risk_acceptance_record` only where they have an executable consumer or clear
+  downstream task.
+- Add a CI example for `tools/integrity_check.py`.
+- Keep reviewer checklist rows for stale cognition packets and broken
+  Context-Refs aligned with validators.
 
-### P1 - Add Entropy-Inspired Evidence Layer
+### P2 - Portfolio And Optional Extensions
 
-- Define playbook-native receipt schemas:
-  - `agent_action_receipt`
-  - `decision_receipt`
-  - `referee_review_record`
-  - `risk_acceptance_record`
-- Keep receipts as artifacts, not infrastructure dependencies.
-- Use `docs/entropy_core_and_gensyn_reference_policy.md` to keep Entropy Core
-  references optional and Gensyn-inspired patterns bounded.
-- Add examples for implementation, review, provider fallback, and eval
-  regression.
-
-### P1 - Add Diverse Review Principle
-
-- Document that role/model diversity is useful for high-risk work because
-  different reviewers find different failure niches.
-- Do not add swarm behavior.
-- Keep consolidation human-readable and evidence-backed.
-
-### P1 - Add Test-First Governance
-
-- Define a risk-tiered test-first protocol and implementer prompt for semantic
-  code changes without imposing full TDD on low-risk docs/config work.
-- Add backward-compatible task metadata for public tests, independent critic
-  review, stronger acceptance oracles, visual contracts, and completion
-  authority.
-- Keep deterministic checks and human approval authoritative; critics audit
-  evidence and explicit stop-ship conditions rather than self-assigning merge
-  authority.
-
-### P2 - Evaluate Stronger Test Oracles
-
-- Define holdout, mutation/property, and UI evidence protocols as optional or
-  risk-triggered layers, not mandatory runtime dependencies.
-- Calibrate critics and require a supportive adjudicated paired pilot before
-  making any claim that the test-first workflow improves quality or
-  productivity; the first TFA-7 pilot did not support that claim.
-- Preserve distinct Lean / Standard / Strict expectations and record the
-  operational cost of stricter gates.
-
-### P2 - Portfolio Integration
-
-- Add a portfolio operating guide showing how Playbook, Entropy Core, Workflow
-  Studio, Training OS, Radar, and Telegram Intelligence fit together.
-- Keep migration/adoption modes current for projects that only need the Lean
-  path (`docs/adoption_modes.md`, `docs/usage_guide.md`).
+- Add a portfolio operating guide only if it names actual source-of-truth repos
+  and does not turn the Playbook into a control plane for unrelated products.
+- Keep Entropy/Hermes/Mythos/dynamic workflow references optional and bounded.
+- Consider optional second-model reviewer guidance for high-risk work, without
+  making multi-model review a default requirement.
 
 ### Completed Baseline Decisions
 
@@ -112,6 +76,14 @@ verification, and cognition integrity.
   Strict starter kit without overwriting existing downstream files by default.
 - `tools/skill_security_gate.py` now provides a CI-friendly trust-record and
   SkillSpector wrapper for external skills.
+- RAG Evaluation v2 now has offline deterministic contracts, scoring,
+  comparison, initializer integration, and a runnable mechanism example.
+- Test-first governance now has task metadata, holdout/property/UI protocols,
+  critic prompts, and pilot evidence. The first paired pilot did not support a
+  quality or productivity improvement claim.
+- Planning Depth, Feature Design, vertical slices, hash-bound human approval,
+  and the thin `tools/feature_workflow.py` lifecycle are now implemented as
+  proportional pre-implementation design controls.
 
 ## AI-Development Tasks
 

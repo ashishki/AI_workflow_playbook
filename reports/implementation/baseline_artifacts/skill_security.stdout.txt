@@ -1,1 +1,0 @@
-skill_security_gate: ok (0 skills)

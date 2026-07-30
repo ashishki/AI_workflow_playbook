@@ -1,7 +1,7 @@
 # AI Workflow Playbook Tasks
 
 Status: active core framework task graph
-Last updated: 2026-07-22
+Last updated: 2026-07-30
 
 This file tracks framework work for the playbook itself. It is separate from
 project adoption tasks in downstream repositories.

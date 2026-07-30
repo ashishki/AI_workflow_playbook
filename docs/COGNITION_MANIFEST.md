@@ -11,7 +11,7 @@ tags: [playbook, cognition, governance]
 ---
 
 Version: 1.0
-Last updated: 2026-05-25
+Last updated: 2026-07-30
 
 ## Purpose
 
@@ -118,12 +118,13 @@ Do not write canonical decisions, eval results, or findings directly into the va
 
 | Gap | Impact | Migration step |
 |-----|--------|----------------|
-| No committed generated index yet | Tool output not visible until generated | Generate locally or in CI when adoption begins |
+| No committed generated index yet | Tool output is intentionally absent until cognition tooling is used | Generate locally or in CI only when cognition packet workflows are active |
+| No committed context packet directory yet | Validators may warn about optional generated packet paths | Keep packets on demand; commit only major design/review packets |
 | No Obsidian vault repo yet | Graph browsing remains documented only | Create external vault after repo-local manifests stabilize |
 
 ## Generated Artifacts
 
 | Artifact | Path | Policy |
 |----------|------|--------|
-| Cognition index | `generated/cognition/index.json` | Optional generated artifact |
-| Context packets | `docs/context-packets/` | Commit only major design/review packets |
+| Cognition index | `generated/cognition/index.json` | Optional generated artifact; absent by default |
+| Context packets | `docs/context-packets/` | Optional generated packet directory; absent by default |
