@@ -12,8 +12,10 @@ Mode: Lean
   implement until the referenced Feature Design registry is approved by a human
   or authorized reviewer.
 - For Feature Design workflow, use `tools/feature_workflow.py`:
-  `plan -> draft -> review -> approve -> next -> start -> context -> check`.
+  `plan -> select-plan -> draft -> review -> approve -> next -> start -> context -> check -> accept-slice`.
   Approval must be fresh and hash-bound; Codex cannot approve its own design.
+  Default execution profile is `direct_codex`; `audited_rounds` is optional for
+  long slices and does not replace human acceptance.
 - Read `docs/CONTRACT_LITE.md` or the project contract-lite boundary before
   editing.
 - Keep changes inside the task file scope.

@@ -266,6 +266,7 @@ For practical setup and adoption, use:
 - [docs/evaluation/EVAL_FIRST_DEVELOPMENT.md](docs/evaluation/EVAL_FIRST_DEVELOPMENT.md) — eval dataset, thresholds, judge calibration, human review, and cost gates from Phase 1
 - [docs/rag/RAG_DATA_READINESS.md](docs/rag/RAG_DATA_READINESS.md) — source inventory and data-quality gate before embeddings/retrieval eval
 - [docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md](docs/agent_harness/HARNESS_EVALUATION_PROTOCOL.md) — model+harness boundary and evaluation protocol for tool-using and agentic systems
+- [docs/audited_execution_protocol.md](docs/audited_execution_protocol.md) — optional `audited_rounds` profile for long slices using Manage -> Execute -> Audit
 - [docs/architecture_layers.md](docs/architecture_layers.md) — concise layer map
 - [docs/heavy_task_mode.md](docs/heavy_task_mode.md) — selective proof-first mode for risky tasks
 - [docs/workflow_continuity_retrofit.md](docs/workflow_continuity_retrofit.md) — MemPalace assessment and the playbook-native continuity retrofit
@@ -277,7 +278,7 @@ For practical setup and adoption, use:
 - [docs/cost_telemetry_protocol.md](docs/cost_telemetry_protocol.md) — provider-agnostic AI cost telemetry JSONL and rollup protocol
 - [docs/external_skill_security_policy.md](docs/external_skill_security_policy.md) — external agent skill trust gate, scan/signature policy, and approval rules
 - [tools/init_playbook_project.py](tools/init_playbook_project.py) — deterministic Lean-Core / Standard / Strict project initializer
-- [tools/feature_workflow.py](tools/feature_workflow.py) — thin coordinator for `plan -> draft -> review -> approve -> next -> start -> context -> check`
+- [tools/feature_workflow.py](tools/feature_workflow.py) — thin coordinator for `plan -> select-plan -> draft -> review -> approve -> next -> start -> context -> check -> accept-slice`
 - [tools/planning_depth.py](tools/planning_depth.py), [tools/create_feature_design.py](tools/create_feature_design.py), [tools/approve_feature_design.py](tools/approve_feature_design.py), [tools/validate_feature_design.py](tools/validate_feature_design.py), [tools/render_slice_context.py](tools/render_slice_context.py) — deterministic Planning Depth, Feature Design, approval, and slice-context helpers
 - [tools/skill_security_gate.py](tools/skill_security_gate.py) — CI-friendly external skill trust-record and SkillSpector wrapper
 - [templates/cost_adapters/](templates/cost_adapters/) — provider-neutral starter adapter for writing AI cost telemetry

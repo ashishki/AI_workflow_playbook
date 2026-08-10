@@ -71,7 +71,12 @@ For Feature Design and vertical slices, prefer `tools/feature_workflow.py
 review` to resolve required `product_design_review`, `program_design_review`,
 `slice_review`, and `maintainability_review` prompts. The tool writes prompt
 files and suggested `codex exec --sandbox read-only` commands, then parses
-required markers when reports exist.
+required markers when reports exist. Design review reports must be paired with
+hash-bound `.playbook-artifacts/reviews/<feature-id>/design/<role>.review.json`
+records before approval.
+
+For long slices, `audited_rounds` uses the same trust rule with a fresh Executor
+and read-only Auditor per round. See `docs/audited_execution_protocol.md`.
 
 ## Standard Commands
 

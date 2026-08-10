@@ -517,13 +517,15 @@ Useful commands:
 
 ```bash
 python3 tools/feature_workflow.py --root . plan --task T14
+python3 tools/feature_workflow.py --root . select-plan --task T14
 python3 tools/feature_workflow.py --root . draft --task T14 --feature-id F01
 python3 tools/feature_workflow.py --root . review --task T14 --feature-id F01 --role auto
 python3 tools/feature_workflow.py --root . approve --feature-id F01
 python3 tools/feature_workflow.py --root . next --feature-id F01
-python3 tools/feature_workflow.py --root . start --feature-id F01 --slice-id F01-S1
+python3 tools/feature_workflow.py --root . start --task T14 --feature-id F01 --slice-id F01-S1
 python3 tools/feature_workflow.py --root . context --task T14 --feature-id F01 --slice-id F01-S1
 python3 tools/feature_workflow.py --root . check --task T14 --feature-id F01 --slice-id F01-S1
+python3 tools/feature_workflow.py --root . accept-slice --task T14 --feature-id F01 --slice-id F01-S1
 ```
 
 Canonical personal-use actor model:
@@ -540,12 +542,21 @@ Canonical personal-use actor model:
 10. `feature_workflow check` runs receipt-backed verification, scope, budget,
     and maintainability checks.
 11. Isolated reviewers check slice/maintainability when required.
-12. Existing human/release authority accepts final completion; the workflow
+12. High-risk slices require `accept-slice` after a local commit; low/medium
+    slices may be policy-accepted only when deterministic policy allows it.
+13. Existing human/release authority accepts final completion; the workflow
     never grants release readiness.
+
+Execution profiles:
+
+- `direct_codex`: default for ordinary short/medium work.
+- `audited_rounds`: optional experimental profile for one long slice; see
+  `docs/audited_execution_protocol.md`.
 
 Future unified CLI mapping:
 
 - `playbook feature plan` -> `tools/feature_workflow.py plan`
+- `playbook feature select-plan` -> `tools/feature_workflow.py select-plan`
 - `playbook feature draft` -> `tools/feature_workflow.py draft`
 - `playbook feature review` -> `tools/feature_workflow.py review`
 - `playbook feature status` -> `tools/feature_workflow.py status`
@@ -554,6 +565,7 @@ Future unified CLI mapping:
 - `playbook slice start` -> `tools/feature_workflow.py start`
 - `playbook slice context` -> `tools/feature_workflow.py context`
 - `playbook slice check` -> `tools/feature_workflow.py check`
+- `playbook slice accept` -> `tools/feature_workflow.py accept-slice`
 
 ### Harness And Evaluation
 

@@ -40,6 +40,7 @@ use can add `--retrofit` to record `.playbook/repository_inventory.json` and
 
 ```bash
 python3 tools/feature_workflow.py --root . plan --task T14
+python3 tools/feature_workflow.py --root . select-plan --task T14
 python3 tools/feature_workflow.py --root . draft --task T14 --feature-id F01
 python3 tools/feature_workflow.py --root . review --task T14 --feature-id F01 --role auto
 python3 tools/feature_workflow.py --root . approve --feature-id F01
@@ -54,14 +55,20 @@ self-approve a design.
 
 ```bash
 python3 tools/feature_workflow.py --root . next --feature-id F01
-python3 tools/feature_workflow.py --root . start --feature-id F01 --slice-id F01-S1
+python3 tools/feature_workflow.py --root . start --task T14 --feature-id F01 --slice-id F01-S1
 python3 tools/feature_workflow.py --root . context --task T14 --feature-id F01 --slice-id F01-S1
+python3 tools/feature_workflow.py --root . check --task T14 --feature-id F01 --slice-id F01-S1
+python3 tools/feature_workflow.py --root . accept-slice --task T14 --feature-id F01 --slice-id F01-S1
 ```
 
 The slice packet is written under `.playbook-artifacts/context/` and includes
 only the approved feature design, current slice, relevant brief/architecture
 refs, allowed/forbidden files, verification commands, and manifest-selected
 contract excerpts.
+
+Use `--execution-profile audited_rounds` only for a long slice that needs
+bounded Manage -> Execute -> Audit rounds. The default remains `direct_codex`;
+the protocol is in `docs/audited_execution_protocol.md`.
 
 ## Check Maintainability Signals
 

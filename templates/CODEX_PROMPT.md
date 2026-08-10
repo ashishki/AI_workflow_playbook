@@ -48,8 +48,9 @@ Never delete history from this file. Append; do not replace.
 - **Feature designs:** `docs/design/*.md` plus `docs/design/*.design.json`
 - **Slice context packets:** `.playbook-artifacts/context/<feature-id>/<slice-id>.md`
 - **Feature workflow coordinator:** `tools/feature_workflow.py`; use for
-  planning facts, design-author prompts, hash-bound approval, next slice,
-  start/context/check lifecycle, and required review prompts.
+  planning facts, human Planning Depth selection, design-author prompts,
+  hash-bound approval, next slice, start/context/check/accept lifecycle,
+  optional `audited_rounds`, and required review prompts.
 
 ---
 

@@ -90,6 +90,12 @@ Playbook-managed work, those steps should align with
 `feature_workflow start/context/check` so slice scope, receipts, and review
 artifacts are comparable across the sequence.
 
+The experimental comparison axis for long slices is `direct_codex` versus
+`audited_rounds`. Keep task, model, CLI/harness version, permissions,
+environment, timeout, cost ceiling, verification, and human acceptance policy
+constant. The audited-rounds fixture is a mechanism demonstration, not
+empirical evidence; protocol details live in `../audited_execution_protocol.md`.
+
 Safety, false completion, and immutable-policy violations are hard gates.
 
 ## Evidence Rule
@@ -121,6 +127,7 @@ The companion package:
 - runs scripted or command adapters;
 - propagates adapter exit codes and required verification receipts;
 - executes independent scorers after the adapter;
+- exposes `harness-lab audited-run ...` for experimental audited rounds;
 - writes EvidenceBundles;
 - validates bundles before comparing baseline and candidate conditions from raw
   evidence.

@@ -1057,13 +1057,19 @@ the design approved or grant completion/release authority.
 Use `tools/feature_workflow.py` as the canonical thin entrypoint for the
 personal-use flow:
 
-`plan -> draft -> review -> approve -> next -> start -> context -> check`.
+`plan -> select-plan -> draft -> review -> approve -> next -> start -> context -> check -> accept-slice`.
+
+The default execution profile is `direct_codex`. The optional experimental
+`audited_rounds` profile is for long slices where state drift is a material
+risk; it is documented in `docs/audited_execution_protocol.md` and does not
+replace Feature Workflow approval, slice acceptance, or release authority.
 
 The design author may write only `docs/design/<feature-id>.md`,
 `docs/design/<feature-id>.design.json`, `docs/tasks.md`, and generated planning
 artifacts. Approval is bound to the exact Markdown hash, canonical registry
-payload hash, and required review report hashes. Slice status changes and
-execution receipts do not stale approval; design content changes do.
+payload hash, required design review record hashes, and required review report
+hashes. Slice status changes and execution receipts do not stale approval;
+design content changes do.
 
 Readiness states are `scaffold`, `brief_ready`, `design_required`,
 `implementation_ready`, and `release_candidate`; `bootstrap_ready` and

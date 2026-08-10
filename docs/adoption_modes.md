@@ -29,6 +29,11 @@ When a task uses `compact_design` or `designed_slices`, use
 actor model and command sequence live in `docs/usage_guide.md`; this document
 only defines proportional adoption.
 
+Execution profile is a separate choice. `direct_codex` remains the default for
+ordinary work. `audited_rounds` is an optional experimental profile for one
+long slice and is documented in `docs/audited_execution_protocol.md`; it is not
+required for Lean-Core or normal Standard tasks.
+
 ## Mode Selection
 
 | Mode | Use When | Do Not Use When |

@@ -83,6 +83,26 @@ Future empirical changeability runs should execute Task A through
 that state, persist state B, then execute Task C. The current synthetic fixture
 only exercises result shape and reporting.
 
+## Audited Rounds
+
+The lab includes an experimental audited execution mechanism:
+
+```bash
+harness-lab audited-run init
+harness-lab audited-run next
+harness-lab audited-run executor-prompt
+harness-lab audited-run audit-prompt
+harness-lab audited-run apply-audit
+harness-lab audited-run status
+harness-lab audited-run stop
+```
+
+Use it to compare `direct_codex` and `audited_rounds` for the same long slice
+under the same task/model/permissions/environment/timeout/cost/verification
+contract. The bundled `audited_rounds_demo_v1` fixture is a mechanism
+demonstration, not empirical evidence. See
+`../../docs/audited_execution_protocol.md`.
+
 ## Project-Specific Suites
 
 `suites/playbook_core_v1` demonstrates the shared Playbook evaluation
