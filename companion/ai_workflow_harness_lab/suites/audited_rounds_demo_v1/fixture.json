@@ -1,0 +1,23 @@
+{
+  "schema_version": "playbook.audited_rounds_demo.v1",
+  "evaluation_mode": "mechanism_demonstration",
+  "comparison_axis": [
+    "direct_codex",
+    "audited_rounds"
+  ],
+  "claim": "state advances only after round 2 audit verification",
+  "rounds": [
+    {
+      "round": 1,
+      "executor_claim": "success",
+      "audit_verdict": "rejected",
+      "expected_requirement_status": "open"
+    },
+    {
+      "round": 2,
+      "executor_claim": "fixed",
+      "audit_verdict": "verified",
+      "expected_requirement_status": "verified"
+    }
+  ]
+}

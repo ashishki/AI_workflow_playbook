@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/audited_audit_report.schema.json",
+  "title": "Audited Audit Report",
+  "type": "object",
+  "required": ["schema_version", "run_id", "round", "read_only", "verdict", "receipts"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"const": "playbook.audited_audit_report.v1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "round": {"type": "integer", "minimum": 1},
+    "read_only": {"const": true},
+    "verdict": {"enum": ["verified", "rejected", "no_progress", "policy_violation", "human_input_required"]},
+    "manager_action": {"enum": ["execute", "done", "blocked", "ask"]},
+    "receipts": {"type": "array"},
+    "requirement_results": {"type": "array"},
+    "facts": {"type": "array"},
+    "findings": {"type": "array"}
+  }
+}

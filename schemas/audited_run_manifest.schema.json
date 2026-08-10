@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/audited_run_manifest.schema.json",
+  "title": "Audited Run Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "execution_profile",
+    "original_goal_ref",
+    "max_rounds",
+    "max_wall_clock_seconds",
+    "max_repeated_failure_count",
+    "max_no_progress_rounds",
+    "max_tool_calls_per_round",
+    "max_total_cost_usd",
+    "human_escalation_policy",
+    "created_at",
+    "status"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"const": "playbook.audited_run_manifest.v1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "execution_profile": {"const": "audited_rounds"},
+    "original_goal_ref": {"type": "string", "minLength": 1},
+    "max_rounds": {"type": "integer", "minimum": 1},
+    "max_wall_clock_seconds": {"type": "integer", "minimum": 1},
+    "max_repeated_failure_count": {"type": "integer", "minimum": 1},
+    "max_no_progress_rounds": {"type": "integer", "minimum": 1},
+    "max_tool_calls_per_round": {"type": "integer", "minimum": 1},
+    "max_total_cost_usd": {},
+    "human_escalation_policy": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "minLength": 1},
+    "status": {"enum": ["active", "stopped", "complete"]}
+  }
+}

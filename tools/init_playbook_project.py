@@ -1069,6 +1069,7 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
     copy_file("docs/cache_context_layout.md", target / "docs/cache_context_layout.md", replacements, args.force, args.dry_run, result)
     copy_file("docs/external_skill_security_policy.md", target / "docs/external_skill_security_policy.md", replacements, args.force, args.dry_run, result)
     copy_file("docs/codex_exec_subagent_protocol.md", target / "docs/codex_exec_subagent_protocol.md", replacements, args.force, args.dry_run, result)
+    copy_file("docs/audited_execution_protocol.md", target / "docs/audited_execution_protocol.md", replacements, args.force, args.dry_run, result)
     copy_file("templates/COST_BUDGET.md", target / "docs/COST_BUDGET.md", replacements, args.force, args.dry_run, result)
     copy_file("templates/README_INDEX.md", target / "docs/README.md", replacements, args.force, args.dry_run, result)
     copy_binary_or_text_file(
@@ -1224,6 +1225,21 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
         args.dry_run,
         result,
     )
+    for schema_name in (
+        "audited_run_manifest.schema.json",
+        "audited_state.schema.json",
+        "audited_round_contract.schema.json",
+        "audited_executor_report.schema.json",
+        "audited_audit_report.schema.json",
+        "audited_run_result.schema.json",
+    ):
+        copy_binary_or_text_file(
+            PLAYBOOK_ROOT / "schemas" / schema_name,
+            target / "schemas" / schema_name,
+            args.force,
+            args.dry_run,
+            result,
+        )
     copy_binary_or_text_file(
         PLAYBOOK_ROOT / "schemas/delivery_execution_model.schema.json",
         target / "schemas/delivery_execution_model.schema.json",

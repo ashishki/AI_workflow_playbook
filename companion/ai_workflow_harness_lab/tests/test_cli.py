@@ -53,6 +53,33 @@ def test_changeability_run_writes_mechanism_result(tmp_path: Path) -> None:
     assert (output / "changeability_result.md").exists()
 
 
+def test_audited_run_cli_init_and_status(tmp_path: Path) -> None:
+    init = run_cli(
+        "audited-run",
+        "init",
+        "--root",
+        str(tmp_path),
+        "--run-id",
+        "run-1",
+        "--goal-ref",
+        ".playbook-artifacts/context/F01/F01-S1.md",
+        "--requirement",
+        "REQ-1:required pytest command passes",
+        "--task",
+        "T14",
+        "--feature-id",
+        "F01",
+        "--slice-id",
+        "F01-S1",
+    )
+    assert init.returncode == 0, init.stderr
+
+    status = run_cli("audited-run", "status", "--root", str(tmp_path), "--run-id", "run-1")
+
+    assert status.returncode == 0, status.stderr
+    assert '"open_requirements": [' in status.stdout
+
+
 def test_run_filters_repeatable_task_ids(tmp_path: Path) -> None:
     output = tmp_path / "filtered"
     result = run_cli(

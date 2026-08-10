@@ -7,6 +7,7 @@ from pathlib import Path
 
 from .adapters.command import CommandAdapter
 from .adapters.scripted import ScriptedAdapter
+from .audited_execution import build_audited_parser, handle_audited_command
 from .changeability import ChangeabilityError, run_changeability_suite
 from .comparison import compare
 from .evidence import verify_bundle
@@ -82,6 +83,7 @@ def build_parser() -> argparse.ArgumentParser:
     changeability = sub.add_parser("changeability-run")
     changeability.add_argument("--suite", required=True)
     changeability.add_argument("--output", required=True)
+    build_audited_parser(sub)
     return parser
 
 
@@ -205,6 +207,9 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         print(json.dumps({"output": str(Path(args.output)), "status": report["status"]}, indent=2))
         return 0
+
+    if args.command == "audited-run":
+        return handle_audited_command(args)
 
     return 2
 

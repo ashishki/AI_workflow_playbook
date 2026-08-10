@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/audited_run_result.schema.json",
+  "title": "Audited Run Result",
+  "type": "object",
+  "required": ["schema_version", "run_id", "status", "generated_at"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"const": "playbook.audited_run_result.v1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["active", "stopped", "complete"]},
+    "stop_reason": {"type": ["string", "null"]},
+    "generated_at": {"type": "string", "minLength": 1}
+  }
+}

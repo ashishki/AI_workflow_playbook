@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/audited_round_contract.schema.json",
+  "title": "Audited Round Contract",
+  "type": "object",
+  "required": ["schema_version", "run_id", "round", "action", "original_goal_ref", "acceptance_requirement_ids", "allowed_files", "verification", "permissions", "budget"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"const": "playbook.audited_round_contract.v1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "round": {"type": "integer", "minimum": 1},
+    "action": {"enum": ["execute", "done", "blocked", "ask"]},
+    "original_goal_ref": {"type": "string", "minLength": 1},
+    "acceptance_requirement_ids": {"type": "array", "items": {"type": "string"}},
+    "allowed_files": {"type": "array", "items": {"type": "string"}},
+    "verification": {"type": "array"},
+    "permissions": {"type": "object"},
+    "budget": {"type": "object"}
+  }
+}
