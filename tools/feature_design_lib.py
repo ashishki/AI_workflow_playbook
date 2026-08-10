@@ -20,8 +20,23 @@ except ImportError:  # pragma: no cover - environments without dev deps.
 
 APPROVED_STATUSES = {"approved", "implemented"}
 SELF_APPROVERS = {"ai", "agent", "assistant", "codex", "llm", "model", "self"}
-SLICE_DONE_STATUSES = {"implemented", "reviewed", "closed", "complete", "completed"}
-SLICE_WORKFLOW_DONE_STATUSES = {"reviewed"}
+SLICE_STATE_ALIASES = {
+    "implemented": "review_required",
+    "reviewed": "review_passed",
+}
+SLICE_WORKFLOW_STATUSES = {
+    "planned",
+    "in_progress",
+    "verification_failed",
+    "review_required",
+    "review_passed",
+    "awaiting_human_acceptance",
+    "accepted",
+    "blocked",
+    "superseded",
+}
+SLICE_DONE_STATUSES = {"accepted"}
+SLICE_WORKFLOW_DONE_STATUSES = {"accepted"}
 APPROVAL_FIELDS = {
     "approved_by",
     "approved_at",
@@ -49,6 +64,10 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(65536), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def sha256_text(text: str) -> str:
+    return sha256_bytes(text.encode("utf-8"))
 
 
 def atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -102,6 +121,22 @@ def safe_repo_path(root: Path, raw: str) -> Path | None:
     except ValueError:
         return None
     return resolved
+
+
+def normalize_slice_status(status: Any) -> str:
+    raw = str(status or "").strip().lower()
+    return SLICE_STATE_ALIASES.get(raw, raw)
+
+
+def is_slice_accepted(status: Any) -> bool:
+    return normalize_slice_status(status) == "accepted"
+
+
+def design_hashes(root: Path, data: dict[str, Any]) -> dict[str, str]:
+    return {
+        "markdown_sha256": markdown_sha256(root, data) or "",
+        "registry_payload_sha256": registry_payload_sha256(data),
+    }
 
 
 def repo_rel(root: Path, path: Path) -> str:
@@ -212,6 +247,43 @@ def review_ref_hashes_are_current(root: Path, review_refs: list[Any]) -> tuple[b
                     f"approved review report hash mismatch for {raw_path}",
                 )
             )
+        raw_record_path = str(ref.get("record_path", "")).strip()
+        expected_record = str(ref.get("record_sha256", "")).strip()
+        if raw_record_path or expected_record:
+            record_path = safe_repo_path(root, raw_record_path)
+            if record_path is None:
+                ok = False
+                findings.append(
+                    DesignFinding(
+                        "error",
+                        raw_record_path,
+                        1,
+                        "DESIGN_APPROVAL_REVIEW_RECORD_UNSAFE",
+                        f"review record path must stay inside repository: {raw_record_path}",
+                    )
+                )
+            elif not record_path.exists():
+                ok = False
+                findings.append(
+                    DesignFinding(
+                        "error",
+                        relative(root, record_path),
+                        1,
+                        "DESIGN_APPROVAL_REVIEW_RECORD_MISSING",
+                        f"approved review record is missing: {raw_record_path}",
+                    )
+                )
+            elif expected_record != sha256_file(record_path):
+                ok = False
+                findings.append(
+                    DesignFinding(
+                        "error",
+                        relative(root, record_path),
+                        1,
+                        "DESIGN_APPROVAL_REVIEW_RECORD_STALE",
+                        f"approved review record hash mismatch for {raw_record_path}",
+                    )
+                )
         verdict = str(ref.get("verdict", "")).strip()
         if verdict not in APPROVAL_REVIEW_VERDICTS:
             ok = False
@@ -447,6 +519,27 @@ def validate_slices(root: Path, registry_path: Path, data: dict[str, Any]) -> li
         slice_id = str(item.get("slice_id", "")).strip()
         if not slice_id:
             continue
+        raw_status = str(item.get("status", "")).strip().lower()
+        if raw_status in SLICE_STATE_ALIASES:
+            findings.append(
+                DesignFinding(
+                    "warning",
+                    relative(root, registry_path),
+                    1,
+                    "DESIGN_SLICE_STATUS_LEGACY_ALIAS",
+                    f"slice {slice_id} uses legacy status {raw_status}; effective status is {SLICE_STATE_ALIASES[raw_status]}",
+                )
+            )
+        elif raw_status and raw_status not in SLICE_WORKFLOW_STATUSES:
+            findings.append(
+                DesignFinding(
+                    "error",
+                    relative(root, registry_path),
+                    1,
+                    "DESIGN_SLICE_STATUS_INVALID",
+                    f"slice {slice_id} uses unsupported status {raw_status}",
+                )
+            )
         if slice_id in seen:
             findings.append(
                 DesignFinding(
@@ -625,7 +718,7 @@ def slice_dependencies_satisfied(data: dict[str, Any], slice_item: dict[str, Any
     missing: list[str] = []
     for dep in slice_item.get("dependencies", []):
         dep_item = by_id.get(str(dep))
-        if not dep_item or str(dep_item.get("status", "")).strip().lower() not in SLICE_DONE_STATUSES:
+        if not dep_item or normalize_slice_status(dep_item.get("status")) not in SLICE_DONE_STATUSES:
             missing.append(str(dep))
     return missing
 

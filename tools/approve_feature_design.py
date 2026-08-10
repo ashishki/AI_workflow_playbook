@@ -13,13 +13,21 @@ from typing import Any
 
 try:
     import feature_design_lib
+    import feature_review_policy
     import render_codex_exec_prompt
 except ImportError:  # pragma: no cover
-    from tools import feature_design_lib, render_codex_exec_prompt  # type: ignore
+    from tools import feature_design_lib, feature_review_policy, render_codex_exec_prompt  # type: ignore
 
 
 class ApprovalError(ValueError):
     pass
+
+
+DESIGN_REVIEW_RECORD_SCHEMA = "playbook.design_review_record.v1"
+
+
+def utc_now() -> str:
+    return dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def git_status(root: Path) -> list[str]:
@@ -72,20 +80,131 @@ def parse_review_ref(root: Path, ref: dict[str, str]) -> dict[str, str]:
     }
 
 
-def load_required_review_refs(root: Path, feature_id: str) -> list[dict[str, str]]:
-    required_path = root / ".playbook-artifacts/workflows" / feature_id / "required_reviews.json"
-    if not required_path.exists():
-        return []
-    data = json.loads(required_path.read_text(encoding="utf-8"))
+def design_review_record_path(root: Path, feature_id: str, role: str) -> Path:
+    return root / ".playbook-artifacts/reviews" / feature_id / "design" / f"{role}.review.json"
+
+
+def write_design_review_record(
+    *,
+    root: Path,
+    feature_id: str,
+    role: str,
+    report_path: str,
+    reviewed_design: dict[str, Any],
+    reviewer_binding: str,
+    read_only: bool = True,
+    generated_at: str | None = None,
+) -> dict[str, Any]:
+    if role not in feature_review_policy.DESIGN_REVIEW_ROLES:
+        raise ApprovalError(f"unsupported design review role: {role}")
+    path = feature_design_lib.safe_repo_path(root, report_path)
+    if path is None:
+        raise ApprovalError(f"review report path must stay inside repository: {report_path}")
+    if not path.exists():
+        raise ApprovalError(f"required review report is missing: {report_path}")
+    parsed = render_codex_exec_prompt.parse_required_marker(role, path.read_text(encoding="utf-8", errors="replace"))
+    hashes = feature_design_lib.design_hashes(root, reviewed_design)
+    record = {
+        "schema_version": DESIGN_REVIEW_RECORD_SCHEMA,
+        "feature_id": feature_id,
+        "role": role,
+        "verdict": parsed["verdict"],
+        "report_path": feature_design_lib.repo_rel(root, path),
+        "report_sha256": feature_design_lib.sha256_file(path),
+        "reviewed_markdown_sha256": hashes["markdown_sha256"],
+        "reviewed_registry_payload_sha256": hashes["registry_payload_sha256"],
+        "generated_at": generated_at or utc_now(),
+        "reviewer_binding": reviewer_binding,
+        "read_only": read_only,
+    }
+    feature_design_lib.atomic_write_json(design_review_record_path(root, feature_id, role), record)
+    return record
+
+
+def parse_design_review_record(
+    *,
+    root: Path,
+    feature_id: str,
+    role: str,
+    current_design: dict[str, Any],
+    required: bool,
+) -> dict[str, str]:
+    record_path = design_review_record_path(root, feature_id, role)
+    if not record_path.exists():
+        label = "required" if required else "optional"
+        raise ApprovalError(f"missing {label} design review record: {feature_id} {role}")
+    try:
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ApprovalError(f"invalid design review record {feature_design_lib.relative(root, record_path)}: {exc.msg}") from exc
+    if not isinstance(record, dict):
+        raise ApprovalError(f"design review record must be an object: {feature_design_lib.relative(root, record_path)}")
+    expected = {
+        "schema_version": DESIGN_REVIEW_RECORD_SCHEMA,
+        "feature_id": feature_id,
+        "role": role,
+    }
+    for key, value in expected.items():
+        if record.get(key) != value:
+            raise ApprovalError(f"design review record {role} has invalid {key}")
+    if record.get("read_only") is not True:
+        raise ApprovalError(f"design review record {role} must declare read_only=true")
+    if not str(record.get("reviewer_binding", "")).strip():
+        raise ApprovalError(f"design review record {role} missing reviewer_binding")
+    verdict = str(record.get("verdict", "")).strip()
+    if verdict == "STOP_SHIP":
+        raise ApprovalError(f"STOP_SHIP review blocks approval: {role}")
+    if verdict not in {"PASS", "ADVISORY"}:
+        raise ApprovalError(f"design review record {role} has unacceptable verdict: {verdict or '[missing]'}")
+    report_path_raw = str(record.get("report_path", "")).strip()
+    report_path = feature_design_lib.safe_repo_path(root, report_path_raw)
+    if report_path is None:
+        raise ApprovalError(f"review report path must stay inside repository: {report_path_raw}")
+    if not report_path.exists():
+        raise ApprovalError(f"required review report is missing: {report_path_raw}")
+    expected_report_sha = str(record.get("report_sha256", "")).strip()
+    actual_report_sha = feature_design_lib.sha256_file(report_path)
+    if expected_report_sha != actual_report_sha:
+        raise ApprovalError(f"design review record {role} is stale: report hash changed")
+    try:
+        parsed = render_codex_exec_prompt.parse_required_marker(role, report_path.read_text(encoding="utf-8", errors="replace"))
+    except ValueError as exc:
+        raise ApprovalError(str(exc)) from exc
+    if parsed["verdict"] != verdict:
+        raise ApprovalError(f"design review record {role} verdict disagrees with report marker")
+    hashes = feature_design_lib.design_hashes(root, current_design)
+    if str(record.get("reviewed_markdown_sha256", "")).strip() != hashes["markdown_sha256"]:
+        raise ApprovalError(f"design review record {role} is stale: Feature Design Markdown changed")
+    if str(record.get("reviewed_registry_payload_sha256", "")).strip() != hashes["registry_payload_sha256"]:
+        raise ApprovalError(f"design review record {role} is stale: Feature Design registry payload changed")
+    return {
+        "role": role,
+        "path": feature_design_lib.repo_rel(root, report_path),
+        "sha256": actual_report_sha,
+        "verdict": verdict,
+        "marker": str(parsed.get("marker", "")),
+        "record_path": feature_design_lib.repo_rel(root, record_path),
+        "record_sha256": feature_design_lib.sha256_file(record_path),
+        "reviewed_markdown_sha256": hashes["markdown_sha256"],
+        "reviewed_registry_payload_sha256": hashes["registry_payload_sha256"],
+    }
+
+
+def required_design_review_refs(root: Path, feature_id: str, design: dict[str, Any]) -> list[dict[str, str]]:
     refs: list[dict[str, str]] = []
-    for item in data.get("reviews", []):
-        if not isinstance(item, dict) or not item.get("required"):
+    for item in feature_review_policy.design_reviews(design):
+        if not item.get("required"):
             continue
-        path = str(item.get("report_path", "")).strip()
         role = str(item.get("role", "")).strip()
-        if not path:
-            raise ApprovalError(f"required review {role} has no report_path")
-        refs.append({"role": role, "path": path})
+        refs.append(
+            parse_design_review_record(
+                root=root,
+                feature_id=feature_id,
+                role=role,
+                current_design=design,
+                required=True,
+            )
+        )
     return refs
 
 
@@ -151,7 +270,12 @@ def approve_registry_payload(
         raise ApprovalError("model/agent self-approval is not valid")
     if payload.get("approval_policy") == "human_required" and human.lower() != "human" and not human.lower().startswith("human:"):
         raise ApprovalError("human_required design requires human:<identity> provenance")
-    parsed_refs = [parse_review_ref(root, ref) for ref in (review_refs or [])]
+    feature_id = str(design.get("feature_id", payload.get("feature_id", ""))).strip()
+    required_refs = required_design_review_refs(root, feature_id, payload)
+    explicit_refs = [parse_review_ref(root, ref) for ref in (review_refs or [])]
+    by_role: dict[str, dict[str, str]] = {ref["role"]: ref for ref in explicit_refs}
+    by_role.update({ref["role"]: ref for ref in required_refs})
+    parsed_refs = list(by_role.values())
     advisories = [ref for ref in parsed_refs if ref["verdict"] == "ADVISORY"]
     if advisories and not advisory_acknowledgement.strip():
         raise ApprovalError("ADVISORY review findings require recorded human acknowledgement")
@@ -192,7 +316,6 @@ def approve_design(
     drift = validate_design_session_boundary(root, feature_id)
     if drift:
         raise ApprovalError("DESIGN_PHASE_CODE_DRIFT: " + ", ".join(drift))
-    refs = review_refs if review_refs is not None else load_required_review_refs(root, feature_id)
     approved = approve_registry_payload(
         root=root,
         registry_path=registry_path,
@@ -201,7 +324,7 @@ def approve_design(
         approval_method=approval_method,
         approval_ref=approval_ref,
         approved_at=approved_at or dt.date.today().isoformat(),
-        review_refs=refs,
+        review_refs=review_refs,
         advisory_acknowledgement=advisory_acknowledgement,
     )
     feature_design_lib.atomic_write_json(registry_path, approved)

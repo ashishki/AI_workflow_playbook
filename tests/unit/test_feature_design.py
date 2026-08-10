@@ -38,7 +38,7 @@ def valid_design(**overrides: object) -> dict[str, object]:
         "slices": [
             {
                 "slice_id": "S01",
-                "status": "implemented",
+                "status": "planned",
                 "user_visible_outcome": "User can run a bounded smoke path.",
                 "scope": "Smoke path through contract and validator.",
                 "allowed_files": ["app/**", "tests/**"],
@@ -65,8 +65,40 @@ def valid_design(**overrides: object) -> dict[str, object]:
     return payload
 
 
+def write_design_review_records(
+    root: Path,
+    payload: dict[str, object],
+    *,
+    product_verdict: str = "PASS",
+    program_verdict: str = "PASS",
+) -> None:
+    reports = root / ".playbook-artifacts/reports/F01"
+    reports.mkdir(parents=True, exist_ok=True)
+    product = reports / "product_design_review.md"
+    program = reports / "program_design_review.md"
+    product.write_text(f"PRODUCT_DESIGN_REVIEW: {product_verdict}\nReview body.\n", encoding="utf-8")
+    program.write_text(f"PROGRAM_DESIGN_REVIEW: {program_verdict}\nReview body.\n", encoding="utf-8")
+    approve_feature_design.write_design_review_record(
+        root=root,
+        feature_id="F01",
+        role="product_design_review",
+        report_path=".playbook-artifacts/reports/F01/product_design_review.md",
+        reviewed_design=payload,
+        reviewer_binding="test:product",
+    )
+    approve_feature_design.write_design_review_record(
+        root=root,
+        feature_id="F01",
+        role="program_design_review",
+        report_path=".playbook-artifacts/reports/F01/program_design_review.md",
+        reviewed_design=payload,
+        reviewer_binding="test:program",
+    )
+
+
 def approve_payload(root: Path, registry: Path) -> dict[str, object]:
     payload = json.loads(registry.read_text(encoding="utf-8"))
+    write_design_review_records(root, payload)
     approved = approve_feature_design.approve_registry_payload(
         root=root,
         registry_path=registry,
@@ -217,9 +249,8 @@ def test_noninteractive_approval_cli_fails(tmp_path: Path) -> None:
 
 def test_stop_ship_review_blocks_approval(tmp_path: Path) -> None:
     registry = write_design(tmp_path, valid_design())
-    report = tmp_path / ".playbook-artifacts/reports/F01/program_design_review.md"
-    report.parent.mkdir(parents=True)
-    report.write_text("PROGRAM_DESIGN_REVIEW: STOP_SHIP\nBoundary violation.\n", encoding="utf-8")
+    payload = json.loads(registry.read_text(encoding="utf-8"))
+    write_design_review_records(tmp_path, payload, program_verdict="STOP_SHIP")
 
     with pytest.raises(approve_feature_design.ApprovalError, match="STOP_SHIP"):
         approve_feature_design.approve_registry_payload(
@@ -235,11 +266,95 @@ def test_stop_ship_review_blocks_approval(tmp_path: Path) -> None:
         )
 
 
+def test_missing_required_design_review_records_block_approval(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+
+    with pytest.raises(approve_feature_design.ApprovalError, match="missing required design review record"):
+        approve_feature_design.approve_registry_payload(
+            root=tmp_path,
+            registry_path=registry,
+            payload=json.loads(registry.read_text(encoding="utf-8")),
+            human_id="human:tester",
+            approval_method="test_harness",
+            approval_ref="tests",
+            approved_at="2026-07-29",
+            review_refs=[],
+            advisory_acknowledgement="",
+        )
+
+
+def test_deleted_required_reviews_projection_does_not_bypass_approval(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+    projection = tmp_path / ".playbook-artifacts/workflows/F01/design/required_reviews.json"
+    projection.parent.mkdir(parents=True)
+    projection.write_text('{"reviews":[]}\n', encoding="utf-8")
+    projection.unlink()
+
+    with pytest.raises(approve_feature_design.ApprovalError, match="missing required design review record"):
+        approve_feature_design.approve_registry_payload(
+            root=tmp_path,
+            registry_path=registry,
+            payload=json.loads(registry.read_text(encoding="utf-8")),
+            human_id="human:tester",
+            approval_method="test_harness",
+            approval_ref="tests",
+            approved_at="2026-07-29",
+            review_refs=[],
+            advisory_acknowledgement="",
+        )
+
+
+def test_stale_design_review_record_blocks_approval(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+    payload = json.loads(registry.read_text(encoding="utf-8"))
+    write_design_review_records(tmp_path, payload)
+    (tmp_path / "docs/design/F01.md").write_text("# Feature Design\n\nChanged after review.\n", encoding="utf-8")
+
+    with pytest.raises(approve_feature_design.ApprovalError, match="stale"):
+        approve_feature_design.approve_registry_payload(
+            root=tmp_path,
+            registry_path=registry,
+            payload=payload,
+            human_id="human:tester",
+            approval_method="test_harness",
+            approval_ref="tests",
+            approved_at="2026-07-29",
+            review_refs=[],
+            advisory_acknowledgement="",
+        )
+
+
+def test_missing_review_marker_blocks_approval(tmp_path: Path) -> None:
+    registry = write_design(tmp_path, valid_design())
+    payload = json.loads(registry.read_text(encoding="utf-8"))
+    write_design_review_records(tmp_path, payload)
+    report = tmp_path / ".playbook-artifacts/reports/F01/program_design_review.md"
+    report.write_text("No machine marker here.\n", encoding="utf-8")
+    record = json.loads((tmp_path / ".playbook-artifacts/reviews/F01/design/program_design_review.review.json").read_text(encoding="utf-8"))
+    record["report_sha256"] = feature_design_lib.sha256_file(report)
+    (tmp_path / ".playbook-artifacts/reviews/F01/design/program_design_review.review.json").write_text(
+        json.dumps(record, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(approve_feature_design.ApprovalError, match="missing required marker"):
+        approve_feature_design.approve_registry_payload(
+            root=tmp_path,
+            registry_path=registry,
+            payload=payload,
+            human_id="human:tester",
+            approval_method="test_harness",
+            approval_ref="tests",
+            approved_at="2026-07-29",
+            review_refs=[],
+            advisory_acknowledgement="",
+        )
+
+
 def test_advisory_review_requires_acknowledgement(tmp_path: Path) -> None:
     registry = write_design(tmp_path, valid_design())
-    report = tmp_path / ".playbook-artifacts/reports/F01/program_design_review.md"
-    report.parent.mkdir(parents=True)
-    report.write_text("PROGRAM_DESIGN_REVIEW: ADVISORY\nConsider smaller interface.\n", encoding="utf-8")
+    payload = json.loads(registry.read_text(encoding="utf-8"))
+    write_design_review_records(tmp_path, payload, program_verdict="ADVISORY")
 
     kwargs = {
         "root": tmp_path,

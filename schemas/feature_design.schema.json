@@ -144,6 +144,22 @@
           "marker": {
             "type": "string",
             "minLength": 1
+          },
+          "record_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "record_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "reviewed_markdown_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "reviewed_registry_payload_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
           }
         }
       },
@@ -178,6 +194,11 @@
             "enum": [
               "planned",
               "in_progress",
+              "verification_failed",
+              "review_required",
+              "review_passed",
+              "awaiting_human_acceptance",
+              "accepted",
               "implemented",
               "reviewed",
               "blocked",

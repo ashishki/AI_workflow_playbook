@@ -22,6 +22,28 @@ def write_tasks(root: Path, text: str) -> None:
 def approve_design_fixture(root: Path, registry: Path, payload: dict[str, object]) -> dict[str, object]:
     (root / "docs/design" / f"{payload['feature_id']}.md").write_text("# Feature Design\n", encoding="utf-8")
     registry.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    reports = root / ".playbook-artifacts/reports" / str(payload["feature_id"])
+    reports.mkdir(parents=True, exist_ok=True)
+    product = reports / "product_design_review.md"
+    program = reports / "program_design_review.md"
+    product.write_text("PRODUCT_DESIGN_REVIEW: PASS\nNo findings.\n", encoding="utf-8")
+    program.write_text("PROGRAM_DESIGN_REVIEW: PASS\nNo findings.\n", encoding="utf-8")
+    approve_feature_design.write_design_review_record(
+        root=root,
+        feature_id=str(payload["feature_id"]),
+        role="product_design_review",
+        report_path=str(product.relative_to(root)),
+        reviewed_design=payload,
+        reviewer_binding="test:product",
+    )
+    approve_feature_design.write_design_review_record(
+        root=root,
+        feature_id=str(payload["feature_id"]),
+        role="program_design_review",
+        report_path=str(program.relative_to(root)),
+        reviewed_design=payload,
+        reviewer_binding="test:program",
+    )
     approved = approve_feature_design.approve_registry_payload(
         root=root,
         registry_path=registry,

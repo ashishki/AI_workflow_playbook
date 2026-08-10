@@ -59,6 +59,28 @@ def write_feature(root: Path) -> None:
             }
     registry_path = root / "docs/design/F01.design.json"
     registry_path.write_text(json.dumps(registry_payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    reports = root / ".playbook-artifacts/reports/F01"
+    reports.mkdir(parents=True, exist_ok=True)
+    product = reports / "product_design_review.md"
+    program = reports / "program_design_review.md"
+    product.write_text("PRODUCT_DESIGN_REVIEW: PASS\nNo findings.\n", encoding="utf-8")
+    program.write_text("PROGRAM_DESIGN_REVIEW: PASS\nNo findings.\n", encoding="utf-8")
+    approve_feature_design.write_design_review_record(
+        root=root,
+        feature_id="F01",
+        role="product_design_review",
+        report_path=".playbook-artifacts/reports/F01/product_design_review.md",
+        reviewed_design=registry_payload,
+        reviewer_binding="test:product",
+    )
+    approve_feature_design.write_design_review_record(
+        root=root,
+        feature_id="F01",
+        role="program_design_review",
+        report_path=".playbook-artifacts/reports/F01/program_design_review.md",
+        reviewed_design=registry_payload,
+        reviewer_binding="test:program",
+    )
     approved = approve_feature_design.approve_registry_payload(
         root=root,
         registry_path=registry_path,

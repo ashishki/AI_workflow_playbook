@@ -815,7 +815,7 @@ def validate_task_design_requirements(tasks: list[TaskBlock], root: Path) -> lis
                         relative(root, task.path),
                         task.field_lines.get("slice_id", task.line),
                         "TASK_SLICE_DEPENDENCY_UNSATISFIED",
-                        f"task {task.task_id} slice {slice_id} dependency {dep} is not implemented/reviewed",
+                        f"task {task.task_id} slice {slice_id} dependency {dep} is not accepted",
                     )
                 )
             outside_allowed, forbidden_hits = feature_design_lib.task_files_within_slice(
