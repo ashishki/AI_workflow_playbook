@@ -41,7 +41,31 @@ none
 9. Stop before installing/enabling/updating external skills unless trust
    evidence is already present or the task is explicitly creating it.
 10. Return `IMPLEMENTATION_RESULT: DONE` only when repository state supports the
-   claim.
+    claim.
+
+## Minimal Implementation Rules
+
+These rules apply to implementation and fix work, not to the completeness of
+review, audit, security, or evidence reports.
+
+Before adding an artifact:
+
+1. Skip it when the requested behavior does not require it.
+2. Reuse an existing repository helper, contract, file, or execution path.
+3. Prefer the standard library or a native platform capability.
+4. Prefer an already-installed dependency over adding another one.
+5. Extend the authoritative path instead of creating a parallel path.
+6. Write only the smallest change that proves the requested behavior.
+
+- No abstraction without a current second consumer.
+- No compatibility layer without a real supported legacy consumer.
+- No new file when an existing cohesive file can own the responsibility.
+- Every new test must protect a distinct invariant, regression, trust boundary,
+  or acceptance condition; merge near-identical cases parametrically.
+- Bug fixes should reproduce the failure before changing production behavior.
+- Prefer deletion and consolidation over scaffolding for hypothetical future use.
+- Never remove trust-boundary validation, security, accessibility, data-loss
+  handling, evidence integrity, human approval, or release gates for brevity.
 
 ## Cost / Budget Notes
 

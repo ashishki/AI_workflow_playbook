@@ -35,6 +35,35 @@ Mode: Lean
 - Do not install, enable, update, or globally expose external agent skills
   unless a trust record or justified Lean inline trust evidence exists.
 
+## Minimal Implementation Policy
+
+This policy applies to design authors, implementers, and fix agents. It does not
+limit the completeness of reviewer, auditor, security, or evidence reports.
+
+Before adding code, tests, files, schemas, tools, documentation, or dependencies,
+stop at the first option that satisfies the task:
+
+1. Do not build it when the requested behavior does not require it.
+2. Reuse an existing repository artifact, helper, contract, or execution path.
+3. Prefer the standard library or a native platform capability.
+4. Prefer an already-installed dependency over a new dependency.
+5. Extend one authoritative path instead of creating a parallel path.
+6. Only then write the smallest change that proves the requested behavior.
+
+Rules:
+
+- No abstraction without a current second consumer.
+- No compatibility layer without a real supported legacy consumer.
+- No new file when an existing cohesive file can own the responsibility.
+- Every new test must protect a distinct invariant, regression, trust boundary,
+  or acceptance condition; consolidate near-identical cases parametrically.
+- Bug fixes should reproduce the failure before changing production behavior.
+- Prefer deletion and consolidation over additional scaffolding.
+- Never minimize away trust-boundary validation, security, accessibility,
+  data-loss prevention, evidence integrity, human approval, or release gates.
+- Reviewers may recommend deletion, but must not shorten or suppress findings to
+  satisfy this policy.
+
 ## Permission Classes
 
 | Class | Examples | Rule |

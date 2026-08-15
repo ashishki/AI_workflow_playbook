@@ -1,19 +1,27 @@
 # Reports Archive Index
 
 Status: evidence archive index, not authority
-Last updated: 2026-07-30
+Last updated: 2026-08-15
 
 The `reports/` tree stores committed evidence, implementation reports, smoke
 outputs, and historical pilot artifacts. Do not load `reports/**` by default
 when starting ordinary Playbook work. Start with `docs/EVIDENCE_INDEX.md`, this
 index, or the current task's explicit evidence references.
 
-## Current Implementation Evidence
+## Current Audit And Implementation Evidence
 
-- `implementation/FEATURE_WORKFLOW_END_TO_END_REPORT.md` - current report for
-  the Planning Depth / Feature Design / Vertical Slice workflow.
+- `audit/MINIMALITY_AUDIT_2026-08-15.md` - read-only structural audit and the
+  ordered cleanup backlog for reducing code, tests, generated artifacts, and
+  default context without weakening assurance gates.
+- `implementation/AUDITED_EXECUTION_AND_FEATURE_GOVERNANCE_REPORT.md` - current
+  report for Feature Workflow governance hardening and the experimental
+  audited-round mechanism.
+- `implementation/FEATURE_WORKFLOW_END_TO_END_REPORT.md` - implementation report
+  for the Planning Depth / Feature Design / Vertical Slice workflow.
 - `implementation/PROGRAM_DESIGN_VERTICAL_SLICES_REPORT.md` - implementation
   report for the initial design-contract slice.
+- `design/audited_execution_and_feature_governance_plan.md` - pre-implementation
+  plan for audited execution and Feature Workflow governance hardening.
 - `design/feature_workflow_completion_plan.md` - pre-implementation plan for
   the feature workflow lifecycle.
 - `design/program_design_vertical_slices_plan.md` - pre-implementation plan for
