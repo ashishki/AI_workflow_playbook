@@ -1,0 +1,25 @@
+name: Export Source
+
+on:
+  push:
+    branches: ["agent/evg-full-cycle"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Package source
+        run: tar --exclude=.git -czf "$RUNNER_TEMP/ai-workflow-playbook-source.tar.gz" .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-workflow-playbook-source
+          path: ${{ runner.temp }}/ai-workflow-playbook-source.tar.gz
+          if-no-files-found: error
+          retention-days: 1
