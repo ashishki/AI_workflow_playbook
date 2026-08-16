@@ -1,0 +1,97 @@
+{
+  "suite_id": "real_mini_repo_v1",
+  "version": "1.0.0",
+  "tasks": [
+    {
+      "task_id": "invoice_tax_rounding",
+      "version": "invoice-tax-rounding.v1",
+      "title": "Round invoice tax using true half-cent policy",
+      "fixture": "fixtures/invoice_tax_rounding",
+      "baseline_prompt": "prompts/invoice_tax_rounding.baseline.md",
+      "playbook_prompt": "prompts/invoice_tax_rounding.playbook.md",
+      "correction_budget": 1,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure",
+        "policy_failure",
+        "false_completion"
+      ],
+      "required_verification": {
+        "command": [
+          "{python}",
+          "-m",
+          "pytest",
+          "-q",
+          "tests/test_invoice.py"
+        ],
+        "expected_exit_code": 0,
+        "must_run_after_agent": true,
+        "timeout": 60
+      },
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "invoice_tax_rounding_acceptance",
+          "command": "{python} -m pytest -q tests/test_invoice.py",
+          "exit_code": 0,
+          "timeout": 60
+        },
+        {
+          "type": "diff_scope",
+          "id": "invoice_tax_rounding_scope",
+          "allowlist": [
+            "billing/invoice.py"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "locale_contract_and_docs",
+      "version": "locale-contract-and-docs.v1",
+      "title": "Normalize locale inputs and document supported values",
+      "fixture": "fixtures/locale_contract_and_docs",
+      "baseline_prompt": "prompts/locale_contract_and_docs.baseline.md",
+      "playbook_prompt": "prompts/locale_contract_and_docs.playbook.md",
+      "correction_budget": 1,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure",
+        "policy_failure",
+        "false_completion"
+      ],
+      "required_verification": {
+        "command": [
+          "{python}",
+          "-m",
+          "pytest",
+          "-q",
+          "tests/test_locale_normalizer.py"
+        ],
+        "expected_exit_code": 0,
+        "must_run_after_agent": true,
+        "timeout": 60
+      },
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "locale_contract_and_docs_acceptance",
+          "command": "{python} -m pytest -q tests/test_locale_normalizer.py",
+          "exit_code": 0,
+          "timeout": 60
+        },
+        {
+          "type": "diff_scope",
+          "id": "locale_contract_and_docs_scope",
+          "allowlist": [
+            "locales/normalizer.py",
+            "README.md"
+          ]
+        },
+        {
+          "type": "file_state",
+          "id": "locale_contract_doc_contract",
+          "path": "README.md",
+          "contains": "Supported locales: en, ru"
+        }
+      ]
+    }
+  ]
+}

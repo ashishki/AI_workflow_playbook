@@ -278,3 +278,46 @@ harness-lab run --suite suites/playbook_core_v1 --condition playbook \
   --command-template 'opencode run --prompt-file {prompt_file}' \
   --trials 3 --output runs/opencode-playbook
 ```
+
+## Real Mini-Project Benchmark
+
+Use this lightweight live-repo-style benchmark for paired empirical comparisons:
+
+2 tasks × 12 trials → 24 paired baseline/playbook trials total.
+
+```bash
+harness-lab validate-suite companion/ai_workflow_harness_lab/suites/real_mini_repo_v1
+
+harness-lab run \
+  --suite companion/ai_workflow_harness_lab/suites/real_mini_repo_v1 \
+  --condition baseline \
+  --adapter command \
+  --command-template 'agent-wrapper --workspace {workspace} --prompt {prompt_file} --output {output_dir}' \
+  --trials 12 \
+  --output reports/real_mini_repo_bench/baseline
+
+harness-lab run \
+  --suite companion/ai_workflow_harness_lab/suites/real_mini_repo_v1 \
+  --condition playbook \
+  --adapter command \
+  --command-template 'agent-wrapper --workspace {workspace} --prompt {prompt_file} --output {output_dir}' \
+  --trials 12 \
+  --output reports/real_mini_repo_bench/playbook
+
+harness-lab compare \
+  --baseline reports/real_mini_repo_bench/baseline \
+  --candidate reports/real_mini_repo_bench/playbook \
+  --output reports/real_mini_repo_bench/comparison \
+  --require-empirical
+```
+
+Append a short LOC/code/docs/tests block from workspace diffs:
+
+```bash
+python tools/harness_loc_delta.py \
+  --baseline reports/real_mini_repo_bench/baseline \
+  --candidate reports/real_mini_repo_bench/playbook \
+  --append-report reports/real_mini_repo_bench/comparison/comparison_report.md \
+  --markdown reports/real_mini_repo_bench/comparison/loc_delta_report.md \
+  --expect-trials 24
+```
