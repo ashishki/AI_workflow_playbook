@@ -1,0 +1,2 @@
+# Pinned to the upstream developer-preview release used by the adapter.
+deepseek-harness-sdk==0.1.0rc7

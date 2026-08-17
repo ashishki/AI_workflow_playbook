@@ -9,8 +9,14 @@ description = "Standalone companion evaluation lab for AI Workflow Playbook"
 requires-python = ">=3.11"
 dependencies = ["jsonschema>=4.22"]
 
+[project.optional-dependencies]
+deepseek = ["deepseek-harness-sdk==0.1.0rc7"]
+
 [project.scripts]
 harness-lab = "ai_workflow_harness_lab.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+ai_workflow_harness_lab = ["profiles/*.yml"]

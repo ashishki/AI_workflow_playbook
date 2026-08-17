@@ -36,6 +36,7 @@ def write_bundle(
     failure_records: list[dict[str, Any]],
     report_path: Path,
     harness_eval_unit_path: Path | None = None,
+    cost_record: dict[str, Any] | None = None,
 ) -> Path:
     bundle = {
         "schema_version": "playbook.evidence_bundle.v1",
@@ -55,7 +56,7 @@ def write_bundle(
         "post_state_manifest": artifact_ref(post_state_manifest, output_dir, "post_state_manifest"),
         "scorer_outputs": [artifact_ref(path, output_dir, "scorer_output") for path in scorer_outputs],
         "failure_records": failure_records,
-        "cost_record": {"cost_usd": "unknown", "tokens": "unknown"},
+        "cost_record": cost_record or {"cost_usd": "unknown", "tokens": "unknown"},
         "generated_report_ref": artifact_ref(report_path, output_dir, "generated_report"),
         "verifier_identity": "ai_workflow_harness_lab",
         "verification_timestamp": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),

@@ -321,3 +321,27 @@ python tools/harness_loc_delta.py \
   --markdown reports/real_mini_repo_bench/comparison/loc_delta_report.md \
   --expect-trials 24
 ```
+
+## DeepSeek Harness screening backend
+
+The optional DeepSeek Harness backend runs empirical suites through the pinned
+Python SDK/runtime while retaining Harness Lab scoring and EvidenceBundles.
+It is not installed by the default Harness Lab dependency set.
+
+```bash
+python -m pip install -r requirements-deepseek-harness.txt
+python -m pip install -e companion/ai_workflow_harness_lab
+export DEEPSEEK_API_KEY='...'
+
+harness-lab dsh-doctor --require-credential
+python tools/run_deepseek_harness_screening.py --trials 3
+```
+
+Resume a quota-limited series without counting the partial trial:
+
+```bash
+python tools/run_deepseek_harness_screening.py --trials 3 --resume
+```
+
+See `docs/integrations/deepseek_harness.md` for the pinned identity, restricted
+profile, metrics, evidence shape, and decision policy.

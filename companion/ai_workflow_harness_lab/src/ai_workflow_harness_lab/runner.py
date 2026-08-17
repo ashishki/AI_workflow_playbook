@@ -192,6 +192,7 @@ def run_trial(suite: Suite, task: SuiteTask, condition: str, adapter: Adapter, t
         failure_records=failure_records,
         report_path=report_path,
         harness_eval_unit_path=harness_eval_unit_path,
+        cost_record=adapter_result.metadata.get("cost_record"),
     )
     return TrialResult(
         task=task,
@@ -232,8 +233,8 @@ def write_harness_eval_unit(
         "harness_version": __version__,
         "adapter_version": adapter.adapter_version,
         "command_template": adapter_metadata.get("command_template", "not_applicable"),
-        "tool_registry_version": "harness_lab_builtin.v1",
-        "memory_policy_version": "stateless_fixture_workspace.v1",
+        "tool_registry_version": adapter_metadata.get("tool_registry_version", "harness_lab_builtin.v1"),
+        "memory_policy_version": adapter_metadata.get("memory_policy_version", "stateless_fixture_workspace.v1"),
         "permission_policy_version": adapter_metadata.get("permission_policy_version", "adapter_default.v1"),
         "environment_digest": env_digest,
         "dataset_version": suite.version,
@@ -243,6 +244,8 @@ def write_harness_eval_unit(
         "delivery_profile": adapter_metadata.get("delivery_profile", "harness_lab_single_adapter"),
         "evaluation_mode": adapter_metadata.get("evaluation_mode", "mechanism_demonstration"),
         "identity_source": adapter_metadata.get("identity_source", "unknown"),
+        "execution_surface": adapter_metadata.get("execution_surface", adapter.adapter_id),
+        "runtime_identity": adapter_metadata.get("runtime_identity", {}),
     }
     unit = {
         "schema_version": "playbook.harness_eval_unit.v1",
@@ -252,6 +255,8 @@ def write_harness_eval_unit(
         "trial_index": trial,
         "evaluation_mode": compatibility["evaluation_mode"],
         "identity_source": compatibility["identity_source"],
+        "execution_surface": compatibility["execution_surface"],
+        "runtime_identity": compatibility["runtime_identity"],
         "model": compatibility["model"],
         "cli_version": compatibility["cli_version"],
         "reasoning_profile": compatibility["reasoning_profile"],
@@ -279,6 +284,63 @@ def write_harness_eval_unit(
 def classify_adapter_result(task_id: str, run_id: str, exit_code: int, metadata: dict[str, Any]) -> list[dict[str, Any]]:
     if exit_code == 0:
         return []
+    if metadata.get("rate_limited"):
+        return [
+            failure(
+                task_id,
+                run_id,
+                f"{run_id}-provider-rate-limit",
+                "environment_failure",
+                "provider rate limit or quota exhausted",
+                owner_class="environment",
+                stage="adapter",
+                score_treatment="invalid_run_exclude_from_capability_score",
+                invalid_run=True,
+            )
+        ]
+    if metadata.get("credential_error"):
+        return [
+            failure(
+                task_id,
+                run_id,
+                f"{run_id}-provider-credential",
+                "environment_failure",
+                "provider credential missing or rejected",
+                owner_class="environment",
+                stage="adapter",
+                score_treatment="invalid_run_exclude_from_capability_score",
+                invalid_run=True,
+            )
+        ]
+    finish_reason = metadata.get("finish_reason")
+    if exit_code == 78 or (finish_reason not in (None, "completed") and not metadata.get("timed_out")):
+        return [
+            failure(
+                task_id,
+                run_id,
+                f"{run_id}-incomplete-finish",
+                "model_reasoning_failure",
+                f"agent run ended without completed finish reason: {finish_reason}",
+                owner_class="model",
+                stage="adapter",
+                score_treatment="count_as_task_failure",
+                invalid_run=False,
+            )
+        ]
+    if metadata.get("invalid_trace"):
+        return [
+            failure(
+                task_id,
+                run_id,
+                f"{run_id}-invalid-dsh-trace",
+                "invalid_evidence",
+                "DeepSeek Harness trace is incomplete or not reconstructable",
+                owner_class="harness",
+                stage="adapter",
+                score_treatment="invalid_run_exclude_from_capability_score",
+                invalid_run=True,
+            )
+        ]
     if metadata.get("timed_out"):
         return [
             failure(

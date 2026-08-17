@@ -7,6 +7,8 @@ from pathlib import Path
 
 from .adapters.command import CommandAdapter
 from .adapters.scripted import ScriptedAdapter
+from .deepseek_runtime import DSH_EXPECTED_VERSION, DeepSeekRuntimeError, default_profile_path, doctor as deepseek_doctor
+from .deepseek_screening import DEFAULT_OUTPUT as DSH_DEFAULT_OUTPUT, DEFAULT_SUITE as DSH_DEFAULT_SUITE, ScreeningConfig, ScreeningError, run_screening
 from .audited_execution import build_audited_parser, handle_audited_command
 from .changeability import ChangeabilityError, run_changeability_suite
 from .comparison import compare
@@ -49,7 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
     run = sub.add_parser("run")
     run.add_argument("--suite", required=True)
     run.add_argument("--condition", required=True, choices=("baseline", "playbook"))
-    run.add_argument("--adapter", required=True, choices=("scripted", "command"))
+    run.add_argument("--adapter", required=True, choices=("scripted", "command", "deepseek-harness"))
     run.add_argument("--command-template", default="")
     run.add_argument("--adapter-timeout", type=float, default=None)
     run.add_argument("--trials", type=positive_int, default=1)
@@ -65,6 +67,12 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--reasoning-profile", default="")
     run.add_argument("--permission-policy", default="")
     run.add_argument("--delivery-profile", default="")
+    run.add_argument("--dsh-profile", type=Path, default=default_profile_path())
+    run.add_argument("--dsh-max-tokens", type=positive_int, default=32768)
+    run.add_argument("--dsh-request-timeout", type=float, default=900.0)
+    run.add_argument("--dsh-expected-version", default=DSH_EXPECTED_VERSION)
+    run.add_argument("--dsh-input-price-per-million", type=float, default=None)
+    run.add_argument("--dsh-output-price-per-million", type=float, default=None)
 
     verify = sub.add_parser("verify-bundle")
     verify.add_argument("bundle_path")
@@ -84,6 +92,26 @@ def build_parser() -> argparse.ArgumentParser:
     changeability.add_argument("--suite", required=True)
     changeability.add_argument("--output", required=True)
     build_audited_parser(sub)
+
+    dsh_doctor = sub.add_parser("dsh-doctor")
+    dsh_doctor.add_argument("--profile", type=Path, default=default_profile_path())
+    dsh_doctor.add_argument("--expected-version", default=DSH_EXPECTED_VERSION)
+    dsh_doctor.add_argument("--require-credential", action="store_true")
+
+    dsh_screening = sub.add_parser("dsh-screening")
+    dsh_screening.add_argument("--suite", type=Path, default=DSH_DEFAULT_SUITE)
+    dsh_screening.add_argument("--output", type=Path, default=DSH_DEFAULT_OUTPUT)
+    dsh_screening.add_argument("--trials", type=positive_int, default=3)
+    dsh_screening.add_argument("--provider", default="deepseek-official")
+    dsh_screening.add_argument("--model-id", default="deepseek-v4-flash")
+    dsh_screening.add_argument("--profile", type=Path, default=default_profile_path())
+    dsh_screening.add_argument("--max-tokens", type=positive_int, default=32768)
+    dsh_screening.add_argument("--request-timeout", type=float, default=900.0)
+    dsh_screening.add_argument("--reasoning-profile", default="high")
+    dsh_screening.add_argument("--expected-version", default=DSH_EXPECTED_VERSION)
+    dsh_screening.add_argument("--input-price-per-million", type=float, default=None)
+    dsh_screening.add_argument("--output-price-per-million", type=float, default=None)
+    dsh_screening.add_argument("--resume", action="store_true")
     return parser
 
 
@@ -133,11 +161,30 @@ def main(argv: list[str] | None = None) -> int:
         }
         if args.adapter == "scripted":
             adapter = ScriptedAdapter(metadata)
-        else:
+        elif args.adapter == "command":
             if not args.command_template:
                 print("--command-template is required for command adapter", file=sys.stderr)
                 return 2
             adapter = CommandAdapter(args.command_template, timeout=args.adapter_timeout, metadata=metadata)
+        else:
+            if not args.empirical_comparison:
+                print("deepseek-harness adapter requires --empirical-comparison", file=sys.stderr)
+                return 2
+            from .adapters.deepseek_harness import DeepSeekHarnessAdapter
+
+            adapter = DeepSeekHarnessAdapter(
+                provider=args.provider,
+                model_id=args.model_id,
+                profile_path=args.dsh_profile,
+                max_tokens=args.dsh_max_tokens,
+                request_timeout_seconds=args.dsh_request_timeout,
+                reasoning_profile=args.reasoning_profile,
+                permission_policy=args.permission_policy or "workspace-write",
+                delivery_profile=args.delivery_profile or "harness_lab_deepseek_single_agent",
+                expected_version=args.dsh_expected_version,
+                input_price_per_million=args.dsh_input_price_per_million,
+                output_price_per_million=args.dsh_output_price_per_million,
+            )
         try:
             results = run_suite(
                 suite,
@@ -149,7 +196,7 @@ def main(argv: list[str] | None = None) -> int:
                 task_ids=args.task_id,
                 append=args.append,
             )
-        except RunError as exc:
+        except (RunError, DeepSeekRuntimeError) as exc:
             print(f"run: failed: {exc}", file=sys.stderr)
             return 1
         invalid = [result for result in results if not result.valid]
@@ -207,6 +254,40 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         print(json.dumps({"output": str(Path(args.output)), "status": report["status"]}, indent=2))
         return 0
+
+    if args.command == "dsh-doctor":
+        report = deepseek_doctor(
+            profile_path=args.profile,
+            require_credential=args.require_credential,
+            expected_version=args.expected_version,
+        )
+        print(json.dumps(report, indent=2, sort_keys=True))
+        return 0 if report["status"] == "pass" else 1
+
+    if args.command == "dsh-screening":
+        try:
+            code, report = run_screening(
+                ScreeningConfig(
+                    suite_path=args.suite,
+                    output_root=args.output,
+                    trials=args.trials,
+                    provider=args.provider,
+                    model_id=args.model_id,
+                    profile_path=args.profile,
+                    max_tokens=args.max_tokens,
+                    request_timeout_seconds=args.request_timeout,
+                    reasoning_profile=args.reasoning_profile,
+                    expected_version=args.expected_version,
+                    input_price_per_million=args.input_price_per_million,
+                    output_price_per_million=args.output_price_per_million,
+                    resume=args.resume,
+                )
+            )
+        except ScreeningError as exc:
+            print(f"dsh-screening: failed: {exc}", file=sys.stderr)
+            return 1
+        print(json.dumps(report, indent=2, sort_keys=True))
+        return code
 
     if args.command == "audited-run":
         return handle_audited_command(args)

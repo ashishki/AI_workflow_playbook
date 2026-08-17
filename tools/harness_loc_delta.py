@@ -29,6 +29,14 @@ CODE_EXTENSIONS = {
     ".cs",
 }
 
+TRANSIENT_PARTS = {".git", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".tox", ".nox"}
+TRANSIENT_FILES = {".coverage", "coverage.xml"}
+
+
+def is_transient_path(path: str) -> bool:
+    value = Path(path)
+    return any(part in TRANSIENT_PARTS for part in value.parts) or value.name in TRANSIENT_FILES
+
 
 @dataclass
 class LocationTotals:
@@ -176,6 +184,8 @@ def numstat_deltas(workspace: Path) -> LocationTotals:
         if len(parts) < 3:
             continue
         added, removed, changed_file = parts[0], parts[1], parts[2]
+        if is_transient_path(changed_file):
+            continue
         try:
             added_int = int(added)
         except ValueError:
@@ -202,6 +212,8 @@ def numstat_deltas(workspace: Path) -> LocationTotals:
         if not line.startswith("?? "):
             continue
         file_path = line[3:]
+        if is_transient_path(file_path):
+            continue
         absolute = workspace / file_path
         deltas.add(classify_path(file_path), count_lines(absolute))
     return deltas

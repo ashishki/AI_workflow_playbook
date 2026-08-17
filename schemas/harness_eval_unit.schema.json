@@ -45,6 +45,8 @@
       "type": "string",
       "enum": ["unknown", "declared", "probed", "attested"]
     },
+    "execution_surface": { "type": "string", "minLength": 1 },
+    "runtime_identity": { "type": "object" },
     "model": { "type": "object" },
     "cli_version": { "type": "string", "minLength": 1 },
     "harness_version": { "type": "string", "minLength": 1 },
