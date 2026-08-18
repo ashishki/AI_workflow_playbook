@@ -1,0 +1,35 @@
+name: Export Role Source V2
+
+on:
+  push:
+    branches:
+      - agent/codex-role-execution-harness
+    paths:
+      - '.github/workflows/export-role-source-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+        with:
+          name: codex-role-harness-source-v2
+          path: .
+          include-hidden-files: true
+          retention-days: 1
+      - name: Publish run marker
+        run: |
+          mkdir -p reports/tmp
+          printf '%s\n' "$GITHUB_RUN_ID" > reports/tmp/role_source_export_run_id.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add reports/tmp/role_source_export_run_id.txt
+          git commit -m 'chore: record temporary source export run'
+          git push origin HEAD:agent/codex-role-execution-harness
