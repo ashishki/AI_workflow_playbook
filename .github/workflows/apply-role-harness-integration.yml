@@ -1,0 +1,617 @@
+name: Apply Role Harness Integration
+
+on:
+  push:
+    branches:
+      - agent/codex-role-execution-harness
+    paths:
+      - '.github/workflows/apply-role-harness-integration.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Apply deterministic integration patches
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one replacement, found {count}')
+              target.write_text(text.replace(old, new), encoding='utf-8')
+
+          # Preserve only the credentials needed by Codex itself. The shell tool receives
+          # a separate include-only policy and never sees provider keys.
+          replace_once(
+              'tools/role_run_lib.py',
+              '''SUPPORTED_ROLES = {
+              "product_design_review": {"phase": "design", "sandbox": "read-only"},
+              "program_design_review": {"phase": "design", "sandbox": "read-only"},
+              "slice_review": {"phase": "slice", "sandbox": "read-only"},
+              "maintainability_review": {"phase": "slice", "sandbox": "read-only"},
+          }
+          SAFE_ID_RE = re.compile(r"[^A-Za-z0-9._-]+")
+          ''',
+              '''SUPPORTED_ROLES = {
+              "product_design_review": {"phase": "design", "sandbox": "read-only"},
+              "program_design_review": {"phase": "design", "sandbox": "read-only"},
+              "slice_review": {"phase": "slice", "sandbox": "read-only"},
+              "maintainability_review": {"phase": "slice", "sandbox": "read-only"},
+          }
+          SAFE_ENVIRONMENT_KEYS = {
+              "CODEX_API_KEY",
+              "CODEX_HOME",
+              "HOME",
+              "LANG",
+              "LC_ALL",
+              "OPENAI_API_KEY",
+              "PATH",
+              "SSL_CERT_DIR",
+              "SSL_CERT_FILE",
+          }
+          SAFE_ID_RE = re.compile(r"[^A-Za-z0-9._-]+")
+          ''',
+          )
+          replace_once(
+              'tools/role_run_lib.py',
+              '''def safe_id(value: str) -> str:
+              normalized = SAFE_ID_RE.sub("-", value.strip()).strip("-._")
+              return normalized or "run"
+          ''',
+              '''def safe_id(value: str) -> str:
+              normalized = SAFE_ID_RE.sub("-", value.strip()).strip("-._")
+              return normalized or "run"
+
+
+          def safe_environment(source: dict[str, str]) -> dict[str, str]:
+              """Keep Codex auth/runtime inputs while excluding unrelated host secrets."""
+              return {
+                  key: value
+                  for key, value in source.items()
+                  if key in SAFE_ENVIRONMENT_KEYS or key.startswith("PLAYBOOK_ROLE_RUN_TEST_")
+              }
+          ''',
+          )
+
+          replace_once(
+              'tools/run_codex_role.py',
+              '''            "-c",
+                          "include_collaboration_mode_instructions=false",
+                          "-",
+                      )
+                  )
+          ''',
+              '''            "-c",
+                          "include_collaboration_mode_instructions=false",
+                          "-c",
+                          (
+                              'shell_environment_policy.include_only=["PATH","HOME","LANG","LC_ALL",'
+                              '"SSL_CERT_DIR","SSL_CERT_FILE"]'
+                          ),
+                          "-",
+                      )
+                  )
+          ''',
+          )
+          replace_once(
+              'tools/run_codex_role.py',
+              '''            stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE,
+                          timeout=args.timeout,
+                          check=False,
+                      )
+          ''',
+              '''            stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE,
+                          timeout=args.timeout,
+                          env=role_run_lib.safe_environment(dict(os.environ)),
+                          check=False,
+                      )
+          ''',
+          )
+          replace_once(
+              'tools/run_codex_role.py',
+              '''    events, trace_problems = role_run_lib.parse_jsonl_objects(trace_path)
+                  failure_reasons = list(trace_problems)
+                  verdict = ""
+          ''',
+              '''    events, trace_problems = role_run_lib.parse_jsonl_objects(trace_path)
+                  failure_reasons = list(trace_problems)
+                  terminal_observed = any(
+                      str(event.get("type", "")) in {"turn.completed", "turn.failed", "turn.cancelled"}
+                      for event in events
+                  )
+                  if events and not terminal_observed:
+                      failure_reasons.append("Codex trace is missing a terminal turn event")
+                  verdict = ""
+          ''',
+          )
+          replace_once(
+              'tools/run_codex_role.py',
+              '''        "timed_out": timed_out,
+                      "prompt_path": role_run_lib.repo_rel(root, prompt_path),
+          ''',
+              '''        "timed_out": timed_out,
+                      "terminal_event_observed": terminal_observed,
+                      "trace_event_count": len(events),
+                      "prompt_path": role_run_lib.repo_rel(root, prompt_path),
+          ''',
+          )
+
+          # Subprocess execution of this tool does not inherit pytest's pythonpath.
+          replace_once(
+              'tools/prepare_test_first_pilot_review.py',
+              '''PROJECT_ROOT = Path(__file__).resolve().parents[1]
+          TOOLS_DIR = PROJECT_ROOT / "tools"
+          if str(TOOLS_DIR) not in sys.path:
+              sys.path.insert(0, str(TOOLS_DIR))
+          ''',
+              '''PROJECT_ROOT = Path(__file__).resolve().parents[1]
+          TOOLS_DIR = PROJECT_ROOT / "tools"
+          HARNESS_SRC = PROJECT_ROOT / "companion" / "ai_workflow_harness_lab" / "src"
+          for import_root in (TOOLS_DIR, HARNESS_SRC):
+              if str(import_root) not in sys.path:
+                  sys.path.insert(0, str(import_root))
+          ''',
+          )
+
+          # Feature Workflow consumes only validated role-run sidecars for the four
+          # guarded roles and shows the canonical runner command.
+          replace_once(
+              'tools/feature_workflow.py',
+              '''    import render_codex_exec_prompt
+              import render_slice_context
+          ''',
+              '''    import render_codex_exec_prompt
+              import render_slice_context
+              import role_run_lib
+          ''',
+          )
+          replace_once(
+              'tools/feature_workflow.py',
+              '''        render_codex_exec_prompt,
+                      render_slice_context,
+                  )
+          ''',
+              '''        render_codex_exec_prompt,
+                      render_slice_context,
+                      role_run_lib,
+                  )
+          ''',
+          )
+
+          feature = Path('tools/feature_workflow.py')
+          text = feature.read_text(encoding='utf-8')
+          start = text.index('def parse_review_if_present(')
+          end = text.index('\ndef write_required_reviews(', start)
+          replacement = '''def parse_review_if_present(root: Path, feature_id: str, review: dict[str, Any], design: dict[str, Any] | None = None) -> dict[str, Any]:
+              path = feature_design_lib.safe_repo_path(root, str(review.get("report_path", "")))
+              if path is None:
+                  return {**review, "status": "blocked", "blocker": "unsafe report path"}
+              if not path.exists():
+                  return {**review, "status": "pending"}
+
+              if review.get("runner_required"):
+                  sidecar = role_run_lib.role_result_sidecar_path(path)
+                  payload, problems = role_run_lib.validate_role_result(
+                      root,
+                      sidecar,
+                      expected_role=str(review.get("role", "")),
+                      expected_task_id=str(review.get("task_id", "")),
+                      expected_feature_id=feature_id,
+                      expected_slice_id=str(review.get("slice_id") or ""),
+                  )
+                  if payload is None or problems:
+                      blocker = "; ".join(problems or ["validated Codex role-run sidecar is missing"])
+                      return {**review, "status": "blocked", "blocker": blocker}
+                  verdict = str(payload.get("verdict", ""))
+                  status = "blocked" if verdict == "STOP_SHIP" else "acceptable"
+                  parsed_review = {
+                      **review,
+                      "status": status,
+                      "verdict": verdict,
+                      "report_sha256": feature_design_lib.sha256_file(path),
+                      "role_run_result_path": feature_design_lib.repo_rel(root, sidecar),
+                      "role_run_result_sha256": feature_design_lib.sha256_file(sidecar),
+                      "execution_surface": "codex_role_runner",
+                  }
+                  if design is not None and review.get("phase") == "design":
+                      record_path = approve_feature_design.design_review_record_path(
+                          root,
+                          feature_id,
+                          str(review["role"]),
+                      )
+                      if not record_path.exists():
+                          return {
+                              **parsed_review,
+                              "status": "blocked",
+                              "blocker": "hash-bound design review record is missing",
+                          }
+                      record = read_json(record_path)
+                      parsed_review["review_record_path"] = feature_design_lib.repo_rel(root, record_path)
+                      parsed_review["review_record_sha256"] = feature_design_lib.sha256_file(record_path)
+                      parsed_review["reviewed_markdown_sha256"] = record.get("reviewed_markdown_sha256")
+                      parsed_review["reviewed_registry_payload_sha256"] = record.get("reviewed_registry_payload_sha256")
+                  return parsed_review
+
+              try:
+                  parsed = render_codex_exec_prompt.parse_required_marker(
+                      str(review["role"]),
+                      path.read_text(encoding="utf-8", errors="replace"),
+                  )
+              except ValueError as exc:
+                  return {**review, "status": "blocked", "blocker": str(exc)}
+              verdict = parsed["verdict"]
+              status = "blocked" if verdict == "STOP_SHIP" else "acceptable"
+              parsed_review = {
+                  **review,
+                  "status": status,
+                  "verdict": verdict,
+                  "report_sha256": feature_design_lib.sha256_file(path),
+              }
+              if design is not None and review.get("phase") == "design":
+                  try:
+                      record = approve_feature_design.write_design_review_record(
+                          root=root,
+                          feature_id=feature_id,
+                          role=str(review["role"]),
+                          report_path=feature_design_lib.repo_rel(root, path),
+                          reviewed_design=design,
+                          reviewer_binding=f"codex_exec:{review['role']}",
+                          read_only=True,
+                      )
+                      record_path = approve_feature_design.design_review_record_path(root, feature_id, str(review["role"]))
+                      parsed_review["review_record_path"] = feature_design_lib.repo_rel(root, record_path)
+                      parsed_review["review_record_sha256"] = feature_design_lib.sha256_file(record_path)
+                      parsed_review["reviewed_markdown_sha256"] = record["reviewed_markdown_sha256"]
+                      parsed_review["reviewed_registry_payload_sha256"] = record["reviewed_registry_payload_sha256"]
+                  except Exception as exc:
+                      return {**parsed_review, "status": "blocked", "blocker": str(exc)}
+              return parsed_review
+          '''
+          feature.write_text(text[:start] + replacement + text[end:], encoding='utf-8')
+
+          replace_once(
+              'tools/feature_workflow.py',
+              '''    for review in report["reviews"]:
+                  prompt_path = root / review["prompt_path"]
+                  prompt_path.parent.mkdir(parents=True, exist_ok=True)
+                  prompt_path.write_text(
+                      render_prompt(root, args.task, review["role"], review["report_path"], args.feature_id),
+                      encoding="utf-8",
+                  )
+                  review["suggested_command"] = (
+                      "codex exec "
+                      f"--cd {json.dumps(str(root))} "
+                      "--sandbox read-only "
+                      f"--output-last-message {json.dumps(review['report_path'])} "
+                      f"\\\"$(cat {review['prompt_path']})\\\""
+                  )
+          ''',
+              '''    for review in report["reviews"]:
+                  review["task_id"] = args.task
+                  prompt_path = root / review["prompt_path"]
+                  prompt_path.parent.mkdir(parents=True, exist_ok=True)
+                  prompt_path.write_text(
+                      render_prompt(root, args.task, review["role"], review["report_path"], args.feature_id),
+                      encoding="utf-8",
+                  )
+                  if review.get("runner_required"):
+                      slice_arg = f" --slice-id {args.slice_id}" if phase == "slice" else ""
+                      review["suggested_command"] = (
+                          "python3 tools/run_codex_role.py --root . "
+                          f"--task {args.task} --feature-id {args.feature_id}{slice_arg} "
+                          f"--role {review['role']}"
+                      )
+                  else:
+                      review["suggested_command"] = (
+                          "codex exec "
+                          f"--cd {json.dumps(str(root))} "
+                          "--sandbox read-only "
+                          f"--output-last-message {json.dumps(review['report_path'])} "
+                          f"\\\"$(cat {review['prompt_path']})\\\""
+                      )
+          ''',
+          )
+
+          # Downstream generated projects receive the runner, helper, schema, and
+          # canonical protocol without a new runtime package.
+          replace_once(
+              'tools/init_playbook_project.py',
+              '''    copy_file("docs/codex_exec_subagent_protocol.md", target / "docs/codex_exec_subagent_protocol.md", replacements, args.force, args.dry_run, result)
+              copy_file("docs/audited_execution_protocol.md", target / "docs/audited_execution_protocol.md", replacements, args.force, args.dry_run, result)
+          ''',
+              '''    copy_file("docs/codex_exec_subagent_protocol.md", target / "docs/codex_exec_subagent_protocol.md", replacements, args.force, args.dry_run, result)
+              copy_file("docs/codex_role_execution_harness.md", target / "docs/codex_role_execution_harness.md", replacements, args.force, args.dry_run, result)
+              copy_file("docs/audited_execution_protocol.md", target / "docs/audited_execution_protocol.md", replacements, args.force, args.dry_run, result)
+          ''',
+          )
+          replace_once(
+              'tools/init_playbook_project.py',
+              '''    for tool_name in (
+                  "approve_feature_design.py",
+                  "feature_review_policy.py",
+                  "feature_workflow.py",
+                  "receipt_run.py",
+              ):
+          ''',
+              '''    for tool_name in (
+                  "approve_feature_design.py",
+                  "feature_review_policy.py",
+                  "feature_workflow.py",
+                  "receipt_run.py",
+                  "role_run_lib.py",
+                  "run_codex_role.py",
+              ):
+          ''',
+          )
+          replace_once(
+              'tools/init_playbook_project.py',
+              '''    copy_binary_or_text_file(
+                  PLAYBOOK_ROOT / "schemas/instruction_manifest.schema.json",
+          ''',
+              '''    copy_binary_or_text_file(
+                  PLAYBOOK_ROOT / "schemas/role_run.schema.json",
+                  target / "schemas/role_run.schema.json",
+                  args.force,
+                  args.dry_run,
+                  result,
+              )
+              copy_binary_or_text_file(
+                  PLAYBOOK_ROOT / "schemas/instruction_manifest.schema.json",
+          ''',
+          )
+
+          # Link the canonical protocol from existing user-facing docs.
+          replace_once(
+              'docs/codex_exec_subagent_protocol.md',
+              '''## Standard Commands
+          ''',
+              '''## Guarded Feature Review Roles
+
+          The canonical execution path for `product_design_review`,
+          `program_design_review`, `slice_review`, and `maintainability_review` is:
+
+          ```bash
+          python3 tools/run_codex_role.py --root . --task T14 --feature-id F01 --role program_design_review
+          ```
+
+          Slice roles add `--slice-id`. The runner performs policy preflight,
+          persists the exact model-visible prompt and context hashes, starts one
+          fresh read-only `codex exec`, checks write drift and the required marker,
+          and writes a receipt, event ledger, and `playbook.role_run.v1` sidecar.
+          Feature Workflow treats a plain Markdown report without a valid sidecar
+          as blocked for these roles. See `docs/codex_role_execution_harness.md`.
+
+          The manual commands below remain examples for legacy/non-Feature roles;
+          they are not the authoritative route for the four guarded roles.
+
+          ## Standard Commands
+          ''',
+          )
+          tools_readme = Path('tools/README.md')
+          tools_readme.write_text(
+              tools_readme.read_text(encoding='utf-8')
+              + '''\n\n## Run Guarded Codex Review Roles\n\n```bash\npython3 tools/run_codex_role.py \\\n  --root . \\\n  --task T14 \\\n  --feature-id F01 \\\n  --role program_design_review\n```\n\nThe V1 runner supports four read-only Feature Workflow review roles. It\nmaterializes and hashes the exact prompt/context, launches one fresh `codex\nexec`, records JSONL trace and CommandReceipt evidence, detects repository\nwrite drift, parses the required result marker, and writes a\n`playbook.role_run.v1` result sidecar. See\n`docs/codex_role_execution_harness.md`.\n''',
+              encoding='utf-8',
+          )
+
+          # Root conftest changes the frozen pilot execution closure.
+          replace_once(
+              'tools/build_test_first_pilot_manifest.py',
+              '''EXACT_PATHS = {
+              "companion/ai_workflow_harness_lab/README.md",
+          ''',
+              '''EXACT_PATHS = {
+              "companion/ai_workflow_harness_lab/README.md",
+              "conftest.py",
+          ''',
+          )
+
+          # Strengthen the fake-Codex tests for credential isolation and terminal trace.
+          test_file = Path('tests/unit/test_codex_role_runner.py')
+          test_text = test_file.read_text(encoding='utf-8')
+          test_text = test_text.replace(
+              '''if os.environ.get("FAKE_CODEX_MUTATE") == "1":
+              pathlib.Path("docs/ARCHITECTURE.md").write_text("changed by reviewer\\n", encoding="utf-8")
+              marker = os.environ.get("FAKE_CODEX_MARKER", "PROGRAM_DESIGN_REVIEW")
+              verdict = os.environ.get("FAKE_CODEX_VERDICT", "PASS")
+              if os.environ.get("FAKE_CODEX_NO_MARKER") == "1":
+          ''',
+              '''assert "GITHUB_TOKEN" not in os.environ
+              if os.environ.get("PLAYBOOK_ROLE_RUN_TEST_MUTATE") == "1":
+              pathlib.Path("docs/ARCHITECTURE.md").write_text("changed by reviewer\\n", encoding="utf-8")
+              marker = os.environ.get("PLAYBOOK_ROLE_RUN_TEST_MARKER", "PROGRAM_DESIGN_REVIEW")
+              verdict = os.environ.get("PLAYBOOK_ROLE_RUN_TEST_VERDICT", "PASS")
+              if os.environ.get("PLAYBOOK_ROLE_RUN_TEST_NO_MARKER") == "1":
+          ''',
+          )
+          test_text = test_text.replace(
+              '''print(json.dumps({"type": "turn.completed", "model": "gpt-test", "usage": {"input_tokens": 10, "output_tokens": 5}}))
+              raise SystemExit(int(os.environ.get("FAKE_CODEX_EXIT", "0")))
+          ''',
+              '''if os.environ.get("PLAYBOOK_ROLE_RUN_TEST_NO_TERMINAL") != "1":
+              print(json.dumps({"type": "turn.completed", "model": "gpt-test", "usage": {"input_tokens": 10, "output_tokens": 5}}))
+              else:
+              print(json.dumps({"type": "assistant.message", "model": "gpt-test"}))
+              raise SystemExit(int(os.environ.get("PLAYBOOK_ROLE_RUN_TEST_EXIT", "0")))
+          ''',
+          )
+          test_text = test_text.replace('{"FAKE_CODEX_NO_MARKER": "1"}', '{"PLAYBOOK_ROLE_RUN_TEST_NO_MARKER": "1"}')
+          test_text = test_text.replace('{"FAKE_CODEX_MUTATE": "1"}', '{"PLAYBOOK_ROLE_RUN_TEST_MUTATE": "1"}')
+          test_text = test_text.replace('{"FAKE_CODEX_VERDICT": "STOP_SHIP"}', '{"PLAYBOOK_ROLE_RUN_TEST_VERDICT": "STOP_SHIP"}')
+          test_text = test_text.replace(
+              'result = run_role(project, fake_codex(tmp_path / "codex"))\n\n    assert result.returncode == 0, result.stderr',
+              'result = run_role(project, fake_codex(tmp_path / "codex"), {"GITHUB_TOKEN": "must-not-propagate"})\n\n    assert result.returncode == 0, result.stderr',
+              1,
+          )
+          test_text += '''\n\ndef test_role_runner_rejects_non_terminal_trace(tmp_path: Path) -> None:\n    project = tmp_path / "project"\n    project.mkdir()\n    write_project(project)\n    result = run_role(\n        project,\n        fake_codex(tmp_path / "codex"),\n        {"PLAYBOOK_ROLE_RUN_TEST_NO_TERMINAL": "1"},\n    )\n\n    assert result.returncode == 2\n    payload = json.loads(sidecar(project).read_text(encoding="utf-8"))\n    assert payload["status"] == "invalid"\n    assert payload["terminal_event_observed"] is False\n    assert "Codex trace is missing a terminal turn event" in payload["failure_reasons"]\n'''
+          test_file.write_text(test_text, encoding='utf-8')
+
+          Path('tests/unit/test_codex_role_integration.py').write_text('''from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+from tools import feature_workflow
+
+
+def design() -> dict[str, object]:
+    return {
+        "schema_version": "playbook.feature_design.v1",
+        "feature_id": "F01",
+        "status": "review_required",
+        "planning_depth": "designed_slices",
+        "risk_level": "high",
+        "brief_ref": "docs/PROJECT_BRIEF.md",
+        "architecture_refs": [],
+        "approval_policy": "human_required",
+        "slices": [],
+    }
+
+
+def test_feature_workflow_emits_guarded_runner_command(tmp_path: Path, monkeypatch) -> None:
+    captured: dict[str, object] = {}
+    monkeypatch.setattr(feature_workflow, "validate_task_feature_slice_binding", lambda *args, **kwargs: (None, {}, {}))
+    monkeypatch.setattr(feature_workflow, "load_design", lambda *args, **kwargs: (tmp_path / "design.json", design(), []))
+    monkeypatch.setattr(feature_workflow, "render_prompt", lambda *args, **kwargs: "bounded prompt\n")
+
+    def capture(_root: Path, _feature_id: str, payload: dict[str, object]) -> dict[str, object]:
+        captured.update(payload)
+        return payload
+
+    monkeypatch.setattr(feature_workflow, "write_required_reviews", capture)
+    args = argparse.Namespace(
+        root=tmp_path,
+        task="T14",
+        feature_id="F01",
+        slice_id="",
+        role="auto",
+    )
+
+    assert feature_workflow.cmd_review(args) == 0
+    reviews = captured["reviews"]
+    assert isinstance(reviews, list)
+    assert {review["role"] for review in reviews} == {
+        "product_design_review",
+        "program_design_review",
+    }
+    assert all(review["runner_required"] is True for review in reviews)
+    assert all("tools/run_codex_role.py" in review["suggested_command"] for review in reviews)
+    assert all(review["task_id"] == "T14" for review in reviews)
+
+
+def test_guarded_report_without_role_sidecar_is_blocked(tmp_path: Path) -> None:
+    report = tmp_path / ".playbook-artifacts/reports/F01/program_design_review.md"
+    report.parent.mkdir(parents=True)
+    report.write_text("PROGRAM_DESIGN_REVIEW: PASS\n", encoding="utf-8")
+    review = {
+        "role": "program_design_review",
+        "phase": "design",
+        "task_id": "T14",
+        "report_path": ".playbook-artifacts/reports/F01/program_design_review.md",
+        "runner_required": True,
+    }
+
+    parsed = feature_workflow.parse_review_if_present(tmp_path, "F01", review, design())
+
+    assert parsed["status"] == "blocked"
+    assert "sidecar" in parsed["blocker"]
+''', encoding='utf-8')
+
+          Path('tests/integration/test_codex_role_initializer.py').write_text('''from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def test_standard_initializer_copies_codex_role_harness(tmp_path: Path) -> None:
+    target = tmp_path / "project"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/init_playbook_project.py"),
+            str(target),
+            "--mode",
+            "standard",
+            "--project-name",
+            "Role Harness Fixture",
+            "--operational-pain",
+            "Reviewer execution lacks reproducible evidence.",
+            "--current-workaround",
+            "Main agents manually assemble codex exec commands.",
+            "--first-proof-metric",
+            "Generated project contains the guarded role runner.",
+            "--verify-argv",
+            json.dumps(["{python}", "-c", "raise SystemExit(0)"]),
+            "--planning-depth",
+            "compact_design",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert (target / "tools/run_codex_role.py").exists()
+    assert (target / "tools/role_run_lib.py").exists()
+    assert (target / "schemas/role_run.schema.json").exists()
+    assert (target / "docs/codex_role_execution_harness.md").exists()
+''', encoding='utf-8')
+          PY
+      - name: Run focused role-harness tests
+        run: |
+          python -m py_compile tools/role_run_lib.py tools/run_codex_role.py tools/feature_workflow.py
+          python -m pytest -q \
+            tests/unit/test_codex_role_runner.py \
+            tests/unit/test_codex_role_integration.py \
+            tests/integration/test_codex_role_initializer.py
+      - name: Refresh frozen execution closure
+        run: python tools/build_test_first_pilot_manifest.py --write
+      - name: Commit integration
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            tools/role_run_lib.py \
+            tools/run_codex_role.py \
+            tools/prepare_test_first_pilot_review.py \
+            tools/feature_workflow.py \
+            tools/init_playbook_project.py \
+            tools/build_test_first_pilot_manifest.py \
+            tools/feature_review_policy.py \
+            docs/codex_exec_subagent_protocol.md \
+            docs/codex_role_execution_harness.md \
+            tools/README.md \
+            tests/unit/test_codex_role_runner.py \
+            tests/unit/test_codex_role_integration.py \
+            tests/integration/test_codex_role_initializer.py \
+            reports/test_first_pilot/shishki_bot_v1/ASSET_MANIFEST.sha256
+          git commit -m 'feat: integrate guarded role runner with Feature Workflow'
+          git push origin HEAD:agent/codex-role-execution-harness
