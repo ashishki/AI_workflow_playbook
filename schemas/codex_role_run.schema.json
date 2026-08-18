@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ashishki/AI_workflow_playbook/schemas/codex_role_run.schema.json",
+  "title": "Codex Role Run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "role",
+    "task_id",
+    "base_commit",
+    "sandbox",
+    "status",
+    "started_at",
+    "finished_at",
+    "codex",
+    "inputs",
+    "outputs",
+    "postflight"
+  ],
+  "properties": {
+    "schema_version": {"const": "playbook.codex_role_run.v1"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "role": {
+      "enum": [
+        "product_design_review",
+        "program_design_review",
+        "slice_review",
+        "maintainability_review"
+      ]
+    },
+    "task_id": {"type": "string", "minLength": 1},
+    "feature_id": {"type": ["string", "null"]},
+    "slice_id": {"type": ["string", "null"]},
+    "base_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "sandbox": {"const": "read-only"},
+    "status": {
+      "enum": [
+        "validated",
+        "preflight_failed",
+        "execution_failed",
+        "postflight_failed",
+        "timeout"
+      ]
+    },
+    "verdict": {"type": ["string", "null"], "enum": ["PASS", "ADVISORY", "STOP_SHIP", null]},
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": "string", "format": "date-time"},
+    "codex": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binary",
+        "cli_version",
+        "model",
+        "argv_sha256",
+        "exit_code",
+        "parent_codex_context_scrubbed"
+      ],
+      "properties": {
+        "binary": {"type": "string"},
+        "cli_version": {"type": "string"},
+        "model": {"type": ["string", "null"]},
+        "argv_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "exit_code": {"type": ["integer", "null"]},
+        "parent_codex_context_scrubbed": {"type": "boolean"}
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prompt_path",
+        "prompt_sha256",
+        "context_manifest_path",
+        "context_manifest_sha256",
+        "renderer_argv_sha256"
+      ],
+      "properties": {
+        "prompt_path": {"type": "string"},
+        "prompt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "context_manifest_path": {"type": "string"},
+        "context_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "renderer_argv_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "report_path",
+        "report_sha256",
+        "trace_path",
+        "trace_sha256",
+        "stderr_path",
+        "stderr_sha256",
+        "published_report_path",
+        "published_report_sha256"
+      ],
+      "properties": {
+        "report_path": {"type": ["string", "null"]},
+        "report_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "trace_path": {"type": "string"},
+        "trace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "stderr_path": {"type": "string"},
+        "stderr_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "published_report_path": {"type": ["string", "null"]},
+        "published_report_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "postflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trace_valid",
+        "marker_valid",
+        "workspace_unchanged",
+        "changed_paths",
+        "event_count",
+        "errors"
+      ],
+      "properties": {
+        "trace_valid": {"type": "boolean"},
+        "marker_valid": {"type": "boolean"},
+        "workspace_unchanged": {"type": "boolean"},
+        "changed_paths": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "event_count": {"type": "integer", "minimum": 0},
+        "errors": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}
