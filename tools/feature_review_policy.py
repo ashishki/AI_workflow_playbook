@@ -11,6 +11,12 @@ from typing import Any
 DESIGN_REVIEW_ROLES = ("product_design_review", "program_design_review")
 SLICE_REVIEW_ROLE = "slice_review"
 MAINTAINABILITY_REVIEW_ROLE = "maintainability_review"
+GUARDED_CODEX_ROLES = {
+    "product_design_review",
+    "program_design_review",
+    "slice_review",
+    "maintainability_review",
+}
 
 
 def design_reviews(design: dict[str, Any]) -> list[dict[str, Any]]:
@@ -112,6 +118,9 @@ def report(
             item["prompt_path"] = f".playbook-artifacts/prompts/{feature_id}/{role}.md"
             item["report_path"] = f".playbook-artifacts/reports/{feature_id}/{role}.md"
         item.setdefault("status", "pending")
+        item["runner_required"] = role in GUARDED_CODEX_ROLES
+        item["execution_surface"] = "codex_role_runner" if role in GUARDED_CODEX_ROLES else "external_or_manual"
+        item["runner_tool"] = "tools/run_codex_role.py" if role in GUARDED_CODEX_ROLES else None
     return {
         "schema_version": "playbook.required_reviews.v1",
         "feature_id": feature_id,

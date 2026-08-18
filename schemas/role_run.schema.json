@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/role_run.schema.json",
+  "title": "CodexRoleRun",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "role",
+    "phase",
+    "task_id",
+    "feature_id",
+    "slice_id",
+    "status",
+    "verdict",
+    "marker",
+    "base_commit",
+    "codex_cli_version",
+    "requested_model",
+    "observed_model",
+    "reasoning_effort",
+    "sandbox",
+    "fresh_process",
+    "timeout_seconds",
+    "started_at",
+    "finished_at",
+    "exit_code",
+    "timed_out",
+    "prompt_path",
+    "prompt_sha256",
+    "context_manifest_path",
+    "context_manifest_sha256",
+    "report_path",
+    "report_sha256",
+    "trace_path",
+    "trace_sha256",
+    "stderr_path",
+    "stderr_sha256",
+    "receipt_path",
+    "receipt_sha256",
+    "event_ledger_path",
+    "event_ledger_sha256",
+    "workspace_state_before_sha256",
+    "workspace_state_after_sha256",
+    "write_drift",
+    "failure_reasons",
+    "canonical_result_path"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "playbook.role_run.v1" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "role": {
+      "type": "string",
+      "enum": [
+        "product_design_review",
+        "program_design_review",
+        "slice_review",
+        "maintainability_review"
+      ]
+    },
+    "phase": { "type": "string", "enum": ["design", "slice"] },
+    "task_id": { "type": "string", "minLength": 1 },
+    "feature_id": { "type": "string", "minLength": 1 },
+    "slice_id": { "type": ["string", "null"] },
+    "status": { "type": "string", "enum": ["validated", "invalid"] },
+    "verdict": { "type": ["string", "null"] },
+    "marker": { "type": "string", "minLength": 1 },
+    "base_commit": { "type": "string", "minLength": 1 },
+    "codex_cli_version": { "type": "string", "minLength": 1 },
+    "requested_model": { "type": "string", "minLength": 1 },
+    "observed_model": { "type": "string", "minLength": 1 },
+    "reasoning_effort": { "type": "string", "minLength": 1 },
+    "sandbox": { "type": "string", "const": "read-only" },
+    "fresh_process": { "type": "boolean", "const": true },
+    "timeout_seconds": { "type": "number", "exclusiveMinimum": 0 },
+    "started_at": { "type": "string", "minLength": 1 },
+    "finished_at": { "type": "string", "minLength": 1 },
+    "exit_code": { "type": "integer" },
+    "timed_out": { "type": "boolean" },
+    "prompt_path": { "type": "string", "minLength": 1 },
+    "prompt_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "context_manifest_path": { "type": "string", "minLength": 1 },
+    "context_manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "report_path": { "type": "string", "minLength": 1 },
+    "report_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "trace_path": { "type": "string", "minLength": 1 },
+    "trace_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "stderr_path": { "type": "string", "minLength": 1 },
+    "stderr_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "receipt_path": { "type": "string", "minLength": 1 },
+    "receipt_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "event_ledger_path": { "type": "string", "minLength": 1 },
+    "event_ledger_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "workspace_state_before_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "workspace_state_after_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "write_drift": { "type": "boolean" },
+    "failure_reasons": { "type": "array", "items": { "type": "string" } },
+    "canonical_result_path": { "type": "string", "minLength": 1 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "phase": { "const": "design" } } },
+      "then": { "properties": { "slice_id": { "type": "null" } } }
+    },
+    {
+      "if": { "properties": { "phase": { "const": "slice" } } },
+      "then": { "properties": { "slice_id": { "type": "string", "minLength": 1 } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "validated" } } },
+      "then": {
+        "properties": {
+          "write_drift": { "const": false },
+          "failure_reasons": { "maxItems": 0 },
+          "verdict": {
+            "type": "string",
+            "enum": ["PASS", "ADVISORY", "STOP_SHIP"]
+          }
+        }
+      }
+    }
+  ]
+}
