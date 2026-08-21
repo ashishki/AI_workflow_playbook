@@ -64,11 +64,11 @@ def import_role_run(
         "schema_version": "playbook.command_receipt.v1", "receipt_id": f"{result['run_id']}-import",
         "task_id": task_id, "producer": "role_run_evidence_bridge.v1", "command_argv": ["codex", "exec"],
         "working_directory": str(root), "start_timestamp": result["started_at"], "end_timestamp": result["finished_at"],
-        "exit_code": result["codex"]["exit_code"], "stdout_artifact_path": "role_run/codex_events.jsonl",
-        "stdout_sha256": sha256_file(copied["trace_path"]), "stderr_artifact_path": "role_run/codex_stderr.txt",
+        "exit_code": result["codex"]["exit_code"], "stdout_artifact_path": "codex_events.jsonl",
+        "stdout_sha256": sha256_file(copied["trace_path"]), "stderr_artifact_path": "codex_stderr.txt",
         "stderr_sha256": sha256_file(copied["stderr_path"]), "repo_commit_before": result["base_commit"],
         "repo_commit_after": result["base_commit"], "dirty_state_before": ["external-role-run"],
-        "dirty_state_after": ["external-role-run"], "diff_stat_artifact_path": "role_run/diff_stat.txt",
+        "dirty_state_after": ["external-role-run"], "diff_stat_artifact_path": "diff_stat.txt",
         "diff_stat_sha256": "", "environment_summary": result["codex"], "parent_receipt_id": None,
         "redaction_status": "not_requested"}
     diff = output / "role_run/diff_stat.txt"; diff.write_text("\n", encoding="utf-8"); receipt["diff_stat_sha256"] = sha256_file(diff)
