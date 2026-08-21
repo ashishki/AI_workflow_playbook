@@ -54,6 +54,7 @@
         "binary",
         "cli_version",
         "model",
+        "reasoning_effort",
         "argv_sha256",
         "exit_code",
         "parent_codex_context_scrubbed"
@@ -62,6 +63,7 @@
         "binary": {"type": "string"},
         "cli_version": {"type": "string"},
         "model": {"type": ["string", "null"]},
+        "reasoning_effort": {"type": "string", "minLength": 1},
         "argv_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "exit_code": {"type": ["integer", "null"]},
         "parent_codex_context_scrubbed": {"type": "boolean"}

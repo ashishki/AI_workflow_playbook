@@ -71,6 +71,7 @@ args = sys.argv[1:]
 assert args[0] == "exec"
 assert "--json" in args
 assert args[args.index("--sandbox") + 1] == "read-only"
+assert args[args.index("-c") + 1] == 'model_reasoning_effort="medium"'
 report = Path(args[args.index("--output-last-message") + 1])
 prompt = args[-1]
 marker = next(
@@ -206,6 +207,7 @@ def test_valid_role_run_is_schema_valid_replayable_and_parent_context_is_scrubbe
     assert payload["status"] == "validated"
     assert payload["verdict"] == "PASS"
     assert payload["sandbox"] == "read-only"
+    assert payload["codex"]["reasoning_effort"] == "medium"
     assert payload["codex"]["parent_codex_context_scrubbed"] is True
     assert payload["postflight"]["workspace_unchanged"] is True
     assert payload["postflight"]["event_count"] == 2

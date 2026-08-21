@@ -630,6 +630,7 @@ def execute_role_run(
     slice_id: str | None,
     codex_binary: str | None,
     model: str | None,
+    reasoning_effort: str,
     timeout_seconds: int,
     run_id: str | None,
     output_report: Path | None,
@@ -650,6 +651,8 @@ def execute_role_run(
         ensure_safe_id(slice_id, label="slice_id")
     if timeout_seconds < 1:
         raise RoleRunError("timeout_seconds must be positive")
+    if not reasoning_effort.strip():
+        raise RoleRunError("reasoning_effort must be non-empty")
 
     run_id = ensure_safe_id(run_id or generated_run_id(role), label="run_id")
     run_root = root / ".playbook-artifacts" / "runs" / run_id
@@ -725,6 +728,7 @@ def execute_role_run(
     ]
     if model:
         codex_argv.extend(["--model", model])
+    codex_argv.extend(["-c", f'model_reasoning_effort="{reasoning_effort}"'])
     codex_argv.append(prompt)
     argv_hash = sha256_bytes(canonical_json_bytes(codex_argv[1:]))
     append_event(
@@ -734,6 +738,7 @@ def execute_role_run(
         details={
             "cli_version": version,
             "model": model,
+            "reasoning_effort": reasoning_effort,
             "sandbox": spec.sandbox,
             "argv_sha256": argv_hash,
             "parent_codex_context_scrubbed": parent_scrubbed,
@@ -857,6 +862,7 @@ def execute_role_run(
             "binary": binary,
             "cli_version": version,
             "model": model,
+            "reasoning_effort": reasoning_effort,
             "argv_sha256": argv_hash,
             "exit_code": execution_exit,
             "parent_codex_context_scrubbed": parent_scrubbed,

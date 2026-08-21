@@ -33,6 +33,11 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--role", choices=sorted(ROLE_SPECS), required=True)
     run_parser.add_argument("--codex-bin")
     run_parser.add_argument("--model")
+    run_parser.add_argument(
+        "--reasoning-effort",
+        default="medium",
+        help="Codex reasoning effort recorded in the role result (default: medium)",
+    )
     run_parser.add_argument("--timeout-seconds", type=int, default=900)
     run_parser.add_argument("--run-id")
     run_parser.add_argument(
@@ -72,6 +77,7 @@ def main(argv: list[str] | None = None) -> int:
                 slice_id=args.slice_id,
                 codex_binary=args.codex_bin,
                 model=args.model,
+                reasoning_effort=args.reasoning_effort,
                 timeout_seconds=args.timeout_seconds,
                 run_id=args.run_id,
                 output_report=args.output_report,

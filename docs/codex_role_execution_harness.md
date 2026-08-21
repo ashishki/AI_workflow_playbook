@@ -48,6 +48,8 @@ python tools/run_codex_role.py run \
   --root . \
   --task T14 \
   --feature-id F01 \
+  --model gpt-5.6-terra \
+  --reasoning-effort medium \
   --role program_design_review
 ```
 
@@ -90,8 +92,8 @@ remains bound to the exact reviewed Feature Design hashes.
 materialization, Codex execution, publication, and final result linkage.
 
 `result.json` records task/feature/slice identity, base commit, Codex CLI identity,
-fixed sandbox, prompt/context/trace/report hashes, parsed verdict, and postflight
-findings.
+model and reasoning effort, fixed sandbox, prompt/context/trace/report hashes,
+parsed verdict, and postflight findings.
 
 ## Trust boundary
 
