@@ -83,6 +83,7 @@ def build_parser() -> argparse.ArgumentParser:
     imported.add_argument("--reasoning-profile", required=True)
     imported.add_argument("--permission-policy", required=True)
     imported.add_argument("--delivery-profile", required=True)
+    imported.add_argument("--repository", required=True)
 
     cmp_parser = sub.add_parser("compare")
     cmp_parser.add_argument("--baseline", required=True)
@@ -193,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "import-role-run":
         try:
-            bundle = import_role_run(root=Path(args.root), result_path=Path(args.result), output=Path(args.output), condition=args.condition, task_spec_version=args.task_spec_version, trial_index=args.trial_index, provider=args.provider, model_id=args.model_id, cli_version=args.cli_version, reasoning_profile=args.reasoning_profile, permission_policy=args.permission_policy, delivery_profile=args.delivery_profile)
+            bundle = import_role_run(root=Path(args.root), result_path=Path(args.result), output=Path(args.output), condition=args.condition, task_spec_version=args.task_spec_version, trial_index=args.trial_index, provider=args.provider, model_id=args.model_id, cli_version=args.cli_version, reasoning_profile=args.reasoning_profile, permission_policy=args.permission_policy, delivery_profile=args.delivery_profile, repository=args.repository)
         except (OSError, ValueError, json.JSONDecodeError) as exc:
             print(f"import-role-run: {exc}", file=sys.stderr)
             return 1

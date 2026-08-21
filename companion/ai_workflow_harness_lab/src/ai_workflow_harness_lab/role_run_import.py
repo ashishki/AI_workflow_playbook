@@ -35,6 +35,7 @@ def import_role_run(
     reasoning_profile: str,
     permission_policy: str,
     delivery_profile: str,
+    repository: str,
 ) -> Path:
     """Create a standard EvidenceBundle from an externally executed role result.
 
@@ -79,4 +80,4 @@ def import_role_run(
     import hashlib
     fp = dict(unit); fp.pop("condition"); fp.pop("prompt_hash"); fp["compatibility_fingerprint"]=""; unit["compatibility_fingerprint"]=hashlib.sha256(json.dumps(fp,sort_keys=True,separators=(",",":" )).encode()).hexdigest()
     unit_path=output/"harness_eval_unit.json"; unit_path.write_text(json.dumps(unit,indent=2,sort_keys=True)+"\n",encoding="utf-8")
-    return write_bundle(output_dir=output, repository=str(root), task_id=task_id, task_spec_version=task_spec_version, condition=condition, adapter_version="role_run_import.v1", environment_digest=result["base_commit"], prompt_file=copied["prompt_path"], commit_before=result["base_commit"], commit_after=result["base_commit"], receipt_paths=[receipt_path], trace_paths=[copied["trace_path"],copied["ledger"]], post_state_manifest=copied["result"], scorer_outputs=[scorer], failure_records=[], report_path=copied["report_path"], harness_eval_unit_path=unit_path)
+    return write_bundle(output_dir=output, repository=repository, task_id=task_id, task_spec_version=task_spec_version, condition=condition, adapter_version="role_run_import.v1", environment_digest=result["base_commit"], prompt_file=copied["prompt_path"], commit_before=result["base_commit"], commit_after=result["base_commit"], receipt_paths=[receipt_path], trace_paths=[copied["trace_path"],copied["ledger"]], post_state_manifest=copied["result"], scorer_outputs=[scorer], failure_records=[], report_path=copied["report_path"], harness_eval_unit_path=unit_path)
