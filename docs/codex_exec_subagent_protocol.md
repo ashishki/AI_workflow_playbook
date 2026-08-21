@@ -56,7 +56,10 @@ approval fields.
 4. Main agent resolves required review roles from `docs/REVIEW_POLICY.md`,
    `.playbook/delivery_execution_model.json`, and task fields such as
    `Risk-Level`, `Critic-Required`, `Visual-Contract`, and `Type`.
-5. Main agent launches isolated read-only review subagents with `codex exec`.
+5. For `product_design_review`, `program_design_review`, `slice_review`, and
+   `maintainability_review`, main agent launches the isolated read-only reviewer
+   through `tools/run_codex_role.py run`; other roles continue to use their
+   explicit `codex exec` command.
 6. If any required review returns `STOP_SHIP`, `BLOCKER`, or an actionable
    finding selected by policy, main agent launches `fix_from_review`.
 7. Main agent reruns deterministic gates and required reviews after fixes.
@@ -69,9 +72,10 @@ approval fields.
 
 For Feature Design and vertical slices, prefer `tools/feature_workflow.py
 review` to resolve required `product_design_review`, `program_design_review`,
-`slice_review`, and `maintainability_review` prompts. The tool writes prompt
-files and suggested `codex exec --sandbox read-only` commands, then parses
-required markers when reports exist. Design review reports must be paired with
+`slice_review`, and `maintainability_review` prompts. Execute those four roles
+with the Role Runner rather than copying its suggested direct command. The
+runner keeps the same renderer semantics, adds preflight/postflight validation,
+and emits a revalidatable result. Design review reports must be paired with
 hash-bound `.playbook-artifacts/reviews/<feature-id>/design/<role>.review.json`
 records before approval.
 
@@ -81,7 +85,23 @@ and read-only Auditor per round. See `docs/audited_execution_protocol.md`.
 ## Standard Commands
 
 Generate prompts with `tools/render_codex_exec_prompt.py` and pass the rendered
-prompt into `codex exec`.
+prompt into `codex exec` for roles outside the Role Runner. For its four
+supported reviewer roles, use the runner as the operational default:
+
+```bash
+python tools/run_codex_role.py run \
+  --root . \
+  --task T14 \
+  --feature-id F01 \
+  --slice-id F01-S1 \
+  --role slice_review \
+  --model gpt-5.6-terra \
+  --reasoning-effort high
+```
+
+The exact model and reasoning effort must still match the repository review
+policy. A runner failure is invalid review evidence, not permission to silently
+retry via a direct command.
 
 Deep review uses the existing audit chain from `docs/audit/`, not a separate
 new prompt. Run the relevant steps as isolated read-only child agents:

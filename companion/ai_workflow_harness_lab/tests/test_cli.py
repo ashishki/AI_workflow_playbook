@@ -9,6 +9,7 @@ from types import SimpleNamespace
 from ai_workflow_harness_lab.adapters.command import CommandAdapter
 from ai_workflow_harness_lab.evidence import manifest_hash
 from ai_workflow_harness_lab.receipts import sha256_file
+from ai_workflow_harness_lab.role_run_import import import_role_run
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -38,6 +39,30 @@ def test_validate_suite() -> None:
 
     assert result.returncode == 0, result.stderr
     assert '"tasks": 5' in result.stdout
+
+
+def test_role_run_import_requires_runner_for_attested_evidence(tmp_path: Path) -> None:
+    try:
+        import_role_run(
+            root=tmp_path,
+            result_path=tmp_path / "missing-result.json",
+            output=tmp_path / "output",
+            condition="playbook",
+            task_spec_version="role-harness-ab.v1",
+            trial_index=0,
+            provider="openai",
+            model_id="gpt-5.6-terra",
+            cli_version="codex-cli test",
+            reasoning_profile="high",
+            permission_policy="read-only",
+            delivery_profile="role-runner-v1",
+            repository="test",
+            integrity_source="role_runner_verified",
+        )
+    except ValueError as exc:
+        assert "--role-runner is required" in str(exc)
+    else:
+        raise AssertionError("attested role evidence must require the verifier")
 
 
 def test_changeability_run_writes_mechanism_result(tmp_path: Path) -> None:

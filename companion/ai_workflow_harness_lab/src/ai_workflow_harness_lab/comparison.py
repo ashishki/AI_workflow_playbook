@@ -88,6 +88,20 @@ def summarize(trials: list[dict[str, Any]]) -> dict[str, Any]:
     policy = sum(1 for failure in failures if failure.get("failure_class") == "policy_failure")
     recovery = sum(1 for trial in trials if trial["task_id"] == "failed_command_recovery" and trial["score"] == 1.0)
     timeout = sum(1 for failure in failures if failure.get("failure_class") == "timeout")
+    role_metrics = [
+        output.get("metrics", {})
+        for trial in trials
+        for output in trial["scorer_outputs"]
+        if output.get("scorer_id") == "role_run_integrity" and isinstance(output.get("metrics"), dict)
+    ]
+
+    def metric_mean(name: str) -> float | str:
+        values = [float(metric[name]) for metric in role_metrics if isinstance(metric.get(name), (int, float))]
+        return statistics.mean(values) if values else "unknown"
+
+    def metric_sum(name: str) -> int | str:
+        values = [int(metric[name]) for metric in role_metrics if isinstance(metric.get(name), int)]
+        return sum(values) if values else "unknown"
     return {
         "sample_count": sample,
         "valid_runs": valid,
@@ -107,17 +121,17 @@ def summarize(trials: list[dict[str, Any]]) -> dict[str, Any]:
         "policy_violation_count": policy,
         "evidence_completeness": rate(sum(1 for trial in trials if trial["receipt_count"] > 0), sample),
         "evidence_correctness": rate(evidence_valid, sample),
-        "tool_call_count": "unknown",
+        "tool_call_count": metric_sum("tool_call_count"),
         "unnecessary_action_count": "unknown",
-        "retry_count": "see_raw_trial_table",
+        "retry_count": metric_sum("retry_count"),
         "timeout_rate": rate(timeout, sample),
         "invalid_infrastructure_run_rate": rate(sample - valid, sample),
-        "input_tokens": "unknown",
-        "output_tokens": "unknown",
-        "wall_clock_latency": "unknown",
+        "input_tokens": metric_sum("input_tokens"),
+        "output_tokens": metric_sum("output_tokens"),
+        "wall_clock_latency": metric_mean("latency_seconds"),
         "cost_per_attempted_task": "unknown",
         "cost_per_successful_task": "unknown",
-        "human_intervention_rate": "unknown",
+        "human_intervention_rate": rate(metric_sum("human_intervention_count"), sample) if isinstance(metric_sum("human_intervention_count"), int) else "unknown",
         "cross_session_continuity_success": rate(sum(1 for trial in trials if trial["task_id"] == "cross_session_resume" and trial["score"] == 1.0), max(1, sum(1 for trial in trials if trial["task_id"] == "cross_session_resume"))),
     }
 
@@ -219,7 +233,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         [
             "# Harness Comparison Report",
             "",
-            "Mechanism demonstration, not empirical proof of Playbook effectiveness.",
+            report["status"],
             "",
             f"- Baseline sample count: {report['baseline']['sample_count']}",
             f"- Candidate sample count: {report['candidate']['sample_count']}",

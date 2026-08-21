@@ -1,6 +1,8 @@
 # Codex Role Execution Harness v1
 
-Status: mechanism implemented; empirical benefit is not yet claimed.
+Status: accepted as the default execution path for supported fresh read-only
+reviewer roles; bounded empirical evidence is recorded in
+`docs/evaluation/CODEX_ROLE_HARNESS_AB_PILOT.md`.
 
 ## Purpose
 
@@ -137,12 +139,19 @@ Codex-internal system-prompt text and internal tool-schema definitions are not
 currently exported by this runner. `context_manifest.json` marks those fields as
 not captured instead of claiming complete reconstruction.
 
-## Evaluation requirement
+## Operational decision and evaluation boundary
 
-The mechanism must pass deterministic and failure-injection tests first. Its value
-as the default reviewer path must then be compared with the existing manual
-suggested-command route while holding model, task, repository commit, permissions,
-and review policy constant.
+The mechanism passed deterministic and failure-injection tests, then a matched
+direct-exec versus Role Runner comparison at fixed model, task, repository commit,
+permissions, prompt semantics, and review policy. The three admitted real-review
+pairs had no guardrail regression, while the candidate produced revalidatable
+provenance and lower aggregate latency/token use. The full evidence and limits
+are in `docs/evaluation/CODEX_ROLE_HARNESS_AB_PILOT.md`.
+
+Use this runner as the default *execution* path for the four roles above. It does
+not grant a role authority to approve a design, task, merge, or release; a failed
+runner invocation is an invalid review and must not silently fall back to a
+manual command.
 
 Primary metrics:
 
@@ -159,5 +168,7 @@ Hard gates:
 - policy and scope violations remain zero;
 - stale-context acceptance remains zero.
 
-The allowed decisions remain `promote`, `accept_without_claim`, `inconclusive`, or
-`reject`. No empirical improvement is claimed from mechanism tests alone.
+The adopted decision is `accept_without_claim`: it is an operational provenance
+and efficiency decision, not a general claim about review-finding quality. Extend
+the sample to product-design and slice-review roles before making that claim, and
+record a versioned price source before reporting cost per valid review.
