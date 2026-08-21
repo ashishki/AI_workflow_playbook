@@ -12,6 +12,7 @@ from .changeability import ChangeabilityError, run_changeability_suite
 from .comparison import compare
 from .evidence import verify_bundle
 from .runner import RunError, run_suite
+from .role_run_import import import_role_run
 from .suite_loader import SuiteError, load_suite
 
 
@@ -68,6 +69,20 @@ def build_parser() -> argparse.ArgumentParser:
 
     verify = sub.add_parser("verify-bundle")
     verify.add_argument("bundle_path")
+
+    imported = sub.add_parser("import-role-run")
+    imported.add_argument("--root", required=True)
+    imported.add_argument("--result", required=True)
+    imported.add_argument("--output", required=True)
+    imported.add_argument("--condition", required=True, choices=("baseline", "playbook"))
+    imported.add_argument("--task-spec-version", required=True)
+    imported.add_argument("--trial-index", type=nonnegative_int, default=0)
+    imported.add_argument("--provider", required=True)
+    imported.add_argument("--model-id", required=True)
+    imported.add_argument("--cli-version", required=True)
+    imported.add_argument("--reasoning-profile", required=True)
+    imported.add_argument("--permission-policy", required=True)
+    imported.add_argument("--delivery-profile", required=True)
 
     cmp_parser = sub.add_parser("compare")
     cmp_parser.add_argument("--baseline", required=True)
@@ -174,6 +189,15 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"error: {error}", file=sys.stderr)
             return 1
         print("verify-bundle: ok")
+        return 0
+
+    if args.command == "import-role-run":
+        try:
+            bundle = import_role_run(root=Path(args.root), result_path=Path(args.result), output=Path(args.output), condition=args.condition, task_spec_version=args.task_spec_version, trial_index=args.trial_index, provider=args.provider, model_id=args.model_id, cli_version=args.cli_version, reasoning_profile=args.reasoning_profile, permission_policy=args.permission_policy, delivery_profile=args.delivery_profile)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            print(f"import-role-run: {exc}", file=sys.stderr)
+            return 1
+        print(json.dumps({"bundle": str(bundle)}, indent=2))
         return 0
 
     if args.command == "compare":
