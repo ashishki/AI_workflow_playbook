@@ -673,6 +673,30 @@ def write_required_reviews(root: Path, feature_id: str, payload: dict[str, Any])
     return payload
 
 
+def role_runner_command(root: Path, task_id: str, feature_id: str, review: dict[str, Any]) -> str:
+    """Return the governed default command for supported review roles.
+
+    Model selection remains explicit at invocation time because it is a
+    repository policy decision, not a Feature Workflow default.
+    """
+    parts = [
+        "python3 tools/run_codex_role.py run",
+        f"--root {json.dumps(str(root))}",
+        f"--task {json.dumps(task_id)}",
+        f"--feature-id {json.dumps(feature_id)}",
+    ]
+    slice_id = str(review.get("slice_id") or "")
+    if slice_id:
+        parts.append(f"--slice-id {json.dumps(slice_id)}")
+    parts.extend(
+        [
+            f"--role {json.dumps(str(review['role']))}",
+            f"--output-report {json.dumps(str(review['report_path']))}",
+        ]
+    )
+    return " ".join(parts)
+
+
 def cmd_review(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     try:
@@ -705,13 +729,7 @@ def cmd_review(args: argparse.Namespace) -> int:
             render_prompt(root, args.task, review["role"], review["report_path"], args.feature_id),
             encoding="utf-8",
         )
-        review["suggested_command"] = (
-            "codex exec "
-            f"--cd {json.dumps(str(root))} "
-            "--sandbox read-only "
-            f"--output-last-message {json.dumps(review['report_path'])} "
-            f"\"$(cat {review['prompt_path']})\""
-        )
+        review["suggested_command"] = role_runner_command(root, args.task, args.feature_id, review)
     report = write_required_reviews(root, args.feature_id, report)
     blockers = [review for review in report["reviews"] if review.get("status") == "blocked"]
     print(f"feature_workflow review: required={sum(1 for r in report['reviews'] if r.get('required'))} blockers={len(blockers)}")

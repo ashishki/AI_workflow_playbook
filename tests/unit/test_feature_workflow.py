@@ -200,6 +200,34 @@ def plan_and_select(root: Path, *, task_id: str = "T14") -> None:
     )
 
 
+def test_review_suggests_governed_role_runner_command(tmp_path: Path) -> None:
+    init_repo(tmp_path)
+    write_base_project(tmp_path)
+    write_design(tmp_path, risk="high")
+    commit_all(tmp_path)
+    plan_and_select(tmp_path)
+
+    result = run_workflow(
+        tmp_path,
+        "review",
+        "--task",
+        "T14",
+        "--feature-id",
+        "F01",
+        "--role",
+        "program_design_review",
+    )
+
+    assert result.returncode == 0, result.stderr
+    projection = json.loads(
+        (tmp_path / ".playbook-artifacts/workflows/F01/design/required_reviews.json").read_text(encoding="utf-8")
+    )
+    command = projection["reviews"][0]["suggested_command"]
+    assert "tools/run_codex_role.py run" in command
+    assert '--role "program_design_review"' in command
+    assert "--output-report" in command
+
+
 def commit_all(root: Path) -> None:
     subprocess.run(["git", "add", "."], cwd=root, check=True)
     subprocess.run(["git", "commit", "-m", "base"], cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)

@@ -1144,9 +1144,11 @@ def add_common_files(args: argparse.Namespace, target: Path, replacements: dict[
     )
     for tool_name in (
         "approve_feature_design.py",
+        "codex_role_run_lib.py",
         "feature_review_policy.py",
         "feature_workflow.py",
         "receipt_run.py",
+        "run_codex_role.py",
     ):
         copy_binary_or_text_file(
             PLAYBOOK_ROOT / "tools" / tool_name,
@@ -1320,9 +1322,11 @@ def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: di
     )
     for tool_name in (
         "approve_feature_design.py",
+        "codex_role_run_lib.py",
         "feature_review_policy.py",
         "feature_workflow.py",
         "receipt_run.py",
+        "run_codex_role.py",
     ):
         copy_binary_or_text_file(
             PLAYBOOK_ROOT / "tools" / tool_name,
