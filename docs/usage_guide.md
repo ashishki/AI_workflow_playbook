@@ -29,6 +29,8 @@ The currently supported default is **Codex Direct**:
 Direct project. They are valid for CI, the standalone harness command adapter,
 or an explicit task-loop profile where the main agent is acting as an
 orchestrator and launches isolated subagents for review, fixes, and doc sync.
+In that task-loop profile, the four governed Feature Workflow reviewer roles use
+`tools/run_codex_role.py`, not a hand-assembled direct command.
 
 ### Optional Task Loop: Codex Exec Subagents
 
@@ -49,7 +51,8 @@ main agent selects next ready task
 -> implementer writes scoped code/tests/docs
 -> deterministic gates run
 -> main agent resolves docs/REVIEW_POLICY.md
--> read-only codex exec reviewers run as required
+-> governed Role Runner reviews run for product/program design, slice, and maintainability
+-> other isolated read-only codex exec reviewers run as required
 -> fix_from_review runs only if findings require fixes
 -> required reviews rerun
 -> doc_sync updates task/evidence/session docs after green reviews
@@ -527,6 +530,24 @@ python3 tools/feature_workflow.py --root . context --task T14 --feature-id F01 -
 python3 tools/feature_workflow.py --root . check --task T14 --feature-id F01 --slice-id F01-S1
 python3 tools/feature_workflow.py --root . accept-slice --task T14 --feature-id F01 --slice-id F01-S1
 ```
+
+`feature_workflow review` writes the review projection and its
+`suggested_command`. For `product_design_review`, `program_design_review`,
+`slice_review`, and `maintainability_review`, that command is the governed Role
+Runner. Add the model and reasoning effort required by the target repository's
+review policy before executing it; for example:
+
+```bash
+python3 tools/run_codex_role.py run \
+  --root . --task T14 --feature-id F01 \
+  --role program_design_review \
+  --model gpt-5.6-terra --reasoning-effort high
+```
+
+For a slice or maintainability review, also pass `--slice-id F01-S1`. The runner
+publishes the expected report, rejects write drift, and stores a revalidatable
+result under `.playbook-artifacts/runs/`. Do not silently replace a failed runner
+execution with a direct reviewer command.
 
 Canonical personal-use actor model:
 

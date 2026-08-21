@@ -46,6 +46,13 @@ python3 tools/feature_workflow.py --root . review --task T14 --feature-id F01 --
 python3 tools/feature_workflow.py --root . approve --feature-id F01
 ```
 
+For the four Feature Workflow reviewer roles (`product_design_review`,
+`program_design_review`, `slice_review`, `maintainability_review`), execute the
+`suggested_command` written by `feature_workflow review`: it uses
+`tools/run_codex_role.py run` as the governed default. Supply the model and
+reasoning effort required by the target repository's review policy; do not
+silently fall back to a hand-written direct `codex exec` when the runner fails.
+
 Feature Design uses paired artifacts: `docs/design/F01.md` for human design and
 `docs/design/F01.design.json` for deterministic metadata, approval provenance,
 and slice registry. Approval is hash-bound and interactive; the tools never
