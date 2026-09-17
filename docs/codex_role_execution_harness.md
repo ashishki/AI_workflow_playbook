@@ -169,6 +169,8 @@ Hard gates:
 - stale-context acceptance remains zero.
 
 The adopted decision is `accept_without_claim`: it is an operational provenance
-and efficiency decision, not a general claim about review-finding quality. Extend
-the sample to product-design and slice-review roles before making that claim, and
-record a versioned price source before reporting cost per valid review.
+and efficiency decision, not a general claim about review-finding quality. One
+medium-profile pair now covers each of product-design and slice-review; add
+repeated policy-compliant coverage and independent finding adjudication before
+making a quality claim, and record a versioned price source before reporting cost
+per valid review.
