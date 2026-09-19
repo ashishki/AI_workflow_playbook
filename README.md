@@ -9,13 +9,18 @@ agent handles implementation, verification, and fixes. Frontend work includes
 exercising the running UI and inspecting its appearance. MCP is optional.
 
 **Status: source preview, not a published or user-validated release.** This
-branch includes the actual skill package and a concrete release plan. Native
-installation/discovery and real agent/browser trials remain release work. The
+branch includes a working offline start page, the skill package and diagnostic
+Codex trials. End-to-end plugin onboarding and agent browser access remain open. The
 repository's existing governed tooling has a different, tested maturity level.
 See the [current verification record](docs/handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md)
 for actual results and pre-existing failures in this checkout.
 
 ## Start Here
+
+- [Начать с задачи](docs/native/start.html) — optional offline request builder;
+  three independent choices and scenario cards, no separate agent runtime.
+- [Результаты реальных испытаний](reports/native/2026-09-19/REPORT_RU.md) — decisions,
+  observed failures and remaining gaps.
 
 - [Быстрый старт на русском](docs/native/QUICKSTART_RU.md) — try the source
   preview in an authorized scratch repository; one connection request, then a task.

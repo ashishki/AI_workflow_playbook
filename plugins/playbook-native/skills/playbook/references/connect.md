@@ -1,7 +1,4 @@
----
-name: playbook-setup
-description: Connect, update, or remove Playbook Native in the current repository when the user asks to set up Playbook. Do not activate for ordinary implementation tasks or silently migrate an existing governed workflow.
----
+# Connect, update, or remove
 
 Connect the current repository with a small, inspectable change. The user's
 request to connect authorizes local setup; do not add a second approval step
@@ -19,12 +16,19 @@ for the ordinary edits below. Honor existing instructions and permissions.
    Read-only discovery can continue while that decision is pending.
 3. Determine how the skills are supplied. When this plugin is installed and
    its skills are discoverable, keep them in the plugin. When invoked by reading
-   this file from a separate checkout, copy this complete skill folder and its
-   sibling `playbook-frontend` to the project's `.agents/skills/` directory.
+   this file from a separate checkout, copy the enclosing `playbook` skill folder (one level above this reference) and
+   its sibling `playbook-frontend` to the project's `.agents/skills/` directory.
    Do not install both copies of the same skill. If names already exist, compare
    them; preserve custom changes and resolve collisions instead of overwriting.
    Do not follow target symlinks to write outside the selected repository.
-4. Read [the project block](assets/project-block.md). Merge it once into the
+   Complete and verify skill availability before editing the project block.
+   Some hosts protect `.agents` even inside a writable workspace. If the host
+   denies installation, stop setup without adding a block that refers to missing
+   skills. Report the native plugin install or host approval needed; do not
+   retry through a different filesystem route or weaken the sandbox. If this
+   attempt already added a block, remove only that new block to restore the
+   prior instructions. Partial connection is not successful onboarding.
+4. Read [the project block](../assets/project-block.md). Merge it once into the
    effective project instruction file (`AGENTS.md`, or the existing root
    `AGENTS.override.md` that would shadow it). Preserve everything outside its
    markers. For a monorepo, choose the relevant scope without changing sibling

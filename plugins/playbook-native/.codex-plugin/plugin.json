@@ -1,18 +1,22 @@
 {
   "name": "playbook-native",
-  "version": "0.1.0-preview.1",
-  "description": "Connect a repository to a small agent-native workflow and verify frontend changes in the running app.",
+  "version": "0.1.0-preview.2",
+  "description": "One entry for new or existing projects: create, fix or check with automatic, plan-first or extended control.",
   "author": {
     "name": "AI Workflow Playbook"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Playbook Native",
-    "shortDescription": "Connect, build, check the real result.",
+    "shortDescription": "Describe a task. Choose how much control you want.",
     "longDescription": "Preview: repository setup and frontend delivery skills. Uses existing project commands and available browser tools. No bundled MCP servers or hooks.",
     "developerName": "AI Workflow Playbook",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "Use $playbook-setup to connect this repository."
+    "defaultPrompt": [
+      "$playbook Помоги начать новый проект.",
+      "$playbook Исправь проблему в существующем проекте.",
+      "$playbook Проверь результат и покажи замечания."
+    ]
   }
 }

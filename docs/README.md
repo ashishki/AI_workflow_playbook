@@ -10,11 +10,13 @@ agents do not load every Markdown file by default.
 ## Native Product Candidate
 
 The proposed entrypoint for new users is a small skill package. It is a source
-preview, not a publicly released or runtime-validated product. Existing
+preview with diagnostic runtime trials; not a publicly released product. Existing
 governed policies are not silently migrated.
 
+- [Start page (Russian)](native/start.html) — task, optional choices, copy to Codex.
+- [Actual diagnostic trials](../reports/native/2026-09-19/REPORT_RU.md) — evidence and limits.
 - [Quick start (Russian)](native/QUICKSTART_RU.md) — connect, task, result, remove.
-- [Package](../plugins/playbook-native/README.md) — setup and frontend skills.
+- [Package](../plugins/playbook-native/README.md) — one entry skill and one frontend skill.
 - [Product model and research](research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)
   — current decisions, external sources, automation and human boundaries.
 - [Delivery plan](research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md)

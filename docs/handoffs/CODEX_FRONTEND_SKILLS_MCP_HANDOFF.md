@@ -1,59 +1,57 @@
-# Handoff: Playbook Native product candidate
+# Handoff: Playbook Native preview.2
 
 Updated: 2026-09-19. Branch: `docs/codex-frontend-skills-mcp-20260919`.
-Starting commit: `d070f4e`. Scope: this repository only; no master/downstream edits.
+Current work starts from `f650301`; original proposal base was `d070f4e`.
+Scope: this repository only; no master/downstream edits or public release.
 
 ## Current result
 
-The user explicitly authorized challenging the original proposal and changing
-this branch. CF-00–CF-09 is superseded, not an approved architecture waiting for
-execution. The new default candidate is a small native agent package with a
-repository connection skill, one frontend delivery skill, and a short project
-instruction block. Existing governed tooling remains a separate opt-in path.
+The user selected three independent dimensions: new/existing project,
+create/fix/check, automatic/plan-first/extended control. A single `$playbook`
+entry infers and announces a useful approach; explicit user choices win.
+Quick mode reduces ceremony while retaining checks. Check-only does not fix
+source; plan-only does not implement or connect the repository.
 
-Read these in order:
+The optional [offline start page](../native/start.html) composes a request for
+Codex, with manual choices and scenario cards. It is a working interface, not
+a connected agent service. No framework, backend, analytics or new runtime.
 
-1. [Product model and current research](../research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md).
-2. [Preview package](../../plugins/playbook-native/README.md) and its actual skills.
-3. [Delivery and release plan](../research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md).
-4. [Quick start](../native/QUICKSTART_RU.md).
+Read the [actual diagnostic pilot](../../reports/native/2026-09-19/REPORT_RU.md),
+[quick start](../native/QUICKSTART_RU.md), [package](../../plugins/playbook-native/README.md)
+and [release plan](../research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md).
 
-The package is authored, not installed in the user's environment, published,
-licensed for subscriber reuse, or empirically validated. No browser/server was
-added to a downstream repository. No model/permission settings were changed.
-No outside users were contacted. There is no marketplace listing for this package.
+## Decisions based on observation
 
-## Decisions already made for the candidate
+- Ordinary Codex and Native both repaired the frontend fixture. External browser
+  checks pass for both; no demonstrated quality/speed advantage for Native.
+- Both accurately reported missing agent browser verification. The shell sandbox
+  blocked Chromium/local bind, and the separate MCP trial required approval
+  unavailable under `never`. No permission bypass was used to declare success.
+- Setup originally left a project block after protected `.agents` prevented skill
+  installation. Fixed ordering; the retry preserves every original file and
+  leaves no partial instructions. Successful installation is still unproven.
+- New/existing plan-only cases preserve files. Backend work does not read the
+  frontend skill. Extended review and explicit quick mode have separate records,
+  including the original review timeout; see the pilot for exact outcomes.
+- The default stays small: two skills, five payload files, 22-line project block.
+  Connection detail loads only when needed. No mandatory records/roles/MCP.
 
-- Codex-first; existing host planning, tools, sessions, and instructions.
-- One plugin as the intended distribution channel; the same source skills in
-  `.agents/skills` as the fallback. No simultaneous duplicate installation.
-- Always-loaded rules stay small; skill detail loads for the relevant task.
-- One agent normally implements and checks; fresh review when useful or required
-  by project risk/policy. Self-check is labeled accurately.
-- Browser capability matters; MCP transport is optional. Desktop and CLI/IDE
-  have different browser availability. No mandatory transport bake-off.
-- Run the actual app and inspect its current rendered state. Missing capability
-  remains a limitation; it does not become PASS.
-- No mandatory task registries, receipts, role prompts, formal design approvals,
-  or pixel baselines for an ordinary Native task.
-- Existing Governed contracts are not silently disabled or migrated.
+These are real model trials in synthetic repositories, not a newcomer study,
+clean-host test or completed end-to-end subscriber journey. The local unregistered
+marketplace was not auto-discovered; no global plugin was installed. Models,
+global configuration and downstream projects were not changed. No outside users
+were contacted. There is no marketplace listing or new reuse license.
 
-## Evidence and limitations
+## Current validation
 
-The initial proposal was written without a working checkout. This revision has
-an actual checkout and local execution; do not repeat the old DNS/no-Codex claim.
-`codex --version` returned `codex-cli 0.155.1`. Reading `codex plugin --help` and
-`codex plugin add --help` established the local CLI surface, not plugin install
-success. Official source pages were read again on 2026-09-19 and are linked in
-the product document.
+The pilot records launcher browser checks, external behavior/layout probes,
+harness tests, package validators and repository checks. Raw local logs live
+under ignored `.playbook-artifacts/native-pilot/`; committed results include
+source/fixture hashes, exact prompts, finals, source diffs and evidence hashes.
+Do not call the external evaluator's browser access an agent verification pass.
+A complete model turn or a correct manifest also does not prove task success.
 
-The initializer footprint was measured in temporary repositories with each
-mode, no optional packs, and a minimal valid verification command. Lean-Core
-created 35 files (17 tools, 8 schemas), Standard 81, Strict 82. These are scaffold
-measurements, not a user productivity experiment.
-
-### Final local checks
+## Prior verification at f650301
 
 These checks exercised the edited working tree before commit. No green remote
 CI or real-agent compatibility result is implied.
@@ -68,7 +66,7 @@ CI or real-agent compatibility result is implied.
 | `.venv/bin/python tools/integrity_check.py --root .` | PASS, with two existing missing-generated-content warnings |
 | Full `.venv/bin/python -m pytest -q` | 222 passed, 12 skipped, 2 failed |
 | `tools/verify_playbook.py` with repo-local artifact directory | 24/26 checks passed; `pytest` and `playbook_validate` failed as below |
-| Native plugin install/discovery, skill behavioral trials, browser trials, newcomer pilot | NOT RUN; release work |
+| Runtime tests at f650301 | Not yet run at that revision; superseded by the pilot below |
 
 The two failing pytest cases were reproduced independently in a detached
 worktree at the unmodified starting commit `d070f4e`:
@@ -98,38 +96,22 @@ layout. Final command:
 The local ignored report retains individual commands and output paths. It is
 execution evidence from this checkout, not a committed release attestation.
 A structural validator does not prove that an agent follows a skill or that a
-host loads it. The two skills' behavioral acceptance scenarios remain in the
-delivery plan. Self-review caught and clarified preservation of modified skill
+host loads it. The delivery plan retains the full release matrix. Self-review caught and clarified preservation of modified skill
 files on removal; no independent reviewer run is claimed.
 
 ## Next useful work
 
-Perform delivery A's isolated connect/reconnect/update/remove/discovery trials,
-then delivery B's real browser trial. Keep tests in scratch fixtures, not a
-working downstream product. Choose the host/browser actually available; do not
-install every candidate. Use the final acceptance table rather than reviving
-CF-00 or creating a new feature-approval ceremony.
+1. On a supported host, exercise actual plugin installation, fresh-session skill
+   discovery, connection/reconnection/update/removal. No changes to downstream.
+2. Complete a full agent browser trial where navigation and image viewing are
+   legitimately available. A standalone browser preflight is insufficient.
+3. Use fresh tasks for paired comparison: a new screen, another framework,
+   stale/wrong preview trap, manual mode change mid-task. Keep failures and
+   compare equal tools/permissions. Do not optimize against the development fixture.
+4. After rights are decided, test first-run understanding with 3–5 newcomers.
+   Prepare the concrete release artifact before seeking publication approval.
 
-Public distribution needs an explicit rights decision: `docs/LEGAL_STATUS.md`
-intentionally grants no project-level reuse license. Prepare the actual release
-artifact and checks before requesting publication approval. Neither license nor
-public release is implied by this source preview.
-
-Known Governed issues remain separately scoped: old skill discovery misses native
-`.agents/skills`; required context can be clipped/skipped; formal browser records
-lack observed build identity. Native does not use those mechanisms. The old
-security gate must not be cited as validation of this plugin.
-
-## Starting prompt for a later session
-
-```text
-Продолжи Playbook Native в AI_workflow_playbook на ветке
- docs/codex-frontend-skills-mcp-20260919.
-Прочитай текущий handoff, product decision, пакет и delivery plan.
-Проверь git status; сохрани мои изменения. CF-00–CF-09 уже заменён.
-Следующая техническая работа — изолированные испытания подключения,
-обновления, удаления и native discovery, затем реальный frontend trial.
-Исправляй наблюдаемые проблемы; не добавляй governance по умолчанию.
-Не меняй master/downstream и не публикуй пакет. Не меняй лицензию без решения
-владельца. Сообщай реально выполненные проверки и оставшиеся ограничения.
-```
+The sole immediate owner decision is reuse rights for subscriber distribution;
+`docs/LEGAL_STATUS.md` intentionally grants no project-level license. The
+technical delivery gaps above require implementation/testing, not another design
+approval. Do not revive CF-00–CF-09 or install governance by default.

@@ -1,0 +1,1553 @@
+{
+  "date": "2026-09-19",
+  "purpose": "Diagnostic developer trials; not a release attestation or model benchmark",
+  "environment": {
+    "codex": "0.155.1",
+    "model": "gpt-6-astra",
+    "effort": "xhigh",
+    "model_source": "existing host config, no overrides",
+    "agent_sandbox": "workspace-write",
+    "agent_approval": "never",
+    "external_playwright": "1.61.1",
+    "mcp_experiment": "@playwright/mcp 0.0.82",
+    "cost": "unknown"
+  },
+  "launcher": {
+    "combinations": 48,
+    "empty_input": "pass",
+    "scenario_prefills": "pass",
+    "clipboard": "pass",
+    "clipboard_fallback": "pass",
+    "input_as_text": "pass",
+    "responsive": [
+      390,
+      1280
+    ],
+    "page_errors": [],
+    "external_requests": []
+  },
+  "original_fixture_browser_check": {
+    "checks": {
+      "invalid_feedback": true,
+      "valid_confirmation": false,
+      "no_overflow_390": false,
+      "controls_visible_390": false,
+      "no_overflow_1280": true,
+      "controls_visible_1280": true,
+      "keyboard_button": true,
+      "no_page_errors": false
+    },
+    "errors": [
+      "Cannot set properties of null (setting 'textContent')"
+    ],
+    "all_passed": false,
+    "scope": "synthetic local behavior/layout probe, not full accessibility or visual design acceptance"
+  },
+  "trials": [
+    {
+      "id": "baseline-ui",
+      "metadata": {
+        "case": "frontend",
+        "condition": "baseline",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "80b40aca59a7fa4ab8beca948a85a553207f5640237309c742caae6712eeea83",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "skills/playbook-setup/SKILL.md": "22ef592462bc3ef9b703d4dd4f6aa6e82f38f69cb58eb56daaabf4596c92c9c0",
+          "skills/playbook-setup/assets/project-block.md": "894a9e8bad44659e779d7133408474a424051f715109fdeb159911a1ec28a998"
+        },
+        "fixture_before": {
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/baseline-ui/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/baseline-ui/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 360,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "frontend",
+        "condition": "baseline",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 189.86,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 189062,
+            "cached_input_tokens": 164864,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 5230,
+            "reasoning_output_tokens": 2027
+          }
+        ],
+        "item_types": {
+          "agent_message": 4,
+          "command_execution": 10,
+          "file_change": 2
+        },
+        "fixture_after": {
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "134404b31a87738dc06c5c7ab3564d6d63980edd0ca33f65f27bf65c577261c9",
+          "app.test.cjs": "65e2d4ad392838c755202c410078d2f7073e400fd8a27a7c8f1ee2fe2cd232ec",
+          "index.html": "7253b038a30b51b144fc745c2cad9e9093aaaeed9dfa5b945adb09ac6931ab6f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        }
+      },
+      "changed_original_files": [
+        "app.js",
+        "app.test.cjs",
+        "index.html"
+      ],
+      "added_files": [],
+      "prompt": "Исправь форму подписки: на узком экране кнопка выходит за границы. Сохрани оформление сайта. Проверь успешную подписку, ошибку невалидного email и внешний вид в работающем приложении. Исправь обнаруженные проблемы и покажи результат.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и инструменты, описанные в README.\n",
+      "final": "Исправил [форму подписки](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/baseline-ui/workspace/index.html): до 720 px кнопка размещается под полем, ширина ограничена контейнером. Цвета, шрифты и отступы сохранены. Исправлен вывод «Вы подписаны!».\n\n`npm test` проходит: проверены успех, невалидный и пустой email, повторная отправка после ошибки.\n\nВизуальную проверку и скриншот получить не удалось: среда блокирует запуск локального сервера и Chromium (`Operation not permitted`). Внешний вид в браузере остаётся непроверенным.\n\nИзменены только файлы текущего репозитория; установок, публикаций и коммитов не было.",
+      "diff": "diff --git a/app.js b/app.js\nindex 54db9f4..019f9de 100644\n--- a/app.js\n+++ b/app.js\n@@ -12,6 +12,6 @@ if (typeof document !== 'undefined') {\n       message.textContent = 'Проверьте адрес почты';\n       return;\n     }\n-    document.querySelector('#subscription-message').textContent = 'Вы подписаны!';\n+    message.textContent = 'Вы подписаны!';\n   });\n }\ndiff --git a/app.test.cjs b/app.test.cjs\nindex ee71ab0..bb968a7 100644\n--- a/app.test.cjs\n+++ b/app.test.cjs\n@@ -1,6 +1,35 @@\n const assert = require('node:assert/strict');\n+const {readFileSync} = require('node:fs');\n+const {join} = require('node:path');\n+const {runInNewContext} = require('node:vm');\n const {validEmail} = require('./app');\n assert.equal(validEmail('reader@example.com'), true);\n assert.equal(validEmail('wrong'), false);\n assert.equal(validEmail(''), false);\n console.log('Email validation checks passed');\n+\n+// Exercise the real submit handler with the element IDs from the page.\n+// These checks do not replace browser layout and interaction checks.\n+const html = readFileSync(join(__dirname, 'index.html'), 'utf8');\n+const elements = new Map([...html.matchAll(/\\bid=\"([^\"]+)\"/g)].map(([, id]) => [\n+  `#${id}`, {value: '', textContent: '', listeners: new Map(), addEventListener(type, handler) {\n+    this.listeners.set(type, handler);\n+  }}\n+]));\n+runInNewContext(readFileSync(join(__dirname, 'app.js'), 'utf8'), {\n+  document: {querySelector: selector => elements.get(selector) ?? null}\n+});\n+const submit = elements.get('#signup').listeners.get('submit');\n+assert.equal(typeof submit, 'function');\n+function subscribe(value) {\n+  elements.get('#email').value = value;\n+  let prevented = false;\n+  submit({preventDefault() { prevented = true; }});\n+  assert.equal(prevented, true, 'Submitting must keep the confirmation local');\n+  return elements.get('#message').textContent;\n+}\n+assert.equal(subscribe('reader@example.com'), 'Вы подписаны!');\n+assert.equal(subscribe('wrong'), 'Проверьте адрес почты');\n+assert.equal(subscribe('reader@example.com'), 'Вы подписаны!');\n+assert.equal(subscribe(''), 'Проверьте адрес почты');\n+console.log('Local subscription handler checks passed');\ndiff --git a/index.html b/index.html\nindex 761af57..8732052 100644\n--- a/index.html\n+++ b/index.html\n@@ -2,7 +2,8 @@\n <html lang=\"ru\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n <title>Письма по делу</title>\n <style>\n-*{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:680px}input{min-width:380px;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex-direction:column;gap:6px}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}\n+*{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:680px;max-width:100%}input{min-width:0;width:380px;max-width:100%;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex-direction:column;gap:6px;min-width:0}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}\n+@media(max-width:720px){form{flex-direction:column}input{width:100%}button{align-self:stretch;white-space:normal}}\n </style>\n <main><p class=\"eyebrow\">Письма по делу · каждую пятницу</p><h1>Полезные идеи.<br>Без лишнего шума.</h1><p>Одно короткое письмо о работе с технологиями. Подпишитесь — отписаться можно в любой момент.</p>\n <form id=\"signup\" novalidate><div class=\"field\"><label for=\"email\">Ваша почта</label><input id=\"email\" name=\"email\" type=\"email\" autocomplete=\"email\" placeholder=\"you@example.com\" required></div><button type=\"submit\">Подписаться на письма</button></form><p id=\"message\" role=\"status\" aria-live=\"polite\"></p><footer>© Письма по делу. Учебный проект; данные не отправляются наружу.</footer></main>\n",
+      "instruction_and_mcp_evidence": [],
+      "external_browser_check": {
+        "checks": {
+          "invalid_feedback": true,
+          "valid_confirmation": true,
+          "no_overflow_390": true,
+          "controls_visible_390": true,
+          "no_overflow_1280": true,
+          "controls_visible_1280": true,
+          "keyboard_button": true,
+          "no_page_errors": true
+        },
+        "errors": [],
+        "all_passed": true,
+        "scope": "synthetic local behavior/layout probe, not full accessibility or visual design acceptance"
+      },
+      "local_artifact_hashes": {
+        "events.jsonl": "e02fceb8c66b53068eb94e5171250b8aaf28dbbdbf2f218b08cf301271b571de",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "78896970e46754762ad862f96d6353181b8e1584851c9d3652ae3912a269aa70",
+        "metadata.json": "6a2906c0486839692e3fbb307749d0e76b628e924d102022f2b6b640e47bfd49",
+        "summary.json": "a495f810bb9596ac2ec4f445ce9220d89d9a0ee904cba26b4b0d180b8fd8d851"
+      }
+    },
+    {
+      "id": "native-ui",
+      "metadata": {
+        "case": "frontend",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "80b40aca59a7fa4ab8beca948a85a553207f5640237309c742caae6712eeea83",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "skills/playbook-setup/SKILL.md": "22ef592462bc3ef9b703d4dd4f6aa6e82f38f69cb58eb56daaabf4596c92c9c0",
+          "skills/playbook-setup/assets/project-block.md": "894a9e8bad44659e779d7133408474a424051f715109fdeb159911a1ec28a998"
+        },
+        "fixture_before": {
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          ".agents/skills/playbook-setup/SKILL.md": "22ef592462bc3ef9b703d4dd4f6aa6e82f38f69cb58eb56daaabf4596c92c9c0",
+          ".agents/skills/playbook-setup/assets/project-block.md": "894a9e8bad44659e779d7133408474a424051f715109fdeb159911a1ec28a998",
+          "AGENTS.md": "894a9e8bad44659e779d7133408474a424051f715109fdeb159911a1ec28a998",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-ui/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-ui/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 360,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "frontend",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 152.5,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 143172,
+            "cached_input_tokens": 126720,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 4150,
+            "reasoning_output_tokens": 1854
+          }
+        ],
+        "item_types": {
+          "agent_message": 4,
+          "command_execution": 9,
+          "file_change": 1
+        },
+        "fixture_after": {
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          ".agents/skills/playbook-setup/SKILL.md": "22ef592462bc3ef9b703d4dd4f6aa6e82f38f69cb58eb56daaabf4596c92c9c0",
+          ".agents/skills/playbook-setup/assets/project-block.md": "894a9e8bad44659e779d7133408474a424051f715109fdeb159911a1ec28a998",
+          "AGENTS.md": "894a9e8bad44659e779d7133408474a424051f715109fdeb159911a1ec28a998",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "134404b31a87738dc06c5c7ab3564d6d63980edd0ca33f65f27bf65c577261c9",
+          "app.test.cjs": "e83e27205232f4fb909340c2ff5d614191df802d085c675d5314155c7c4b65b8",
+          "index.html": "68e95ffa144e9ecda4cc7fed45d0fcf3ea2ebeb1818a6fbd7f3837e0a92bb574",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        }
+      },
+      "changed_original_files": [
+        "app.js",
+        "app.test.cjs",
+        "index.html"
+      ],
+      "added_files": [],
+      "prompt": "Исправь форму подписки: на узком экране кнопка выходит за границы. Сохрани оформление сайта. Проверь успешную подписку, ошибку невалидного email и внешний вид в работающем приложении. Исправь обнаруженные проблемы и покажи результат.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и инструменты, описанные в README.\n",
+      "final": "Исправил [форму](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-ui/workspace/index.html): на узком экране кнопка располагается под полем, ширина ограничена контейнером. Цвета, шрифты и скругления сохранены. Также исправил сбой успешной подписки.\n\n`npm test` прошёл: успех, неверный и пустой email проверены на DOM-заглушке. `git diff --check` — без ошибок.\n\n**Визуальная проверка осталась невыполненной:** среда блокирует запуск локального HTTP-сервера и Chromium (`Operation not permitted`). Скриншот получить не удалось; поведение в работающем браузере не подтверждено.",
+      "diff": "diff --git a/app.js b/app.js\nindex 54db9f4..019f9de 100644\n--- a/app.js\n+++ b/app.js\n@@ -12,6 +12,6 @@ if (typeof document !== 'undefined') {\n       message.textContent = 'Проверьте адрес почты';\n       return;\n     }\n-    document.querySelector('#subscription-message').textContent = 'Вы подписаны!';\n+    message.textContent = 'Вы подписаны!';\n   });\n }\ndiff --git a/app.test.cjs b/app.test.cjs\nindex ee71ab0..5775fb1 100644\n--- a/app.test.cjs\n+++ b/app.test.cjs\n@@ -1,6 +1,36 @@\n const assert = require('node:assert/strict');\n+const { readFileSync } = require('node:fs');\n+const { join } = require('node:path');\n+const { runInNewContext } = require('node:vm');\n const {validEmail} = require('./app');\n assert.equal(validEmail('reader@example.com'), true);\n assert.equal(validEmail('wrong'), false);\n assert.equal(validEmail(''), false);\n console.log('Email validation checks passed');\n+\n+// Exercise the real submit handler with a minimal DOM stub, without a browser.\n+const elements = {\n+  '#signup': {\n+    addEventListener(type, handler) {\n+      assert.equal(type, 'submit');\n+      this.submit = handler;\n+    }\n+  },\n+  '#email': { value: '' },\n+  '#message': { textContent: '' }\n+};\n+runInNewContext(readFileSync(join(__dirname, 'app.js'), 'utf8'), {\n+  document: { querySelector: selector => elements[selector] ?? null }\n+});\n+function submit(value, expectedMessage) {\n+  elements['#email'].value = value;\n+  let prevented = false;\n+  elements['#signup'].submit({ preventDefault() { prevented = true; } });\n+  assert.equal(prevented, true, 'Submission must stay on the local page');\n+  assert.equal(elements['#message'].textContent, expectedMessage);\n+}\n+submit('reader@example.com', 'Вы подписаны!');\n+submit('wrong', 'Проверьте адрес почты');\n+submit('reader@example.com', 'Вы подписаны!');\n+submit('', 'Проверьте адрес почты');\n+console.log('Submit handler checks passed (DOM stub)');\ndiff --git a/index.html b/index.html\nindex 761af57..0a69e9b 100644\n--- a/index.html\n+++ b/index.html\n@@ -2,7 +2,8 @@\n <html lang=\"ru\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n <title>Письма по делу</title>\n <style>\n-*{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:680px}input{min-width:380px;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex-direction:column;gap:6px}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}\n+*{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:680px;max-width:100%}input{min-width:0;width:100%;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex-direction:column;gap:6px;width:380px;min-width:0}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}\n+@media(max-width:640px){form{flex-direction:column}.field{width:100%}button{align-self:stretch;white-space:normal}}\n </style>\n <main><p class=\"eyebrow\">Письма по делу · каждую пятницу</p><h1>Полезные идеи.<br>Без лишнего шума.</h1><p>Одно короткое письмо о работе с технологиями. Подпишитесь — отписаться можно в любой момент.</p>\n <form id=\"signup\" novalidate><div class=\"field\"><label for=\"email\">Ваша почта</label><input id=\"email\" name=\"email\" type=\"email\" autocomplete=\"email\" placeholder=\"you@example.com\" required></div><button type=\"submit\">Подписаться на письма</button></form><p id=\"message\" role=\"status\" aria-live=\"polite\"></p><footer>© Письма по делу. Учебный проект; данные не отправляются наружу.</footer></main>\n",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc \"pwd && rg --files -g 'README*' -g 'AGENTS.md' -g 'package.json' -g '*lock*' -g '*config*' -g 'SKILL.md' -g '\"'!node_modules'\"' -g '\"'!vendor'\"'\"",
+          "exit_code": 0
+        },
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'cat .agents/skills/playbook-frontend/SKILL.md'",
+          "exit_code": 0
+        },
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'git status --short && cat .agents/skills/playbook-frontend/references/browser-check.md'",
+          "exit_code": 0
+        }
+      ],
+      "external_browser_check": {
+        "checks": {
+          "invalid_feedback": true,
+          "valid_confirmation": true,
+          "no_overflow_390": true,
+          "controls_visible_390": true,
+          "no_overflow_1280": true,
+          "controls_visible_1280": true,
+          "keyboard_button": true,
+          "no_page_errors": true
+        },
+        "errors": [],
+        "all_passed": true,
+        "scope": "synthetic local behavior/layout probe, not full accessibility or visual design acceptance"
+      },
+      "local_artifact_hashes": {
+        "events.jsonl": "3330d612df8d7424ace6b3808102450f092e64dd0a23bf7d85feac53df748a4b",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "78896970e46754762ad862f96d6353181b8e1584851c9d3652ae3912a269aa70",
+        "metadata.json": "fd713357ab353923cf08b0f3257c62c45757650eda9c017ecd4fe3958060fc4c",
+        "summary.json": "f557ca23e0c0f34d4d513db42bd53bb01cb88b3b1af527ce2c3817341d77fe77"
+      }
+    },
+    {
+      "id": "native-setup",
+      "metadata": {
+        "case": "setup",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "80b40aca59a7fa4ab8beca948a85a553207f5640237309c742caae6712eeea83",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "skills/playbook-setup/SKILL.md": "22ef592462bc3ef9b703d4dd4f6aa6e82f38f69cb58eb56daaabf4596c92c9c0",
+          "skills/playbook-setup/assets/project-block.md": "894a9e8bad44659e779d7133408474a424051f715109fdeb159911a1ec28a998"
+        },
+        "fixture_before": {
+          "AGENTS.md": "386707aac9346e9319fa165a41841f5b9f262bce7c665e5a7bde5c12c52fee97",
+          "AGENTS.override.md": "bae3bcd93284c0b55841d5153cecbc2d046abfa33a033fc2f3038f523a9eb846",
+          "AUTHORS.txt": "53189274fbce68a7267c26b57946de9745fd78fa03005fbfa0c3c4ec2f931663",
+          "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+          "slugs.py": "84933356323572b622fdcc3f13363b30622e26011cbb8692a3dcd5a89b5fd823",
+          "test_slugs.py": "6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 360,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "setup",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 192.1,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 127940,
+            "cached_input_tokens": 112128,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 5730,
+            "reasoning_output_tokens": 1830
+          }
+        ],
+        "item_types": {
+          "agent_message": 4,
+          "command_execution": 8
+        },
+        "fixture_after": {
+          "AGENTS.md": "386707aac9346e9319fa165a41841f5b9f262bce7c665e5a7bde5c12c52fee97",
+          "AGENTS.override.md": "62de6e44fce6a03946f23795b19bfdaec950198aadefb7ef3c4fd39eb037069d",
+          "AUTHORS.txt": "53189274fbce68a7267c26b57946de9745fd78fa03005fbfa0c3c4ec2f931663",
+          "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+          "slugs.py": "84933356323572b622fdcc3f13363b30622e26011cbb8692a3dcd5a89b5fd823",
+          "test_slugs.py": "6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285"
+        }
+      },
+      "changed_original_files": [
+        "AGENTS.override.md"
+      ],
+      "added_files": [],
+      "prompt": "Прочитай skill /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup/package/skills/playbook-setup/SKILL.md и подключи Playbook к текущему репозиторию, затем повтори подключение и проверь, что нет дубликатов. Сохрани существующие инструкции и незакоммиченные изменения.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и инструменты, описанные в README.\n",
+      "final": "Подключение выполнено частично: `.agents` доступен только для чтения, поэтому установить `playbook-setup` и `playbook-frontend` не удалось.\n\n- В [AGENTS.override.md](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup/workspace/AGENTS.override.md) добавлен один блок Playbook. Повторное применение блока ничего не изменило; дубликатов нет. Полное повторное подключение остаётся непроверенным.\n- Исходные инструкции, `AUTHORS.txt` и незакоммиченные изменения в `slugs.py` сохранены.\n- Команда из README `python3 -m unittest -v` прошла: 1 тест. `git diff --check` также прошёл.\n- Локальные команды доступны; фронтенда в проекте нет. Коммитов, установок зависимостей и внешних обращений не было.\n\nПример следующей задачи: добавить проверку обработки пустой строки в `slugify`.",
+      "diff": "diff --git a/AGENTS.override.md b/AGENTS.override.md\nindex 109b094..7d2e933 100644\n--- a/AGENTS.override.md\n+++ b/AGENTS.override.md\n@@ -1,3 +1,31 @@\n # Local override\n \n Use Python standard library only.\n+\n+<!-- playbook-native:begin v0.1.0-preview.1 -->\n+## Playbook Native\n+\n+- Deliver the requested outcome using this repository's conventions and tools.\n+  Inspect relevant code and checks first. Keep small tasks small; use a short\n+  plan for multi-step work, and save it only when it helps continuation.\n+- Continue through implementation, verification, and fixes within the authorized\n+  scope. Ask when missing intent changes the result or when new authority is\n+  needed; do not add approvals for routine reversible work.\n+- Use relevant installed skills. For rendered UI changes, use\n+  `playbook-frontend` when available. Run the app, exercise the changed user\n+  flow, and inspect current screenshots before calling the UI verified.\n+- Run meaningful existing checks; add regression coverage when the changed\n+  behavior warrants it. Inspect the diff. Do not weaken tests or regenerate\n+  visual baselines just to obtain a pass.\n+- Report what changed, what actually ran and passed/failed, and what remains\n+  unverified, with useful evidence links. Missing tools/access mean an explicit\n+  limitation. A self-check is not independent review.\n+- Preserve unrelated work and existing project policies. Do not expand access,\n+  publish, deploy, spend money, or mutate production without authorization.\n+  Stop repeating an unchanged failing approach; diagnose or report the blocker.\n+<!-- playbook-native:end -->\n+\n+## Project notes\n+\n+- Run checks from the repository root: `python3 -m unittest -v`.\n+- README.md describes a Python helper with no frontend, browser, external dependencies, or network use.\ndiff --git a/slugs.py b/slugs.py\nindex 5bad2b1..0fd8b4f 100644\n--- a/slugs.py\n+++ b/slugs.py\n@@ -3,3 +3,5 @@ import re\n \n def slugify(value: str) -> str:\n     return re.sub(r'[^a-z0-9]+', '-', value.lower())\n+\n+# User uncommitted note: preserve exactly.\n",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'cat /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup/package/skills/playbook-setup/SKILL.md'",
+          "exit_code": 0
+        },
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc \"python3 - <<'PY'\nfrom pathlib import Path\nimport hashlib, json, shutil, subprocess\n\nroot = Path.cwd()\nexpected_root = Path('/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup/workspace')\nassert root.resolve() == expected_root\nassert Path(subprocess.check_output(['git', 'rev-parse', '--show-toplevel'], text=True).strip()).resolve() == root\nsource = root.parent / 'package' / 'skills'\nskill_names = ('playbook-setup', 'playbook-frontend')\nblock = (source / 'playbook-setup/assets/project-block.md').read_bytes()\nnotes = (b'## Project notes\\\\n\\\\n'\n         b'- Run checks from the repository root: \"'`python3 -m unittest -v`.'\"\\\\n'\n         b'- README.md describes a Python helper with no frontend, browser, external dependencies, or network use.\\\\n')\ninstructions = root / 'AGENTS.override.md'\noriginal_instructions = instructions.read_bytes()\nhead_before = subprocess.check_output(['git', 'rev-parse', 'HEAD'])\nindex_before = subprocess.check_output(['git', 'ls-files', '--stage'])\n\n\ndef snapshot():\n    result = {}\n    for path in sorted(root.rglob('*')):\n        relative = path.relative_to(root)\n        if '.git' in relative.parts:\n            continue\n        assert not path.is_symlink(), str(relative)\n        if path.is_file():\n            result[str(relative)] = {'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),\n                                     'mode': path.stat().st_mode & 0o777}\n    return result\n\n\ndef safe_target(path):\n    assert path.is_relative_to(root)\n    for candidate in (path, *path.parents):\n        if candidate == root:\n            break\n        assert not candidate.is_symlink(), str(candidate)\n    assert path.resolve().is_relative_to(root)\n\n\ndef connect():\n    copies = []\n    for skill_name in skill_names:\n        skill_source = source / skill_name\n        assert skill_source.is_dir() and not skill_source.is_symlink()\n        for src in sorted(skill_source.rglob('*')):\n            assert not src.is_symlink(), str(src)\n            dst = root / '.agents/skills' / skill_name / src.relative_to(skill_source)\n            safe_target(dst)\n            if src.is_file():\n                if dst.exists():\n                    assert dst.is_file() and dst.read_bytes() == src.read_bytes(), f'Skill collision: {dst}'\n                else:\n                    copies.append((src, dst))\n            else:\n                assert src.is_dir()\n                assert not dst.exists() or dst.is_dir()\n    safe_target(instructions)\n    current = instructions.read_bytes()\n    marker_count = current.count(b'<\"'!-- playbook-native:begin'\"')\n    if marker_count:\n        assert marker_count == 1 and current.count(b'<\"'!-- playbook-native:end -->'\"') == 1\n        assert current.count(block) == 1, 'Existing Playbook block differs'\n        new = current\n    else:\n        assert b'<\"'!-- playbook-native:end -->'\"' not in current\n        new = current + (b'\\\\n' if current.endswith(b'\\\\n') else b'\\\\n\\\\n') + block\n    if b'## Project notes' in new:\n        assert new.count(notes) == 1, 'Existing project notes differ'\n    else:\n        new += b'\\\\n' + notes\n    changed = []\n    for src, dst in copies:\n        dst.parent.mkdir(parents=True, exist_ok=True)\n        shutil.copy2(src, dst)\n        changed.append(str(dst.relative_to(root)))\n    if new \"'!= current:\n        instructions.write_bytes(new)\n        changed.append(str(instructions.relative_to(root)))\n    return changed\n\nbefore = snapshot()\nfirst_changes = connect()\nafter_first = snapshot()\nsecond_changes = connect()\nafter_second = snapshot()\nassert after_first == after_second, '\"'Second setup changed files'\nassert not second_changes, second_changes\nfor filename, entry in before.items():\n    if filename \"'!= '\"'AGENTS.override.md':\n        assert after_second[filename] == entry, f'Existing file changed: {filename}'\nassert instructions.read_bytes().startswith(original_instructions)\nassert instructions.read_bytes().count(block) == 1\nassert instructions.read_bytes().count(notes) == 1\nfor skill_name in skill_names:\n    src_root = source / skill_name\n    dst_root = root / '.agents/skills' / skill_name\n    src_files = {str(p.relative_to(src_root)): p.read_bytes() for p in src_root.rglob('*') if p.is_file()}\n    dst_files = {str(p.relative_to(dst_root)): p.read_bytes() for p in dst_root.rglob('*') if p.is_file()}\n    assert src_files == dst_files, f'Incomplete skill copy: {skill_name}'\n    installations = [str(p.relative_to(root)) for p in root.rglob('SKILL.md')\n                     if '.git' not in p.relative_to(root).parts and p.parent.name == skill_name]\n    assert installations == [f'.agents/skills/{skill_name}/SKILL.md'], installations\nassert head_before == subprocess.check_output(['git', 'rev-parse', 'HEAD'])\nassert index_before == subprocess.check_output(['git', 'ls-files', '--stage'])\nprint(json.dumps({'first_setup_changed': first_changes, 'second_setup_changed': second_changes,\n                  'idempotent': True, 'original_files_preserved': True,\n                  'original_instruction_prefix_preserved': True, 'block_count': 1,\n                  'skill_installation_count': {name: 1 for name in skill_names},\n                  'head_and_index_unchanged': True, 'after_setup': after_second}, ensure_ascii=False, indent=2))\nPY\"",
+          "exit_code": 1
+        },
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc \"python3 - <<'PY'\nfrom pathlib import Path\nimport hashlib, json, subprocess\n\nroot = Path.cwd()\nexpected = {\\\"AGENTS.md\\\":\\\"386707aac9346e9319fa165a41841f5b9f262bce7c665e5a7bde5c12c52fee97\\\",\\\"AGENTS.override.md\\\":\\\"bae3bcd93284c0b55841d5153cecbc2d046abfa33a033fc2f3038f523a9eb846\\\",\\\"AUTHORS.txt\\\":\\\"53189274fbce68a7267c26b57946de9745fd78fa03005fbfa0c3c4ec2f931663\\\",\\\"README.md\\\":\\\"7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e\\\",\\\"slugs.py\\\":\\\"84933356323572b622fdcc3f13363b30622e26011cbb8692a3dcd5a89b5fd823\\\",\\\"test_slugs.py\\\":\\\"6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285\\\"}\noriginal_instructions = \\\"# Local override\\\\n\\\\nUse Python standard library only.\\\\n\\\".encode()\nfor name, digest in expected.items():\n    path = root / name\n    assert not path.is_symlink()\n    assert hashlib.sha256(path.read_bytes()).hexdigest() == digest, f'File changed before setup: {name}'\n\nsource = root.parent / 'package/skills/playbook-setup/assets/project-block.md'\nblock = source.read_bytes()\nnotes = (b'## Project notes\\\\n\\\\n'\n         b'- Run checks from the repository root: \"'`python3 -m unittest -v`.'\"\\\\n'\n         b'- README.md describes a Python helper with no frontend, browser, external dependencies, or network use.\\\\n')\ntarget = root / 'AGENTS.override.md'\nhead_before = subprocess.check_output(['git', 'rev-parse', 'HEAD'])\nindex_before = subprocess.check_output(['git', 'ls-files', '--stage'])\n\n\ndef snapshot():\n    result = {}\n    for path in sorted(root.rglob('*')):\n        relative = path.relative_to(root)\n        if '.git' in relative.parts:\n            continue\n        assert not path.is_symlink(), str(relative)\n        if path.is_file():\n            result[str(relative)] = (hashlib.sha256(path.read_bytes()).hexdigest(), path.stat().st_mode & 0o777)\n    return result\n\n\ndef merge_instructions():\n    current = target.read_bytes()\n    assert current.startswith(original_instructions)\n    begins = current.count(b'<\"'!-- playbook-native:begin'\"')\n    ends = current.count(b'<\"'!-- playbook-native:end -->'\"')\n    if begins or ends:\n        assert begins == ends == 1 and current.count(block) == 1\n        updated = current\n    else:\n        updated = current + b'\\\\n' + block\n    if b'## Project notes' in updated:\n        assert updated.count(notes) == 1\n    else:\n        updated += b'\\\\n' + notes\n    if current \"'!= updated:\n        target.write_bytes(updated)\n        return True\n    return False\n\nfirst_changed = merge_instructions()\nafter_first = snapshot()\nsecond_changed = merge_instructions()\nafter_second = snapshot()\nassert first_changed and not second_changed\nassert after_first == after_second\nassert target.read_bytes() == original_instructions + b'\"'\\\\n' + block + b'\\\\n' + notes\nassert target.read_bytes().count(b'<\"'!-- playbook-native:begin'\"') == 1\nassert target.read_bytes().count(b'<\"'!-- playbook-native:end -->'\"') == 1\nfor name, digest in expected.items():\n    if name \"'!= '\"'AGENTS.override.md':\n        assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest, f'Unrelated file changed: {name}'\nassert set(after_second) == set(expected), 'Unexpected files added'\nassert subprocess.check_output(['git', 'rev-parse', 'HEAD']) == head_before\nassert subprocess.check_output(['git', 'ls-files', '--stage']) == index_before\nskill_paths = [str(p.relative_to(root)) for p in root.rglob('SKILL.md') if '.git' not in p.relative_to(root).parts]\nprint(json.dumps({'first_instruction_merge_changed': first_changed,\n                  'second_instruction_merge_changed': second_changed,\n                  'block_count': 1, 'project_notes_count': 1,\n                  'snapshots_identical_after_second_merge': after_first == after_second,\n                  'unrelated_files_preserved': True, 'head_and_index_unchanged': True,\n                  'installed_skills': skill_paths,\n                  'setup_complete': False,\n                  'limitation': 'The project .agents directory is read-only; copying skills was blocked.'}, indent=2))\nPY\"",
+          "exit_code": 0
+        }
+      ],
+      "external_browser_check": null,
+      "local_artifact_hashes": {
+        "events.jsonl": "1e99b2986718696716f768352ab59d3a26458a1fa9c25be664a75157fbcb8efe",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "7a78f93e708ea601a7fe253c72497edf5e376bbe1256943496fe39c42b18a773",
+        "metadata.json": "93352b2b63ed5b5ffc2ce67083ddd1cf450eabaef9284f0b51414c9d0988de8f",
+        "summary.json": "e895c6cf430db7f1a159b04b52fad4f4fa303cde506b4e05e5bd09a179eb3f5c"
+      }
+    },
+    {
+      "id": "native-plan",
+      "metadata": {
+        "case": "plan",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "0eef2df9aa90ac09e462e4a09d3cc80a2b3198f88e4858d333ee0424e0cb9e11",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          "skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "skills/playbook/references/connect.md": "6e66d63e41fdeba0601417309d9d8893c554087d745e3d0ed592ca08b3b71950",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6"
+        },
+        "fixture_before": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "6e66d63e41fdeba0601417309d9d8893c554087d745e3d0ed592ca08b3b71950",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-plan/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-plan/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 240,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "plan",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 75.66,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 92532,
+            "cached_input_tokens": 76288,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1909,
+            "reasoning_output_tokens": 742
+          }
+        ],
+        "item_types": {
+          "agent_message": 3,
+          "command_execution": 8
+        },
+        "fixture_after": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "6e66d63e41fdeba0601417309d9d8893c554087d745e3d0ed592ca08b3b71950",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        }
+      },
+      "changed_original_files": [],
+      "added_files": [],
+      "prompt": "$playbook Сначала план. Хочу добавить второй вариант подписки: еженедельные письма и только важные новости. Изучи текущий проект, предложи подход и проверки. Код и файлы пока не меняй.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и инструменты, описанные в README.\n",
+      "final": "Предлагаю два взаимоисключающих варианта: **«Еженедельные письма»** — выбран по умолчанию, и **«Только важные новости»** — без обещания регулярной отправки.\n\nПроект — статическая страница с локальным подтверждением, без сервера рассылок. Нашёл связанную ошибку: [app.js:15](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-plan/workspace/app.js:15) обращается к отсутствующему `#subscription-message`, хотя в HTML есть `#message`. Это мешает успешному подтверждению.\n\nПлан изменений:\n\n1. В [index.html](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-plan/workspace/index.html) добавить группу радиокнопок с общим заголовком и понятными подписями. Уточнить текст «каждую пятницу», чтобы он относился только к еженедельному варианту.\n2. Адаптировать форму к двум вариантам и узкому экрану. Сейчас её ширина фиксирована, а стили всех `input` задают минимум 380 px — их нужно ограничить полем email.\n3. В обработчике формы учитывать выбранный вариант, исправить вывод в `#message` и показывать соответствующее подтверждение. Сохранить локальную работу демо.\n4. Расширить проверки существующими средствами, без новых зависимостей.\n\nКритерии приёмки:\n\n- По умолчанию выбраны еженедельные письма; одновременно доступен только один вариант.\n- Для обоих вариантов корректный email даёт соответствующее подтверждение без ошибок JavaScript.\n- Пустой и некорректный email показывают ошибку; выбранный вариант сохраняется.\n- Выбор и отправка доступны с клавиатуры; подписи связаны с полями.\n- На мобильном и широком экране форма не обрезается и не создаёт горизонтальную прокрутку.\n- Внешних сетевых запросов нет.\n\nДля проверки после реализации: `npm test`, затем локальное приложение через `npm run preview` и указанный в README Playwright с установленным Chromium; пройти оба сценария и просмотреть снимки экрана.\n\nСейчас **`npm test` прошёл**: три проверки email. Браузерные сценарии не запускал. Код и файлы не менял, рабочее дерево чистое.",
+      "diff": "",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'cat .agents/skills/playbook/SKILL.md && git status --short'",
+          "exit_code": 0
+        }
+      ],
+      "external_browser_check": null,
+      "local_artifact_hashes": {
+        "events.jsonl": "d2645b96a9429ae8200b83258dcc1acc92da929e97e45b86c24493d0021f1a00",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "8edc81fecce857f966bedb6b82bb5f7e71db1b5d5d64d9325bfc08c794e19a87",
+        "metadata.json": "4479488bf16b9dab0cfa2d00b19144d78667bdb6bd292567795bf97610100c29",
+        "summary.json": "5f78f70ad3e392dd419143a981ed2d7dadf591a0fb5eb7d0dbbd9ac6f8080b05"
+      }
+    },
+    {
+      "id": "baseline-ui-mcp",
+      "metadata": {
+        "case": "frontend",
+        "condition": "baseline",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "0eef2df9aa90ac09e462e4a09d3cc80a2b3198f88e4858d333ee0424e0cb9e11",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          "skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6"
+        },
+        "fixture_before": {
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/baseline-ui-mcp/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/baseline-ui-mcp/final.txt",
+          "-c",
+          "mcp_servers.eval_browser.command=\"node\"",
+          "-c",
+          "mcp_servers.eval_browser.args=[\"/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/browser-tool/node_modules/@playwright/mcp/cli.js\", \"--headless\", \"--isolated\", \"--executable-path\", \"/root/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome\", \"--output-dir\", \"/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/baseline-ui-mcp/workspace/browser-artifacts\", \"--allowed-origins\", \"http://127.0.0.1:35677\", \"--block-service-workers\", \"--no-webmcp\"]",
+          "-c",
+          "mcp_servers.eval_browser.cwd=\"/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/baseline-ui-mcp/workspace\"",
+          "-c",
+          "mcp_servers.eval_browser.required=true",
+          "-"
+        ],
+        "timeout_seconds": 360,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "frontend",
+        "condition": "baseline",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 133.43,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 148584,
+            "cached_input_tokens": 131968,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 3695,
+            "reasoning_output_tokens": 1363
+          }
+        ],
+        "item_types": {
+          "agent_message": 3,
+          "command_execution": 6,
+          "file_change": 1,
+          "mcp_tool_call": 3
+        },
+        "fixture_after": {
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "134404b31a87738dc06c5c7ab3564d6d63980edd0ca33f65f27bf65c577261c9",
+          "app.test.cjs": "a82d58424c7a69be1cb3118183246b3416212bdba1054ac2727a19cba4b14d29",
+          "index.html": "c61c5732baebf5a90b2f531fb0bfef9b08e523a1322ce8ce5d7fa4aa2d14e93a",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        }
+      },
+      "changed_original_files": [
+        "app.js",
+        "app.test.cjs",
+        "index.html"
+      ],
+      "added_files": [],
+      "prompt": "Исправь форму подписки: на узком экране кнопка выходит за границы. Сохрани оформление сайта. Проверь успешную подписку, ошибку невалидного email и внешний вид в работающем приложении. Исправь обнаруженные проблемы и покажи результат.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и доступные локальные инструменты.\nДля обеих сравниваемых условий evaluator уже запустил именно текущий checkout на http://127.0.0.1:35677/. Подключён локальный eval_browser MCP для проверки этого приложения. Используй его; запуск Chromium из shell в этой среде заблокирован. Не открывай другие сайты. Не запускай или останавливай чужие серверы.\n",
+      "final": "Исправил адаптивность формы: на экранах до 640 px кнопка располагается под полем. Цвета, шрифты и скругления сохранены. Также исправил ошибку, мешавшую показывать «Вы подписаны!».\n\n`npm test` проходит: проверены успешная подписка, невалидный и пустой email, повторная отправка.\n\n[Открыть локальное приложение](http://127.0.0.1:35677/)\n\nВизуальная проверка и скриншот заблокированы: автоматическая проверка разрешений отклонила навигацию `eval_browser`, а чтение страницы завершилось ошибкой sandbox Chromium. Поэтому внешний вид в браузере не подтверждён.",
+      "diff": "diff --git a/app.js b/app.js\nindex 54db9f4..019f9de 100644\n--- a/app.js\n+++ b/app.js\n@@ -12,6 +12,6 @@ if (typeof document !== 'undefined') {\n       message.textContent = 'Проверьте адрес почты';\n       return;\n     }\n-    document.querySelector('#subscription-message').textContent = 'Вы подписаны!';\n+    message.textContent = 'Вы подписаны!';\n   });\n }\ndiff --git a/app.test.cjs b/app.test.cjs\nindex ee71ab0..feda185 100644\n--- a/app.test.cjs\n+++ b/app.test.cjs\n@@ -1,6 +1,39 @@\n const assert = require('node:assert/strict');\n+const fs = require('node:fs');\n+const path = require('node:path');\n+const vm = require('node:vm');\n const {validEmail} = require('./app');\n assert.equal(validEmail('reader@example.com'), true);\n assert.equal(validEmail('wrong'), false);\n assert.equal(validEmail(''), false);\n-console.log('Email validation checks passed');\n+assert.equal(validEmail('  reader@example.com  '), true);\n+\n+// Exercise the real submit handler using the element IDs in the page.\n+const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');\n+const elements = new Map([...html.matchAll(/id=\"([^\"]+)\"/g)].map(([, id]) => [\n+  `#${id}`, { value: '', textContent: '' }\n+]));\n+let submit;\n+elements.get('#signup').addEventListener = (event, handler) => {\n+  assert.equal(event, 'submit');\n+  submit = handler;\n+};\n+vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8'), {\n+  document: { querySelector: selector => elements.get(selector) ?? null }\n+});\n+assert.equal(typeof submit, 'function');\n+\n+for (const [email, expectedMessage] of [\n+  ['wrong', 'Проверьте адрес почты'],\n+  ['', 'Проверьте адрес почты'],\n+  ['reader@example.com', 'Вы подписаны!'],\n+  ['reader@', 'Проверьте адрес почты'],\n+  ['  reader@example.com  ', 'Вы подписаны!']\n+]) {\n+  elements.get('#email').value = email;\n+  let prevented = false;\n+  submit({ preventDefault() { prevented = true; } });\n+  assert.equal(prevented, true, 'Submitting must not reload the page');\n+  assert.equal(elements.get('#message').textContent, expectedMessage);\n+}\n+console.log('Email validation and subscription submission checks passed');\ndiff --git a/index.html b/index.html\nindex 761af57..bf86030 100644\n--- a/index.html\n+++ b/index.html\n@@ -2,7 +2,8 @@\n <html lang=\"ru\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n <title>Письма по делу</title>\n <style>\n-*{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:680px}input{min-width:380px;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex-direction:column;gap:6px}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}\n+*{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:100%;max-width:680px}input{width:100%;min-width:0;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex:1;min-width:0;flex-direction:column;gap:6px}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}\n+@media(max-width:640px){form{flex-direction:column}button{align-self:stretch;white-space:normal}}\n </style>\n <main><p class=\"eyebrow\">Письма по делу · каждую пятницу</p><h1>Полезные идеи.<br>Без лишнего шума.</h1><p>Одно короткое письмо о работе с технологиями. Подпишитесь — отписаться можно в любой момент.</p>\n <form id=\"signup\" novalidate><div class=\"field\"><label for=\"email\">Ваша почта</label><input id=\"email\" name=\"email\" type=\"email\" autocomplete=\"email\" placeholder=\"you@example.com\" required></div><button type=\"submit\">Подписаться на письма</button></form><p id=\"message\" role=\"status\" aria-live=\"polite\"></p><footer>© Письма по делу. Учебный проект; данные не отправляются наружу.</footer></main>\n",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "mcp_tool_call",
+          "server": "eval_browser",
+          "tool": "browser_navigate",
+          "arguments": {
+            "url": "http://127.0.0.1:35677/"
+          },
+          "status": "failed",
+          "error": {
+            "message": "MCP tool call requires approval, but approval policy is never"
+          }
+        },
+        {
+          "type": "mcp_tool_call",
+          "server": "eval_browser",
+          "tool": "browser_tabs",
+          "arguments": {
+            "action": "list"
+          },
+          "status": "failed",
+          "error": {
+            "message": "MCP tool call requires approval, but approval policy is never"
+          }
+        },
+        {
+          "type": "mcp_tool_call",
+          "server": "eval_browser",
+          "tool": "browser_snapshot",
+          "arguments": {
+            "boxes": true
+          },
+          "status": "failed",
+          "error": null
+        }
+      ],
+      "external_browser_check": {
+        "checks": {
+          "invalid_feedback": true,
+          "valid_confirmation": true,
+          "no_overflow_390": true,
+          "controls_visible_390": true,
+          "no_overflow_1280": true,
+          "controls_visible_1280": true,
+          "keyboard_button": true,
+          "no_page_errors": true
+        },
+        "errors": [],
+        "all_passed": true,
+        "scope": "synthetic local behavior/layout probe, not full accessibility or visual design acceptance"
+      },
+      "local_artifact_hashes": {
+        "events.jsonl": "d722fe245daa1fda0b58ca985ec8323a55cd25b5b24e390ef8207ae38e72b81b",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "4d8b65161848625b643248bcf0b9fd5011b14e233ad0f1fc1bdc6b5c51e27bbe",
+        "metadata.json": "bd5ed8684b4392106c75ad9ee41799c54b60912c828840e3580e077ea8d71474",
+        "summary.json": "a733e3ea7e29818e84aeb71e9b6d13b1a80d04a74fd88188e1fb511c7bdc0135"
+      }
+    },
+    {
+      "id": "native-ui-mcp",
+      "metadata": {
+        "case": "frontend",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "0eef2df9aa90ac09e462e4a09d3cc80a2b3198f88e4858d333ee0424e0cb9e11",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          "skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6"
+        },
+        "fixture_before": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-ui-mcp/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-ui-mcp/final.txt",
+          "-c",
+          "mcp_servers.eval_browser.command=\"node\"",
+          "-c",
+          "mcp_servers.eval_browser.args=[\"/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/browser-tool/node_modules/@playwright/mcp/cli.js\", \"--headless\", \"--isolated\", \"--executable-path\", \"/root/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome\", \"--output-dir\", \"/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-ui-mcp/workspace/browser-artifacts\", \"--allowed-origins\", \"http://127.0.0.1:38757\", \"--block-service-workers\", \"--no-webmcp\"]",
+          "-c",
+          "mcp_servers.eval_browser.cwd=\"/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-ui-mcp/workspace\"",
+          "-c",
+          "mcp_servers.eval_browser.required=true",
+          "-"
+        ],
+        "timeout_seconds": 360,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "frontend",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 141.86,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 158477,
+            "cached_input_tokens": 140416,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 4071,
+            "reasoning_output_tokens": 1224
+          }
+        ],
+        "item_types": {
+          "agent_message": 4,
+          "command_execution": 7,
+          "file_change": 1,
+          "mcp_tool_call": 2
+        },
+        "fixture_after": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "92fb2b0dd36f42c6d77551954f0dd05f10c52d1a1b01f1abdbfb96fcf1fb4589",
+          "app.test.cjs": "49ed3f49f59d0d482b8ba2ce94b6d3fc97535e237a59b0ec7f05efd31a7a30b1",
+          "index.html": "5e1c879add74640fbf216a1b71022acbac805d2d5fa59f427149921882643140",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        }
+      },
+      "changed_original_files": [
+        "app.js",
+        "app.test.cjs",
+        "index.html"
+      ],
+      "added_files": [],
+      "prompt": "Исправь форму подписки: на узком экране кнопка выходит за границы. Сохрани оформление сайта. Проверь успешную подписку, ошибку невалидного email и внешний вид в работающем приложении. Исправь обнаруженные проблемы и покажи результат.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и доступные локальные инструменты.\nДля обеих сравниваемых условий evaluator уже запустил именно текущий checkout на http://127.0.0.1:38757/. Подключён локальный eval_browser MCP для проверки этого приложения. Используй его; запуск Chromium из shell в этой среде заблокирован. Не открывай другие сайты. Не запускай или останавливай чужие серверы.\n",
+      "final": "Исправил форму: до 600 px кнопка располагается под полем, ширина ограничена контейнером. Цвета, шрифты и скругления сохранены. Исправил сломанное подтверждение подписки и добавил обозначение невалидного email.\n\n`npm test` и `git diff --check` прошли. Тесты обработчика проверяют успех, ошибку и исправление адреса.\n\n[Открыть локальное приложение](http://127.0.0.1:38757/)\n\nПроверка в браузере осталась заблокирована: `eval_browser` требует одобрения, запрещённого политикой `never`; локальный HTTP из shell возвращает `EPERM`. Поэтому внешний вид не проверен, скриншотов нет.",
+      "diff": "diff --git a/app.js b/app.js\nindex 54db9f4..7778d5d 100644\n--- a/app.js\n+++ b/app.js\n@@ -6,12 +6,16 @@ if (typeof document !== 'undefined') {\n   const form = document.querySelector('#signup');\n   form.addEventListener('submit', event => {\n     event.preventDefault();\n-    const value = document.querySelector('#email').value;\n+    const email = document.querySelector('#email');\n+    const value = email.value;\n     const message = document.querySelector('#message');\n     if (!validEmail(value)) {\n+      email.setAttribute('aria-invalid', 'true');\n       message.textContent = 'Проверьте адрес почты';\n+      email.focus();\n       return;\n     }\n-    document.querySelector('#subscription-message').textContent = 'Вы подписаны!';\n+    email.removeAttribute('aria-invalid');\n+    message.textContent = 'Вы подписаны!';\n   });\n }\ndiff --git a/app.test.cjs b/app.test.cjs\nindex ee71ab0..f255f52 100644\n--- a/app.test.cjs\n+++ b/app.test.cjs\n@@ -1,6 +1,55 @@\n const assert = require('node:assert/strict');\n+const fs = require('node:fs');\n+const path = require('node:path');\n+const vm = require('node:vm');\n const {validEmail} = require('./app');\n assert.equal(validEmail('reader@example.com'), true);\n assert.equal(validEmail('wrong'), false);\n assert.equal(validEmail(''), false);\n console.log('Email validation checks passed');\n+\n+// Exercise the actual submit handler with the element IDs from the page.\n+// This lightweight DOM double does not replace browser/layout verification.\n+const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');\n+const elements = new Map();\n+let focusedElement;\n+for (const [, id] of html.matchAll(/\\bid=\"([^\"]+)\"/g)) {\n+  elements.set(`#${id}`, {\n+    value: '',\n+    textContent: '',\n+    attributes: new Map(),\n+    listeners: new Map(),\n+    addEventListener(type, listener) { this.listeners.set(type, listener); },\n+    setAttribute(name, value) { this.attributes.set(name, value); },\n+    removeAttribute(name) { this.attributes.delete(name); },\n+    focus() { focusedElement = this; },\n+  });\n+}\n+vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8'), {\n+  document: { querySelector: selector => elements.get(selector) || null },\n+});\n+const email = elements.get('#email');\n+const message = elements.get('#message');\n+const submitHandler = elements.get('#signup').listeners.get('submit');\n+assert.equal(typeof submitHandler, 'function');\n+function submit(value) {\n+  email.value = value;\n+  let prevented = false;\n+  submitHandler({ preventDefault() { prevented = true; } });\n+  assert.equal(prevented, true, 'Submission must not navigate away');\n+}\n+\n+submit('reader@example.com');\n+assert.equal(message.textContent, 'Вы подписаны!');\n+assert.equal(email.attributes.has('aria-invalid'), false);\n+for (const value of ['wrong', '', 'reader@', 'reader@example']) {\n+  focusedElement = undefined;\n+  submit(value);\n+  assert.equal(message.textContent, 'Проверьте адрес почты');\n+  assert.equal(email.attributes.get('aria-invalid'), 'true');\n+  assert.equal(focusedElement, email);\n+}\n+submit('reader@example.com');\n+assert.equal(message.textContent, 'Вы подписаны!');\n+assert.equal(email.attributes.has('aria-invalid'), false);\n+console.log('Subscription success, validation errors, and correction checks passed');\ndiff --git a/index.html b/index.html\nindex 761af57..c995d55 100644\n--- a/index.html\n+++ b/index.html\n@@ -2,8 +2,9 @@\n <html lang=\"ru\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n <title>Письма по делу</title>\n <style>\n-*{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:680px}input{min-width:380px;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex-direction:column;gap:6px}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}\n+*{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:100%;max-width:680px}input{width:100%;min-width:0;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex:1;min-width:0;flex-direction:column;gap:6px}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}\n+@media(max-width:600px){form{flex-direction:column}button{align-self:stretch;white-space:normal}}\n </style>\n <main><p class=\"eyebrow\">Письма по делу · каждую пятницу</p><h1>Полезные идеи.<br>Без лишнего шума.</h1><p>Одно короткое письмо о работе с технологиями. Подпишитесь — отписаться можно в любой момент.</p>\n-<form id=\"signup\" novalidate><div class=\"field\"><label for=\"email\">Ваша почта</label><input id=\"email\" name=\"email\" type=\"email\" autocomplete=\"email\" placeholder=\"you@example.com\" required></div><button type=\"submit\">Подписаться на письма</button></form><p id=\"message\" role=\"status\" aria-live=\"polite\"></p><footer>© Письма по делу. Учебный проект; данные не отправляются наружу.</footer></main>\n+<form id=\"signup\" novalidate><div class=\"field\"><label for=\"email\">Ваша почта</label><input id=\"email\" name=\"email\" type=\"email\" autocomplete=\"email\" placeholder=\"you@example.com\" aria-describedby=\"message\" required></div><button type=\"submit\">Подписаться на письма</button></form><p id=\"message\" role=\"status\" aria-live=\"polite\"></p><footer>© Письма по делу. Учебный проект; данные не отправляются наружу.</footer></main>\n <script src=\"app.js\"></script></html>\n",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'cat .agents/skills/playbook-frontend/SKILL.md && git status --short'",
+          "exit_code": 0
+        },
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc \"cat AGENTS.md package.json README.md .agents/skills/playbook-frontend/references/browser-check.md && rg --files -g '\"'!node_modules'\"' -g '\"'!.git'\"' -g '\"'!.agents'\"' -g '\"'!.codex'\"' && cat index.html\"",
+          "exit_code": 0
+        },
+        {
+          "type": "mcp_tool_call",
+          "server": "eval_browser",
+          "tool": "browser_navigate",
+          "arguments": {
+            "url": "http://127.0.0.1:38757/"
+          },
+          "status": "failed",
+          "error": {
+            "message": "MCP tool call requires approval, but approval policy is never"
+          }
+        },
+        {
+          "type": "mcp_tool_call",
+          "server": "eval_browser",
+          "tool": "browser_tabs",
+          "arguments": {
+            "action": "list"
+          },
+          "status": "failed",
+          "error": {
+            "message": "MCP tool call requires approval, but approval policy is never"
+          }
+        }
+      ],
+      "external_browser_check": {
+        "checks": {
+          "invalid_feedback": true,
+          "valid_confirmation": true,
+          "no_overflow_390": true,
+          "controls_visible_390": true,
+          "no_overflow_1280": true,
+          "controls_visible_1280": true,
+          "keyboard_button": true,
+          "no_page_errors": true
+        },
+        "errors": [],
+        "all_passed": true,
+        "scope": "synthetic local behavior/layout probe, not full accessibility or visual design acceptance"
+      },
+      "local_artifact_hashes": {
+        "events.jsonl": "94e8f8e96f0301bcd702c185ab654b7542f4432be14917336e74dd1abf2435ea",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "41f2ef57c14d7d4ae2b5baca59fe2ef2085762c8946531fbb759e6f4a0b665f0",
+        "metadata.json": "8a0b0c5fbe4dafbac470f094c7c349df6d4ddd27417b17b41fe85ade8906e9f9",
+        "summary.json": "71f6142706cfbc99eafc0d6ce37538eda106dd48f14a3c3f26b40ff62280f1af"
+      }
+    },
+    {
+      "id": "native-setup-retest",
+      "metadata": {
+        "case": "setup",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "0eef2df9aa90ac09e462e4a09d3cc80a2b3198f88e4858d333ee0424e0cb9e11",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          "skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6"
+        },
+        "fixture_before": {
+          "AGENTS.md": "386707aac9346e9319fa165a41841f5b9f262bce7c665e5a7bde5c12c52fee97",
+          "AGENTS.override.md": "bae3bcd93284c0b55841d5153cecbc2d046abfa33a033fc2f3038f523a9eb846",
+          "AUTHORS.txt": "53189274fbce68a7267c26b57946de9745fd78fa03005fbfa0c3c4ec2f931663",
+          "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+          "slugs.py": "84933356323572b622fdcc3f13363b30622e26011cbb8692a3dcd5a89b5fd823",
+          "test_slugs.py": "6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup-retest/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup-retest/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 240,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": null,
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "setup",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 126.8,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 131463,
+            "cached_input_tokens": 119936,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 3636,
+            "reasoning_output_tokens": 1420
+          }
+        ],
+        "item_types": {
+          "agent_message": 4,
+          "command_execution": 11
+        },
+        "fixture_after": {
+          "AGENTS.md": "386707aac9346e9319fa165a41841f5b9f262bce7c665e5a7bde5c12c52fee97",
+          "AGENTS.override.md": "bae3bcd93284c0b55841d5153cecbc2d046abfa33a033fc2f3038f523a9eb846",
+          "AUTHORS.txt": "53189274fbce68a7267c26b57946de9745fd78fa03005fbfa0c3c4ec2f931663",
+          "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+          "slugs.py": "84933356323572b622fdcc3f13363b30622e26011cbb8692a3dcd5a89b5fd823",
+          "test_slugs.py": "6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285"
+        }
+      },
+      "changed_original_files": [],
+      "added_files": [],
+      "prompt": "Прочитай skill /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup-retest/package/skills/playbook/SKILL.md и подключи Playbook к текущему репозиторию, затем повтори подключение и проверь, что нет дубликатов. Сохрани существующие инструкции и незакоммиченные изменения.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и доступные локальные инструменты.\n",
+      "final": "Подключение заблокировано: `.agents/skills` недоступен для записи (`Read-only file system`). Повторное подключение не выполнялось; идемпотентность не проверена.\n\n- Дубликатов и частичной установки нет.\n- Все файлы сохранены побайтово, включая инструкции, `AUTHORS.txt` и незакоммиченную правку `slugs.py`.\n- `python3 -B -m unittest -v`: 1 тест прошёл.\n\nОстановка предусмотрена skill [Playbook](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup-retest/package/skills/playbook/SKILL.md), [правилом подключения](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup-retest/package/skills/playbook/references/connect.md): “If the host denies installation, stop setup without adding a block that refers to missing skills.”\n\nДля завершения нужна среда с разрешённой записью в `.agents/skills`. После этого можно повторить задачу: «Подключи Playbook дважды и проверь отсутствие дубликатов».",
+      "diff": "diff --git a/slugs.py b/slugs.py\nindex 5bad2b1..0fd8b4f 100644\n--- a/slugs.py\n+++ b/slugs.py\n@@ -3,3 +3,5 @@ import re\n \n def slugify(value: str) -> str:\n     return re.sub(r'[^a-z0-9]+', '-', value.lower())\n+\n+# User uncommitted note: preserve exactly.\n",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'cat /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-setup-retest/package/skills/playbook/SKILL.md'",
+          "exit_code": 0
+        },
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc \"python3 - <<'PY'\nimport hashlib\nimport json\nimport subprocess\nfrom pathlib import Path\nroot = Path.cwd()\nfiles = {}\ndirs = []\nlinks = {}\nfor path in sorted(root.rglob('*')):\n    rel = path.relative_to(root)\n    if '.git' in rel.parts:\n        continue\n    if path.is_symlink():\n        links[str(rel)] = str(path.readlink())\n    elif path.is_file():\n        files[str(rel)] = hashlib.sha256(path.read_bytes()).hexdigest()\n    elif path.is_dir():\n        dirs.append(str(rel))\nsnapshot = {'files': files, 'dirs': dirs, 'links': links, 'status': subprocess.check_output(['git', 'status', '--porcelain=v1', '--untracked-files=all'], text=True), 'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()}\nblocks = {}\nfor name in ('AGENTS.md', 'AGENTS.override.md'):\n    content = (root / name).read_text()\n    blocks[name] = {'begin': content.count('<\"'!-- playbook-native:begin'\"'), 'end': content.count('<\"'!-- playbook-native:end -->'\"')}\ninstalled = [str(p.relative_to(root)) for p in (root / '.agents').rglob('SKILL.md') if p.parent.name in ('playbook', 'playbook-frontend')]\nprint(json.dumps({'snapshot': snapshot, 'playbook_blocks': blocks, 'installed_skills': installed}, ensure_ascii=False))\nPY\"",
+          "exit_code": 0
+        }
+      ],
+      "external_browser_check": null,
+      "local_artifact_hashes": {
+        "events.jsonl": "2d165670671f712112da942131fcb207adf3dea1f3ce52cafbfb88f6babb600f",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "37a864a0d5e8f5edc67a6b005d4547aedda42ef06bd0ded7fae37d5d82985256",
+        "metadata.json": "9fdbf00ffc46b35ab59721cac92b006d5c7f808b851c08e5aeaabd9a26bddbb8",
+        "summary.json": "413d31a8144ee3364ca1a23af5d85436fd3bb59779602078ad887c74719af40a"
+      }
+    },
+    {
+      "id": "native-backend",
+      "metadata": {
+        "case": "backend",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "0eef2df9aa90ac09e462e4a09d3cc80a2b3198f88e4858d333ee0424e0cb9e11",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          "skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6"
+        },
+        "fixture_before": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+          "slugs.py": "5d7a31bdc4376dd721b45538edc14f09b800bd8d077af6f58ecf093a65d28dbb",
+          "test_slugs.py": "6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-backend/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-backend/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 300,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "backend",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 43.11,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 81439,
+            "cached_input_tokens": 71296,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 776,
+            "reasoning_output_tokens": 74
+          }
+        ],
+        "item_types": {
+          "agent_message": 2,
+          "command_execution": 5,
+          "file_change": 1
+        },
+        "fixture_after": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+          "slugs.py": "e7e8926605db8d31e4a35b3d6671279f803b5e3c8624ff84a6528911700687f2",
+          "test_slugs.py": "6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285"
+        }
+      },
+      "changed_original_files": [
+        "slugs.py"
+      ],
+      "added_files": [],
+      "prompt": "Исправь slugify: пробелы и дефисы в начале и конце результата должны удаляться, внутренние слова остаются разделены одним дефисом. Проверь обычную строку и строку из одних пробелов. Работай только над этим Python helper.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и доступные локальные инструменты.\n",
+      "final": "Исправлен только [slugs.py](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-backend/workspace/slugs.py:5): крайние разделители удаляются, между словами остаётся один дефис.\n\nЛокальные проверки прошли:\n\n- `'Two Words'` → `'two-words'`\n- `'  --Two   -- Words--  '` → `'two-words'`\n- `'   '` → `''`\n\nСуществующий unittest и `git diff --check` также прошли.",
+      "diff": "diff --git a/slugs.py b/slugs.py\nindex 5bad2b1..23daaee 100644\n--- a/slugs.py\n+++ b/slugs.py\n@@ -2,4 +2,4 @@ import re\n \n \n def slugify(value: str) -> str:\n-    return re.sub(r'[^a-z0-9]+', '-', value.lower())\n+    return re.sub(r'[^a-z0-9]+', '-', value.lower()).strip('-')\n",
+      "instruction_and_mcp_evidence": [],
+      "external_browser_check": null,
+      "local_artifact_hashes": {
+        "events.jsonl": "910db275316c33b42f10bc54f5d423427264cb40477c6ee79f234201ae457f99",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "e6569c6bb862c3be5bfd162c207d370f2a577035fa736718d5684c4af3fd9253",
+        "metadata.json": "c74eed9e7633975198be6c998cb88003da5fb5d78aa49f24810ce0abc4856ca0",
+        "summary.json": "b37379de35f250f6127f361b526f70bff697a3a34e897eb43ead8809354be465"
+      }
+    },
+    {
+      "id": "native-new-plan",
+      "metadata": {
+        "case": "new-plan",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "0eef2df9aa90ac09e462e4a09d3cc80a2b3198f88e4858d333ee0424e0cb9e11",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          "skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6"
+        },
+        "fixture_before": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-new-plan/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-new-plan/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 300,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "new-plan",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 69.26,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 53070,
+            "cached_input_tokens": 45440,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1716,
+            "reasoning_output_tokens": 784
+          }
+        ],
+        "item_types": {
+          "agent_message": 2,
+          "command_execution": 7
+        },
+        "fixture_after": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac"
+        }
+      },
+      "changed_original_files": [],
+      "added_files": [],
+      "prompt": "$playbook Новый проект. Создать. Сначала план. Хочу небольшой сервис записи на занятия для одного преподавателя. Предложи первый полезный результат, важные вопросы и способ проверки. Не создавай файлы и не начинай реализацию.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и доступные локальные инструменты.\n",
+      "final": "Предлагаю первый полезный результат: **локальный сервис с полным сценарием записи** — преподаватель создаёт свободные слоты, ученик выбирает время и записывается, преподаватель видит запись. Занятое время становится недоступным, данные сохраняются после перезапуска.\n\nДля предварительного плана предлагаю индивидуальные занятия, ручное добавление слотов и немедленное подтверждение записи. Это рабочие предположения, которые нужно уточнить.\n\nВажные вопросы:\n\n1. Занятия индивидуальные или групповые? Какова длительность и нужен ли перерыв между ними?\n2. Преподаватель задаёт отдельные слоты или повторяющееся расписание? Какой часовой пояс использовать?\n3. Запись подтверждается сразу или после одобрения преподавателем?\n4. Какие данные ученика нужны? Нужен ли ему аккаунт, и как преподаватель получает доступ к управлению?\n5. Нужны ли в первой версии отмена и перенос, с каким ограничением по времени?\n\nПлан будущей реализации:\n\n1. Уточнить правила и описать три экрана: расписание ученика, подтверждение записи, управление занятиями.\n2. Создать локальное приложение с хранением данных и защитой от двойного бронирования. Предварительный вариант без установки зависимостей — Python, SQLite и обычные HTML/CSS/JavaScript.\n3. Проверить полный сценарий на тестовых данных, исправить обнаруженные проблемы и приложить результаты проверок.\n\nСпособ проверки:\n\n| Проверка | Ожидаемый результат |\n|---|---|\n| Создать слот и записаться через интерфейс | Запись видна преподавателю, слот занят |\n| Одновременно отправить две записи на один слот | Успешна ровно одна |\n| Отправить пустую форму или выбрать прошедшее время | Понятная ошибка, запись не создаётся |\n| Перезапустить приложение | Расписание и записи сохранены |\n| Пройти сценарий в узком и широком окне | Все действия доступны; актуальные скриншоты просмотрены |\n\nВ репозитории сейчас только инструкции и навыки; приложения и тестов нет. Python и Node.js доступны. Браузер или Playwright в `PATH` не найдены, поэтому возможность проверки интерфейса ещё предстоит подтвердить локально; без неё интерфейс нельзя считать проверенным.\n\n**Изменений нет:** выполнено только локальное чтение. Файлы не создавались, зависимости не устанавливались, обращений к внешним сервисам и коммитов не было. Реализация остановлена на плане согласно вашему запросу.",
+      "diff": "",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'cat .agents/skills/playbook/SKILL.md'",
+          "exit_code": 0
+        }
+      ],
+      "external_browser_check": null,
+      "local_artifact_hashes": {
+        "events.jsonl": "a39a7fbb5ec6dc5461a5eedb8f5219135b6a5e5503d04b57caae2a50908b7fca",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "ea7dea76c3a30a4455edb9f838c96104f53b7c74c8bb72821edc04620d962360",
+        "metadata.json": "4c0a464ba8d48421290305f942413fa1cdbf89b4d739651e2a039ce1cde35091",
+        "summary.json": "c8209410daada4b219753f20e67747117945d645f55c4bfb76db2887853d8fef"
+      }
+    },
+    {
+      "id": "native-review",
+      "metadata": {
+        "case": "review",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "0eef2df9aa90ac09e462e4a09d3cc80a2b3198f88e4858d333ee0424e0cb9e11",
+          "README.md": "49e24bd9c4389b2e0025e3394aadec913023e158cf8dc095068a14a019e68d29",
+          "skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          "skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6"
+        },
+        "fixture_before": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-review/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-review/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 300,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "review",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": true,
+        "elapsed_seconds": 300.07,
+        "event_parse_errors": 0,
+        "turn_completed": false,
+        "usage": [],
+        "item_types": {
+          "agent_message": 4,
+          "command_execution": 11,
+          "file_change": 2
+        },
+        "fixture_after": {
+          ".agents/skills/playbook/SKILL.md": "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          ".review-tmp/subscription/REPORT.md": "1c3407faf8ca463ac9876355496c96be2d2acb5813d0b94e3336ab07ed0e2341",
+          ".review-tmp/subscription/check.cjs": "de863a8a0c194454ca75fdc9f7f3e25a03a9d868c58571ee863792e7e8349725",
+          ".review-tmp/subscription/results.json": "caf49e0627eca966d2b3501e4d05823e78664d40b933c194fbecc0fbd064942c",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        }
+      },
+      "changed_original_files": [],
+      "added_files": [
+        ".review-tmp/subscription/REPORT.md",
+        ".review-tmp/subscription/check.cjs",
+        ".review-tmp/subscription/results.json"
+      ],
+      "prompt": "$playbook Существующий проект. Проверить результат. Расширенный контроль. Проверь текущую форму подписки: поведение, мобильный вид и доступность с клавиатуры. Дай конкретные замечания с проверками. Исходники не исправляй; временные файлы проверки разрешены. Независимого reviewer в этом испытании нет, не запускай другие агенты.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и доступные локальные инструменты.\n",
+      "final": null,
+      "diff": "",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'cat .agents/skills/playbook/SKILL.md && cat .agents/skills/playbook-frontend/references/browser.md'",
+          "exit_code": 1
+        },
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc \"cat .agents/skills/playbook-frontend/references/browser-check.md && node -e 'const p = process.env.PLAYBOOK_EVAL_PLAYWRIGHT_MODULE; console.log(\\\"Playwright module:\\\", p || \\\"not provided\\\"); if(p){const pw=require(p); console.log(\\\"Chromium executable:\\\",pw.chromium.executablePath());}'\"",
+          "exit_code": 0
+        }
+      ],
+      "external_browser_check": null,
+      "local_artifact_hashes": {
+        "events.jsonl": "94473b65a71bd0eaee8c382aaa65ae6e0da028352b32bd3018104ed1d3df809b",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "9ce4b7b40dc131d82b72abb3e1dd3971afbd1416590fe96dd96b5bd5a988aae1",
+        "metadata.json": "9f101e7f5f1df2a3e48fb03856d05ff47cb5be7cc9afe95ad91a8ddf40aa8f85",
+        "summary.json": "866d8a3ebbdffc01dc5cc7017bf836286824a93227619c7489c110b3554170e1"
+      }
+    },
+    {
+      "id": "native-review-retest",
+      "metadata": {
+        "case": "review",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "0eef2df9aa90ac09e462e4a09d3cc80a2b3198f88e4858d333ee0424e0cb9e11",
+          "README.md": "773891eb5c9422b3cc99e3d431b49e49aec7891a4a4a2b0f625fb41f9b20f38d",
+          "skills/playbook/SKILL.md": "5e2dc406ac0f498a4ade092e5eeb2663de703a731bfe6616550cabfbe4ade47a",
+          "skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6"
+        },
+        "fixture_before": {
+          ".agents/skills/playbook/SKILL.md": "5e2dc406ac0f498a4ade092e5eeb2663de703a731bfe6616550cabfbe4ade47a",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-review-retest/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-review-retest/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 420,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "review",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 248.63,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 338348,
+            "cached_input_tokens": 296448,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 6916,
+            "reasoning_output_tokens": 2686
+          }
+        ],
+        "item_types": {
+          "agent_message": 6,
+          "command_execution": 12,
+          "file_change": 1
+        },
+        "fixture_after": {
+          ".agents/skills/playbook/SKILL.md": "5e2dc406ac0f498a4ade092e5eeb2663de703a731bfe6616550cabfbe4ade47a",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          ".playbook-artifacts/subscription-review/checks.tap": "b98e7628a29178dc4c9b3c1643809078fb78a6b0c60e563de951ab7001ce99fa",
+          ".playbook-artifacts/subscription-review/review.test.cjs": "b77b658ddf868a1e138683214fd4dfc93f42f4b7ca623737c62f4108c0f5a3e2",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        }
+      },
+      "changed_original_files": [],
+      "added_files": [
+        ".playbook-artifacts/subscription-review/checks.tap",
+        ".playbook-artifacts/subscription-review/review.test.cjs"
+      ],
+      "prompt": "$playbook Существующий проект. Проверить результат. Расширенный контроль. Проверь текущую форму подписки: поведение, мобильный вид и доступность с клавиатуры. Дай конкретные замечания с проверками. Исходники не исправляй; временные файлы проверки разрешены. Независимого reviewer в этом испытании нет, не запускай другие агенты.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и доступные локальные инструменты.\n",
+      "final": "Обнаружены три проблемы. **Исходники не изменены; браузерная часть проверки осталась заблокирована средой.**\n\n1. **Высокий приоритет: успешная подписка сломана.** Отправка `reader@example.com` вызывает `TypeError`: обработчик обращается к отсутствующему `#subscription-message`. Подтверждение не появляется. Сценарий `wrong` → исправление адреса → повторная отправка оставляет прежнюю ошибку. Воспроизведено исполнением исходного обработчика в Node с минимальной моделью DOM. Причина: [app.js:15](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-review-retest/workspace/app.js:15).\n\n2. **Средний приоритет: форма не адаптирована к мобильной ширине.** По CSS форма занимает 680 px, поле имеет минимум 380 px. При экранах 320 / 375 / 390 px доступная ширина содержимого — только 264 / 319 / 334 px. Переноса элементов и адаптивных правил нет. Это подтверждено расчётом по [index.html:5](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-review-retest/workspace/index.html:5), без визуальной проверки.\n\n3. **Средний приоритет: ошибка программно не связана с полем.** Нет `aria-describedby` или `aria-errormessage`; обработчик также не выставляет `aria-invalid`. При возвращении к полю связь с пояснением ошибки отсутствует. При этом корректный `label`, нативная кнопка и `aria-live=\"polite\"` присутствуют. Проверено по [разметке](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-review-retest/workspace/index.html:8) и обработчику; озвучивание не проверялось.\n\n`npm test` прошёл: три проверки валидатора. Дополнительные проверки: **3 прошли, 4 упали**; два падения относятся к одному дефекту отправки. Сохранён [протокол с входными данными и ошибками](/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-review-retest/workspace/.playbook-artifacts/subscription-review/checks.tap). Diff отслеживаемых файлов пуст; добавлены только временный тест и протокол.\n\nЛокальный сервер и Chromium завершились с `Operation not permitted`. Поэтому Tab / Shift+Tab / Enter, видимый фокус, мобильный рендеринг, скриншоты и консоль браузера **не проверены**. Для завершения нужен доступный локальный запуск браузера. Независимого ревью не было; другие агенты не запускались.",
+      "diff": "",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc \"pwd && rg --files -g 'AGENTS.md' -g 'package.json' -g '*lock*' -g '*config*' -g '*test*' -g '*spec*' -g 'README*' -g '\"'!node_modules'\"' -g '\"'!'\"\\\\.git' -g '\"'!dist'\"' -g '\"'!build'\"' && cat .agents/skills/playbook/SKILL.md && cat .agents/skills/playbook-frontend/references/browser-check.md\"",
+          "exit_code": 0
+        }
+      ],
+      "external_browser_check": null,
+      "local_artifact_hashes": {
+        "events.jsonl": "10686d42d8ed55ae1891f8bc78e64f2f73d364c01b568f7928323e77d25884df",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "9ce4b7b40dc131d82b72abb3e1dd3971afbd1416590fe96dd96b5bd5a988aae1",
+        "metadata.json": "073a8ce82031763c1a7691d944ee92ad18519a420922c3e114b65a2981d80c99",
+        "summary.json": "4afd2921597ce2d2a8088bb98302fb7c3be4312ac13d52974a065191fdc6565a"
+      }
+    },
+    {
+      "id": "native-quick",
+      "metadata": {
+        "case": "quick",
+        "condition": "native",
+        "source_hashes": {
+          ".codex-plugin/plugin.json": "0eef2df9aa90ac09e462e4a09d3cc80a2b3198f88e4858d333ee0424e0cb9e11",
+          "README.md": "773891eb5c9422b3cc99e3d431b49e49aec7891a4a4a2b0f625fb41f9b20f38d",
+          "skills/playbook/SKILL.md": "5e2dc406ac0f498a4ade092e5eeb2663de703a731bfe6616550cabfbe4ade47a",
+          "skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          "skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          "skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6"
+        },
+        "fixture_before": {
+          ".agents/skills/playbook/SKILL.md": "5e2dc406ac0f498a4ade092e5eeb2663de703a731bfe6616550cabfbe4ade47a",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "de587407af40a7a57b2554c4f1891955af0f9b483ede4b42b423342ee39b015a",
+          "app.test.cjs": "5bac2ccf5e46097315a645ae7132c70957b959c92f02e922f79dea2993ebb7f1",
+          "index.html": "43f29e04a93e593f25dc6feb2c395b2630e62e08be8582ded3dda4301185c75f",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        },
+        "argv": [
+          "codex",
+          "exec",
+          "--ephemeral",
+          "--sandbox",
+          "workspace-write",
+          "-c",
+          "approval_policy=\"never\"",
+          "--json",
+          "-C",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-quick/workspace",
+          "-o",
+          "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/native-pilot/native-quick/final.txt",
+          "-"
+        ],
+        "timeout_seconds": 360,
+        "codex_version": "codex-cli 0.155.1",
+        "model_configuration": "inherited unchanged from host; see protocol/report",
+        "playwright_module": "/tmp/visual-review/node_modules/playwright",
+        "limitations": [
+          "not a clean host profile",
+          "single diagnostic trial",
+          "no automated semantic grading of final claims"
+        ]
+      },
+      "summary": {
+        "case": "quick",
+        "condition": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 163.27,
+        "event_parse_errors": 0,
+        "turn_completed": true,
+        "usage": [
+          {
+            "input_tokens": 236934,
+            "cached_input_tokens": 209152,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 4327,
+            "reasoning_output_tokens": 2046
+          }
+        ],
+        "item_types": {
+          "agent_message": 4,
+          "command_execution": 12,
+          "file_change": 2
+        },
+        "fixture_after": {
+          ".agents/skills/playbook/SKILL.md": "5e2dc406ac0f498a4ade092e5eeb2663de703a731bfe6616550cabfbe4ade47a",
+          ".agents/skills/playbook/assets/project-block.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+          ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+          ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+          "AGENTS.md": "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac",
+          "README.md": "f24535696c3dc97486c934b8358daccb6795a4e9292e9fc448e3156a6d779d4e",
+          "app.js": "134404b31a87738dc06c5c7ab3564d6d63980edd0ca33f65f27bf65c577261c9",
+          "app.test.cjs": "0c3ea3cdcf38e034625cfeb156668fd3cd75b86156d7430bb9d63eec95d47d50",
+          "index.html": "27767d126f283f8a99bdcc81d811d2bb973ae5f62630003a3b3dc9631975a659",
+          "package.json": "fe47211b3999d1b6e96a6925f9da0cfebf8c931913a65e81280e2bdd8a7923cb"
+        }
+      },
+      "changed_original_files": [
+        "app.js",
+        "app.test.cjs",
+        "index.html"
+      ],
+      "added_files": [],
+      "prompt": "$playbook Существующий проект. Исправить. Быстрый режим: поправь форму подписки, на телефоне кнопка выходит за границы. Сохрани оформление. Минимум бюрократии; проверь отправку, ошибку email и реальный результат. Исправь найденные проблемы и покажи итог.\nРаботай только в текущем изолированном репозитории. Не меняй глобальные настройки, не устанавливай зависимости, не обращайся к внешним сервисам, не публикуй и не коммить изменения. Для проверки используй только локальное приложение и доступные локальные инструменты.\n",
+      "final": "Исправил [форму](./index.html): на узких экранах кнопка располагается под полем и помещается по ширине. Оформление сохранено. Также устранил сбой подтверждения «Вы подписаны!».\n\n`npm test` и проверка diff прошли. Регрессионный тест проверяет пустой/неверный email, успешную отправку и исправление ошибки на модели DOM.\n\nРеальная браузерная проверка и скриншоты остались недоступны: среда блокирует Chromium и локальный сервер (`Operation not permitted`). Результат демоформы — локальное подтверждение, без внешней подписки.",
+      "diff": "diff --git a/app.js b/app.js\nindex 54db9f4..019f9de 100644\n--- a/app.js\n+++ b/app.js\n@@ -12,6 +12,6 @@ if (typeof document !== 'undefined') {\n       message.textContent = 'Проверьте адрес почты';\n       return;\n     }\n-    document.querySelector('#subscription-message').textContent = 'Вы подписаны!';\n+    message.textContent = 'Вы подписаны!';\n   });\n }\ndiff --git a/app.test.cjs b/app.test.cjs\nindex ee71ab0..0aa40e7 100644\n--- a/app.test.cjs\n+++ b/app.test.cjs\n@@ -1,6 +1,39 @@\n const assert = require('node:assert/strict');\n+const { readFileSync } = require('node:fs');\n+const { join } = require('node:path');\n+const { runInNewContext } = require('node:vm');\n const {validEmail} = require('./app');\n assert.equal(validEmail('reader@example.com'), true);\n assert.equal(validEmail('wrong'), false);\n assert.equal(validEmail(''), false);\n console.log('Email validation checks passed');\n+\n+// Exercise the real handler with a small DOM double backed by the page's IDs.\n+// This catches missing message targets; it does not verify browser rendering.\n+const html = readFileSync(join(__dirname, 'index.html'), 'utf8');\n+const elements = new Map([...html.matchAll(/\\bid=\"([^\"]+)\"/g)].map(([, id]) => [\n+  `#${id}`, { value: '', textContent: '' }\n+]));\n+let submit;\n+elements.get('#signup').addEventListener = (event, handler) => {\n+  assert.equal(event, 'submit');\n+  submit = handler;\n+};\n+runInNewContext(readFileSync(join(__dirname, 'app.js'), 'utf8'), {\n+  document: { querySelector: selector => elements.get(selector) ?? null }\n+});\n+\n+function checkSubmission(value, expectedMessage) {\n+  elements.get('#email').value = value;\n+  let prevented = false;\n+  submit({ preventDefault() { prevented = true; } });\n+  assert.ok(prevented, 'The form must not navigate or send data');\n+  assert.equal(elements.get('#message').textContent, expectedMessage);\n+}\n+\n+checkSubmission('', 'Проверьте адрес почты');\n+checkSubmission('wrong', 'Проверьте адрес почты');\n+checkSubmission('reader@example.com', 'Вы подписаны!');\n+checkSubmission('reader@', 'Проверьте адрес почты');\n+checkSubmission(' reader@example.com ', 'Вы подписаны!');\n+console.log('Form handler checks passed (DOM double, not a browser)');\ndiff --git a/index.html b/index.html\nindex 761af57..1b47c5d 100644\n--- a/index.html\n+++ b/index.html\n@@ -3,6 +3,7 @@\n <title>Письма по делу</title>\n <style>\n *{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:680px}input{min-width:380px;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex-direction:column;gap:6px}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}\n+@media(max-width:736px){form{width:100%;flex-direction:column}input{min-width:0;width:100%}button{align-self:stretch;white-space:normal}}\n </style>\n <main><p class=\"eyebrow\">Письма по делу · каждую пятницу</p><h1>Полезные идеи.<br>Без лишнего шума.</h1><p>Одно короткое письмо о работе с технологиями. Подпишитесь — отписаться можно в любой момент.</p>\n <form id=\"signup\" novalidate><div class=\"field\"><label for=\"email\">Ваша почта</label><input id=\"email\" name=\"email\" type=\"email\" autocomplete=\"email\" placeholder=\"you@example.com\" required></div><button type=\"submit\">Подписаться на письма</button></form><p id=\"message\" role=\"status\" aria-live=\"polite\"></p><footer>© Письма по делу. Учебный проект; данные не отправляются наружу.</footer></main>\n",
+      "instruction_and_mcp_evidence": [
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'cat .agents/skills/playbook/SKILL.md && cat .agents/skills/playbook-frontend/SKILL.md'",
+          "exit_code": 0
+        },
+        {
+          "type": "instruction_read_command",
+          "command": "/bin/bash -lc 'cat AGENTS.md package.json README.md index.html app.js app.test.cjs .agents/skills/playbook-frontend/references/browser-check.md'",
+          "exit_code": 0
+        }
+      ],
+      "external_browser_check": {
+        "checks": {
+          "invalid_feedback": true,
+          "valid_confirmation": true,
+          "no_overflow_390": true,
+          "controls_visible_390": true,
+          "no_overflow_1280": true,
+          "controls_visible_1280": true,
+          "keyboard_button": true,
+          "no_page_errors": true
+        },
+        "errors": [],
+        "all_passed": true,
+        "scope": "synthetic local behavior/layout probe, not full accessibility or visual design acceptance"
+      },
+      "local_artifact_hashes": {
+        "events.jsonl": "66bc0c9334fb401ba4e2bb28621dc69409c5f7afa7a54247aea47367de1bb2ff",
+        "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "prompt.txt": "4a80a67cb2edde5cc459121a6edc841206494dc5eead546a879fb49b3432060c",
+        "metadata.json": "1b300c55c857a453a607c990d512e1a8c50bf7e5c24b0ad913ef10fdf4217080",
+        "summary.json": "0945f37973c59a81fce289d182486cc2226ae05f461122d113e0dff63241f00b"
+      }
+    }
+  ],
+  "skill_sources_by_sha256": {
+    "22ef592462bc3ef9b703d4dd4f6aa6e82f38f69cb58eb56daaabf4596c92c9c0": {
+      "path": "skills/playbook-setup/SKILL.md",
+      "text": "---\nname: playbook-setup\ndescription: Connect, update, or remove Playbook Native in the current repository when the user asks to set up Playbook. Do not activate for ordinary implementation tasks or silently migrate an existing governed workflow.\n---\n\nConnect the current repository with a small, inspectable change. The user's\nrequest to connect authorizes local setup; do not add a second approval step\nfor the ordinary edits below. Honor existing instructions and permissions.\n\n## Connect\n\n1. Identify the repository root, current branch, uncommitted changes, and\n   applicable instructions, including `AGENTS.override.md` and nested files.\n   Read the relevant README, package manifest, lockfile, and CI commands.\n   Inspect only the project scope needed to find run/check commands.\n2. If an established Playbook contract, mandated reviews, or another workflow\n   conflicts with Native, explain the concrete conflict and ask which workflow\n   should govern. Do not remove or weaken existing requirements as setup.\n   Read-only discovery can continue while that decision is pending.\n3. Determine how the skills are supplied. When this plugin is installed and\n   its skills are discoverable, keep them in the plugin. When invoked by reading\n   this file from a separate checkout, copy this complete skill folder and its\n   sibling `playbook-frontend` to the project's `.agents/skills/` directory.\n   Do not install both copies of the same skill. If names already exist, compare\n   them; preserve custom changes and resolve collisions instead of overwriting.\n   Do not follow target symlinks to write outside the selected repository.\n4. Read [the project block](assets/project-block.md). Merge it once into the\n   effective project instruction file (`AGENTS.md`, or the existing root\n   `AGENTS.override.md` that would shadow it). Preserve everything outside its\n   markers. For a monorepo, choose the relevant scope without changing sibling\n   apps. Add a short adjacent project note only for useful verified facts:\n   run/check commands with working directories, design-system location, and\n   unusual constraints. Reuse existing notes; do not duplicate them or invent\n   scripts. Keep the added note to roughly ten lines.\n5. Check actual capabilities: command execution; existing checks; for UI work,\n   a reachable browser and screenshot inspection. Prefer an available native\n   browser or installed project runner. Report missing capabilities plainly.\n   Do not install browser packages, connect accounts, change global settings,\n   add MCP, or relax permissions merely to finish setup. A requested first task\n   may separately authorize its needed project dependencies.\n6. Inspect the diff. Setup is complete when the effective project instructions\n   have one block, the two skills have one installation source, and there is a\n   usable next task or a specific environment limitation. Do not claim a skill\n   was selected or a command passed without observing it. If the client has not\n   picked up instructions/skills, start a new session and verify discovery.\n\nFinish with: files changed; commands discovered; capabilities available/missing;\none example task. If the user also supplied a task, continue with it as soon as\nsetup permits. No brief, task registry, receipts, or policy files are required.\n\n## Update or remove\n\nOnly do this when requested. Compare the installed files and marked block with\nthe requested source version. Preserve user edits; explain unresolved conflicts.\nDo not auto-update from a moving branch. With plugin delivery, use the host's\nupdate/remove mechanism instead of adding local duplicates.\n\nRemoval deletes only the Playbook-marked block and skill files known to have\nbeen installed by this setup. Preserve locally modified skill files unless the\nuser explicitly includes those edits in the removal request; explain any files\nleft behind. Keep project-specific notes and all unrelated\ninstructions, tests, screenshots, and source changes. If an instruction file\nbecomes empty, delete it only if setup created it. Disabling the plugin alone\ndoes not remove the project block; mention that distinction. Show the diff.\n"
+    },
+    "894a9e8bad44659e779d7133408474a424051f715109fdeb159911a1ec28a998": {
+      "path": "skills/playbook-setup/assets/project-block.md",
+      "text": "<!-- playbook-native:begin v0.1.0-preview.1 -->\n## Playbook Native\n\n- Deliver the requested outcome using this repository's conventions and tools.\n  Inspect relevant code and checks first. Keep small tasks small; use a short\n  plan for multi-step work, and save it only when it helps continuation.\n- Continue through implementation, verification, and fixes within the authorized\n  scope. Ask when missing intent changes the result or when new authority is\n  needed; do not add approvals for routine reversible work.\n- Use relevant installed skills. For rendered UI changes, use\n  `playbook-frontend` when available. Run the app, exercise the changed user\n  flow, and inspect current screenshots before calling the UI verified.\n- Run meaningful existing checks; add regression coverage when the changed\n  behavior warrants it. Inspect the diff. Do not weaken tests or regenerate\n  visual baselines just to obtain a pass.\n- Report what changed, what actually ran and passed/failed, and what remains\n  unverified, with useful evidence links. Missing tools/access mean an explicit\n  limitation. A self-check is not independent review.\n- Preserve unrelated work and existing project policies. Do not expand access,\n  publish, deploy, spend money, or mutate production without authorization.\n  Stop repeating an unchanged failing approach; diagnose or report the blocker.\n<!-- playbook-native:end -->\n"
+    },
+    "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8": {
+      "path": "skills/playbook-frontend/SKILL.md",
+      "text": "---\nname: playbook-frontend\ndescription: Implement or fix rendered web UI and verify the changed user journey in the running application. Use for pages, components, forms, responsive layouts, and UI interactions; not for backend-only changes, prose, or research without implementation.\n---\n\nDeliver a working, visually inspected user journey. Adapt the depth to the\nchange; a small CSS repair does not need a design phase. Respect the project's\nexisting release, accessibility, and review requirements.\n\n## Establish the intended result\n\nRead the relevant screen, components, styles, and tests. Use the existing stack,\ntokens, and design system. Identify what a person needs to do and what should\nhappen. For a new screen, state a brief visual direction and key states in the\nconversation, then build. Ask only if an unresolved choice would materially\nchange the product; use a sensible stated assumption for ordinary details.\n\nUse supplied designs and real content where available. Distinguish a marketing\npage from a working application. Do not add decorative effects, dependencies,\nor a different framework merely to make the result look more elaborate.\nIf a specialist design or framework skill is already available and appropriate,\nuse it selectively rather than reproducing its full guidance here.\n\n## Implement and check\n\nUse the project's run and verification commands. For behavior changes, choose\nregression coverage that exercises the actual failure or acceptance criterion.\nReuse the existing test runner; do not introduce a new framework for a trivial\nchange. A build passing does not prove that the user flow works.\n\nFollow [browser verification](references/browser-check.md) when starting the\napp and testing the change. The browser interface may be native, CLI, or MCP;\nchoose an available capability that can reach this app. Use one interface\nunless a specific missing diagnostic justifies another.\n\nExercise the changed flow, its relevant failure state, and the layouts affected\nby the change. Inspect fresh screenshots at the relevant wide and narrow\nviewports for a responsive web UI; for a fixed-size surface, use its supported\nsize. Look for overflow, clipping, hierarchy, text legibility, focus visibility,\nand overlap. Check keyboard operation and labels for changed controls. Use\nautomated accessibility checks if available, without calling them a complete\naccessibility audit.\n\nFix observed issues and recheck the affected flow and relevant project checks.\nIf two attempts make no progress on the same blocker, diagnose the environment\nor ask for the specific missing input. This is a prompt heuristic, not an\nenforced retry budget. Do not cycle indefinitely or broaden the task silently.\n\n## Present the result\n\nGive a short outcome, actual check results, the preview or useful screenshot\nlinks, and any remaining limitation. Include the checked route/state and\nviewport when they clarify coverage. Distinguish test success, observed browser\nbehavior, visual inspection, and unverified areas. Do not say \"verified\" when\nthe browser never opened, screenshots were not inspected, or data was mocked\nwhere the acceptance criterion requires the real integration.\n\nThe user sees the working result and meaningful tradeoffs, not a packet of\nprocess forms. Follow an existing visual-baseline policy; do not invent a new\napproval cycle for an ordinary change. New golden baselines are candidates\nfor review, never evidence of their own correctness. If external publishing\nor production actions are needed, finish the locally reviewable work first.\n"
+    },
+    "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6": {
+      "path": "skills/playbook-frontend/references/browser-check.md",
+      "text": "# Verify the app you changed\n\nUse existing run scripts and browser instructions. These checks apply to local\ndevelopment; a project's CI/release evidence policy can require more.\n\n## Reach the right app\n\n- Start the app from the actual checkout/worktree being edited, on an available\n  port. Use the server's real ready URL. Do not reuse or stop an unknown process\n  just because it occupies the expected port. Give concurrent worktrees separate\n  ports and browser sessions.\n- Check a distinctive property of this change in the rendered app. Compare it\n  with the source being edited and the process you started. A URL, PID, commit\n  label, or HTTP 200 alone does not establish that the changed code is running.\n  On mismatch, rebuild/restart your own server and recheck. Do not report a pass\n  if the mismatch remains unresolved.\n- With HMR, wait for the changed screen to settle. Recapture after subsequent\n  code edits. For a remote preview, require a deployment/build identity tied to\n  the revision under review; otherwise state that the preview is unverified.\n- A cloud browser's localhost may be a different machine. Do not expose a local\n  service publicly or add a tunnel without authorization. Prefer a browser\n  colocated with the dev server when available.\n\n## Observe useful evidence\n\n- Use a fresh test session and non-sensitive data. Exercise the main interaction\n  and a relevant edge/error state. Verify the visible result and relevant\n  persistence/navigation; clicking a button alone is not a successful outcome.\n- Capture current screenshots after fonts/data are ready and animations settle.\n  Open the images to inspect them. A saved PNG that was never viewed proves\n  capture, not visual review. If image inspection is unavailable, disclose it.\n- Inspect console/network errors when the tool provides them; distinguish new\n  defects from known background noise. If those diagnostics are unavailable,\n  state that gap instead of inventing a clean console.\n- Use the project's artifact location or the session's temporary output folder.\n  Keep only useful screenshots/traces and link them. Do not commit recordings,\n  cookies, credentials, or customer data by default. No receipt schema is needed\n  for a normal local check. Formal provenance is required only by project policy.\n- Screenshot comparisons help stable repeated UI surfaces. Preserve established\n  baselines; inspect differences before proposing updates. Do not add pixel\n  snapshots to every UI change or hide defects with masks/looser thresholds.\n\n## Missing capability\n\nUse an already installed native browser, project Playwright runner, browser CLI,\nor appropriate connected MCP tool. Do not install all alternatives. If none is\navailable, complete independent code checks and report exactly what blocks the\nbrowser check and the smallest next step. Human inspection may close that gap,\nbut never relabel it as agent verification. An installed skill is not a browser.\n\nClose only servers and browser sessions you created, unless the user needs the\npreview kept open. Tell the user if a linked preview has been stopped.\n"
+    },
+    "00b25bd819ca399ff84f04e161c8ca358486d5ffbb3e9a50dd546b35c45db43f": {
+      "path": "skills/playbook/SKILL.md",
+      "text": "---\nname: playbook\ndescription: Start or steer Playbook work when the user invokes Playbook, asks to connect it, or asks it to choose a workflow. Infer project context, create/fix/check intent and automatic/plan-first/extended control. Do not activate for every unrelated code edit.\n---\n\nProvide one entry to the project. Accept the user's ordinary task description;\nmake the working approach understandable without requiring a process form.\nPreserve existing authorization, project instructions and the user's changes.\n\n## Choose a useful approach\n\nRead enough of the current directory, instructions and project to resolve three\nindependent dimensions. The user's explicit choices override your suggestions.\n\n| Dimension | Choices | Default inference |\n|---|---|---|\n| Project | New / existing | Inspect files and the task; a new feature in an existing repo is still an existing project |\n| Action | Create / fix / check | Infer the requested outcome, not just a keyword |\n| Control | Automatic / plan first / extended | Automatic for clear local work; recommend extended for material auth/data/payment/migration risk |\n\nBriefly state the proposed approach and why, for example:\n\"Existing project · fix · automatic. I'll reproduce the mobile issue, make the\nchange and check the form in the browser.\" Continue when intent is clear.\nDo not turn this announcement into an extra approval gate. The user can change\nany dimension in ordinary language, including while work is in progress.\n\nIf no task was supplied, ask one short question about the desired outcome.\nOffer optional examples: create a new project, fix an existing bug, check a\nresult. Do not require the user to select all three dimensions. If a supposed\nnew project targets an occupied folder, preserve its contents and resolve the\nactual destination before scaffolding. Do not invent business requirements.\n\n## Honor the selected control\n\n- **Automatic:** choose a proportional plan, implement, verify the real outcome,\n  fix observed problems and present the result. \"Quick\" means this mode with\n  less ceremony; it does not remove verification, project policy or permissions.\n- **Plan first:** inspect and clarify the task, then present the proposed changes,\n  acceptance checks and material choices. Stop before implementation. Do not\n  write project files, install/connect the package, or persist a plan unless\n  separately requested. Continue implementation only when the user requests it.\n- **Extended:** make acceptance criteria and material risks explicit, add relevant\n  negative/regression checks and a focused fresh review when available and\n  authorized. State what extra checks are justified. If independent review is\n  unavailable, disclose that limitation. Do not invent a reviewer or import a\n  full governance framework. Existing policy determines consequential approvals;\n  the mode itself does not demand approval for every local step.\n\nControl applies independently of action. **Check** inspects and tests, and reports\nfindings; it does not fix source code unless the user asks. Temporary evidence\nis allowed when consistent with the user's scope. \"Plan first + check\" means\npropose the review plan and stop before executing it. An explicit request to\nonly inspect must never turn into automatic installation or implementation.\n\n## Connect only when needed\n\nFor a connect/update/remove request, read [connection instructions](references/connect.md).\nFor a first implementation task through Playbook in an unconnected repository,\nuse those instructions to establish the small project block and available skills,\nthen continue. Skip reconnection in an already connected project. If another\nmandatory workflow conflicts, resolve that conflict without silently weakening it.\n\nPlan-only and check-only requests do not authorize setup writes. The installed\nplugin can guide those tasks without a repository block. If invoked from a source\ncheckout, the reference explains how to copy only the two skill folders.\n\n## Deliver and verify\n\nFor rendered UI implementation, use `playbook-frontend` when available. For a\ncheck-only UI task, use its browser reference directly, preserving the no-fix\nboundary. For other work, use relevant project checks; do not launch a browser\nfor backend-only or prose changes. Reuse existing skills/tools instead of\ninstalling a catalogue. Missing capabilities are named gaps, not a pass.\n\nPresent the result appropriate to the chosen action: implemented outcome, plan,\nor findings. Include actual verification, remaining limitations, and a useful\nnext step only when work remains. Keep process metadata out of the final answer\nunless it helps the user understand a real decision.\n"
+    },
+    "6e66d63e41fdeba0601417309d9d8893c554087d745e3d0ed592ca08b3b71950": {
+      "path": "skills/playbook/references/connect.md",
+      "text": "# Connect, update, or remove\n\nConnect the current repository with a small, inspectable change. The user's\nrequest to connect authorizes local setup; do not add a second approval step\nfor the ordinary edits below. Honor existing instructions and permissions.\n\n## Connect\n\n1. Identify the repository root, current branch, uncommitted changes, and\n   applicable instructions, including `AGENTS.override.md` and nested files.\n   Read the relevant README, package manifest, lockfile, and CI commands.\n   Inspect only the project scope needed to find run/check commands.\n2. If an established Playbook contract, mandated reviews, or another workflow\n   conflicts with Native, explain the concrete conflict and ask which workflow\n   should govern. Do not remove or weaken existing requirements as setup.\n   Read-only discovery can continue while that decision is pending.\n3. Determine how the skills are supplied. When this plugin is installed and\n   its skills are discoverable, keep them in the plugin. When invoked by reading\n   this file from a separate checkout, copy the enclosing `playbook` skill folder (one level above this reference) and\n   its sibling `playbook-frontend` to the project's `.agents/skills/` directory.\n   Do not install both copies of the same skill. If names already exist, compare\n   them; preserve custom changes and resolve collisions instead of overwriting.\n   Do not follow target symlinks to write outside the selected repository.\n4. Read [the project block](../assets/project-block.md). Merge it once into the\n   effective project instruction file (`AGENTS.md`, or the existing root\n   `AGENTS.override.md` that would shadow it). Preserve everything outside its\n   markers. For a monorepo, choose the relevant scope without changing sibling\n   apps. Add a short adjacent project note only for useful verified facts:\n   run/check commands with working directories, design-system location, and\n   unusual constraints. Reuse existing notes; do not duplicate them or invent\n   scripts. Keep the added note to roughly ten lines.\n5. Check actual capabilities: command execution; existing checks; for UI work,\n   a reachable browser and screenshot inspection. Prefer an available native\n   browser or installed project runner. Report missing capabilities plainly.\n   Do not install browser packages, connect accounts, change global settings,\n   add MCP, or relax permissions merely to finish setup. A requested first task\n   may separately authorize its needed project dependencies.\n6. Inspect the diff. Setup is complete when the effective project instructions\n   have one block, the two skills have one installation source, and there is a\n   usable next task or a specific environment limitation. Do not claim a skill\n   was selected or a command passed without observing it. If the client has not\n   picked up instructions/skills, start a new session and verify discovery.\n\nFinish with: files changed; commands discovered; capabilities available/missing;\none example task. If the user also supplied a task, continue with it as soon as\nsetup permits. No brief, task registry, receipts, or policy files are required.\n\n## Update or remove\n\nOnly do this when requested. Compare the installed files and marked block with\nthe requested source version. Preserve user edits; explain unresolved conflicts.\nDo not auto-update from a moving branch. With plugin delivery, use the host's\nupdate/remove mechanism instead of adding local duplicates.\n\nRemoval deletes only the Playbook-marked block and skill files known to have\nbeen installed by this setup. Preserve locally modified skill files unless the\nuser explicitly includes those edits in the removal request; explain any files\nleft behind. Keep project-specific notes and all unrelated\ninstructions, tests, screenshots, and source changes. If an instruction file\nbecomes empty, delete it only if setup created it. Disabling the plugin alone\ndoes not remove the project block; mention that distinction. Show the diff.\n"
+    },
+    "66870f6732c6adf5ca54852147bd089fccac87ab7b83d83e723bc7f6380d41ac": {
+      "path": "skills/playbook/assets/project-block.md",
+      "text": "<!-- playbook-native:begin v0.1.0-preview.2 -->\n## Playbook Native\n\n- Deliver the requested outcome using this repository's conventions and tools.\n  Inspect relevant code and checks first. Keep small tasks small; use a short\n  plan for multi-step work, and save it only when it helps continuation.\n- Continue through implementation, verification, and fixes within the authorized\n  scope. Ask when missing intent changes the result or when new authority is\n  needed; do not add approvals for routine reversible work.\n- Use relevant installed skills. For rendered UI changes, use\n  `playbook-frontend` when available. Run the app, exercise the changed user\n  flow, and inspect current screenshots before calling the UI verified.\n- Run meaningful existing checks; add regression coverage when the changed\n  behavior warrants it. Inspect the diff. Do not weaken tests or regenerate\n  visual baselines just to obtain a pass.\n- Report what changed, what actually ran and passed/failed, and what remains\n  unverified, with useful evidence links. Missing tools/access mean an explicit\n  limitation. A self-check is not independent review.\n- Preserve unrelated work and existing project policies. Do not expand access,\n  publish, deploy, spend money, or mutate production without authorization.\n  Stop repeating an unchanged failing approach; diagnose or report the blocker.\n<!-- playbook-native:end -->\n"
+    },
+    "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624": {
+      "path": "skills/playbook/references/connect.md",
+      "text": "# Connect, update, or remove\n\nConnect the current repository with a small, inspectable change. The user's\nrequest to connect authorizes local setup; do not add a second approval step\nfor the ordinary edits below. Honor existing instructions and permissions.\n\n## Connect\n\n1. Identify the repository root, current branch, uncommitted changes, and\n   applicable instructions, including `AGENTS.override.md` and nested files.\n   Read the relevant README, package manifest, lockfile, and CI commands.\n   Inspect only the project scope needed to find run/check commands.\n2. If an established Playbook contract, mandated reviews, or another workflow\n   conflicts with Native, explain the concrete conflict and ask which workflow\n   should govern. Do not remove or weaken existing requirements as setup.\n   Read-only discovery can continue while that decision is pending.\n3. Determine how the skills are supplied. When this plugin is installed and\n   its skills are discoverable, keep them in the plugin. When invoked by reading\n   this file from a separate checkout, copy the enclosing `playbook` skill folder (one level above this reference) and\n   its sibling `playbook-frontend` to the project's `.agents/skills/` directory.\n   Do not install both copies of the same skill. If names already exist, compare\n   them; preserve custom changes and resolve collisions instead of overwriting.\n   Do not follow target symlinks to write outside the selected repository.\n   Complete and verify skill availability before editing the project block.\n   Some hosts protect `.agents` even inside a writable workspace. If the host\n   denies installation, stop setup without adding a block that refers to missing\n   skills. Report the native plugin install or host approval needed; do not\n   retry through a different filesystem route or weaken the sandbox. If this\n   attempt already added a block, remove only that new block to restore the\n   prior instructions. Partial connection is not successful onboarding.\n4. Read [the project block](../assets/project-block.md). Merge it once into the\n   effective project instruction file (`AGENTS.md`, or the existing root\n   `AGENTS.override.md` that would shadow it). Preserve everything outside its\n   markers. For a monorepo, choose the relevant scope without changing sibling\n   apps. Add a short adjacent project note only for useful verified facts:\n   run/check commands with working directories, design-system location, and\n   unusual constraints. Reuse existing notes; do not duplicate them or invent\n   scripts. Keep the added note to roughly ten lines.\n5. Check actual capabilities: command execution; existing checks; for UI work,\n   a reachable browser and screenshot inspection. Prefer an available native\n   browser or installed project runner. Report missing capabilities plainly.\n   Do not install browser packages, connect accounts, change global settings,\n   add MCP, or relax permissions merely to finish setup. A requested first task\n   may separately authorize its needed project dependencies.\n6. Inspect the diff. Setup is complete when the effective project instructions\n   have one block, the two skills have one installation source, and there is a\n   usable next task or a specific environment limitation. Do not claim a skill\n   was selected or a command passed without observing it. If the client has not\n   picked up instructions/skills, start a new session and verify discovery.\n\nFinish with: files changed; commands discovered; capabilities available/missing;\none example task. If the user also supplied a task, continue with it as soon as\nsetup permits. No brief, task registry, receipts, or policy files are required.\n\n## Update or remove\n\nOnly do this when requested. Compare the installed files and marked block with\nthe requested source version. Preserve user edits; explain unresolved conflicts.\nDo not auto-update from a moving branch. With plugin delivery, use the host's\nupdate/remove mechanism instead of adding local duplicates.\n\nRemoval deletes only the Playbook-marked block and skill files known to have\nbeen installed by this setup. Preserve locally modified skill files unless the\nuser explicitly includes those edits in the removal request; explain any files\nleft behind. Keep project-specific notes and all unrelated\ninstructions, tests, screenshots, and source changes. If an instruction file\nbecomes empty, delete it only if setup created it. Disabling the plugin alone\ndoes not remove the project block; mention that distinction. Show the diff.\n"
+    },
+    "5e2dc406ac0f498a4ade092e5eeb2663de703a731bfe6616550cabfbe4ade47a": {
+      "path": "skills/playbook/SKILL.md",
+      "text": "---\nname: playbook\ndescription: Start or steer Playbook work when the user invokes Playbook, asks to connect it, or asks it to choose a workflow. Infer project context, create/fix/check intent and automatic/plan-first/extended control. Do not activate for every unrelated code edit.\n---\n\nProvide one entry to the project. Accept the user's ordinary task description;\nmake the working approach understandable without requiring a process form.\nPreserve existing authorization, project instructions and the user's changes.\n\n## Choose a useful approach\n\nRead enough of the current directory, instructions and project to resolve three\nindependent dimensions. The user's explicit choices override your suggestions.\n\n| Dimension | Choices | Default inference |\n|---|---|---|\n| Project | New / existing | Inspect files and the task; a new feature in an existing repo is still an existing project |\n| Action | Create / fix / check | Infer the requested outcome, not just a keyword |\n| Control | Automatic / plan first / extended | Automatic for clear local work; recommend extended for material auth/data/payment/migration risk |\n\nBriefly state the proposed approach and why, for example:\n\"Existing project · fix · automatic. I'll reproduce the mobile issue, make the\nchange and check the form in the browser.\" Continue when intent is clear.\nDo not turn this announcement into an extra approval gate. The user can change\nany dimension in ordinary language, including while work is in progress.\n\nIf no task was supplied, ask one short question about the desired outcome.\nOffer optional examples: create a new project, fix an existing bug, check a\nresult. Do not require the user to select all three dimensions. If a supposed\nnew project targets an occupied folder, preserve its contents and resolve the\nactual destination before scaffolding. Do not invent business requirements.\n\n## Honor the selected control\n\n- **Automatic:** choose a proportional plan, implement, verify the real outcome,\n  fix observed problems and present the result. \"Quick\" means this mode with\n  less ceremony; it does not remove verification, project policy or permissions.\n- **Plan first:** inspect and clarify the task, then present the proposed changes,\n  acceptance checks and material choices. Stop before implementation. Do not\n  write project files, install/connect the package, or persist a plan unless\n  separately requested. Continue implementation only when the user requests it.\n- **Extended:** make acceptance criteria and material risks explicit, add relevant\n  negative/regression checks and a focused fresh review when available and\n  authorized. State what extra checks are justified. If independent review is\n  unavailable, disclose that limitation. Do not invent a reviewer or import a\n  full governance framework. Existing policy determines consequential approvals;\n  the mode itself does not demand approval for every local step.\n  Keep criteria and findings in the conversation unless a report file was\n  requested. Prioritize defects affecting the task; do not expand into an\n  unrelated audit just because extended control was selected.\n\nControl applies independently of action. **Check** inspects and tests, and reports\nfindings; it does not fix source code unless the user asks. Temporary evidence\nis allowed when consistent with the user's scope. \"Plan first + check\" means\npropose the review plan and stop before executing it. An explicit request to\nonly inspect must never turn into automatic installation or implementation.\n\n## Connect only when needed\n\nFor a connect/update/remove request, read [connection instructions](references/connect.md).\nFor a first implementation task through Playbook in an unconnected repository,\nuse those instructions to establish the small project block and available skills,\nthen continue. Skip reconnection in an already connected project. If another\nmandatory workflow conflicts, resolve that conflict without silently weakening it.\n\nPlan-only and check-only requests do not authorize setup writes. The installed\nplugin can guide those tasks without a repository block. If invoked from a source\ncheckout, the reference explains how to copy only the two skill folders.\n\n## Deliver and verify\n\nFor rendered UI implementation, use `playbook-frontend` when available. For a\ncheck-only UI task, read [browser checks](../playbook-frontend/references/browser-check.md), preserving the no-fix\nboundary. For other work, use relevant project checks; do not launch a browser\nfor backend-only or prose changes. Reuse existing skills/tools instead of\ninstalling a catalogue. Missing capabilities are named gaps, not a pass.\n\nPresent the result appropriate to the chosen action: implemented outcome, plan,\nor findings. Include actual verification, remaining limitations, and a useful\nnext step only when work remains. Keep process metadata out of the final answer\nunless it helps the user understand a real decision.\n"
+    }
+  },
+  "caveats": [
+    "host instructions not isolated",
+    "single task in paired arms",
+    "blocked agent browsers are not successful end-to-end UI trials",
+    "external browser checks are evaluator actions, not task-agent actions",
+    "retry deadline differs and is disclosed",
+    "source revisions evolved; hashes and actual text retained",
+    "raw events are local ignored artifacts; hashes alone do not prove their contents"
+  ],
+  "validation": {
+    "launcher": "48 combinations and all listed functional checks passed",
+    "harness_unit_tests": {
+      "passed": 5,
+      "fake_cli": true
+    },
+    "repository_pytest": {
+      "passed": 222,
+      "skipped": 12,
+      "failed": 2,
+      "failures": [
+        "test_frozen_asset_manifest_matches_full_execution_closure",
+        "test_frozen_permission_profile_denies_sibling_auth_and_network_access"
+      ],
+      "classification": "pre-existing; reproduced at d070f4e during preceding revision"
+    },
+    "plugin_validator": "pass",
+    "skill_validators": "both pass",
+    "integrity_check": "pass; two existing missing-generated-content warnings"
+  }
+}

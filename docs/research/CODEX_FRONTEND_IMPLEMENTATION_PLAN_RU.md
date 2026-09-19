@@ -10,16 +10,18 @@ workflow: подписчик не выполняет эти этапы для к
 
 ## 1. Граница готовности
 
-В этой ветке сделаны продуктовые решения, два настоящих `SKILL.md`, компактный
-project block, browser reference, plugin manifest и согласованная навигация.
+В этой ветке есть два `SKILL.md`, project block, browser reference и plugin
+manifest. Добавлены [единый старт](../native/start.html), три независимых измерения
+процесса и [12 диагностических запусков Codex](../../reports/native/2026-09-19/REPORT_RU.md).
 Это больше, чем review документов, но пока меньше, чем проверенный массовый релиз.
 
 | Область | Состояние кандидата | Что ещё требуется |
 |---|---|---|
-| Продуктовая модель | Перепроектирована | Проверка понятности новичками |
+| Продуктовая модель | Единый вход, три независимых измерения | Проверка понятности новичками |
 | Исходная упаковка | Есть preview plugin, без scripts/hooks/MCP | Устанавливаемый versioned artifact после выбора прав |
-| Repo connection | Реализован как skill + project block | Реальные connect/reconnect/update/remove trials |
-| Frontend loop | Один skill с browser reference | Реальный agent/browser прогон и сравнение с обычным Codex |
+| Repo connection | Отказ записи в `.agents` воспроизведён; исправлена частичная установка, сохранение файлов подтверждено | Успешные install/connect/reconnect/update/remove на поддержанном host |
+| Frontend loop | Codex и Native исправили fixture; внешние browser checks прошли у обоих | Полный agent/browser цикл: в текущем CLI доступ заблокирован |
+| Старт и режимы | Offline UI прошёл 48 сочетаний; plan/new-plan/backend/quick/review проверены реальным Codex | Свежие задачи, смена режима по ходу, usability |
 | Static/repository checks | Фактические результаты в handoff | Не подменяют host/runtime trials |
 | Desktop/CLI/IDE support | Кандидаты, разные browser capabilities | Заполнить матрицу реально испытанных hosts |
 | Публичное использование | Не выпущено | Права, release checks, публикация |
@@ -47,6 +49,10 @@ project block, browser reference, plugin manifest и согласованная 
 - Если agent-mediated merge регулярно ошибается, добавить маленький deterministic
   helper только для сохранения/обновления своего блока. Не писать installer
   framework до наблюдения проблемы.
+
+Обнаруженный приоритет: подтвердить штатную установку plugin на чистом host.
+Agent-mediated копирование в защищённую `.agents` не является универсальным
+каналом доставки. Не лечить это отключением sandbox или новым prompts pack.
 
 **Приёмка:** все non-destructive сценарии таблицы ниже выполнены; повторное
 подключение не раздувает diff; удаление сохраняет проектные изменения. Нельзя
@@ -135,7 +141,9 @@ approval; scope/permissions сохранены. Shell assertions и скринш
 | Approval уже дан | Нет повторной остановки на рутинной работе | Agent trial |
 | Новое внешнее действие | Локальный reviewable результат готов; запрошено только недостающее разрешение | Agent trial |
 
-Все runtime строки пока **не выполнены**. При выполнении хранить в trial report
+Часть runtime сценариев выполнена; точный статус и неудачи находятся в
+[отчёте пилота](../../reports/native/2026-09-19/REPORT_RU.md). Сценарий без записи в отчёте
+остаётся **не выполненным**. При выполнении хранить в trial report
 host/model/tool versions, fixture revision, запрос, итоговый diff, реальные checks,
 полезные screenshots и ручные вмешательства. Не собирать отдельный ledger для
 каждого shell command.
@@ -174,7 +182,7 @@ Baseline — современный Codex с тем же repo context, дост�
 | CF-01: skill security discovery | Native использует discovery host; дефект старого scanner — отдельный Governed backlog |
 | CF-02: bounded context renderer | Убрано из Native; AGENTS + native progressive disclosure |
 | CF-03: сложная browser evidence identity | Практическая проверка своего запуска в skill; формальная provenance остаётся release-policy задачей |
-| CF-04: три frontend skills | Один frontend loop + один setup skill |
+| CF-04: три frontend skills | Один frontend loop + единый вход с connection reference |
 | CF-05: downstream pilot | Сначала изолированные fixtures; downstream только по отдельному поручению |
 | CF-06: status/learning framework | Host task/session + один repo note при необходимости; нет self-modifying policy |
 | CF-07: обязательная условная стадия MCP | Нет отдельной стадии; integration только для конкретной потребности |
