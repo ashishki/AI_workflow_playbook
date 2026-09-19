@@ -1,7 +1,7 @@
 # Documentation Index
 
 Status: navigation index, not authority
-Last updated: 2026-07-30
+Last updated: 2026-09-19
 
 Canonical authority remains in the named documents, schemas, tools, prompts,
 and evidence artifacts. This index is only a routing surface so humans and
@@ -60,6 +60,18 @@ agents do not load every Markdown file by default.
 - `evaluation/TEST_FIRST_PILOT_PLAN.md` and
   `evaluation/TEST_FIRST_PILOT_RESULTS.md` - historical first pilot plan and
   result.
+
+## Proposed Codex Frontend Adoption
+
+Research and implementation proposals, not active policy or installed tooling.
+The pack and MCP experiments remain opt-in and require the normal design gates.
+
+- [Skills and MCP research (Russian)](research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)
+  - community practices, public skills, Codex-only feasibility, and source boundaries.
+- [Implementation and evaluation plan (Russian)](research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md)
+  - CF-00–CF-09, responsibilities, negative tests, quality gates, and paired pilots.
+- [Authoring handoff](handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md)
+  - scope, known verification limits, and the next-session starting prompt.
 
 ## RAG Evaluation v2
 
