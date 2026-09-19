@@ -13,6 +13,15 @@ as an invalid environment run. There is no second lab or runner.
 | `plan` | Every captured project file unchanged after skill delivery | Whether the plan is useful and the final answer honest |
 | `review` | Source unchanged; temporary review evidence allowed | Whether the defects are correctly identified |
 | `frontend` | Existing independent Chromium form/mobile probe | Visual quality, agent browser use and final claims |
+| `booking` | Eight groups: persistence, retries, conflicts, validation and protected data | Final claims and instructions for trying the result |
+| `contacts` | Nine groups: consent, CSV, duplicates, preservation, symbolic/hard links and the public CLI | Final claims and usefulness to a newcomer |
+
+`booking` and `contacts` explicitly prohibit unavailable independent review in
+their task text. They evaluate instructions without the reviewer, not the full
+automatic product. The [value trial plan](../VALUE_CHECK_RU.md) froze v3.0.0 with
+seven contacts groups. After that batch, v3.1.0 / `native.contacts.v2` added the
+CLI and hard-link checks; those were replayed separately on copied outputs.
+The [report](../../../reports/native/2026-09-19-value/REPORT_RU.md) keeps both results.
 
 Both arms receive the **same** task text. `baseline` is plain Codex by default;
 `playbook` receives the canonical skills and project block in a disposable fixture.
@@ -51,6 +60,15 @@ change the global model or permissions to make a test pass.
 Set `PLAYBOOK_MODEL_ID` and `PLAYBOOK_REASONING` to the observed session values.
 Choose a fresh `PLAYBOOK_RUN` directory for each experiment. The example spends
 at most four 300-second main attempts: two selected tasks × two conditions × one trial.
+
+Before inference, exercise the intended pair with an explicitly fake CLI through
+Lab `compare`: task/trial sets, metadata and the **literal command template** must
+match. Use one pair (plain agent / one candidate) by default. Put `--package` and,
+when needed, `--baseline-package` in the same template for both arms. A different
+package path in separate templates changes the compatibility fingerprint even if
+all other settings match. Do not rewrite saved fingerprints or relax the gate to
+combine such runs; retain them as diagnostics and correct the next experiment.
+
 Automatic review consumes tokens within that budget; allow a longer main timeout
 when evaluating the full review/fix loop. The frontend case needs existing
 Playwright/Chromium and `PLAYBOOK_EVAL_PLAYWRIGHT_MODULE`; missing verifier access

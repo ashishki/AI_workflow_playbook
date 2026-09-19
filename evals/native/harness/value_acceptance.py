@@ -146,7 +146,26 @@ def evaluate(workspace, task):
             rejects(lambda: module.export_csv(source, output))
             expect(output.read_bytes() == b'keep previous export', 'Invalid JSON destroyed previous export')
 
-        for callback in (consent, escaping, deduplication, empty, collision, linked_collision, corrupt):
+        def hardlinked_collision(root):
+            source = root / 'in.json'; source.write_bytes(b'[]')
+            output = root / 'out.csv'; output.hardlink_to(source)
+            rejects(lambda: module.export_csv(source, output))
+            expect(source.read_bytes() == b'[]', 'Hard-link export destroyed source')
+
+        def public_cli(root):
+            source = root / 'in.json'; output = root / 'out.csv'
+            rows = [dict(name='Анна, "ведущая"', email=' Reader@Example.Test ', consent=True, notes='PRIVATE'),
+                    dict(name='Not consenting', email='no@example.test', consent='false')]
+            source.write_text(json.dumps(rows, ensure_ascii=False), encoding='utf-8')
+            before = source.read_bytes()
+            result = subprocess.run([sys.executable, '-B', str(workspace / 'export_contacts.py'), str(source), str(output)],
+                                    cwd=workspace, text=True, capture_output=True, timeout=5)
+            expect(result.returncode == 0, 'Documented CLI failed: ' + result.stderr)
+            data = list(csv.reader(io.StringIO(output.read_text(encoding='utf-8-sig'), newline='')))
+            expect(data == [['name', 'email'], ['Анна, "ведущая"', 'reader@example.test']], 'CLI produced incorrect CSV')
+            expect(source.read_bytes() == before, 'CLI changed original contacts')
+
+        for callback in (consent, escaping, deduplication, empty, collision, linked_collision, corrupt, hardlinked_collision, public_cli):
             run(callback.__name__, callback)
 
     summary_path = workspace.parent / 'adapter/adapter_summary.json'

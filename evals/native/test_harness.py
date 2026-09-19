@@ -94,6 +94,22 @@ if mode != 'incomplete':
         self.assertEqual(result.score, 0.0)
         self.assertEqual(verify_bundle(result.bundle_path), [])
 
+    def test_different_command_templates_are_not_a_comparable_pair(self):
+        baseline, = self.trial(condition='baseline', task_ids=['plan'])
+        # Even an equivalent explicit package path changes the execution contract.
+        # Do not normalize old evidence after discovering this setup error.
+        self.adapter.command_template += ' --package ' + shlex.quote(
+            str(ROOT / 'plugins/playbook-native'))
+        candidate, = self.trial(condition='playbook', task_ids=['plan'])
+        for result in (baseline, candidate):
+            self.assertTrue(result.valid)
+            self.assertEqual(result.score, 1.0)
+            self.assertEqual(verify_bundle(result.bundle_path), [])
+        report = compare(self.root / 'successbaseline', self.root / 'successplaybook',
+                         self.root / 'comparison', minimum_trials_per_task=1)
+        self.assertTrue(any('compatibility differs' in error
+                            for error in report['compatibility_errors']))
+
     def test_plan_mutation_fails_acceptance(self):
         result, = self.trial('mutate-plan', task_ids=['plan'])
         self.assertTrue(result.valid)
