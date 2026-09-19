@@ -1,4 +1,4 @@
-# Playbook Native — preview.4
+# Playbook Native — preview.5
 
 One entry: describe a task in ordinary language, beginning with “Playbook”.
 The agent infers new/existing project, create/fix/check intent and
@@ -14,19 +14,22 @@ release. See [Legal Status](../../docs/LEGAL_STATUS.md); no new reuse rights are
 | `playbook` | Single entry and control boundaries; connection reference only when needed |
 | `playbook-frontend` | Implement UI, exercise it, inspect appearance and fix observed defects |
 | Project block | Small always-loaded expectations in the effective AGENTS file |
+| Bundled Role Runner | Automatic independent read-only review of code changes |
 
-Six skill payload files including UI metadata; one 22-line project block, plus
-brief verified project facts when useful. No installed runtime, hooks, MCP servers,
-model settings, external accounts or auto-update. Skills guide decisions; they
-do not enforce permissions or guarantee outcomes.
+The entry skill includes the existing Role Runner's two Python files and a short
+review reference. Canonical code stays in `tools/`; packaging checks byte identity.
+No governed task registry, renderer or Git initialization is needed for Native.
+Python 3.10+ and authenticated Codex CLI must be available in the agent's environment.
+Skills guide decisions; the runner checks execution evidence and file drift.
+No global model changes, hooks, mandatory MCP or automatic self-updates are added.
 
 ## Try it
 
 The [Russian quick start](../../docs/native/QUICKSTART_RU.md) starts with a small
 [offline kit](../../distribution/native/README.md): extract, open `START.html`,
 open the included `Мой проект` folder in Codex, describe a task. That folder
-already contains exact repo-local copies of these skills. No terminal or hidden
-file copying is needed for the first try. The kit does not bundle Codex itself.
+already contains exact repo-local copies of these skills. The first instructions avoid terminal commands or hidden-file copying.
+Automatic review has the runtime prerequisites above; the agent checks them. The kit does not bundle Codex itself.
 
 For ongoing work in existing projects, the same source is a native plugin using
 `.codex-plugin/plugin.json`. The start page contains the installation request.
@@ -51,8 +54,8 @@ It composes a request; mode changes also work directly in conversation.
   left all files unchanged.
 - Reproducible archive, file hashes and browser-tested start page.
 
-Desktop installation dialogs, Windows/macOS extraction, real newcomer usability
-and cross-host reliability remain unverified. A separate clean-container model
+Windows, macOS and Linux are supported targets; the [platform record](../../docs/native/PLATFORMS_RU.md)
+separates package/runner checks from actual desktop onboarding and newcomer usability. A separate clean-container model
 trial announced Playbook selection but could not read it because of tool failure;
 that is not a successful skill execution. The earlier
 [12 CLI trials](../../reports/native/2026-09-19/REPORT_RU.md) retain their failures.

@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'companion/ai_workflow_harness_lab/src'))
 from ai_workflow_harness_lab.environment import tree_manifest
 from ai_workflow_harness_lab.receipts import run_command_receipt
+from ai_workflow_harness_lab.telemetry import execution_metrics
 
 
 def prepare(workspace: Path, prompt: Path, output: Path, condition: str,
@@ -83,6 +84,19 @@ def run(args) -> int:
                    turn_completed=completed, event_parse_errors=parse_errors,
                    execution_valid=bool(valid),
                    usage=terminal[-1].get('usage', 'unknown') if completed else 'unknown')
+    reviews = sorted((workspace / '.playbook-artifacts/runs').glob('*/codex_events.jsonl'))
+    # Preserve nested review traces with the parent bundle. Do not hide their cost.
+    captured_reviews = []
+    for path in reviews:
+        if path.is_symlink() or not path.resolve().is_relative_to(workspace.resolve()):
+            raise ValueError('Review trace escapes the fixture')
+        captured_reviews.append({'path': str(path.relative_to(workspace)), 'events': path.read_text()})
+    (output / 'review_runs.json').write_text(json.dumps(captured_reviews, indent=2) + '\n')
+    try:
+        summary['execution_telemetry'] = execution_metrics(
+            output / 'codex_events.jsonl', execution.receipt_path, reviews)
+    except (ValueError, OSError, KeyError, TypeError) as exc:
+        summary['telemetry_error'] = str(exc)  # Corruption must never become a zero bill.
     (output / 'adapter_summary.json').write_text(json.dumps(summary, indent=2) + '\n')
     return 0 if valid else 1
 

@@ -41,7 +41,7 @@ elif mode == 'mutate-plan' or (mode == 'success' and 'Исправь slugify' in
  Path('slugs.py').write_text("import re\\ndef slugify(value):\\n return re.sub(r'[^a-z0-9]+', '-', value.lower()).strip('-')\\n")
 if mode != 'incomplete':
  Path(sys.argv[sys.argv.index('-o') + 1]).write_text('FAKE CLI: mechanism test only.')
- print(json.dumps({'type': 'turn.completed', 'usage': {}}))
+ print(json.dumps({'type': 'turn.completed', 'usage': {'input_tokens': 100, 'output_tokens': 10}}))
 ''')
         cli.chmod(0o755)
         self.env = {'PATH': str(bin_dir) + os.pathsep + os.environ['PATH']}
@@ -55,7 +55,7 @@ if mode != 'incomplete':
     def trial(self, mode='success', condition='playbook', task_ids=None, output=None):
         with patch.dict(os.environ, {**self.env, 'NATIVE_LAB_FAKE_MODE': mode}):
             return run_suite(self.suite, condition, self.adapter, 1,
-                             output or self.root / (mode + condition), task_ids=task_ids)
+                             output or self.root / (mode + condition), task_ids=task_ids or ['backend', 'plan'])
 
     def test_both_arms_have_verified_bundles_and_comparable_results(self):
         for condition in ('baseline', 'playbook'):
@@ -75,6 +75,9 @@ if mode != 'incomplete':
         self.assertEqual(report['compatibility_errors'], [])
         self.assertEqual(report['baseline']['mean'], 1.0)
         self.assertEqual(report['candidate']['mean'], 1.0)
+        self.assertEqual(report['candidate']['input_tokens'], 200)
+        self.assertEqual(report['baseline']['output_tokens'], 20)
+        self.assertEqual(report['candidate']['review_execution_count'], 0)
 
     def test_previous_native_version_can_be_the_baseline(self):
         self.adapter.command_template += ' --baseline-package ' + shlex.quote(

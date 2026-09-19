@@ -48,9 +48,12 @@ identity flags, and an explicit budget. Use `harness-lab compare
 --require-empirical` when the comparison is intended to support empirical
 claims.
 
-Command-adapter examples are launched by an external shell, CI job, or harness
-worker. Do not run them from inside an active Codex Direct project session,
-because that would spawn nested Codex.
+Command-adapter examples run in an external shell, CI job, or isolated harness
+worker against copied fixtures. A maintainer agent may launch a separate worker
+when the user explicitly requests real trials; never recursively launch an
+experiment from its task agent. Product Role Runner review subprocesses are a
+separate bounded capability, not recursive experiments. The frozen TFA pilot
+retains its own stricter execution/approval rules.
 
 The command adapter propagates the real process exit code. Use
 `--fail-on-invalid-run` during real experiments so missing commands, non-zero

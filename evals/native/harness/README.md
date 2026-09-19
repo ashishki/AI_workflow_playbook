@@ -9,6 +9,8 @@ runner, receipts, evidence verification and comparison; its core is unchanged.
 |---|---|---|
 | `backend` | Seven slug cases, including the original defect; unrelated files preserved | Agent's verification claims and clarity |
 | `plan` | Every captured project file unchanged after skill delivery | Whether the plan is useful and the final answer honest |
+| `review` | Source unchanged; temporary review evidence allowed | Whether the defects are correctly identified |
+| `frontend` | Existing independent Chromium form/mobile probe | Visual quality, agent browser use and final claims |
 
 Both arms receive the **same** task text. `baseline` is plain Codex by default;
 `playbook` receives the canonical skills and project block in a disposable fixture.
@@ -38,14 +40,19 @@ If the Lab is not installed in the development environment, follow its
 
 ## Real diagnostic run (external terminal / worker)
 
-Do not launch this inside an active Codex Direct session; see the Lab's execution
-boundary. Use authenticated Codex with working tool execution. Record the actual
+Use a separate worker on copied fixtures, including when a maintainer agent
+starts it at the user's explicit request. A task agent must not recursively launch
+an experiment. Use authenticated Codex with working tool execution. Record the actual
 model, effort, CLI version and common host instructions before running. Do not
 change the global model or permissions to make a test pass.
 
 Set `PLAYBOOK_MODEL_ID` and `PLAYBOOK_REASONING` to the observed session values.
 Choose a fresh `PLAYBOOK_RUN` directory for each experiment. The example spends
-at most four 300-second model attempts: two tasks × two conditions × one trial.
+at most four 300-second main attempts: two selected tasks × two conditions × one trial.
+Automatic review consumes tokens within that budget; allow a longer main timeout
+when evaluating the full review/fix loop. The frontend case needs existing
+Playwright/Chromium and `PLAYBOOK_EVAL_PLAYWRIGHT_MODULE`; missing verifier access
+is an invalid run, not a task failure.
 It is a diagnostic, not evidence of a general improvement.
 
 ```bash
@@ -56,7 +63,7 @@ PLAYBOOK_COMMAND="\"$PWD/.venv/bin/python\" \"$PWD/evals/native/harness_adapter.
 
 for condition in baseline playbook; do
   .venv/bin/python -m ai_workflow_harness_lab.cli run \
-    --suite evals/native/harness --adapter command \
+    --suite evals/native/harness --task-id backend --task-id plan --adapter command \
     --command-template "$PLAYBOOK_COMMAND" --adapter-timeout 330 \
     --condition "$condition" --trials 1 --output "$PLAYBOOK_RUN/$condition" \
     --empirical-comparison --provider openai --model-id "$PLAYBOOK_MODEL_ID" \
@@ -92,12 +99,13 @@ Task acceptance can fail after a completely valid model turn.
 
 The command adapter does not extract structured claims from the final answer.
 Its aggregate `false_success_rate` therefore does **not** evaluate Native's
-honesty; inspect the final message and trace. Time/token data do not establish
-monetary cost. The automatic plan check hashes file content (excluding `.git`);
+honesty; inspect the final message and trace. The comparison includes primary and captured review tokens; missing counters
+remain unknown. Main wall time includes reviews once. Time/token data do not
+establish monetary cost. The automatic plan check hashes file content (excluding `.git`);
 it does not audit empty directories, permission bits or activity outside the
 fixture. Browser/lifecycle probes remain in [the evaluation index](../README.md).
 
 Keep raw output under `.playbook-artifacts/`. Commit a concise result with source
 versions, counts, failures, limits and decision. Publish a stable evidence archive
-if making an externally reproducible claim. Never call these two cases a complete
+if making an externally reproducible claim. Never call these small cases a complete
 frontend, onboarding, usability or product-quality evaluation.

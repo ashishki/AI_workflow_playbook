@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .evidence import verify_bundle
+from .telemetry import known_sum
 
 
 def find_bundles(path: Path) -> list[Path]:
@@ -49,12 +50,17 @@ def load_trial(bundle_path: Path) -> dict[str, Any]:
         }
     scorer_outputs = []
     eval_unit = None
+    execution_telemetry = None
     if not evidence_errors:
         for ref in bundle.get("scorer_outputs", []):
             scorer_outputs.append(json.loads((bundle_path.parent / ref["path"]).read_text(encoding="utf-8")))
         eval_ref = bundle.get("harness_eval_unit_ref")
         if isinstance(eval_ref, dict):
             eval_unit = json.loads((bundle_path.parent / eval_ref["path"]).read_text(encoding="utf-8"))
+        for ref in bundle.get('trace_refs', []):
+            if Path(ref['path']).name == 'adapter_summary.json':
+                summary = json.loads((bundle_path.parent / ref['path']).read_text())
+                execution_telemetry = summary.get('execution_telemetry')
     failures = bundle.get("failure_records", [])
     scores = [float(output.get("score", 0.0)) for output in scorer_outputs]
     invalid = bool(evidence_errors) or any(record.get("invalid_run") for record in failures)
@@ -75,6 +81,7 @@ def load_trial(bundle_path: Path) -> dict[str, Any]:
         "failures": failures,
         "scorer_outputs": scorer_outputs,
         "receipt_count": len(bundle.get("command_receipts", [])),
+        "execution_telemetry": execution_telemetry,
     }
 
 
@@ -94,6 +101,20 @@ def summarize(trials: list[dict[str, Any]]) -> dict[str, Any]:
         for output in trial["scorer_outputs"]
         if output.get("scorer_id") == "role_run_integrity" and isinstance(output.get("metrics"), dict)
     ]
+    native_telemetry = [trial.get('execution_telemetry') for trial in trials]
+
+    def execution_total(field):
+        if not any(isinstance(t, dict) for t in native_telemetry):
+            return metric_sum(field)
+        return known_sum([t.get('total', {}).get(field, 'unknown')
+                          if isinstance(t, dict) else 'unknown' for t in native_telemetry])
+
+    def execution_latency():
+        if not any(isinstance(t, dict) for t in native_telemetry):
+            return metric_mean('latency_seconds')
+        total = known_sum([t.get('latency_seconds', 'unknown')
+                           if isinstance(t, dict) else 'unknown' for t in native_telemetry])
+        return total / sample if isinstance(total, (int, float)) else 'unknown'
 
     def metric_mean(name: str) -> float | str:
         values = [float(metric[name]) for metric in role_metrics if isinstance(metric.get(name), (int, float))]
@@ -121,14 +142,17 @@ def summarize(trials: list[dict[str, Any]]) -> dict[str, Any]:
         "policy_violation_count": policy,
         "evidence_completeness": rate(sum(1 for trial in trials if trial["receipt_count"] > 0), sample),
         "evidence_correctness": rate(evidence_valid, sample),
-        "tool_call_count": metric_sum("tool_call_count"),
+        "tool_call_count": execution_total("tool_call_count"),
         "unnecessary_action_count": "unknown",
         "retry_count": metric_sum("retry_count"),
         "timeout_rate": rate(timeout, sample),
         "invalid_infrastructure_run_rate": rate(sample - valid, sample),
-        "input_tokens": metric_sum("input_tokens"),
-        "output_tokens": metric_sum("output_tokens"),
-        "wall_clock_latency": metric_mean("latency_seconds"),
+        "input_tokens": execution_total("input_tokens"),
+        "output_tokens": execution_total("output_tokens"),
+        "cached_input_tokens": execution_total('cached_input_tokens'),
+        "review_execution_count": known_sum([t.get('review_count', 'unknown')
+            if isinstance(t, dict) else 'unknown' for t in native_telemetry]),
+        "wall_clock_latency": execution_latency(),
         "cost_per_attempted_task": "unknown",
         "cost_per_successful_task": "unknown",
         "human_intervention_rate": rate(metric_sum("human_intervention_count"), sample) if isinstance(metric_sum("human_intervention_count"), int) else "unknown",

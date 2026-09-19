@@ -56,8 +56,8 @@ actual destination before scaffolding. Do not invent business requirements.
   write project files, install/connect the package, or persist a plan unless
   separately requested. Continue implementation only when the user requests it.
 - **Extended:** make acceptance criteria and material risks explicit, add relevant
-  negative/regression checks and a focused fresh review when available and
-  authorized. State what extra checks are justified. If independent review is
+  negative/regression checks and deepen the automatic independent review where
+  useful. State what extra checks are justified. If independent review is
   unavailable, disclose that limitation. Do not invent a reviewer or import a
   full governance framework. Existing policy determines consequential approvals;
   the mode itself does not demand approval for every local step.
@@ -95,3 +95,12 @@ Present the result appropriate to the chosen action: implemented outcome, plan,
 or findings. Include actual verification, remaining limitations, and a useful
 next step only when work remains. Keep process metadata out of the final answer
 unless it helps the user understand a real decision.
+
+For completed code changes, automatically use the bundled
+[Role Runner](references/review.md) for one focused independent review before
+the final answer, including in quick mode. Apply confirmed fixes and recheck.
+This is part of ordinary delivery; the user need not opt in again. Preserve the
+plan-only/no-write boundary and disclose an unavailable reviewer. A review worker
+must not recursively start another review. The main agent remains responsible for
+the result and for judging findings; independent review does not replace tests or
+checking the running UI.

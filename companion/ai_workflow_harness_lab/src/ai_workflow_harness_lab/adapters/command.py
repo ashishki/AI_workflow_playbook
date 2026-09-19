@@ -69,6 +69,7 @@ class CommandAdapter(Adapter):
                 "final_message.txt",
                 "event_ledger.jsonl",
                 "adapter_summary.json",
+                "review_runs.json",
             )
             if (output_dir / name).is_file()
         ]

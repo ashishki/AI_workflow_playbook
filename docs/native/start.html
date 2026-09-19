@@ -20,7 +20,7 @@
  <div class="onboarding-top"><h2 id="first-title">Первый раз? Начнём с простой пробы.</h2><a class="small-link" href="#task-section">Уже пользуюсь — к задаче ↓</a></div>
  <p class="intro">Нужны компьютер, приложение с Codex и аккаунт с доступом к работе в нём. Пробный архив Playbook нужно распаковать целиком.</p>
  <div class="setup-grid">
-  <div class="setup-step"><span class="step-no">1</span><h3>Откройте Codex</h3><p>В приложении ChatGPT на компьютере выберите Codex. <a href="https://learn.chatgpt.com/docs/quickstart?setup=app" target="_blank" rel="noopener noreferrer">Установка и вход</a>.</p></div>
+  <div class="setup-step"><span class="step-no">1</span><h3>Откройте Codex</h3><p>В Windows, macOS или Linux откройте приложение ChatGPT и выберите Codex. <a href="https://learn.chatgpt.com/docs/quickstart?setup=app" target="_blank" rel="noopener noreferrer">Установка и вход</a>.</p></div>
   <div class="setup-step"><span class="step-no">2</span><h3>Выберите «Мой проект»</h3><p>Создайте локальный проект и выберите папку «Мой проект» из распакованного архива основной папкой. Playbook уже находится внутри неё.</p></div>
   <div class="setup-step"><span class="step-no">3</span><h3>Дайте первую задачу</h3><p>Напишите своими словами или <button class="text-button" type="button" data-scenario="first">возьмите учебный пример</button>. Скопируйте запрос ниже и вставьте в чат Codex.</p></div>
  </div>
@@ -67,6 +67,10 @@
  <p>Убедитесь, что архив распакован целиком и в Codex выбрана нужная папка. Затем отправьте агенту этот запрос. Пароли и ключи доступа присылать не нужно.</p>
  <textarea id="help-prompt" readonly aria-label="Запрос помощи">Playbook, помоги закончить первый запуск. Проверь, в какой папке мы работаем, доступен ли Playbook и могу ли я открыть результат. Объясни проблему и один следующий шаг простыми словами. Не меняй настройки доступа и не устанавливай новые инструменты без объяснения. Я не программист.</textarea>
  <button class="secondary" type="button" data-copy="help-prompt">Скопировать запрос помощи</button><p class="extra-feedback" id="help-prompt-feedback" role="status"></p>
+</details>
+<details><summary>Как работает автоматическое ревью</summary>
+ <p>После изменений кода агент сам запускает отдельного проверяющего и исправляет подтверждённые проблемы. Быстрый режим тоже включает эту проверку. Выбирать роли и читать технические отчёты не нужно.</p>
+ <p>Для проверяющего в рабочей среде нужны Python и Codex CLI. Агент проверит их доступность. Если инструмента нет или запуск запрещён, он объяснит, какая проверка не состоялась, и следующий шаг. Не нужно самостоятельно отключать защиту.</p>
 </details>
 <details><summary>Как продолжить завтра, исправить что-то или остановиться</summary>
  <p>Откройте в Codex ту же папку проекта. Можно написать: «Продолжим с того места, где остановились», «Исправь только эту кнопку», «Пока только предложи план» или «Остановись, файлы больше не меняй». Расширение можно удалить средствами Codex; агент поможет убрать свои настройки проекта, сохранив вашу работу.</p>

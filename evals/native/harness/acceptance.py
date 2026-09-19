@@ -2,6 +2,8 @@
 """External acceptance checks, outside the agent-editable fixture."""
 import argparse
 import json
+import os
+import subprocess
 from pathlib import Path
 import sys
 
@@ -17,9 +19,22 @@ def check(workspace: Path, task: str) -> list[str]:
     changed = {p for p in before.keys() | after.keys() if before.get(p) != after.get(p)}
     if task == 'plan':
         return ['Plan-only task changed files: ' + ', '.join(sorted(changed))] if changed else []
+    if task == 'review':
+        changed = {p for p in changed if not p.startswith('.playbook-artifacts/')}
+        return ['Check-only task changed source: ' + ', '.join(sorted(changed))] if changed else []
+    if task == 'frontend':
+        module = os.environ.get('PLAYBOOK_EVAL_PLAYWRIGHT_MODULE')
+        if not module or not Path(module).exists():
+            print('Browser verifier unavailable: supply an installed Playwright module', file=sys.stderr)
+            raise SystemExit(2)
+        result = subprocess.run(['node', str(ROOT / 'evals/native/check-ui.cjs'), str(workspace),
+                                 str(workspace.parent / 'external-browser')], timeout=40)
+        if result.returncode == 2:
+            raise SystemExit(2)
+        return [] if result.returncode == 0 else ['External browser acceptance failed']
     # Tests may be added or extended; project instructions and unrelated files stay intact.
     unexpected = {p for p in changed if p not in ('slugs.py', 'test_slugs.py')
-                  and not p.startswith('__pycache__/')}
+                  and not p.startswith(('__pycache__/', '.playbook-artifacts/'))}
     errors = ['Unexpected change: ' + p for p in sorted(unexpected)]
     namespace = {'__name__': 'slugs_acceptance'}
     source = safe_workspace_path(workspace, 'slugs.py')
@@ -37,7 +52,7 @@ def check(workspace: Path, task: str) -> list[str]:
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--workspace', type=Path, required=True)
-    ap.add_argument('--task', choices=('backend', 'plan'), required=True)
+    ap.add_argument('--task', choices=('backend', 'plan', 'review', 'frontend'), required=True)
     args = ap.parse_args()
     try:
         errors = check(args.workspace, args.task)

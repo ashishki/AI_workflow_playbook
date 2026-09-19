@@ -5,7 +5,8 @@ start page. The recipient extracts it, opens `START.html`, selects `Мой пр�
 in Codex, and describes a task. No build tools are required by the recipient.
 
 ```bash
-python3 -m unittest discover -s distribution/native -p test_build.py -v
+python3 distribution/native/sync_runtime.py --check
+python3 -m unittest discover -s distribution/native -p 'test_*.py' -v
 python3 distribution/native/build.py --output .playbook-artifacts/my-new-kit
 ```
 
@@ -36,3 +37,11 @@ be settled before subscriber distribution. The [small pilot plan](../../docs/nat
 is for the owner; it is not copied into users' projects.
 
 Development and eval decisions follow the [maintainer protocol](../../docs/native/DEVELOPMENT_RU.md).
+
+The package now includes the existing Role Runner's two stdlib Python files under
+the entry skill. Canonical sources remain in `tools/`; after changing them run
+`python3 distribution/native/sync_runtime.py`. Build refuses stale copies.
+The Native profile needs neither a governed renderer nor Git. Python and an
+authenticated Codex CLI must be available in the user's agent environment.
+Windows/macOS/Linux package and runner tests are defined in Native CI; desktop
+usability and real CLI access on each host need their own observations.

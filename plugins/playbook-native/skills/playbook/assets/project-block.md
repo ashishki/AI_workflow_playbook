@@ -1,4 +1,4 @@
-<!-- playbook-native:begin v0.1.0-preview.4 -->
+<!-- playbook-native:begin v0.1.0-preview.5 -->
 ## Playbook Native
 
 - Deliver the requested outcome using this repository's conventions and tools.
@@ -13,6 +13,9 @@
 - Run meaningful existing checks; add regression coverage when the changed
   behavior warrants it. Inspect the diff. Do not weaken tests or regenerate
   visual baselines just to obtain a pass.
+- Before delivering code changes, use the Playbook skill's bundled Role Runner
+  for a focused independent review, including quick mode. Fix confirmed findings
+  and recheck. Preserve plan-only scope; review workers never start another review.
 - Report what changed, what actually ran and passed/failed, and what remains
   unverified, with useful evidence links. Missing tools/access mean an explicit
   limitation. A self-check is not independent review.

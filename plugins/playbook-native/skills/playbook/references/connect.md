@@ -36,6 +36,9 @@ for the ordinary edits below. Honor existing instructions and permissions.
    run/check commands with working directories, design-system location, and
    unusual constraints. Reuse existing notes; do not duplicate them or invent
    scripts. Keep the added note to roughly ten lines.
+   Keep runtime review evidence local: when setup writes are authorized, add
+   `.playbook-artifacts/` to the root `.gitignore` if it is not already covered,
+   preserving every existing rule. Do not move/delete review logs to hide a diff.
 5. Check actual capabilities: command execution; existing checks; for UI work,
    a reachable browser and screenshot inspection. Prefer an available native
    browser or installed project runner. Report missing capabilities plainly.

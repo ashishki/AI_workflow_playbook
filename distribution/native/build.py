@@ -6,6 +6,9 @@ import hashlib
 import json
 from pathlib import Path
 import zipfile
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from sync_runtime import sync
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'plugins/playbook-native'
@@ -20,6 +23,8 @@ FIRST_README = '''# Мой первый проект
 '''
 
 def collect():
+    if sync(check=True):
+        raise ValueError('Packaged Role Runner is stale; run distribution/native/sync_runtime.py')
     payload = {}
     for p in sorted(PACKAGE.rglob('*')):
         if p.is_symlink():
@@ -35,7 +40,8 @@ def collect():
                 payload['Мой проект/.agents/' + relative] = p.read_bytes()
     payload['Мой проект/AGENTS.md'] = (PACKAGE / 'skills/playbook/assets/project-block.md').read_bytes()
     payload['Мой проект/README.md'] = FIRST_README.encode()
-    payload['START.html'] = (ROOT / 'docs/native/start.html').read_text().replace('data-kit="source"', 'data-kit="archive"').encode()
+    payload['Мой проект/.gitignore'] = b'.playbook-artifacts/\n__pycache__/\n'
+    payload['START.html'] = (ROOT / 'docs/native/start.html').read_text(encoding='utf-8').replace('data-kit="source"', 'data-kit="archive"').encode()
     payload['RIGHTS.txt'] = (ROOT / 'docs/LEGAL_STATUS.md').read_bytes()
     payload['НАЧНИТЕ ЗДЕСЬ.txt'] = '''Откройте START.html двойным щелчком.
 Нужно приложение ChatGPT на компьютере: войдите в аккаунт и выберите Codex.
@@ -47,7 +53,7 @@ START.html — инструкция; сама страница не запуск
 распространения ещё не оформлены. См. RIGHTS.txt. Архив ничего не устанавливает
 глобально, не запускает код автоматически и не содержит учётных данных.
 '''.encode()
-    version = json.loads((PACKAGE / '.codex-plugin/plugin.json').read_text())['version']
+    version = json.loads((PACKAGE / '.codex-plugin/plugin.json').read_text(encoding='utf-8'))['version']
     manifest = {'product':'Playbook','version':version,'status':'private-evaluation-preview',
                 'files':{n:hashlib.sha256(b).hexdigest() for n,b in sorted(payload.items())}}
     payload['PACKAGE.json'] = (json.dumps(manifest,ensure_ascii=False,indent=2)+'\n').encode()
