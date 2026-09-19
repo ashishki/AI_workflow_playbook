@@ -59,3 +59,16 @@ jobs:
         env:
           PLAYBOOK_EVAL_PLAYWRIGHT_MODULE: ${{ github.workspace }}/.playbook-artifacts/browser-tools/node_modules/playwright
         run: node evals/native/check-launcher.cjs .playbook-artifacts/browser-results .playbook-artifacts/extracted/Playbook/START.html
+      - name: Preserve exact tracked source for reproducible inspection
+        if: matrix.os == 'ubuntu-latest'
+        run: git archive --format=zip --output=.playbook-artifacts/ci-kit/Playbook-source.zip HEAD
+      - name: Retain the checked kit and browser evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vnext-kit-${{ matrix.os }}
+          path: |
+            .playbook-artifacts/ci-kit/
+            .playbook-artifacts/browser-results/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7

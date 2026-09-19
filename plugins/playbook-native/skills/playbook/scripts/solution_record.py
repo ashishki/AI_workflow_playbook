@@ -145,8 +145,8 @@ def validate(data: Any) -> list[str]:
             errors.append('Intervention minutes must be nonnegative or null')
     if isinstance(state, dict) and state.get('technical') == 'checked':
         checks = data.get('checks', [])
-        if not isinstance(checks, list) or not any(isinstance(c, dict) and c.get('status') == 'passed' for c in checks) or any(isinstance(c, dict) and c.get('status') in {'failed', 'blocked'} for c in checks):
-            errors.append('A checked technical state needs reported passing evidence and no failed/blocked check')
+        if not isinstance(checks, list) or not any(isinstance(c, dict) and c.get('status') == 'passed' for c in checks) or any(isinstance(c, dict) and c.get('status') in {'failed', 'blocked', 'not_run'} for c in checks):
+            errors.append('A checked technical state needs reported passing evidence and no failed/blocked/unrun check')
     if isinstance(state, dict) and state.get('effect') in {'improved', 'worse', 'no_change'}:
         observations = data.get('observations', [])
         if not isinstance(observations, list) or not any(isinstance(o, dict) and o.get('before') is not None and o.get('after') is not None and o.get('evidence') for o in observations):
