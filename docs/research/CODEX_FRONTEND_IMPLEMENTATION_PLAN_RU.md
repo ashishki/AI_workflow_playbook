@@ -1,6 +1,6 @@
 # Playbook Native: план доведения до выпуска
 
-Статус: **preview.4: комплект, короткий протокол и Native-сценарии в Harness Lab; desktop usability ещё не подтверждён**. 2026-09-19.
+Статус: **preview.5: автоматический Role Runner, четыре сценария Harness Lab, CI на Windows/macOS/Linux; desktop usability ещё не подтверждён**. 2026-09-19.
 Этот план заменяет CF-00–CF-09. Это backlog работ, а не новый пользовательский
 workflow: подписчик не выполняет эти этапы для каждой задачи.
 Текущий цикл улучшений — [короткий протокол](../native/DEVELOPMENT_RU.md);
@@ -23,6 +23,8 @@ manifest. Добавлены [единый старт](../native/start.html), т
 |---|---|---|
 | Продуктовая модель | Единый вход, три измерения, простой язык, смена режима проверена | Самостоятельный проход новичков |
 | Упаковка | Воспроизводимый ZIP: START.html + готовая папка + native plugin | Права и разрешение на распространение |
+| Три ОС | Сборка, распаковка, контракты runtime и START/Chromium прошли CI Windows/macOS/Linux | Реальный desktop и авторизованный CLI на каждой системе |
+| Независимое ревью | Включён существующий Role Runner; отдельный реальный Linux-запуск нашёл дефект | Вложенный CLI в текущем eval-host блокируется; полноценный автоматический цикл требует доступной среды |
 | Native lifecycle | CLI Linux: install/reinstall/update/remove, fresh-session discovery; файлы проекта сохранены | Desktop UI, Windows/macOS |
 | Repo connection | Connect/reconnect/update прошли; дефект remove исправлен и перепроверен с custom skill | Остальные негативные fixtures и monorepo |
 | Frontend loop | Отдельный агент: новый сайт → Chromium → просмотр изображений → исправления → итог | Другой stack, stale/wrong-preview traps |
@@ -44,8 +46,8 @@ manifest. Добавлены [единый старт](../native/start.html), т
 - Использовать текущие исходники `plugins/playbook-native/` как единственный
   источник skills. Выбрать один host-tested способ доставки plugin. Для CLI/IDE,
   где он недоступен, использовать те же repo-local `.agents/skills`.
-- Перед публичной упаковкой решить права. Не копировать в Native старый набор
-  tools/templates. Не публиковать все исследовательские архивы как install kit.
+- Перед публичной раздачей решить права. Native включает два файла существующего
+  Role Runner; остальной набор tools/templates и исследовательские архивы в комплект не входят.
 - Проверить install/connect/reconnect/update/remove в изолированных fixtures.
   Существующий `AGENTS.md`, root override, monorepo и локальные изменения должны
   переживать setup. Не менять global config или устанавливать tools без нужды.
@@ -63,7 +65,7 @@ Agent-mediated копирование в защищённую `.agents` не я�
 **Условие закрытия этапа:** выполнить все non-destructive сценарии таблицы ниже;
 подтвердить, что повторное подключение не раздувает diff, а удаление сохраняет
 проектные изменения. Текущее покрытие перечислено в отчётах. Нельзя
-объявить Linux-tested пакет проверенным на Windows/macOS.
+считать CI-проверку пакета подтверждением desktop-прохода новичка.
 
 **Откат:** выключить plugin и убрать проектный block; локальные изменённые
 skills переместить целиком вне discovery. Не удалять пользовательские notes/tests.

@@ -51,6 +51,7 @@ def load_trial(bundle_path: Path) -> dict[str, Any]:
     scorer_outputs = []
     eval_unit = None
     execution_telemetry = None
+    execution_timed_out = False
     if not evidence_errors:
         for ref in bundle.get("scorer_outputs", []):
             scorer_outputs.append(json.loads((bundle_path.parent / ref["path"]).read_text(encoding="utf-8")))
@@ -61,6 +62,7 @@ def load_trial(bundle_path: Path) -> dict[str, Any]:
             if Path(ref['path']).name == 'adapter_summary.json':
                 summary = json.loads((bundle_path.parent / ref['path']).read_text())
                 execution_telemetry = summary.get('execution_telemetry')
+                execution_timed_out = summary.get('timed_out') is True
     failures = bundle.get("failure_records", [])
     scores = [float(output.get("score", 0.0)) for output in scorer_outputs]
     invalid = bool(evidence_errors) or any(record.get("invalid_run") for record in failures)
@@ -82,6 +84,7 @@ def load_trial(bundle_path: Path) -> dict[str, Any]:
         "scorer_outputs": scorer_outputs,
         "receipt_count": len(bundle.get("command_receipts", [])),
         "execution_telemetry": execution_telemetry,
+        "execution_timed_out": execution_timed_out,
     }
 
 
@@ -94,7 +97,8 @@ def summarize(trials: list[dict[str, Any]]) -> dict[str, Any]:
     false_success = sum(1 for failure in failures if failure.get("failure_class") == "false_completion")
     policy = sum(1 for failure in failures if failure.get("failure_class") == "policy_failure")
     recovery = sum(1 for trial in trials if trial["task_id"] == "failed_command_recovery" and trial["score"] == 1.0)
-    timeout = sum(1 for failure in failures if failure.get("failure_class") == "timeout")
+    timeout = sum(1 for trial in trials if trial.get('execution_timed_out') or
+                  any(f.get('failure_class') == 'timeout' for f in trial['failures']))
     role_metrics = [
         output.get("metrics", {})
         for trial in trials
@@ -261,13 +265,18 @@ def render_markdown(report: dict[str, Any]) -> str:
             "",
             f"- Baseline sample count: {report['baseline']['sample_count']}",
             f"- Candidate sample count: {report['candidate']['sample_count']}",
-            f"- Baseline task success rate: {report['baseline']['task_success_rate']}",
-            f"- Candidate task success rate: {report['candidate']['task_success_rate']}",
+            f"- Baseline valid / invalid runs: {report['baseline']['valid_runs']} / {report['baseline']['invalid_runs']}",
+            f"- Candidate valid / invalid runs: {report['candidate']['valid_runs']} / {report['candidate']['invalid_runs']}",
+            f"- Baseline task success rate (valid runs only): {report['baseline']['task_success_rate']}",
+            f"- Candidate task success rate (valid runs only): {report['candidate']['task_success_rate']}",
             f"- Candidate false-success rate: {report['candidate']['false_success_rate']}",
             f"- Candidate policy violation rate: {report['candidate']['policy_violation_rate']}",
             f"- Candidate evidence correctness: {report['candidate']['evidence_correctness']}",
             f"- Per-task stability warning: {report['hard_gates']['single_run_stability_warning']}",
             f"- Blocking errors: {len(report.get('blocking_errors', []))}",
+            "",
+            "Invalid runs are excluded from task success rates, not counted as successful attempts.",
+            "A zero detected false-success/policy count only reflects the configured scorers; it does not prove coverage.",
             "",
             "Raw trial details are in `comparison_report.json`.",
             "",

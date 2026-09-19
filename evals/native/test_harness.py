@@ -11,7 +11,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'companion/ai_workflow_harness_lab/src'))
 from ai_workflow_harness_lab.adapters.command import CommandAdapter
-from ai_workflow_harness_lab.comparison import compare
+from ai_workflow_harness_lab.comparison import compare, load_trial, summarize
 from ai_workflow_harness_lab.evidence import verify_bundle
 from ai_workflow_harness_lab.runner import run_suite, RunError
 from ai_workflow_harness_lab.suite_loader import load_suite
@@ -99,6 +99,23 @@ if mode != 'incomplete':
         self.assertTrue(result.valid)
         self.assertEqual(result.score, 0.0)
 
+    def test_review_cannot_silently_fix_source(self):
+        result, = self.trial('mutate-plan', task_ids=['review'])
+        self.assertTrue(result.valid)
+        self.assertEqual(result.score, 0.0)
+
+    def test_missing_browser_verifier_is_invalid_not_model_failure(self):
+        for index, module in enumerate(('', str(self.root))):
+            with self.subTest(module=module), patch.dict(
+                    os.environ, {'PLAYBOOK_EVAL_PLAYWRIGHT_MODULE': module}):
+                result, = self.trial('no-fix', task_ids=['frontend'],
+                                     output=self.root / f'missing-browser-{index}')
+            self.assertFalse(result.valid)
+            self.assertEqual(result.score, 0.0)
+            self.assertEqual(verify_bundle(result.bundle_path), [])
+            self.assertTrue(any(f['failure_class'] == 'environment_failure'
+                                for f in result.failure_records))
+
     def test_bad_and_missing_traces_are_invalid_not_task_passes(self):
         for mode in ('corrupt', 'incomplete', 'timeout'):
             with self.subTest(mode=mode):
@@ -107,6 +124,10 @@ if mode != 'incomplete':
                 self.assertEqual(result.score, 0.0)
                 self.assertEqual(verify_bundle(result.bundle_path), [])
                 self.assertTrue((result.output_dir / 'adapter/codex_events.jsonl').read_text())
+                if mode == 'timeout':
+                    metrics = summarize([load_trial(result.bundle_path)])
+                    self.assertEqual(metrics['invalid_runs'], 1)
+                    self.assertEqual(metrics['timeout_rate'], 1.0)
 
     def test_rerun_preserves_existing_evidence(self):
         result, = self.trial(task_ids=['plan'])

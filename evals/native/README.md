@@ -3,7 +3,7 @@
 Maintainer tools, not part of a subscriber installation.
 New comparisons use the existing **[Harness Lab Native suite](harness/README.md)**
 and the [current development protocol](../../docs/native/DEVELOPMENT_RU.md).
-The two initial cases cover backend repair and plan-only. The older runner below
+The suite covers backend repair, plan-only, review-only and frontend. The older runner below
 is retained for reproducing diagnostics and browser-specific probes; it is not
 the new comparison framework. Ground Truth Lab is deferred.
 

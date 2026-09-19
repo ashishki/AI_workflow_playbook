@@ -27,8 +27,12 @@ def check(workspace: Path, task: str) -> list[str]:
         if not module or not Path(module).exists():
             print('Browser verifier unavailable: supply an installed Playwright module', file=sys.stderr)
             raise SystemExit(2)
-        result = subprocess.run(['node', str(ROOT / 'evals/native/check-ui.cjs'), str(workspace),
-                                 str(workspace.parent / 'external-browser')], timeout=40)
+        try:
+            result = subprocess.run(['node', str(ROOT / 'evals/native/check-ui.cjs'), str(workspace),
+                                     str(workspace.parent / 'external-browser')], timeout=40)
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            print(f'Browser verifier unavailable: {exc}', file=sys.stderr)
+            raise SystemExit(2) from exc
         if result.returncode == 2:
             raise SystemExit(2)
         return [] if result.returncode == 0 else ['External browser acceptance failed']

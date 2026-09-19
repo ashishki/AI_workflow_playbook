@@ -4,6 +4,7 @@
 [протокол автора](../../docs/native/DEVELOPMENT_RU.md).
 Испытания ведём в существующем Harness Lab; Ground Truth Lab отложен.
 
+- [Preview.5: автоматическое ревью и три платформы](2026-09-19-autoreview/REPORT_RU.md).
 - [Preview.4: протокол, Harness Lab и уборка](2026-09-19-maintenance/REPORT_RU.md).
 - [Preview.3: подключение и первый результат](2026-09-19-onboarding/REPORT_RU.md).
 - [Предыдущие 12 запусков Codex](2026-09-19/REPORT_RU.md).

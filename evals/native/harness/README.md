@@ -3,7 +3,9 @@
 Maintainer surface. Product decisions follow
 [the short development protocol](../../../docs/native/DEVELOPMENT_RU.md).
 Ground Truth Lab is deferred. This suite reuses Harness Lab's command adapter,
-runner, receipts, evidence verification and comparison; its core is unchanged.
+runner, receipts, evidence verification and comparison. Native telemetry extends
+comparison with primary/reviewer counters; unavailable verification is classified
+as an invalid environment run. There is no second lab or runner.
 
 | Task | Automated acceptance | Still reviewed by a person |
 |---|---|---|

@@ -2,8 +2,8 @@
 const {pathToFileURL} = require('node:url');
 const path = require('node:path');
 const fs = require('node:fs');
-const {chromium} = require(process.env.PLAYBOOK_EVAL_PLAYWRIGHT_MODULE);
 (async () => {
+  const {chromium} = require(process.env.PLAYBOOK_EVAL_PLAYWRIGHT_MODULE);
   const workspace = path.resolve(process.argv[2]);
   const out = path.resolve(process.argv[3]); fs.mkdirSync(out, {recursive:true});
   const browser = await chromium.launch({headless:true});
