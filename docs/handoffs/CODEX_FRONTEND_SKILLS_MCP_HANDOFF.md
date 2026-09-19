@@ -1,86 +1,135 @@
-# Handoff: Codex frontend skills and optional MCP
+# Handoff: Playbook Native product candidate
 
-Status: **PROPOSED / documentation-only**. Date: 2026-09-19.
-Repository: `ashishki/AI_workflow_playbook`.
-Research baseline: `d570163ab17ec3b4245187c778f1e8d89af9690f` (`master`).
-Publication branch: `docs/codex-frontend-skills-mcp-20260919`.
+Updated: 2026-09-19. Branch: `docs/codex-frontend-skills-mcp-20260919`.
+Starting commit: `d070f4e`. Scope: this repository only; no master/downstream edits.
 
-## Request and delivered scope
+## Current result
 
-The user requested deeper research into skills used by mysetup.ai authors, especially frontend; whether an equivalent workflow can use Codex without Claude; when MCP is useful; a detailed proposal, ordered implementation and quality evaluation with explicit responsibilities; and publication on a separate branch.
+The user explicitly authorized challenging the original proposal and changing
+this branch. CF-00–CF-09 is superseded, not an approved architecture waiting for
+execution. The new default candidate is a small native agent package with a
+repository connection skill, one frontend delivery skill, and a short project
+instruction block. Existing governed tooling remains a separate opt-in path.
 
-This branch contains only research, a proposed plan, this handoff, and documentation navigation. It does not install skills/MCP, change production code, implement CF stages, approve a Feature Design, or authorize merge/deployment. Publishing the proposal is not approval to execute it.
+Read these in order:
 
-Read:
+1. [Product model and current research](../research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md).
+2. [Preview package](../../plugins/playbook-native/README.md) and its actual skills.
+3. [Delivery and release plan](../research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md).
+4. [Quick start](../native/QUICKSTART_RU.md).
 
-- [Research and proposal (Russian)](../research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)
-- [Implementation and evaluation plan (Russian)](../research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md)
-- [Documentation index](../README.md)
+The package is authored, not installed in the user's environment, published,
+licensed for subscriber reuse, or empirically validated. No browser/server was
+added to a downstream repository. No model/permission settings were changed.
+No outside users were contacted. There is no marketplace listing for this package.
 
-## Findings to preserve
+## Decisions already made for the candidate
 
-Codex-only is a proposed complete development process, not a promise that all models produce identical frontend quality. Skills provide scoped instructions; tools provide capabilities; MCP is an optional interface to tools and external context, not a required dependency of the user's products.
+- Codex-first; existing host planning, tools, sessions, and instructions.
+- One plugin as the intended distribution channel; the same source skills in
+  `.agents/skills` as the fallback. No simultaneous duplicate installation.
+- Always-loaded rules stay small; skill detail loads for the relevant task.
+- One agent normally implements and checks; fresh review when useful or required
+  by project risk/policy. Self-check is labeled accurately.
+- Browser capability matters; MCP transport is optional. Desktop and CLI/IDE
+  have different browser availability. No mandatory transport bake-off.
+- Run the actual app and inspect its current rendered state. Missing capability
+  remains a limitation; it does not become PASS.
+- No mandatory task registries, receipts, role prompts, formal design approvals,
+  or pixel baselines for an ordinary Native task.
+- Existing Governed contracts are not silently disabled or migrated.
 
-At the research baseline, `tools/skill_security_gate.py` discovers `.codex/skills`, `.claude/skills`, and `skills`, but not native `.agents/skills`. The proposal prioritizes effective discovery and trust coverage before installing a frontend pack. `tools/render_slice_context.py` uses character clipping and skips some absent manifest paths; required-context coverage needs explicit validation. Existing execution receipts do not require observed application build identity; browser evidence should prove the correct implementation was exercised.
+## Evidence and limitations
 
-Reuse Codex Direct, the existing four-role reviewer harness, `docs/testing/ui_verification.md`, `feature_workflow` and Harness Lab. Do not add a parallel orchestrator, scheduler, approval system, universal memory service, or mandatory React/browser/MCP dependency.
+The initial proposal was written without a working checkout. This revision has
+an actual checkout and local execution; do not repeat the old DNS/no-Codex claim.
+`codex --version` returned `codex-cli 0.155.1`. Reading `codex plugin --help` and
+`codex plugin add --help` established the local CLI surface, not plugin install
+success. Official source pages were read again on 2026-09-19 and are linked in
+the product document.
 
-## Verification performed and limitations
+The initializer footprint was measured in temporary repositories with each
+mode, no optional packs, and a minimal valid verification command. Lean-Core
+created 35 files (17 tools, 8 schemas), Standard 81, Strict 82. These are scaffold
+measurements, not a user productivity experiment.
 
-Research used GitHub connector reads and public primary documentation. The main research file records sources and versions where available. Community claims are self-reports; private skills were not audited as source code. No source was installed or executed merely because it appeared on mysetup.
+### Final local checks
 
-An isolated reproduction of the discovery traversal was executed on temporary fixtures. With a skill only in `.agents/skills`, discovered targets were `[]`. Adding `.codex/skills/legacy-check` discovered only that legacy path. This was a copy of the traversal logic, not execution of the full repository security CLI, external scanner or installed Codex.
+These checks exercised the edited working tree before commit. No green remote
+CI or real-agent compatibility result is implied.
 
-Local `git clone` failed with DNS resolution for github.com. A public archive retrieval was also unavailable. There was no accessible `codex` executable. Accordingly:
-
-| Check | Status in this authoring session |
+| Check | Observed result |
 |---|---|
-| Read named repository files at pinned baseline | Performed via GitHub connector |
-| Isolated discovery algorithm reproduction | Performed; narrow result above |
-| Full repository `pytest` | NOT_RUN |
-| `tools/verify_playbook.py` / full integrity checker | NOT_RUN |
-| Live Codex skill compatibility smoke | NOT_RUN |
-| Independent Role Runner review | NOT_RUN |
-| Frontend quality or MCP A/B pilot | NOT_RUN |
+| Plugin Creator `validate_plugin.py plugins/playbook-native` | PASS |
+| Skill Creator `quick_validate.py` for both skills, using system `python3` | PASS |
+| Copy the four skill payload files into temporary `.agents/skills`; validate both and resolve internal resources | PASS; packaging smoke only |
+| Local Markdown links in changed/new documents | PASS |
+| `git diff --check` | PASS |
+| `.venv/bin/python tools/integrity_check.py --root .` | PASS, with two existing missing-generated-content warnings |
+| Full `.venv/bin/python -m pytest -q` | 222 passed, 12 skipped, 2 failed |
+| `tools/verify_playbook.py` with repo-local artifact directory | 24/26 checks passed; `pytest` and `playbook_validate` failed as below |
+| Native plugin install/discovery, skill behavioral trials, browser trials, newcomer pilot | NOT RUN; release work |
 
-Documentation-only static checks and remote publication verification are separate from these runtime checks. Consult the publication response/commit for actual results; do not infer green CI from the existence of a branch. The existing CI configuration targets pushes to master/main and pull requests, so a side-branch push alone does not establish a CI result.
+The two failing pytest cases were reproduced independently in a detached
+worktree at the unmodified starting commit `d070f4e`:
 
-## Next-session operating instructions
+- `test_frozen_asset_manifest_matches_full_execution_closure`: historical
+  frozen pilot manifest is stale.
+- `test_frozen_permission_profile_denies_sibling_auth_and_network_access`:
+  installed Codex CLI version differs from that frozen pilot's toolchain.
 
-First inspect the actual workspace, branch, HEAD, dirty state and changes relative to the current remote base. Preserve unrelated work. Fetch only when network access is permitted. Start from this branch for proposal revisions; create a separate implementation branch only after the approved design/task scope says to do so. Never edit master directly.
+`playbook_validate` reports six missing references to the historical
+`shishki-tfa7-20260715` run/review/approval artifacts and two warnings for absent
+generated cognition content. Its complete findings match `d070f4e` exactly.
+No historical evidence, policy, or frozen hash was rewritten to hide these
+failures. The other verifier checks, including generated-project matrices,
+hooks, compilation, evidence fixtures, and RAG comparison, passed.
 
-Read the two linked documents, then current `PLAYBOOK.md`, `docs/CODEX_PROMPT.md`, `docs/tasks.md`, `docs/adoption_modes.md`, `docs/codex_role_execution_harness.md`, and relevant canonical security/UI policies. Use their current authority, not this historical handoff, to resolve disagreements. Do not restart completed historical task queues.
+The first verifier invocation put artifacts outside the repository and hit a
+RAG comparison path-scope error. It was rerun using the supported repo-local
+layout. Final command:
 
-Begin with CF-00: inventory, real downstream task selection, observed baseline, Feature Design and required reviews. CF identifiers are proposal labels, not existing task IDs. Map them to real task/feature/slice records. The user has not selected a downstream frontend repository in this request; do not assume a React stack or silently modify another repository.
+```bash
+.venv/bin/python tools/verify_playbook.py --root . \
+  --output .playbook-artifacts/native-candidate-verification.json \
+  --artifact-dir .playbook-artifacts/native-candidate
+```
 
-Present scope, evidence contract, cost/permission budgets and unresolved product decisions for human approval. Do not self-approve, synthesize a human identity, bypass interactive approval, or install all suggested packages while waiting for design acceptance.
+The local ignored report retains individual commands and output paths. It is
+execution evidence from this checkout, not a committed release attestation.
+A structural validator does not prove that an agent follows a skill or that a
+host loads it. The two skills' behavioral acceptance scenarios remain in the
+delivery plan. Self-review caught and clarified preservation of modified skill
+files on removal; no independent reviewer run is claimed.
 
-After approval, implement in bounded slices with tests first where required. Use the actual configured model/effort; no silent reviewer downgrade. Invoke only the four supported roles through the existing Role Runner. An implementer's self-check is not independent review. A QA driver that launches a browser and changes test data is not read-only.
+## Next useful work
 
-The baseline frontend pilot uses no MCP. CF-07 is conditional and may be explicitly skipped as not useful. Compare current competent workflow against skills, then compare browser interfaces separately. Preserve holdouts, failures, manual hints and cost uncertainty. Do not fill an experiment report with invented outcomes.
+Perform delivery A's isolated connect/reconnect/update/remove/discovery trials,
+then delivery B's real browser trial. Keep tests in scratch fixtures, not a
+working downstream product. Choose the host/browser actually available; do not
+install every candidate. Use the final acceptance table rather than reviving
+CF-00 or creating a new feature-approval ceremony.
 
-For each completed slice record exact changed files/commits, actual commands/results, receipts, evidence freshness, independent reviews, human gates, remaining findings, rollback and the next action. Merge/release remains human.
+Public distribution needs an explicit rights decision: `docs/LEGAL_STATUS.md`
+intentionally grants no project-level reuse license. Prepare the actual release
+artifact and checks before requesting publication approval. Neither license nor
+public release is implied by this source preview.
 
-## Copyable starting prompt
+Known Governed issues remain separately scoped: old skill discovery misses native
+`.agents/skills`; required context can be clipped/skipped; formal browser records
+lack observed build identity. Native does not use those mechanisms. The old
+security gate must not be cited as validation of this plugin.
+
+## Starting prompt for a later session
 
 ```text
-Продолжи в ashishki/AI_workflow_playbook, ветка
+Продолжи Playbook Native в AI_workflow_playbook на ветке
  docs/codex-frontend-skills-mcp-20260919.
-
-Сначала покажи git status, ветку, HEAD и изменения относительно актуальной
-базы. Не трогай master и не перезапускай закрытые исторические задачи.
-Прочитай docs/handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md и два документа,
-на которые он ссылается; затем сверь текущие canonical policy и task state.
-
-Цель — подготовить и после требуемого approval реализовать proposed план
-CF-00–CF-09: Codex-only frontend workflow, scoped skills, проверяемое browser
-evidence и MCP только при доказанной необходимости. Не подменяй цель
-массовой установкой plugins или новым универсальным runtime.
-
-Сейчас начни с CF-00: inventory, baseline, Feature Design, существующие
-required design reviews и предъявление владельцу. Документы этой ветки
-не означают утверждения дизайна или разрешения менять downstream repo.
-После approval двигайся по зависимостям небольшими проверяемыми слайсами.
-Сохраняй текущую модель/effort и review policy; не выдумывай результаты
-проверок и не объявляй собственное ревью независимым.
+Прочитай текущий handoff, product decision, пакет и delivery plan.
+Проверь git status; сохрани мои изменения. CF-00–CF-09 уже заменён.
+Следующая техническая работа — изолированные испытания подключения,
+обновления, удаления и native discovery, затем реальный frontend trial.
+Исправляй наблюдаемые проблемы; не добавляй governance по умолчанию.
+Не меняй master/downstream и не публикуй пакет. Не меняй лицензию без решения
+владельца. Сообщай реально выполненные проверки и оставшиеся ограничения.
 ```

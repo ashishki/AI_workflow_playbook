@@ -1,18 +1,64 @@
 # AI Workflow Playbook
 
-A structured AI-assisted development workflow with explicit, testable quality
-controls. It provides prompts, templates, schemas, validators, receipts,
-review loops, and fit-for-purpose governance. Controls are labeled by actual
-maturity: documented, formalized, enforced, tested, or empirically validated.
+Connect a repository, ask your coding agent for a change, and get an implemented,
+checked result with clear evidence and limitations.
 
-The current playbook is strongest when read as a layered system:
+The proposed default for new users is **Playbook Native**: two focused skills,
+a small project instruction block, and the repository's existing tools. The
+agent handles implementation, verification, and fixes. Frontend work includes
+exercising the running UI and inspecting its appearance. MCP is optional.
+
+**Status: source preview, not a published or user-validated release.** This
+branch includes the actual skill package and a concrete release plan. Native
+installation/discovery and real agent/browser trials remain release work. The
+repository's existing governed tooling has a different, tested maturity level.
+See the [current verification record](docs/handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md)
+for actual results and pre-existing failures in this checkout.
+
+## Start Here
+
+- [Быстрый старт на русском](docs/native/QUICKSTART_RU.md) — try the source
+  preview in an authorized scratch repository; one connection request, then a task.
+- [Native package](plugins/playbook-native/README.md) — two skills, project
+  block, browser guidance, and plugin manifest. No bundled runtime or MCP.
+- [Product model and research](docs/research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)
+  — what we keep, simplify, and remove from the default workflow.
+- [Implementation and release plan](docs/research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md)
+  — observable acceptance checks and remaining work, replacing CF-00–CF-09.
+
+| Path | Choose it for | Installation |
+|------|---------------|--------------|
+| **Native (preview)** | Ordinary project work with agent autonomy and real-result checks | Small skill package + project instructions; [quick start](docs/native/QUICKSTART_RU.md) |
+| **Governed (existing)** | Projects explicitly requiring formal contracts, review records, and release evidence | Existing Lean-Core / Standard / Strict initializer and tools described below |
+
+Native is not a new `--mode` for the old initializer. Existing projects retain
+their chosen contracts and review policies; installing a skill does not migrate
+them. Do not run both sets of conflicting instructions. No downstream project
+is changed by this proposal. Native deliberately does not load the governed
+manuals, schemas, prompts, or role runner for ordinary tasks.
+
+> **Distribution boundary:** reuse rights must be decided before subscriber
+> distribution. This preview does not add a license or permission to reuse the
+> material. See [Legal Status](docs/LEGAL_STATUS.md).
+
+## Governed Workflow Reference
+
+The remainder of this README describes the existing **Governed** path, its
+tools, and its evidence. Its mandatory artifacts and review gates apply to
+projects that adopt that path, not automatically to Native. Governed provides
+prompts, templates, schemas, validators, receipts, and review loops. Controls
+are labeled by actual maturity: documented, formalized, enforced, tested, or
+empirically validated.
+
+The governed system has four layers:
 
 1. Policy / Governance
 2. Proof / Evidence
 3. Optional Execution Patterns
 4. Harness Design / Packaging
 
-This repository is not trying to become a generic orchestration framework. Its center of gravity remains governance, contracts, reviews, and auditable repo artifacts.
+This path serves governance, contracts, reviews, and auditable repo artifacts;
+it is not a prerequisite for using the Native package.
 
 > **Current maturity:** repository mechanisms and generated-project contracts are
 > tested locally and in CI. Their effect on team productivity, delivery quality,

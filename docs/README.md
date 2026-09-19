@@ -7,10 +7,25 @@ Canonical authority remains in the named documents, schemas, tools, prompts,
 and evidence artifacts. This index is only a routing surface so humans and
 agents do not load every Markdown file by default.
 
-## Core Workflow
+## Native Product Candidate
+
+The proposed entrypoint for new users is a small skill package. It is a source
+preview, not a publicly released or runtime-validated product. Existing
+governed policies are not silently migrated.
+
+- [Quick start (Russian)](native/QUICKSTART_RU.md) — connect, task, result, remove.
+- [Package](../plugins/playbook-native/README.md) — setup and frontend skills.
+- [Product model and research](research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)
+  — current decisions, external sources, automation and human boundaries.
+- [Delivery plan](research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md)
+  — three concrete releases, acceptance scenarios, and CF-00–CF-09 disposition.
+- [Handoff and verification](handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md)
+  — what exists, actual checks, limits, and the next useful work.
+
+## Governed Core Workflow
 
 - `../README.md` - user-facing overview and quick-start map.
-- `../PLAYBOOK.md` - master workflow contract and authority model.
+- `../PLAYBOOK.md` - existing governed workflow contract and authority model.
 - `usage_guide.md` - end-to-end operating guide for new and retrofit projects.
 - `adoption_modes.md` - Lean-Core / Standard / Strict proportionality matrix.
 - `project_fit_guide.md` - problem-first adoption gate and anti-patterns.
@@ -60,18 +75,6 @@ agents do not load every Markdown file by default.
 - `evaluation/TEST_FIRST_PILOT_PLAN.md` and
   `evaluation/TEST_FIRST_PILOT_RESULTS.md` - historical first pilot plan and
   result.
-
-## Proposed Codex Frontend Adoption
-
-Research and implementation proposals, not active policy or installed tooling.
-The pack and MCP experiments remain opt-in and require the normal design gates.
-
-- [Skills and MCP research (Russian)](research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)
-  - community practices, public skills, Codex-only feasibility, and source boundaries.
-- [Implementation and evaluation plan (Russian)](research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md)
-  - CF-00–CF-09, responsibilities, negative tests, quality gates, and paired pilots.
-- [Authoring handoff](handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md)
-  - scope, known verification limits, and the next-session starting prompt.
 
 ## RAG Evaluation v2
 

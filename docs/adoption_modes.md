@@ -1,5 +1,12 @@
 # Adoption Modes
 
+> **Scope: Governed path.** The three modes below belong to the existing
+> initializer and formal workflow. [Native](native/QUICKSTART_RU.md) is a separate
+> source-preview entrypoint for new users, not a fourth initializer mode.
+> Its small project block and skills do not require these artifacts or review
+> gates. Existing governed projects retain their policies until an explicitly
+> chosen migration; setup must not silently downgrade them.
+
 ## Purpose
 
 The playbook has three adoption modes. The initializer names the minimal mode

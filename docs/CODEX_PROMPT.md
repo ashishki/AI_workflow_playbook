@@ -1,5 +1,14 @@
 # AI Workflow Playbook - Compact Session State
 
+> **Branch context, 2026-09-19:** On
+> `docs/codex-frontend-skills-mcp-20260919`, the active work is the Native product
+> redesign and preview package. Start with the
+> [current handoff](handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md), not the
+> historical task queue below. CF-00–CF-09 has been superseded. The existing
+> governed contracts/tooling remain available; no downstream or master change
+> is authorized by this handoff. The older session state below is retained as
+> historical governed context, not a new instruction to resume old phases.
+
 Version: 1.3
 Date: 2026-06-08
 Status: active-core-framework

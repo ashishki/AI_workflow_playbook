@@ -1,5 +1,13 @@
 # Usage Guide
 
+For the new small skill package, use the [Native quick start](native/QUICKSTART_RU.md).
+It connects through project instructions and existing commands; it does not
+require the brief-first initializer below. Native is currently a source preview.
+
+**The rest of this guide covers the existing Governed workflow.** Its contracts
+remain applicable to projects that chose that workflow. Installing Native does
+not replace an existing contract or authorize a downstream migration.
+
 This guide explains how to use AI Workflow Playbook in practice for:
 
 1. a new repository
