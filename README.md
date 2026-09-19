@@ -45,3 +45,7 @@
 > Репозиторий не получил новую лицензию. Права использования и распространения
 > остаются описанными в [LEGAL_STATUS](docs/LEGAL_STATUS.md). Эта ветка не является
 > публичным выпуском или разрешением отправлять комплект подписчикам.
+
+> This repository has no project-level open-source license and grants no additional
+> copyright permission beyond the GitHub Terms, applicable law, and file-specific
+> licenses. See [Legal Status](docs/LEGAL_STATUS.md).
