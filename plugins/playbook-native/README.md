@@ -1,4 +1,4 @@
-# Playbook Native — preview.5
+# Playbook Native — preview.6
 
 One entry: describe a task in ordinary language, beginning with “Playbook”.
 The agent infers new/existing project, create/fix/check intent and
@@ -26,8 +26,9 @@ No global model changes, hooks, mandatory MCP or automatic self-updates are adde
 ## Try it
 
 The [Russian quick start](../../docs/native/QUICKSTART_RU.md) starts with a small
-[offline kit](../../distribution/native/README.md): extract, open `START.html`,
-open the included `Мой проект` folder in Codex, describe a task. That folder
+[offline kit](../../distribution/native/README.md): extract,
+open the included `Мой проект` folder in Codex, describe a task. `START.html` is
+optional help; no prompt-builder handoff is required. That folder
 already contains exact repo-local copies of these skills. The first instructions avoid terminal commands or hidden-file copying.
 Automatic review has the runtime prerequisites above; the agent checks them. The kit does not bundle Codex itself.
 

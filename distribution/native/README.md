@@ -1,8 +1,8 @@
 # Offline beginner kit (maintainer instructions)
 
 Builds a small private evaluation ZIP from the canonical native package and
-start page. The recipient extracts it, opens `START.html`, selects `Мой проект`
-in Codex, and describes a task. No build tools are required by the recipient.
+help page. The recipient extracts it, selects `Мой проект` in Codex, and describes
+a task directly. `START.html` is optional help. No build tools are required by the recipient.
 
 ```bash
 python3 distribution/native/sync_runtime.py --check

@@ -1,6 +1,6 @@
 {
-  "suite_id": "playbook_native_v2",
-  "version": "2.0.0",
+  "suite_id": "playbook_native_v3",
+  "version": "3.0.0",
   "tasks": [
     {
       "task_id": "backend",
@@ -85,6 +85,46 @@
           "invalid_exit_codes": [
             2
           ]
+        }
+      ]
+    },
+    {
+      "task_id": "booking",
+      "version": "native.booking.v1",
+      "title": "booking",
+      "fixture": "../fixtures/booking",
+      "baseline_prompt": "prompts/booking.md",
+      "playbook_prompt": "prompts/booking.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure"
+      ],
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "external_acceptance",
+          "command": "{python} {project_root}/evals/native/harness/value_acceptance.py {workspace} booking",
+          "timeout": 25
+        }
+      ]
+    },
+    {
+      "task_id": "contacts",
+      "version": "native.contacts.v1",
+      "title": "contacts",
+      "fixture": "../fixtures/contacts",
+      "baseline_prompt": "prompts/contacts.md",
+      "playbook_prompt": "prompts/contacts.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure"
+      ],
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "external_acceptance",
+          "command": "{python} {project_root}/evals/native/harness/value_acceptance.py {workspace} contacts",
+          "timeout": 25
         }
       ]
     }
