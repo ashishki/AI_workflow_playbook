@@ -41,6 +41,8 @@ Development and eval decisions follow the [maintainer protocol](../../docs/nativ
 The package now includes the existing Role Runner's two stdlib Python files under
 the entry skill. Canonical sources remain in `tools/`; after changing them run
 `python3 distribution/native/sync_runtime.py`. Build refuses stale copies.
+Scoped `.gitattributes` keeps delivered text in LF form, and ZIP metadata uses
+an explicit platform identifier so the same source builds the same archive on all three OSes.
 The Native profile needs neither a governed renderer nor Git. Python and an
 authenticated Codex CLI must be available in the user's agent environment.
 Windows/macOS/Linux package and runner tests are defined in Native CI; desktop

@@ -1,0 +1,6 @@
+# Keep the delivered Native payload identical across Windows, macOS and Linux.
+plugins/playbook-native/** text eol=lf
+tools/run_codex_role.py text eol=lf
+tools/codex_role_run_lib.py text eol=lf
+docs/native/start.html text eol=lf
+docs/LEGAL_STATUS.md text eol=lf

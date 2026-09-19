@@ -71,6 +71,7 @@ def build(output):
         with zipfile.ZipFile(dest,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
             for name,content in sorted(payload.items()):
                 info=zipfile.ZipInfo('Playbook/'+name,date_time=(2026,9,19,0,0,0))
+                info.create_system=3  # Stable Unix metadata, also when built on Windows.
                 info.compress_type=zipfile.ZIP_DEFLATED
                 info.external_attr=0o100644 << 16
                 z.writestr(info,content)
