@@ -2,9 +2,9 @@ name: Native Product Checks
 
 on:
   push:
-    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919"]
+    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919", "feature/playbook-vnext-20260919"]
   pull_request:
-    branches: ["master", "main"]
+    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919"]
 
 permissions:
   contents: read
@@ -27,7 +27,6 @@ jobs:
           python -m unittest discover -s evals/native -p 'test_*.py' -v
           python -m ai_workflow_harness_lab.cli validate-suite evals/native/harness
 
-
   package:
     name: Package and Role Runner / ${{ matrix.os }}
     strategy:
@@ -46,6 +45,8 @@ jobs:
         run: |
           python distribution/native/sync_runtime.py --check
           python -m unittest discover -s distribution/native -p "test_*.py" -v
+      - name: Check lifecycle and transfer helper on this OS
+        run: python -m unittest discover -s tests/vnext -p "test_*.py" -v
       - name: Build offline preview
         run: python distribution/native/build.py --output .playbook-artifacts/ci-kit
       - name: Extract actual archive
@@ -58,3 +59,16 @@ jobs:
         env:
           PLAYBOOK_EVAL_PLAYWRIGHT_MODULE: ${{ github.workspace }}/.playbook-artifacts/browser-tools/node_modules/playwright
         run: node evals/native/check-launcher.cjs .playbook-artifacts/browser-results .playbook-artifacts/extracted/Playbook/START.html
+      - name: Preserve exact tracked source for reproducible inspection
+        if: matrix.os == 'ubuntu-latest'
+        run: git archive --format=zip --output=.playbook-artifacts/ci-kit/Playbook-source.zip HEAD
+      - name: Retain the checked kit and browser evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vnext-kit-${{ matrix.os }}
+          path: |
+            .playbook-artifacts/ci-kit/
+            .playbook-artifacts/browser-results/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
