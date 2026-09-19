@@ -1,0 +1,31 @@
+name: Native Product Checks
+
+on:
+  push:
+    branches: ["master", "main"]
+  pull_request:
+    branches: ["master", "main"]
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    name: Native package and Harness Lab integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - name: Install existing lab dependencies
+        run: python -m pip install -e companion/ai_workflow_harness_lab
+      - name: Check package and native lab adapter (fake CLI, no inference)
+        run: |
+          python -m unittest discover -s distribution/native -p 'test_*.py' -v
+          python -m unittest discover -s evals/native -p 'test_*.py' -v
+          python -m ai_workflow_harness_lab.cli validate-suite evals/native/harness
+      - name: Build offline preview
+        run: python distribution/native/build.py --output "$RUNNER_TEMP/native-kit"

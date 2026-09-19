@@ -28,9 +28,11 @@ opening `Мой проект`. Do not install the plugin globally as well for th
 Before handing off a changed ZIP, extract it to a fresh path, verify its manifest
 and discovery, and run the [launcher probe](../../evals/native/README.md) against
 its actual `START.html`. The tested result and artifact hash belong in the
-[onboarding report](../../reports/native/2026-09-19-onboarding/REPORT_RU.md).
+[version report](../../reports/native/README.md).
 Do not rename a different payload to an already distributed version.
 
 This is not a public release. Rights and a supported desktop walkthrough must
 be settled before subscriber distribution. The [small pilot plan](../../docs/native/PILOT_RU.md)
 is for the owner; it is not copied into users' projects.
+
+Development and eval decisions follow the [maintainer protocol](../../docs/native/DEVELOPMENT_RU.md).

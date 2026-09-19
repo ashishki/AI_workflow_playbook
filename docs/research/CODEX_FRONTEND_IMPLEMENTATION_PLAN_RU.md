@@ -1,8 +1,10 @@
 # Playbook Native: план доведения до выпуска
 
-Статус: **preview.3: собран пробный комплект, технические прогоны выполнены; desktop usability ещё не подтверждён**. 2026-09-19.
+Статус: **preview.4: комплект, короткий протокол и Native-сценарии в Harness Lab; desktop usability ещё не подтверждён**. 2026-09-19.
 Этот план заменяет CF-00–CF-09. Это backlog работ, а не новый пользовательский
 workflow: подписчик не выполняет эти этапы для каждой задачи.
+Текущий цикл улучшений — [короткий протокол](../native/DEVELOPMENT_RU.md);
+используем существующий Harness Lab, Ground Truth Lab отложен.
 
 [Модель продукта](CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md) →
 [исходный пакет](../../plugins/playbook-native/README.md) →

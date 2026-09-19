@@ -1,0 +1,36 @@
+{
+  "suite_id": "playbook_native_smoke_v1",
+  "version": "1.0.0",
+  "tasks": [
+    {
+      "task_id": "backend",
+      "version": "native.backend.v1",
+      "title": "Correct a slug function without unrelated changes",
+      "fixture": "../fixtures/backend",
+      "baseline_prompt": "prompts/backend.md",
+      "playbook_prompt": "prompts/backend.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": ["model_reasoning_failure"],
+      "scorers": [{
+        "type": "shell", "id": "external_acceptance",
+        "command": "{python} {project_root}/evals/native/harness/acceptance.py --workspace {workspace} --task backend",
+        "timeout": 15
+      }]
+    },
+    {
+      "task_id": "plan",
+      "version": "native.plan.v1",
+      "title": "Plan without changing project files",
+      "fixture": "../fixtures/backend",
+      "baseline_prompt": "prompts/plan.md",
+      "playbook_prompt": "prompts/plan.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": ["model_reasoning_failure"],
+      "scorers": [{
+        "type": "shell", "id": "external_acceptance",
+        "command": "{python} {project_root}/evals/native/harness/acceptance.py --workspace {workspace} --task plan",
+        "timeout": 15
+      }]
+    }
+  ]
+}

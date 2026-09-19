@@ -1,7 +1,13 @@
-# Native diagnostic evaluations
+# Native product checks
 
-Maintainer tools for this source preview, not part of a subscriber installation.
-Read [PROTOCOL.md](PROTOCOL.md) **before** a model trial and
+Maintainer tools, not part of a subscriber installation.
+New comparisons use the existing **[Harness Lab Native suite](harness/README.md)**
+and the [current development protocol](../../docs/native/DEVELOPMENT_RU.md).
+The two initial cases cover backend repair and plan-only. The older runner below
+is retained for reproducing diagnostics and browser-specific probes; it is not
+the new comparison framework. Ground Truth Lab is deferred.
+
+Read the [historical diagnostic protocol](PROTOCOL.md) to reproduce its trials and
 [actual results](../../reports/native/2026-09-19/REPORT_RU.md) before making claims.
 Synthetic repos only. No downstream app, global configuration or model changes.
 

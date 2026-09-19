@@ -1,32 +1,29 @@
-# Documentation Index
+# Указатель документации
 
-Status: navigation index, not authority
-Last updated: 2026-09-19
+Текущий продукт — Playbook Native, пробный комплект для Codex. Начинайте с
+[корневого README](../README.md); все справочники сразу загружать не нужно.
 
-Canonical authority remains in the named documents, schemas, tools, prompts,
-and evidence artifacts. This index is only a routing surface so humans and
-agents do not load every Markdown file by default.
+- Пользователю: [первый запуск](native/QUICKSTART_RU.md) и [START](native/start.html).
+- Автору: [короткий протокол развития](native/DEVELOPMENT_RU.md),
+  [Harness Lab для Native](../evals/native/harness/README.md),
+  [сборка комплекта](../distribution/native/README.md).
+- Доказательства: [результаты и архив](../reports/native/README.md),
+  [текущее состояние и ограничения](handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md).
+- Решения: [модель продукта](research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md),
+  [план реализации](research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md).
+- До публичного выпуска: [пилот с новичками](native/PILOT_RU.md),
+  [права использования](LEGAL_STATUS.md).
 
-## Native Product Candidate
+Используем существующий внутренний Harness Lab. Ground Truth Lab откладываем.
+Прежние планы и CF-00–CF-09 — исследовательская история, не обязательная
+архитектура нового продукта. Governed-путь сохранён для явного выбора.
 
-The proposed entrypoint for new users is a small skill package. It is a source
-preview with diagnostic runtime trials; not a publicly released product. Existing
-governed policies are not silently migrated.
-
-- [Start page (Russian)](native/start.html) — task, optional choices, copy to Codex.
-- [Actual diagnostic trials](../reports/native/2026-09-19/REPORT_RU.md) — evidence and limits.
-- [Quick start (Russian)](native/QUICKSTART_RU.md) — connect, task, result, remove.
-- [Package](../plugins/playbook-native/README.md) — one entry skill and one frontend skill.
-- [Product model and research](research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)
-  — current decisions, external sources, automation and human boundaries.
-- [Delivery plan](research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md)
-  — three concrete releases, acceptance scenarios, and CF-00–CF-09 disposition.
-- [Handoff and verification](handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md)
-  — what exists, actual checks, limits, and the next useful work.
+<details>
+<summary>Расширенный индекс Governed, исследований и исторических механизмов</summary>
 
 ## Governed Core Workflow
 
-- `../README.md` - user-facing overview and quick-start map.
+- [Governed reference](governed/README.md) - preserved overview and quick-start map.
 - `../PLAYBOOK.md` - existing governed workflow contract and authority model.
 - `usage_guide.md` - end-to-end operating guide for new and retrofit projects.
 - `adoption_modes.md` - Lean-Core / Standard / Strict proportionality matrix.
@@ -154,3 +151,5 @@ Mechanism fixtures and examples are not empirical product evidence.
 - Keep historical evidence under `reports/`; do not reference it from hot-path
   docs unless the specific evidence still supports a current claim.
 - Do not create placeholder docs only to satisfy a checklist.
+
+</details>

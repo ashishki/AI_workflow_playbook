@@ -1,6 +1,6 @@
 {
   "name": "playbook-native",
-  "version": "0.1.0-preview.3",
+  "version": "0.1.0-preview.4",
   "description": "One entry for new or existing projects: create, fix or check with automatic, plan-first or extended control.",
   "author": {
     "name": "AI Workflow Playbook"

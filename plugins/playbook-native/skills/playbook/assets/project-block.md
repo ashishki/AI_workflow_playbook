@@ -1,4 +1,4 @@
-<!-- playbook-native:begin v0.1.0-preview.3 -->
+<!-- playbook-native:begin v0.1.0-preview.4 -->
 ## Playbook Native
 
 - Deliver the requested outcome using this repository's conventions and tools.

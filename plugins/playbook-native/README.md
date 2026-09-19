@@ -1,4 +1,4 @@
-# Playbook Native — preview.3
+# Playbook Native — preview.4
 
 One entry: describe a task in ordinary language, beginning with “Playbook”.
 The agent infers new/existing project, create/fix/check intent and

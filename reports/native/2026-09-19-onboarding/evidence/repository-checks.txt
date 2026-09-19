@@ -1,9 +1,0 @@
-Full pytest summary (working tree, 2026-09-19)
- ============================
-FAILED tests/unit/test_test_first_pilot_assets.py::test_frozen_asset_manifest_matches_full_execution_closure
-FAILED tests/unit/test_test_first_pilot_permissions.py::test_frozen_permission_profile_denies_sibling_auth_and_network_access
-2 failed, 222 passed, 12 skipped in 92.76s (0:01:32)
-
-WARN: docs/COGNITION_MANIFEST.md:129: Missing referenced path `generated/cognition/index.json`
-WARN: docs/COGNITION_MANIFEST.md:130: Missing referenced path `docs/context-packets/`
-integrity_check: ok

@@ -1,5 +1,7 @@
 # Native pilot — protocol fixed before runs
 
+> Historical diagnostic protocol. New changes follow [the author protocol](../../docs/native/DEVELOPMENT_RU.md) and use [the existing Harness Lab](harness/README.md).
+
 Date: 2026-09-19. Starting package: `f650301` / `0.1.0-preview.1`.
 Scope: synthetic isolated repositories; no downstream project or public release.
 

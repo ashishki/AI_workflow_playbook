@@ -1,5 +1,7 @@
 # Preview.3: упаковка, подключение и первый результат
 
+> Исторический отчёт. Подробные материалы сохранены в [неизменяемом архиве](../README.md); ссылки ниже ведут на проверенный коммит.
+
 Дата: 2026-09-19. База изменений: `4eb96cce5623bd397b47e837a6aea286b0695963`.
 Работа выполнена в ветке `docs/codex-frontend-skills-mcp-20260919`.
 Master `d570163ab17ec3b4245187c778f1e8d89af9690f` и downstream не изменялись.
@@ -19,7 +21,7 @@ Master `d570163ab17ec3b4245187c778f1e8d89af9690f` и downstream не измен�
 **Архив:** `Playbook-0.1.0-preview.3.zip`, 34 588 байт, 19 файлов.
 SHA256: `03e6b9460943ec8d12f7e13771cdf7f7e6e4f142154d31b14f62d1d86e07431d`.
 [Сборщик и инструкция](../../../distribution/native/README.md),
-[идентичность артефакта](evidence/artifact.json), [хеши каждого файла](evidence/package.json).
+[идентичность артефакта](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/artifact.json), [хеши каждого файла](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/package.json).
 Архив собран локально, не опубликован; исходники позволяют повторить сборку.
 
 ## На что опирались решения
@@ -44,30 +46,30 @@ SHA256: `03e6b9460943ec8d12f7e13771cdf7f7e6e4f142154d31b14f62d1d86e07431d`.
 | Проверка | Наблюдаемый результат | Доказательство / граница |
 |---|---|---|
 | ZIP | 5 тестов: повторяемость, хеши, извлечение с кириллицей/пробелами, сохранность существующих архивов/checksum, запрет symlink | [test_build.py](../../../distribution/native/test_build.py); Linux, не Windows/macOS |
-| START.html из финального ZIP | 48 сочетаний; пустой ввод, карточки, буквальный пользовательский текст, copy/fallback, помощь, 390/1280 px; нет page errors/внешних requests | [launcher-check.json](evidence/launcher-check.json); clipboard API stub, реальная selection fallback; не OS clipboard |
-| Repo-local discovery | Из распакованной папки без `.git` host обнаружил оба enabled skills | [starter-discovery.json](evidence/starter-discovery.json); свежий container, app-server |
-| Native plugin lifecycle | Install, reinstall без изменения cache bytes, update с cachebuster, remove; новые app-server sessions; пользовательские файлы не изменены | [lifecycle.json](evidence/lifecycle.json), offline Linux container; не модель и не desktop UI |
-| Connect/reconnect | Правильный root override, один блок, 6 точных файлов; повтор без изменений bytes/mtime/mode | [до](evidence/connection-before.json), [после](evidence/connection-after.json); независимый агент, затем продолжение той же сессии |
-| Update | Меняется только frontend SKILL; совместимые исходное обновление и пользовательская строка сохранены | [наблюдения агента](evidence/connection-observations.md); проверка файлов, не fresh-session discovery |
-| Первое remove | **FAIL:** custom skill остаётся активным, reference потеряна | [наблюдения](evidence/connection-observations.md), [независимая проверка](evidence/removal-verification.json); не скрыто успешным retry |
-| Removal regression | Полная резервная папка вне discovery, нет активного SKILL/блока; остальные bytes сохранены | [до](evidence/remove-before.json), [после](evidence/remove-after.json); follow-up в новой fixture после узкой правки инструкции |
-| Новая frontend-задача | Агент создал сайт, открыл Chromium, прошёл форму/ошибки/клавиатуру, просмотрел 8 изображений, исправил проблемы, перепроверил | [его checks](evidence/agent-browser-checks.json), [полученный сайт](demo-output/index.html); полный цикл в доступной среде |
-| Проверка результата другим проходом | Родитель самостоятельно проверил выбор занятия, пустую/невалидную форму, успех/reset, ширины 360/390/768/1440, file://; ошибок/внешних запросов не наблюдал | [independent-ui.json](evidence/independent-ui.json); это дополнение, не подмена проверки исполнителя |
-| Смена режима | «Теперь сначала только план» после создания: понятный план расписания; все 60 файлов, включая локальные служебные файлы, совпали по хешам | [plan-switch.json](evidence/plan-switch.json), [ответ](evidence/plan-switch-final.md) |
-| Clean-container model trial | **BLOCKED:** агент заявил выбор Playbook, но не смог прочитать инструкции; в финале это сообщил; файл проекта не изменился | [final](evidence/native-discovery/final.txt), [events](evidence/native-discovery/events.jsonl), [summary](evidence/native-discovery/summary.json); exit 0 не засчитан как skill execution |
+| START.html из финального ZIP | 48 сочетаний; пустой ввод, карточки, буквальный пользовательский текст, copy/fallback, помощь, 390/1280 px; нет page errors/внешних requests | [launcher-check.json](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/launcher-check.json); clipboard API stub, реальная selection fallback; не OS clipboard |
+| Repo-local discovery | Из распакованной папки без `.git` host обнаружил оба enabled skills | [starter-discovery.json](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/starter-discovery.json); свежий container, app-server |
+| Native plugin lifecycle | Install, reinstall без изменения cache bytes, update с cachebuster, remove; новые app-server sessions; пользовательские файлы не изменены | [lifecycle.json](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/lifecycle.json), offline Linux container; не модель и не desktop UI |
+| Connect/reconnect | Правильный root override, один блок, 6 точных файлов; повтор без изменений bytes/mtime/mode | [до](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/connection-before.json), [после](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/connection-after.json); независимый агент, затем продолжение той же сессии |
+| Update | Меняется только frontend SKILL; совместимые исходное обновление и пользовательская строка сохранены | [наблюдения агента](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/connection-observations.md); проверка файлов, не fresh-session discovery |
+| Первое remove | **FAIL:** custom skill остаётся активным, reference потеряна | [наблюдения](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/connection-observations.md), [независимая проверка](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/removal-verification.json); не скрыто успешным retry |
+| Removal regression | Полная резервная папка вне discovery, нет активного SKILL/блока; остальные bytes сохранены | [до](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/remove-before.json), [после](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/remove-after.json); follow-up в новой fixture после узкой правки инструкции |
+| Новая frontend-задача | Агент создал сайт, открыл Chromium, прошёл форму/ошибки/клавиатуру, просмотрел 8 изображений, исправил проблемы, перепроверил | [его checks](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/agent-browser-checks.json), [полученный сайт](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/demo-output/index.html); полный цикл в доступной среде |
+| Проверка результата другим проходом | Родитель самостоятельно проверил выбор занятия, пустую/невалидную форму, успех/reset, ширины 360/390/768/1440, file://; ошибок/внешних запросов не наблюдал | [independent-ui.json](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/independent-ui.json); это дополнение, не подмена проверки исполнителя |
+| Смена режима | «Теперь сначала только план» после создания: понятный план расписания; все 60 файлов, включая локальные служебные файлы, совпали по хешам | [plan-switch.json](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/plan-switch.json), [ответ](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/plan-switch-final.md) |
+| Clean-container model trial | **BLOCKED:** агент заявил выбор Playbook, но не смог прочитать инструкции; в финале это сообщил; файл проекта не изменился | [final](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/native-discovery/final.txt), [events](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/native-discovery/events.jsonl), [summary](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/native-discovery/summary.json); exit 0 не засчитан как skill execution |
 
 Native lifecycle использует CLI 0.155.1, Python 3.12 container и official helpers;
 контейнер удаляется после проверки, сетевой доступ отключён. Глобальные каталоги
 меняются только внутри disposable container. Host config, модель и разрешения
 не изменялись. Контейнерная проверка модели использовала тот же `gpt-6-astra/xhigh`,
 штатную авторизацию CLI и read-only sandbox, approval never; credentials в evidence
-не копировались. [Версии и хеши исходников](evidence/environment.json).
+не копировались. [Версии и хеши исходников](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/environment.json).
 
 Первая версия lifecycle probe ошибочно ожидала unprefixed names и упала:
-[сохранённая ошибка harness](evidence/lifecycle-first-attempt.json). Исправлена
+[сохранённая ошибка harness](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/lifecycle-first-attempt.json). Исправлена
 проверка фактических names, а не пакет ради прохождения неверного ожидания.
 Первый model trial не включал companion executable `codex-code-mode-host`:
-[исходная ошибка](evidence/native-discovery-missing-host/events.jsonl). После
+[исходная ошибка](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/native-discovery-missing-host/events.jsonl). После
 добавления штатного executable ошибка запуска исчезла, но чтение skill всё ещё
 не подтверждено. Повторный результат также сохранён как blocked; разрешения
 не расширялись, дальнейшие одинаковые model retries не запускались.
@@ -93,9 +95,9 @@ Native lifecycle использует CLI 0.155.1, Python 3.12 container и offi
 заранее подготовленный ответ внутри распространяемого архива.
 
 Родитель просмотрел desktop и mobile screenshots результата, а также финальную
-стартовую страницу. [Старт desktop](images/start-desktop.png),
-[старт mobile](images/start-mobile.png), [пример результата](images/demo-desktop.png),
-[форма на телефоне](images/demo-mobile-success.png). Исходный browser script сохранён в `demo-output/tests/browser-check.cjs`;
+стартовую страницу. [Старт desktop](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/images/start-desktop.png),
+[старт mobile](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/images/start-mobile.png), [пример результата](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/images/demo-desktop.png),
+[форма на телефоне](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/images/demo-mobile-success.png). Исходный browser script сохранён в `demo-output/tests/browser-check.cjs`;
 он использует Playwright по пути испытанной среды, указанному в README результата.
 Это зафиксированный evaluator, не универсальная установка зависимостей.
 Субъективное качество дизайна
@@ -109,7 +111,7 @@ Native lifecycle использует CLI 0.155.1, Python 3.12 container и offi
 - Полный pytest: **222 passed, 12 skipped, 2 failed** за 92.76 s.
   Это те же исторические ошибки frozen asset manifest и несовпадения установленного
   Codex с frozen toolchain, ранее воспроизведённые на исходном `d070f4e`.
-  [Сводка](evidence/repository-checks.txt). Исторические хеши не переписаны.
+  [Сводка](https://github.com/ashishki/AI_workflow_playbook/blob/b80eb56aebef97615724995dacc6b6512edbd15b/reports/native/2026-09-19-onboarding/evidence/repository-checks.txt). Исторические хеши не переписаны.
 - Integrity check — PASS с двумя прежними предупреждениями о generated cognition.
 - Проверка ссылок изменённых документов, синтаксиса новых инструментов и
   `git diff --check` — см. итоговую запись в [handoff](../../../docs/handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md).
