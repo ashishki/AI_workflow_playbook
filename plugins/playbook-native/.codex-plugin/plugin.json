@@ -1,22 +1,20 @@
 {
   "name": "playbook-native",
-  "version": "0.1.0-preview.6",
-  "description": "One entry for new or existing projects: create, fix or check with automatic, plan-first or extended control.",
-  "author": {
-    "name": "AI Workflow Playbook"
-  },
+  "version": "0.2.0-preview.1",
+  "description": "A full work-solution lifecycle: discover, decide, design, build, verify, introduce, observe, change, diagnose, recover, transfer, grow and retire.",
+  "author": {"name": "AI Workflow Playbook"},
   "skills": "./skills/",
   "interface": {
     "displayName": "Playbook",
-    "shortDescription": "Опишите задачу — агент поможет сделать и проверить.",
-    "longDescription": "Для новых и существующих проектов. Создать, исправить или проверить; автоматически, сначала план или с расширенным контролем. Пробный пакет для Codex.",
+    "shortDescription": "От рабочей проблемы до решения, которым вы владеете.",
+    "longDescription": "Понятный разговор, полный путь и проверяемые инженерные механизмы. Для владельца небольшой рабочей проблемы; предварительная версия, не обещание готовности любой бизнес-системы.",
     "developerName": "AI Workflow Playbook",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
-      "Playbook, помоги начать новый проект.",
-      "Playbook, помоги исправить проблему в моём проекте.",
-      "Playbook, проверь результат и объясни, что ещё нужно сделать."
+      "Playbook, помоги разобраться с повторяющейся рабочей проблемой.",
+      "Playbook, помоги изменить существующее решение и сохранить данные.",
+      "Playbook, подготовь передачу другому помощнику."
     ]
   }
 }

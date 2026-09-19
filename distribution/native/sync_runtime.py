@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Ship exact copies of the existing Role Runner; never maintain a second engine."""
+"""Ship exact canonical helper copies; never maintain a second engine."""
 import argparse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / 'plugins/playbook-native/skills/playbook/scripts'
-FILES = ('run_codex_role.py', 'codex_role_run_lib.py')
+FILES = ('run_codex_role.py', 'codex_role_run_lib.py', 'solution_record.py')
 
 
 def sync(check=False):

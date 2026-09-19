@@ -2,9 +2,9 @@ name: Native Product Checks
 
 on:
   push:
-    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919"]
+    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919", "feature/playbook-vnext-20260919"]
   pull_request:
-    branches: ["master", "main"]
+    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919"]
 
 permissions:
   contents: read
@@ -27,7 +27,6 @@ jobs:
           python -m unittest discover -s evals/native -p 'test_*.py' -v
           python -m ai_workflow_harness_lab.cli validate-suite evals/native/harness
 
-
   package:
     name: Package and Role Runner / ${{ matrix.os }}
     strategy:
@@ -46,6 +45,8 @@ jobs:
         run: |
           python distribution/native/sync_runtime.py --check
           python -m unittest discover -s distribution/native -p "test_*.py" -v
+      - name: Check lifecycle and transfer helper on this OS
+        run: python -m unittest discover -s tests/vnext -p "test_*.py" -v
       - name: Build offline preview
         run: python distribution/native/build.py --output .playbook-artifacts/ci-kit
       - name: Extract actual archive

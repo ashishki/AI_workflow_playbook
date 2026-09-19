@@ -1,0 +1,34 @@
+name: Playbook vNext
+
+on:
+  push:
+    branches: ["feature/playbook-vnext-20260919", "master", "main", "docs/codex-frontend-skills-mcp-20260919"]
+  pull_request:
+    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919"]
+
+permissions:
+  contents: read
+
+jobs:
+  vnext:
+    name: vNext ownership and full delivery / Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Verify current tracked inventory and preserved sources
+        run: python tools/vnext_check.py --root .
+      - name: Exercise helpers, negative cases and actual extracted kit
+        run: python -m unittest discover -s tests/vnext -p 'test_*.py' -v
+      - name: Verify single canonical packaged implementation
+        run: python distribution/native/sync_runtime.py --check
+      - name: Preserve existing package and review mechanism tests
+        run: python -m unittest discover -s distribution/native -p 'test_*.py' -v

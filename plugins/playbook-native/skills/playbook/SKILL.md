@@ -1,49 +1,54 @@
 ---
 name: playbook
-description: Start or steer Playbook work when the user invokes Playbook, asks to connect it, or asks it to choose a workflow. Infer project context, create/fix/check intent and automatic/plan-first/extended control. Do not activate for every unrelated code edit.
+description: Help a process owner discover a work problem, choose a sufficient change, build or configure it, verify, introduce, observe, change, recover, transfer, grow or retire it. Use when Playbook is invoked or enabled by the project's instructions; not for unrelated conversation.
 ---
 
-Work in the user's coding agent and project. Accept an ordinary task description;
-no launcher, generated prompt, role selection or process form is required.
-Use the project's conventions and available tools. Ask only when missing intent
-changes the result; keep existing authorization and user changes intact.
+Work in the user's coding agent and project. Accept ordinary language, not a process
+form. Aim for a useful process change that the owner can keep using and changing.
+The solution may be a new rule, existing service, template, automation, code, AI
+or a reasoned no-build decision. Full lifecycle does not mean full ceremony each turn.
 
 ## Scope and control
 
-Infer new/existing project, create/fix/check, and automatic/plan-first/extended
-control from the task and files. A new feature can belong to an existing project.
-Explain your approach briefly in the user's language, then continue. The user
-can change any choice in chat; do not ask for approval of routine local work.
+Infer new/existing context, create/fix/check and automatic/plan-first/extended control.
+Briefly explain the approach in the user's language. Ask only about missing facts
+that change the outcome. Respect user changes and existing authority. Routine allowed
+local work continues without repeated approval; consequential business decisions,
+external writes, data disclosure, spending and publication need their actual authority.
 
 - Automatic is the default for clear work. Quick reduces ceremony and retains checks.
-- Plan-first presents the proposal and stops before implementation or file writes.
+- Plan-first presents a proposal and stops before implementation or file writes.
 - Check-only reports findings without fixing source or installing the package.
-  Temporary evidence must fit the user's scope. Plan-first + check proposes the
-  review and stops before carrying it out.
-- Extended adds checks justified by the task's risks; it does not add approval gates.
+  Temporary evidence must fit the scope. Plan-first + check stops before executing it.
+- Extended adds risk-appropriate checks, not new permissions or approval bureaucracy.
 
-For connection/update/removal, read [connect](references/connect.md). Use it for
-an unconnected project's first implementation task, then continue that task.
-Do not reconnect an already connected project or weaken its required workflow.
+Use [lifecycle](references/lifecycle.md) to select the relevant procedure. Do not read
+all 13 references each turn. For connection/update/removal use
+[connect](references/connect.md); preserve established governed policies and custom
+files. Do not reconnect an already connected project. Discovery alone need not install
+or create anything. Verify real capabilities before promising browser/reviewer/integration.
 
-## Deliver a usable result
+## Deliver and retain ownership
 
-Check the user's actual outcome, not only a component's passing test. Follow the
-changed flow to its observable result using the available tools. Distinguish a
-local example, saved data, a working external integration and a published service.
-An unavailable part remains an explicit limitation. Do not invent business rules.
-
-For UI implementation use `playbook-frontend`; for a check-only UI task read its
-[browser checks](../playbook-frontend/references/browser-check.md) without fixing code.
-Use relevant project checks for other tasks. Reproduce observed defects, fix them,
-and check the final state. Avoid new process files unless needed to continue work.
+Follow changed behavior to its observable outcome using available tools. For UI use
+`playbook-frontend`; for check-only UI read its browser-check reference without fixing.
+Use relevant existing project checks. For AI behavior also use Verify's evaluation
+path: actual observations and independently justified labels, not self-certified JSON.
 
 After code changes use the included [Role Runner](references/review.md) for one
-focused independent review, also in quick mode. Address confirmed findings and
-recheck. Plan-only writes nothing; reviewers never start other reviewers. If the
-host lacks or denies review, disclose it and preserve its evidence. Tests and
-checking the running result remain the main agent's responsibility.
+focused independent review, also in quick mode. Fix confirmed findings and recheck.
+Reviewers never start reviewers. Missing/denied review remains explicit, not PASS.
+The main agent remains responsible for tests and checking the running result.
 
-End with the result, a useful way to open or use it, actual checks, and unresolved
-limitations. Explain these in ordinary language; the user need not read logs or
-know the tools' names. Continue later in the same project, using its saved state.
+Distinguish local example, verified local behavior, connected integration, published
+service, observed usage and business effect. Do not manufacture time savings or future
+adoption. Log meaningful author intervention when conducting a case, not invisible help.
+
+Keep one current project record of problem/rules/data/access/costs/run/checks/open issues
+and next step. Reuse existing state; [state helper](references/state.md) is optional.
+A later session must verify facts against files. No stale review or compressed note
+becomes write authority. Consider recovery, transfer and retirement from the beginning.
+
+End with the usable result, how to open/use it, actual checks, limitations and the
+next meaningful step. The owner need not know agent roles or read logs. Continue
+assigned work to the agreed outcome, not only the first scaffold, within real limits.
