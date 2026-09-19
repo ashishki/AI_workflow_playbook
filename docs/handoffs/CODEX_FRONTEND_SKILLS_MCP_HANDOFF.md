@@ -1,117 +1,84 @@
-# Handoff: Playbook Native preview.2
+# Handoff: Playbook Native preview.3
 
-Updated: 2026-09-19. Branch: `docs/codex-frontend-skills-mcp-20260919`.
-Current work starts from `f650301`; original proposal base was `d070f4e`.
-Scope: this repository only; no master/downstream edits or public release.
+Updated 2026-09-19. Branch `docs/codex-frontend-skills-mcp-20260919`.
+This change starts at `4eb96cc`; original proposal base `d070f4e`.
+Only this branch/repository changed. Master remains `d570163`; no downstream,
+public release, licensing change, host config change or subscriber contact.
 
 ## Current result
 
-The user selected three independent dimensions: new/existing project,
-create/fix/check, automatic/plan-first/extended control. A single `$playbook`
-entry infers and announces a useful approach; explicit user choices win.
-Quick mode reduces ceremony while retaining checks. Check-only does not fix
-source; plan-only does not implement or connect the repository.
+A [small offline kit](../../distribution/native/README.md) gives newcomers a
+three-step start: extract, open START.html, select the prepared project in Codex
+and describe the task. No terminal, hidden file copying or process manuals.
+For existing projects, the same canonical source is a native plugin.
 
-The optional [offline start page](../native/start.html) composes a request for
-Codex, with manual choices and scenario cards. It is a working interface, not
-a connected agent service. No framework, backend, analytics or new runtime.
+The user-selected dimensions remain independent: new/existing; create/fix/check;
+automatic/plan-first/extended. Quick reduces ceremony and retains checks.
+Plain language is the user entry: native plugin skill names are namespaced, so
+`$playbook` is not promised as a universal alias. The host picker remains available.
 
-Read the [actual diagnostic pilot](../../reports/native/2026-09-19/REPORT_RU.md),
-[quick start](../native/QUICKSTART_RU.md), [package](../../plugins/playbook-native/README.md)
-and [release plan](../research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md).
+Two skills, six payload files, a 22-line block. No new agent runtime, hooks,
+mandatory MCP, model routing, receipts or project bureaucracy. Maintainer build
+and eval tools are not installed in users' projects.
 
-## Decisions based on observation
+Read the [beginner quick start](../native/QUICKSTART_RU.md),
+[onboarding report with evidence](../../reports/native/2026-09-19-onboarding/REPORT_RU.md),
+[product decision](../research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md) and
+[release plan](../research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md).
 
-- Ordinary Codex and Native both repaired the frontend fixture. External browser
-  checks pass for both; no demonstrated quality/speed advantage for Native.
-- Both accurately reported missing agent browser verification. The shell sandbox
-  blocked Chromium/local bind, and the separate MCP trial required approval
-  unavailable under `never`. No permission bypass was used to declare success.
-- Setup originally left a project block after protected `.agents` prevented skill
-  installation. Fixed ordering; the retry preserves every original file and
-  leaves no partial instructions. Successful installation is still unproven.
-- New/existing plan-only cases preserve files. Backend work does not read the
-  frontend skill. Extended review and explicit quick mode have separate records,
-  including the original review timeout; see the pilot for exact outcomes.
-- The default stays small: two skills, five payload files, 22-line project block.
-  Connection detail loads only when needed. No mandatory records/roles/MCP.
+## Observed outcomes
 
-These are real model trials in synthetic repositories, not a newcomer study,
-clean-host test or completed end-to-end subscriber journey. The local unregistered
-marketplace was not auto-discovered; no global plugin was installed. Models,
-global configuration and downstream projects were not changed. No outside users
-were contacted. There is no marketplace listing or new reuse license.
+- ZIP reproducibility, extraction, hashes and protected output/symlink cases pass.
+  The extracted page passes 48 selector combinations and mobile/desktop probes.
+- Native CLI install/reinstall/update/remove and fresh-session discovery pass in
+  clean offline containers; user workspace files are preserved. Extracted starter
+  skills are discovered without Git. This is not a desktop onboarding test.
+- Independent agent connect/reconnect/update preserved custom instructions and
+  user changes. Initial remove exposed an active customized skill with a missing
+  reference. Fixed by preserving the whole skill outside discovery; follow-up
+  regression and parent hash checks pass.
+- Independent agent built a new demo, used Chromium, viewed screenshots, fixed
+  observed defects and provided double-click opening. Parent separately verified
+  the form, mobile layouts and file:// operation. Mid-conversation plan-only
+  request preserved every captured file. Different host from earlier blocked CLI.
+- Clean-container model discovery trial still could not read the skill due to
+  tool failure. Both attempts are retained; successful installation and exit 0
+  are not counted as successful skill execution.
 
-## Current validation
+## Current verification
 
-The pilot records launcher browser checks, external behavior/layout probes,
-harness tests, package validators and repository checks. Raw local logs live
-under ignored `.playbook-artifacts/native-pilot/`; committed results include
-source/fixture hashes, exact prompts, finals, source diffs and evidence hashes.
-Do not call the external evaluator's browser access an agent verification pass.
-A complete model turn or a correct manifest also does not prove task success.
-
-## Prior verification at f650301
-
-These checks exercised the edited working tree before commit. No green remote
-CI or real-agent compatibility result is implied.
-
-| Check | Observed result |
+| Check | Result |
 |---|---|
-| Plugin Creator `validate_plugin.py plugins/playbook-native` | PASS |
-| Skill Creator `quick_validate.py` for both skills, using system `python3` | PASS |
-| Copy the four skill payload files into temporary `.agents/skills`; validate both and resolve internal resources | PASS; packaging smoke only |
-| Local Markdown links in changed/new documents | PASS |
-| `git diff --check` | PASS |
-| `.venv/bin/python tools/integrity_check.py --root .` | PASS, with two existing missing-generated-content warnings |
-| Full `.venv/bin/python -m pytest -q` | 222 passed, 12 skipped, 2 failed |
-| `tools/verify_playbook.py` with repo-local artifact directory | 24/26 checks passed; `pytest` and `playbook_validate` failed as below |
-| Runtime tests at f650301 | Not yet run at that revision; superseded by the pilot below |
+| Native plugin and both skill validators | PASS |
+| Package unit tests | 5 PASS |
+| Existing eval harness unit tests | 5 PASS |
+| Extracted ZIP launcher | PASS; clipboard API stub + real selection fallback; OS clipboard untested |
+| Native lifecycle + archive discovery | PASS on CLI 0.155.1 Linux; not desktop/windows/macOS |
+| Parent browser probe of task output | PASS; Chromium 149.0.7827.55 |
+| Full repository pytest | 222 passed, 12 skipped, 2 pre-existing failures |
+| Integrity check | PASS, 2 pre-existing generated-content warnings |
+| Local links / Python and JS syntax / diff whitespace | PASS; 144 local links checked |
 
-The two failing pytest cases were reproduced independently in a detached
-worktree at the unmodified starting commit `d070f4e`:
+The two pytest failures are `test_frozen_asset_manifest_matches_full_execution_closure`
+and `test_frozen_permission_profile_denies_sibling_auth_and_network_access`.
+Both were independently reproduced at unmodified `d070f4e` in the earlier work.
+No frozen evidence or toolchain hash was rewritten. The full 26-check verifier
+was not rerun in this increment; its prior 24/26 result and six historical missing
+references remain recorded in the [preview.2 report](../../reports/native/2026-09-19/REPORT_RU.md).
+Do not present this as a completely green repository or remote CI.
 
-- `test_frozen_asset_manifest_matches_full_execution_closure`: historical
-  frozen pilot manifest is stale.
-- `test_frozen_permission_profile_denies_sibling_auth_and_network_access`:
-  installed Codex CLI version differs from that frozen pilot's toolchain.
+## Remaining product work
 
-`playbook_validate` reports six missing references to the historical
-`shishki-tfa7-20260715` run/review/approval artifacts and two warnings for absent
-generated cognition content. Its complete findings match `d070f4e` exactly.
-No historical evidence, policy, or frozen hash was rewritten to hide these
-failures. The other verifier checks, including generated-project matrices,
-hooks, compilation, evidence fixtures, and RAG comparison, passed.
+1. Observe the actual desktop first run, including extraction, Codex folder choice,
+   plugin setup for an existing project, and real OS clipboard behavior.
+2. Resolve reuse rights; the repository intentionally has no project-level license.
+   The prepared archive and [pilot message](../native/PILOT_RU.md) are reviewable,
+   but have not been distributed to subscribers.
+3. Run a small newcomer pilot, fix observed stumbling points, then choose the
+   public channel. No proof of speed/quality improvement over ordinary Codex.
+4. Continue targeted compatibility tests (another UI stack, wrong/stale preview,
+   monorepo/collisions) where they affect the supported release scope.
 
-The first verifier invocation put artifacts outside the repository and hit a
-RAG comparison path-scope error. It was rerun using the supported repo-local
-layout. Final command:
-
-```bash
-.venv/bin/python tools/verify_playbook.py --root . \
-  --output .playbook-artifacts/native-candidate-verification.json \
-  --artifact-dir .playbook-artifacts/native-candidate
-```
-
-The local ignored report retains individual commands and output paths. It is
-execution evidence from this checkout, not a committed release attestation.
-A structural validator does not prove that an agent follows a skill or that a
-host loads it. The delivery plan retains the full release matrix. Self-review caught and clarified preservation of modified skill
-files on removal; no independent reviewer run is claimed.
-
-## Next useful work
-
-1. On a supported host, exercise actual plugin installation, fresh-session skill
-   discovery, connection/reconnection/update/removal. No changes to downstream.
-2. Complete a full agent browser trial where navigation and image viewing are
-   legitimately available. A standalone browser preflight is insufficient.
-3. Use fresh tasks for paired comparison: a new screen, another framework,
-   stale/wrong preview trap, manual mode change mid-task. Keep failures and
-   compare equal tools/permissions. Do not optimize against the development fixture.
-4. After rights are decided, test first-run understanding with 3–5 newcomers.
-   Prepare the concrete release artifact before seeking publication approval.
-
-The sole immediate owner decision is reuse rights for subscriber distribution;
-`docs/LEGAL_STATUS.md` intentionally grants no project-level license. The
-technical delivery gaps above require implementation/testing, not another design
-approval. Do not revive CF-00–CF-09 or install governance by default.
+Skills and context files are guidance, not enforcement. Preserve actual failures
+and host limits. Do not revive CF-00–CF-09 or add an installer framework to make
+unverified claims look complete.

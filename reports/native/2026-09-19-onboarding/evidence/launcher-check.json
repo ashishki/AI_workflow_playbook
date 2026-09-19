@@ -1,0 +1,17 @@
+{
+  "combinations": 48,
+  "empty_input": "pass",
+  "scenario_prefills": "pass",
+  "clipboard": "pass",
+  "clipboard_fallback": "pass",
+  "first_run_example": "pass",
+  "install_and_help_prompts": "pass",
+  "archive_edition": true,
+  "input_as_text": "pass",
+  "responsive": [
+    390,
+    1280
+  ],
+  "page_errors": [],
+  "external_requests": []
+}

@@ -8,22 +8,26 @@ a small project instruction block, and the repository's existing tools. The
 agent handles implementation, verification, and fixes. Frontend work includes
 exercising the running UI and inspecting its appearance. MCP is optional.
 
-**Status: source preview, not a published or user-validated release.** This
-branch includes a working offline start page, the skill package and diagnostic
-Codex trials. End-to-end plugin onboarding and agent browser access remain open. The
+**Status: packaged preview, not a public or newcomer-validated release.** This
+branch includes a small offline beginner kit, native CLI lifecycle checks and
+a full agent/browser example. Desktop onboarding and first-time user testing
+remain open. The
 repository's existing governed tooling has a different, tested maturity level.
 See the [current verification record](docs/handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md)
 for actual results and pre-existing failures in this checkout.
 
 ## Start Here
 
-- [Начать с задачи](docs/native/start.html) — optional offline request builder;
-  three independent choices and scenario cards, no separate agent runtime.
+- [Первый запуск простыми словами](docs/native/QUICKSTART_RU.md) — extract the kit,
+  open the prepared project in Codex and describe a task. No terminal required.
+- [Стартовая страница](docs/native/start.html) — three setup steps, task examples,
+  optional process choices and help. No separate agent runtime.
+- [Пробный комплект](distribution/native/README.md) — reproducible archive and contents.
+- [Проверка упаковки и первого результата](reports/native/2026-09-19-onboarding/REPORT_RU.md)
+  — actual installation, removal fix, agent browser loop and remaining gaps.
 - [Результаты реальных испытаний](reports/native/2026-09-19/REPORT_RU.md) — decisions,
   observed failures and remaining gaps.
 
-- [Быстрый старт на русском](docs/native/QUICKSTART_RU.md) — try the source
-  preview in an authorized scratch repository; one connection request, then a task.
 - [Native package](plugins/playbook-native/README.md) — two skills, project
   block, browser guidance, and plugin manifest. No bundled runtime or MCP.
 - [Product model and research](docs/research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)

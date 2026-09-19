@@ -1,0 +1,4 @@
+interface:
+  display_name: "Playbook"
+  short_description: "От задачи своими словами до проверенного результата"
+  default_prompt: "$playbook Помоги с моей задачей. Объясняй простыми словами и предложи подходящий процесс."

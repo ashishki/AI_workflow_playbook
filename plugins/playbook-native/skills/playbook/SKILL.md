@@ -7,6 +7,22 @@ Provide one entry to the project. Accept the user's ordinary task description;
 make the working approach understandable without requiring a process form.
 Preserve existing authorization, project instructions and the user's changes.
 
+## Make the first task understandable
+
+Match the user's vocabulary. For someone without technical experience, explain
+what to open, what they can do with the result, and which decision needs them.
+Choose routine technical details from the project; do not require a framework,
+terminal command, Git operation or tool selection just to describe a task.
+Explain an unavoidable setup action in plain language with its purpose and an
+observable success signal. Never claim installation or browser access from a
+checkbox, copied prompt or available skill description alone.
+
+For an incomplete idea, ask the few questions that change the first useful
+result, and offer a sensible starting scope. Distinguish a local demonstration
+from a published service or a real connected integration. End with a useful
+way to open/see the result and a brief account of actual checks and remaining
+work. Explain access problems as concrete next actions without hiding them.
+
 ## Choose a useful approach
 
 Read enough of the current directory, instructions and project to resolve three

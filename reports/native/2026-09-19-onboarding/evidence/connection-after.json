@@ -1,0 +1,15 @@
+{
+  "AGENTS.override.md": "abc0f301ea7d6e98819613f78d82b4a6462e2c0740f2b062dd204e205cc5cce9",
+  "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+  "slugs.py": "fda3b3c140ae85ae74ae0cf21adf2ff45f1b033a86209eec327a48c47ed8bb1e",
+  "AGENTS.md": "6b9f5c87b837724dd7bddee00800722b1eb59061fd732e378b624b4012ae30bc",
+  "AUTHORS.txt": "029aa4e4535d4b75922909e1d14282c32284e35c6a368f4d6cb5eba54d46f086",
+  "test_slugs.py": "6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285",
+  ".agents/skills/playbook/SKILL.md": "c6ef469baf29e7013d18b22ac400622a63000d2d79fc98e7d3993a862e5070ec",
+  ".agents/skills/playbook/agents/openai.yaml": "a716e684840e7696fd69b8193e0290cdc53528c05e9a19e961bd448e829e185e",
+  ".agents/skills/playbook/references/connect.md": "40aa7220c77384d2f37a89ae507f6bd25f11e3b82a08fa053d056fe766af5624",
+  ".agents/skills/playbook/assets/project-block.md": "8e2233ced951109649e61648a440dcee728af1f158c74f1a7524cd1df42c219b",
+  ".agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+  ".agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+  "docs/notes.txt": "d9240e23873b246941117b121c80f9333565235ebcd1f16f14da7c34735ccee8"
+}

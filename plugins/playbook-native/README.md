@@ -1,50 +1,62 @@
-# Playbook Native — preview.2
+# Playbook Native — preview.3
 
-One entry: `$playbook` and an ordinary task. The agent infers new/existing project,
-create/fix/check intent and automatic/plan-first/extended control. Explicit user
-choices take precedence. Quick work keeps verification and reduces ceremony.
+One entry: describe a task in ordinary language, beginning with “Playbook”.
+The agent infers new/existing project, create/fix/check intent and
+automatic/plan-first/extended control. Explicit choices win. Quick work retains
+verification while reducing ceremony. Beginner instructions explain what to open,
+what works and what remains, without requiring framework or workflow expertise.
 
-This is a source candidate with diagnostic runtime trials, **not a published or
-newcomer-validated release**. The repository has no project-level reuse license;
-see [Legal Status](../../docs/LEGAL_STATUS.md). No new permission is granted here.
+This is a **private evaluation candidate**, not a public or newcomer-validated
+release. See [Legal Status](../../docs/LEGAL_STATUS.md); no new reuse rights are granted.
 
 | Component | Responsibility |
 |---|---|
-| `playbook` | Single entry, intent/control boundaries; connect/update/remove reference loaded as needed |
-| `playbook-frontend` | Implement UI, exercise the running app, inspect appearance, fix observed defects |
+| `playbook` | Single entry and control boundaries; connection reference only when needed |
+| `playbook-frontend` | Implement UI, exercise it, inspect appearance and fix observed defects |
 | Project block | Small always-loaded expectations in the effective AGENTS file |
 
-Five skill payload files; one 22-line project block, plus brief verified project
-facts when useful. No executable runtime, hooks, MCP servers, model settings,
-external accounts or auto-update. The evaluation tools and optional offline
-[start page](../../docs/native/start.html) are outside the installed skills.
-Skills guide behavior; they do not enforce permissions or guarantee results.
+Six skill payload files including UI metadata; one 22-line project block, plus
+brief verified project facts when useful. No installed runtime, hooks, MCP servers,
+model settings, external accounts or auto-update. Skills guide decisions; they
+do not enforce permissions or guarantee outcomes.
 
 ## Try it
 
-Use the [Russian quick start](../../docs/native/QUICKSTART_RU.md). An installed
-plugin supplies both skills. Source-checkout setup can copy the same two folders
-to `.agents/skills` when the host allows it; never install duplicate copies.
+The [Russian quick start](../../docs/native/QUICKSTART_RU.md) starts with a small
+[offline kit](../../distribution/native/README.md): extract, open `START.html`,
+open the included `Мой проект` folder in Codex, describe a task. That folder
+already contains exact repo-local copies of these skills. No terminal or hidden
+file copying is needed for the first try. The kit does not bundle Codex itself.
 
-Actual CLI trials loaded the repo-local skills. Agent-mediated installation into
-protected `.agents` was denied: the revised setup leaves existing files intact
-and does not add instructions for missing skills. Plugin install/remove has not
-yet been validated; do not present the source-read path as universally working.
+For ongoing work in existing projects, the same source is a native plugin using
+`.codex-plugin/plugin.json`. The start page contains the installation request.
+Installed plugin skills were discovered as `playbook-native:playbook` and
+`playbook-native:playbook-frontend`; repo-local skill names are unprefixed. Use
+ordinary language or the host's actual skill picker instead of assuming a
+universal `$playbook` alias. Never install both delivery sources in one project.
 
-After connection, write `$playbook` and the task, or copy a request from the
-start page. That page has no agent connection, repository access or telemetry.
-The process can also be changed directly in conversation without a page.
+The page has no connection to an agent, project filesystem access or telemetry.
+It composes a request; mode changes also work directly in conversation.
 
-## Distribution boundary
+## Evidence and limits
 
-The manifest uses the supported `.codex-plugin/plugin.json` compatibility layout.
-Native plugin distribution remains the intended release channel. This change
-does not install the package globally or publish a marketplace. A synthetic
-unregistered project marketplace was not auto-discovered by this CLI; this is
-not a successful plugin installation test.
+[Onboarding trials](../../reports/native/2026-09-19-onboarding/REPORT_RU.md) record:
 
-[Actual trials](../../reports/native/2026-09-19/REPORT_RU.md) distinguish model
-runs, external browser checks and unresolved delivery limitations.
-[Product decision](../../docs/research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)
-and [release plan](../../docs/research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md)
-explain what remains before subscriber distribution.
+- Native CLI install/reinstall/update/remove and fresh-session discovery in clean,
+  disposable Linux containers; host configuration and projects preserved.
+- Agent connection/reconnection/update in a scratch project; a removal defect
+  found and fixed by preserving a whole customized skill outside discovery.
+- A fresh agent built a demo, used Chromium and screenshot inspection, fixed
+  problems and explained double-click opening; a subsequent plan-only request
+  left all files unchanged.
+- Reproducible archive, file hashes and browser-tested start page.
+
+Desktop installation dialogs, Windows/macOS extraction, real newcomer usability
+and cross-host reliability remain unverified. A separate clean-container model
+trial announced Playbook selection but could not read it because of tool failure;
+that is not a successful skill execution. The earlier
+[12 CLI trials](../../reports/native/2026-09-19/REPORT_RU.md) retain their failures.
+No speed/quality advantage over ordinary Codex is claimed.
+
+This branch does not globally install the plugin for the user, publish a catalog
+or change a downstream project. See the [release plan](../../docs/research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md).

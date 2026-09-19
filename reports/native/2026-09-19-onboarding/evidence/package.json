@@ -1,0 +1,25 @@
+{
+  "product": "Playbook",
+  "version": "0.1.0-preview.3",
+  "status": "private-evaluation-preview",
+  "files": {
+    "RIGHTS.txt": "38e36562717380f20f8dcf67f170b945ccc9ccc35d1794801d5bd55cfbaa3cda",
+    "START.html": "21841a92b77b904aecd17ece81f68ff01a0d1e974f39f5bd3bab3718fbee19e9",
+    "plugins/playbook-native/.codex-plugin/plugin.json": "81959bd955d215e0a866b68c5553efbf4de3913bd511e28876a3351445107488",
+    "plugins/playbook-native/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+    "plugins/playbook-native/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+    "plugins/playbook-native/skills/playbook/SKILL.md": "c6ef469baf29e7013d18b22ac400622a63000d2d79fc98e7d3993a862e5070ec",
+    "plugins/playbook-native/skills/playbook/agents/openai.yaml": "a716e684840e7696fd69b8193e0290cdc53528c05e9a19e961bd448e829e185e",
+    "plugins/playbook-native/skills/playbook/assets/project-block.md": "8e2233ced951109649e61648a440dcee728af1f158c74f1a7524cd1df42c219b",
+    "plugins/playbook-native/skills/playbook/references/connect.md": "29486684a2b9db187c2ca315ef62bbe419451d0ceafc810b46a7f92b750fb349",
+    "Мой проект/.agents/skills/playbook-frontend/SKILL.md": "793a8635fb52b82e4f8ace01e52bc3359e29c9b84f03f786ad578dae3ca23bb8",
+    "Мой проект/.agents/skills/playbook-frontend/references/browser-check.md": "697bce8a842593ba8382ca0ab9a0168f9bf149c31e943998a293df9d307b98c6",
+    "Мой проект/.agents/skills/playbook/SKILL.md": "c6ef469baf29e7013d18b22ac400622a63000d2d79fc98e7d3993a862e5070ec",
+    "Мой проект/.agents/skills/playbook/agents/openai.yaml": "a716e684840e7696fd69b8193e0290cdc53528c05e9a19e961bd448e829e185e",
+    "Мой проект/.agents/skills/playbook/assets/project-block.md": "8e2233ced951109649e61648a440dcee728af1f158c74f1a7524cd1df42c219b",
+    "Мой проект/.agents/skills/playbook/references/connect.md": "29486684a2b9db187c2ca315ef62bbe419451d0ceafc810b46a7f92b750fb349",
+    "Мой проект/AGENTS.md": "8e2233ced951109649e61648a440dcee728af1f158c74f1a7524cd1df42c219b",
+    "Мой проект/README.md": "386c4b6b90f7281cfe501e4c2ef763b1e4a740e1c5f41c8edd27347a6c8a7d11",
+    "НАЧНИТЕ ЗДЕСЬ.txt": "c03f81de26bed1cabed31eba36538bee2f03f6b075e2cd2e72f5edfad2930b7c"
+  }
+}

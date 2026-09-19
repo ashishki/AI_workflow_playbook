@@ -1,22 +1,22 @@
 {
   "name": "playbook-native",
-  "version": "0.1.0-preview.2",
+  "version": "0.1.0-preview.3",
   "description": "One entry for new or existing projects: create, fix or check with automatic, plan-first or extended control.",
   "author": {
     "name": "AI Workflow Playbook"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "Playbook Native",
-    "shortDescription": "Describe a task. Choose how much control you want.",
-    "longDescription": "Preview: repository setup and frontend delivery skills. Uses existing project commands and available browser tools. No bundled MCP servers or hooks.",
+    "displayName": "Playbook",
+    "shortDescription": "Опишите задачу — агент поможет сделать и проверить.",
+    "longDescription": "Для новых и существующих проектов. Создать, исправить или проверить; автоматически, сначала план или с расширенным контролем. Пробный пакет для Codex.",
     "developerName": "AI Workflow Playbook",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
-      "$playbook Помоги начать новый проект.",
-      "$playbook Исправь проблему в существующем проекте.",
-      "$playbook Проверь результат и покажи замечания."
+      "Playbook, помоги начать новый проект.",
+      "Playbook, помоги исправить проблему в моём проекте.",
+      "Playbook, проверь результат и объясни, что ещё нужно сделать."
     ]
   }
 }

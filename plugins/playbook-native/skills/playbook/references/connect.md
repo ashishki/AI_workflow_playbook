@@ -59,10 +59,19 @@ the requested source version. Preserve user edits; explain unresolved conflicts.
 Do not auto-update from a moving branch. With plugin delivery, use the host's
 update/remove mechanism instead of adding local duplicates.
 
-Removal deletes only the Playbook-marked block and skill files known to have
-been installed by this setup. Preserve locally modified skill files unless the
-user explicitly includes those edits in the removal request; explain any files
-left behind. Keep project-specific notes and all unrelated
-instructions, tests, screenshots, and source changes. If an instruction file
-becomes empty, delete it only if setup created it. Disabling the plugin alone
-does not remove the project block; mention that distinction. Show the diff.
+Removal removes the Playbook-marked block and disables the skills installed by
+this connection. Preserve all user changes. If an installed skill was customized,
+move its entire folder, including unchanged references/assets, to a clearly named
+backup directory inside the project but outside every skill-discovery root
+(for example `.playbook-saved/skills/`). Check that the backup is complete before
+removing the active copy. Do not overwrite an existing backup; use a free name
+or compare it. Do not leave a customized skill active after claiming removal,
+and do not delete its supporting resources while preserving only SKILL.md.
+If the host denies the move, leave the original intact and explain the incomplete
+removal instead of changing permissions.
+
+For known unmodified installed skills, remove only their owned files. Keep
+project-specific notes and all unrelated instructions, tests, screenshots, and
+source changes. If an instruction file becomes empty, delete it only if setup
+created it. Disabling the plugin alone does not remove the project block;
+mention that distinction. Show the diff and the location of any preserved copy.

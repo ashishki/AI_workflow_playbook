@@ -1,0 +1,57 @@
+{
+  "passed": false,
+  "error": "AssertionError([{'name': 'playbook-native:playbook', 'path': '/root/.codex/plugins/cache/personal/playbook-native/0.1.0-preview.3/skills/playbook/SKILL.md', 'enabled': True}, {'name': 'playbook-native:playbook-frontend', 'path': '/root/.codex/plugins/cache/personal/playbook-native/0.1.0-preview.3/skills/playbook-frontend/SKILL.md', 'enabled': True}])",
+  "steps": [
+    {
+      "step": "scaffold",
+      "argv": [
+        "python3",
+        "/creator/create_basic_plugin.py",
+        "playbook-native",
+        "--with-skills",
+        "--with-marketplace"
+      ],
+      "exit": 0,
+      "stdout": "Created plugin scaffold: /root/plugins/playbook-native\nplugin manifest: /root/plugins/playbook-native/.codex-plugin/plugin.json\nmarketplace manifest: /root/.agents/plugins/marketplace.json\n",
+      "stderr": ""
+    },
+    {
+      "step": "validate-marketplace",
+      "argv": [
+        "python3",
+        "/creator/read_marketplace_name.py"
+      ],
+      "exit": 0,
+      "stdout": "personal\n",
+      "stderr": ""
+    },
+    {
+      "step": "install",
+      "argv": [
+        "/codex",
+        "plugin",
+        "add",
+        "playbook-native@personal",
+        "--json"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"pluginId\": \"playbook-native@personal\",\n  \"name\": \"playbook-native\",\n  \"marketplaceName\": \"personal\",\n  \"version\": \"0.1.0-preview.3\",\n  \"installedPath\": \"/root/.codex/plugins/cache/personal/playbook-native/0.1.0-preview.3\",\n  \"authPolicy\": \"ON_INSTALL\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "step": "fresh-session-after-install",
+      "native_skills": [
+        {
+          "name": "playbook-native:playbook",
+          "path": "/root/.codex/plugins/cache/personal/playbook-native/0.1.0-preview.3/skills/playbook/SKILL.md",
+          "enabled": true
+        },
+        {
+          "name": "playbook-native:playbook-frontend",
+          "path": "/root/.codex/plugins/cache/personal/playbook-native/0.1.0-preview.3/skills/playbook-frontend/SKILL.md",
+          "enabled": true
+        }
+      ]
+    }
+  ]
+}

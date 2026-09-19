@@ -1,0 +1,10 @@
+{
+  "observer": "parent agent, hash comparisons after independent task execution",
+  "complete_custom_skill_backup": true,
+  "no_active_skills": true,
+  "unrelated_file_hashes_preserved": true,
+  "original_partial_removal": {
+    "custom_skill_still_active": true,
+    "reference_missing": true
+  }
+}

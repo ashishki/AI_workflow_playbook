@@ -1,0 +1,28 @@
+{
+  "time": "2026-09-19T10:49:09.123Z",
+  "browser": "Chromium",
+  "checks": [
+    "Correct app served from this project: title, hero, three services and price match source.",
+    "Keyboard skip link operates and has visible focus styling.",
+    "All three course buttons open the form, select the matching course and focus the name field.",
+    "Form controls have labels; keyboard Tab order and native select operate.",
+    "Empty submission, whitespace-only name and malformed email are blocked with visible errors.",
+    "Successful submission shows an explicit demo result; no request or browser storage is created.",
+    "Reset and reload clear the form.",
+    "No horizontal page overflow at 360, 390, 768 or 1440px.",
+    "Mobile (390 × 844) course selection and successful form interaction pass.",
+    "Direct opening with file:// loads CSS and the working form, without a server.",
+    "No observed browser console/page/network errors or external HTTP requests."
+  ],
+  "screenshots": [
+    "desktop.png",
+    "desktop-lessons.png",
+    "desktop-form-errors.png",
+    "mobile.png",
+    "mobile-lessons.png",
+    "mobile-approach.png",
+    "mobile-form.png",
+    "mobile-success.png"
+  ],
+  "note": "Screenshots require separate visual inspection. No automated accessibility audit or other browsers tested."
+}
