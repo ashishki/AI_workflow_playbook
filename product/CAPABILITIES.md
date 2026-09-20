@@ -38,3 +38,19 @@
 URL временный, отдельной аутентификации Quick Tunnel не даёт, поэтому чувствительные
 данные и административные поверхности туда не выносятся. Постоянная публикация,
 домен и access-control остаются отдельным решением Introduce/Release.
+
+
+## Preview → Claim ownership
+
+Если web-решение действительно подходит под поддерживаемую Cloudflare Workers
+модель, Product может предложить после preview: **«Оставить себе»**.
+
+Это не означает «Playbook хостит ваш продукт». Agent-native маршрут создаёт
+temporary deployment, проверяет живой URL и отдаёт intended owner-у приватный
+claim URL. После завершённого claim поддерживаемые ресурсы переходят в Cloudflare
+account пользователя, а дальнейшие изменения требуют отдельной обычной
+авторизации. Claim URL считается bearer credential и не входит в обычный handoff,
+Git, screenshots или telemetry.
+
+Capability опциональна и provider-specific. Неподходящее решение не
+перепроектируется под Cloudflare только ради красивого onboarding.

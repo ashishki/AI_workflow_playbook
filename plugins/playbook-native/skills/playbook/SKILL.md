@@ -29,8 +29,7 @@ files. Do not reconnect an already connected project. Discovery alone need not i
 or create anything. Verify real capabilities before promising browser/reviewer/integration.
 
 For a new work problem or a returning owner use [working session](references/working-session.md).
-For setup uncertainty use [environment](references/environment.md). Load these when
-needed, not alongside all lifecycle procedures on each turn.
+For setup uncertainty use [environment](references/environment.md). For a request like «покажи результат», «дай ссылку» or «хочу оставить себе» load [preview/share ownership](references/preview-share.md). Load these when needed, not alongside all lifecycle procedures on each turn.
 
 ## Deliver and retain ownership
 
