@@ -138,6 +138,76 @@ Quick Tunnel не закрывает D10. Для постоянного испо
 deployment/ownership/access путь. Будущий claimable preview через Cloudflare
 Temporary Accounts исследовать отдельно; не смешивать его evidence с Quick Tunnel.
 
+## B3. Preview → Claim ownership для совместимого Worker (D03/D06)
+
+Это реальное внешнее создание временного Cloudflare account/resource. Выполнять
+только после явного разрешения владельца и на синтетическом/безопасном проекте
+до пользовательского пилота.
+
+### Изоляция
+
+Wrangler хранит temporary account/token/claim values в глобальной конфигурации
+текущего OS user. Не использовать общий profile нескольких пользователей и не
+выполнять `wrangler logout` в обычном profile ради temporary flow. Для VPS —
+отдельный непривилегированный OS user или другой проверенно изолированный context.
+
+```bash
+wrangler --version
+```
+
+Если Wrangler отсутствует, установка/обновление — отдельное разрешённое действие.
+Наличие `npx` не считается установленным adapter: оно может скачать пакет.
+
+### Acceptance run
+
+До deployment владелец видит Cloudflare Terms of Service и Privacy Policy и явно
+их принимает. Агент не выставляет acceptance молча.
+
+На совместимом одноразовом Worker:
+
+```bash
+wrangler deploy --temporary
+```
+
+Успех требует фактически наблюдать:
+- temporary account created/reused именно в изолированном context;
+- live Worker URL;
+- claim URL и expiry;
+- live URL проходит заранее заданный безопасный smoke/acceptance scenario;
+- claim URL не попал в Git, публичные artifacts, screenshots или shared logs;
+- evidence хранит только безопасные признаки: received=yes, expiry, Worker URL,
+  version/HEAD и при необходимости hash/redacted claim identifier, не полный URL.
+
+### Claim
+
+Claim завершает сам владелец в браузере в пределах claim window. Простое открытие
+claim URL не считается завершением. После claim через отдельно разрешённый
+Cloudflare path проверить, что supported resources остались в claimed account.
+
+Отдельно проверить ownership boundary: claim не предоставляет Playbook permanent
+write access. Следующий deploy либо получает обычную owner authorization, либо
+честно останавливается.
+
+### Negative cases
+
+- Wrangler старее поддерживаемого temporary flow;
+- текущий profile уже авторизован и `--temporary` отклонён;
+- Terms/Privacy не приняты;
+- temporary account creation/rate/abuse check отказал;
+- unsupported resource;
+- claim URL истёк;
+- claim URL открыт, но dashboard claim не завершён;
+- temporary resource исчез после non-claim;
+- агент пытается логировать claim URL/API token;
+- solution не подходит Workers temporary accounts.
+
+Не обходить это автоматическим logout, переносом credentials, ослаблением sandbox
+или объявлением production success.
+
+Для будущего REST adapter отдельно проверить proof-of-work, server-side temporary
+apiToken, user-scoped claim URL, отсутствие секретов во frontend/telemetry и
+удаление temporary credentials не позднее expiry.
+
 ## C. Сквозные истории (D02–D07)
 
 Сначала адаптируйте истории к безопасным реальным или явно синтетическим данным.

@@ -1,4 +1,4 @@
-# Cloudflare Quick Tunnels: бесшовный Preview/Share
+# Cloudflare: бесшовный Preview/Share и Preview → Claim
 
 Дата проверки источников: 20 сентября 2026.
 
@@ -10,7 +10,13 @@
 
 Пользовательское действие: **«Показать результат»**.
 
-Внутренний первый adapter: Cloudflare Quick Tunnels (`try.cloudflare.com`).
+Внутри два разных adapter-path:
+
+1. **Instant Share** — Cloudflare Quick Tunnels (`try.cloudflare.com`) для
+   безопасного временного показа локального web-процесса.
+2. **Preview → Claim** — Cloudflare Temporary Accounts для совместимых Workers:
+   live deployment создаётся до входа пользователя, затем владелец получает
+   claim URL и забирает поддерживаемые ресурсы в свой Cloudflare account.
 
 ## Почему подходит
 
@@ -77,11 +83,48 @@ Playbook:
 - понял ли различие preview и опубликованного приложения;
 - не пришлось ли ему пользоваться Cloudflare dashboard/CLI самостоятельно.
 
-## Дальнейший вариант
+## Preview → Claim ownership
 
-Cloudflare Temporary Accounts API (июль 2026) позволяет платформам создавать
-временный Worker/account до входа пользователя и затем выдавать claim URL.
-Это потенциально ещё ближе к бесшовному «создать → показать → забрать себе»,
-но требует уже продуктовой интеграции, принятия Cloudflare Terms/Privacy,
-proof-of-work, API lifecycle и отдельной проверки лимитов/ownership. Пока это
-research candidate после подтверждения ценности простого Preview/Share.
+Это planned Product capability, а не только research note.
+
+Cloudflare поддерживает два уровня интеграции:
+
+- **Wrangler `deploy --temporary`** — для агента/CLI. Wrangler управляет
+  proof-of-work, temporary credentials и выводит live URL + claim URL.
+- **REST Temporary Accounts API** — для собственного platform backend, если он
+  появится позже. Backend получает temporary account ID/API token и claim URL.
+
+Для текущего Playbook приоритет — Wrangler path: он проще и не требует строить
+собственный backend.
+
+По текущей документации:
+- unauthenticated Wrangler flow поддерживается с 4.102.0+;
+- claim нужно завершить в течение 60 минут; просто открыть URL недостаточно;
+- если claim не завершён, temporary account/resources удаляются;
+- после claim supported resources остаются в account пользователя;
+- claim не даёт платформе permanent access — будущий deploy требует обычной auth;
+- claim URL — bearer credential, temporary API token — secret;
+- эти значения нельзя помещать в client-side code, shared telemetry/logs;
+- supported resources ограничены Workers/workers.dev, Static Assets, KV, D1,
+  Durable Objects, Hyperdrive, Queues и частью certificate operations с лимитами.
+
+Ключевой продуктовый принцип: **Playbook помогает создать и передать владение,
+но не остаётся скрытым хозяином инфраструктуры**.
+
+## UX-контракт Preview → Claim
+
+Пользователь: «Хочу оставить себе».
+
+Playbook:
+1. объясняет возможность временно развернуть и затем забрать ресурс;
+2. проверяет совместимость, не перестраивая неподходящее решение ради провайдера;
+3. не разлогинивает существующий Cloudflare profile;
+4. показывает Terms/Privacy и получает явное согласие;
+5. создаёт temporary deployment в изолированном context;
+6. проверяет live URL;
+7. показывает claim URL только владельцу и срок истечения;
+8. после completed claim подтверждает переход ресурсов владельцу;
+9. не сохраняет temporary secrets;
+10. для последующих изменений использует обычный owner-authorized deployment path.
+
+VPS acceptance находится в `VPS_ACCEPTANCE_RU.md`, раздел B3.
