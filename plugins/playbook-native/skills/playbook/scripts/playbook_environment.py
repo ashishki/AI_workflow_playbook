@@ -27,7 +27,7 @@ def inspect_environment(root: Path, audience: str, needs: set[str], *,
     root = root.expanduser().resolve(strict=True)
     if not root.is_dir():
         raise ValueError('Project root is not a directory')
-    if audience not in {'engineering', 'product'} or not needs <= {'review', 'browser', 'tests'}:
+    if audience not in {'engineering', 'product'} or not needs <= {'review', 'browser', 'tests', 'preview', 'claim'}:
         raise ValueError('Unsupported audience or capability')
     if playbook_source and audience != 'engineering':
         raise ValueError('Playbook source checks are for the maintainer environment')
@@ -45,6 +45,8 @@ def inspect_environment(root: Path, audience: str, needs: set[str], *,
         ('git', audience == 'engineering', 'Git найден в PATH; checkout ещё не проверен.'),
         ('codex', 'review' in needs, 'Codex CLI найден в PATH; вход и запуск ещё не проверены.'),
         ('node', False, 'Node найден в PATH; это не работающий браузер.'),
+        ('cloudflared', False, 'cloudflared найден в PATH; публичный preview ещё не запускался.'),
+        ('wrangler', False, 'Wrangler найден в PATH; temporary deployment и claim ещё не проверены.'),
     ):
         found = shutil.which(binary) is not None
         add(binary, 'found' if found else 'missing', required,
@@ -63,6 +65,28 @@ def inspect_environment(root: Path, audience: str, needs: set[str], *,
     add('browser_execution', 'unknown', 'browser' in needs,
         'Доступный браузер, нужная версия приложения и просмотр изображения не проверялись.',
         'Используйте доступный браузер/проектный runner; откройте текущую версию и проверьте реальное действие.')
+    if 'preview' in needs:
+        if shutil.which('cloudflared') is None:
+            add('preview_adapter', 'missing', True,
+                'cloudflared не найден: Quick Tunnel preview пока недоступен.',
+                'Выберите поддерживаемую установку cloudflared или продолжите локальную проверку; не устанавливайте скрытно.')
+        else:
+            add('preview_adapter', 'found', True,
+                'cloudflared найден; внешний tunnel, публичность и фактический URL ещё не проверены.')
+        add('preview_execution', 'unknown', True,
+            'Временный публичный preview не запускался и разрешение на внешний URL не проверялось.',
+            'После явного разрешения запустите tunnel к проверенному localhost и проверьте внешний URL.')
+    if 'claim' in needs:
+        if shutil.which('wrangler') is None:
+            add('claim_adapter', 'missing', True,
+                'Wrangler не найден: claimable temporary deployment пока недоступен.',
+                'Установка/обновление Wrangler требует отдельного разрешения; наличие npx не считается готовым adapter.')
+        else:
+            add('claim_adapter', 'found', True,
+                'Wrangler найден; версия, Terms acceptance, temporary deployment и claim ещё не проверены.')
+        add('claim_execution', 'unknown', True,
+            'Temporary account/live deployment/claim не выполнялись; авторизация и Terms acceptance не проверялись.',
+            'В изолированном context и после явного согласия выполните поддерживаемый temporary deployment и claim workflow.')
     if 'tests' in needs:
         add('project_checks', 'unknown', True,
             'Команды и результаты проверок конкретного проекта ещё не подтверждены.',
@@ -109,7 +133,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path('.'))
     parser.add_argument('--audience', choices=('engineering', 'product'), default='product')
-    parser.add_argument('--need', action='append', choices=('review', 'browser', 'tests'), default=[])
+    parser.add_argument('--need', action='append', choices=('review', 'browser', 'tests', 'preview', 'claim'), default=[])
     parser.add_argument('--json', action='store_true')
     parser.add_argument('--playbook-source', action='store_true',
                         help='Inspect author test dependencies of this Playbook checkout, not a downstream project')

@@ -68,6 +68,29 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn('browser_execution', json.loads(result.stdout)['pending_live'])
 
+    def test_preview_need_requires_cloudflared_and_live_execution(self):
+        def which(name):
+            return '/fake/cloudflared' if name == 'cloudflared' else None
+        with patch.object(environment.shutil, 'which', side_effect=which):
+            report = environment.inspect_environment(self.root, 'product', {'preview'})
+        self.assertNotIn('preview_adapter', report['missing_required'])
+        self.assertIn('preview_execution', report['pending_live'])
+
+    def test_claim_need_requires_wrangler_and_never_claims_terms_or_auth(self):
+        def which(name):
+            return '/fake/wrangler' if name == 'wrangler' else None
+        with patch.object(environment.shutil, 'which', side_effect=which):
+            report = environment.inspect_environment(self.root, 'product', {'claim'})
+        self.assertNotIn('claim_adapter', report['missing_required'])
+        self.assertIn('claim_execution', report['pending_live'])
+        self.assertEqual(report['authorization'], 'not_checked')
+
+    def test_missing_preview_and_claim_adapters_are_visible(self):
+        with patch.object(environment.shutil, 'which', return_value=None):
+            report = environment.inspect_environment(self.root, 'product', {'preview', 'claim'})
+        self.assertIn('preview_adapter', report['missing_required'])
+        self.assertIn('claim_adapter', report['missing_required'])
+
     def test_invalid_root_fails_without_creating_it(self):
         missing = self.root / 'not-created'
         result = subprocess.run([sys.executable, str(SCRIPT), '--root', str(missing), '--json'],
