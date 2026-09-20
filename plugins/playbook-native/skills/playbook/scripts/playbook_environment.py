@@ -22,19 +22,22 @@ def module_present(name: str) -> bool:
         return False
 
 
-def inspect_environment(root: Path, audience: str, needs: set[str]) -> dict[str, Any]:
+def inspect_environment(root: Path, audience: str, needs: set[str], *,
+                        playbook_source: bool = False) -> dict[str, Any]:
     root = root.expanduser().resolve(strict=True)
     if not root.is_dir():
         raise ValueError('Project root is not a directory')
     if audience not in {'engineering', 'product'} or not needs <= {'review', 'browser', 'tests'}:
         raise ValueError('Unsupported audience or capability')
+    if playbook_source and audience != 'engineering':
+        raise ValueError('Playbook source checks are for the maintainer environment')
     checks: list[dict[str, Any]] = []
 
     def add(key: str, status: str, required: bool, message: str, next_step: str = '') -> None:
         checks.append({'id': key, 'status': status, 'required': required,
                        'message_ru': message, 'next_ru': next_step})
 
-    floor = (3, 11) if audience == 'engineering' else (3, 10)
+    floor = (3, 11) if playbook_source else (3, 10)
     add('python', 'found' if sys.version_info[:2] >= floor else 'missing', True,
         f'Python {sys.version_info.major}.{sys.version_info.minor}; нужно {floor[0]}.{floor[1]}+.',
         'При необходимости создайте согласованное локальное окружение; не меняйте глобальный Python.')
@@ -47,7 +50,7 @@ def inspect_environment(root: Path, audience: str, needs: set[str]) -> dict[str,
         add(binary, 'found' if found else 'missing', required,
             message if found else f'{binary}: команда не найдена в PATH.',
             'Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения.')
-    if audience == 'engineering':
+    if playbook_source:
         for module in ('pytest', 'jsonschema', 'ai_workflow_harness_lab'):
             found = module_present(module)
             add(module, 'found' if found else 'missing', 'tests' in needs,
@@ -84,7 +87,7 @@ def inspect_environment(root: Path, audience: str, needs: set[str]) -> dict[str,
     pending = [c['id'] for c in checks if c['required'] and c['status'] == 'unknown']
     status = 'missing_prerequisites' if unavailable else 'live_checks_pending' if pending else 'inventory_only'
     return {'schema_version': 'playbook.environment.v1', 'status': status,
-            'audience': audience, 'checks': checks, 'project_entrypoints': entries,
+            'audience': audience, 'playbook_source': playbook_source, 'checks': checks, 'project_entrypoints': entries,
             'missing_required': unavailable, 'pending_live': pending,
             'model': 'host_configuration_not_read', 'authorization': 'not_checked',
             'meaning': 'Presence only. Not readiness, authentication, execution, quality or permission.'}
@@ -108,12 +111,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--audience', choices=('engineering', 'product'), default='product')
     parser.add_argument('--need', action='append', choices=('review', 'browser', 'tests'), default=[])
     parser.add_argument('--json', action='store_true')
+    parser.add_argument('--playbook-source', action='store_true',
+                        help='Inspect author test dependencies of this Playbook checkout, not a downstream project')
     args = parser.parse_args(argv)
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, 'reconfigure'):
             stream.reconfigure(encoding='utf-8')
     try:
-        report = inspect_environment(args.root, args.audience, set(args.need))
+        report = inspect_environment(args.root, args.audience, set(args.need),
+                                     playbook_source=args.playbook_source)
         print(json.dumps(report, ensure_ascii=False, indent=2) if args.json else render(report))
         return 1 if report['missing_required'] or report['pending_live'] else 0
     except (OSError, ValueError) as exc:

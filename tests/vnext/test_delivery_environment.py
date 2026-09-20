@@ -45,10 +45,13 @@ class EnvironmentTests(unittest.TestCase):
 
     def test_engineering_checks_missing_companion_but_product_does_not_require_it(self):
         with patch.object(environment, 'module_present', return_value=False):
-            report = environment.inspect_environment(self.root, 'engineering', {'tests'})
+            report = environment.inspect_environment(self.root, 'engineering', {'tests'}, playbook_source=True)
         self.assertIn('ai_workflow_harness_lab', report['missing_required'])
         report = environment.inspect_environment(self.root, 'product', set())
         self.assertNotIn('ai_workflow_harness_lab', [c['id'] for c in report['checks']])
+        downstream = environment.inspect_environment(self.root, 'engineering', {'tests'})
+        self.assertNotIn('ai_workflow_harness_lab', [c['id'] for c in downstream['checks']])
+        self.assertIn('project_checks', downstream['pending_live'])
 
     def test_symlink_instruction_is_not_loaded(self):
         try:
