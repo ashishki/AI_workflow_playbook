@@ -1,0 +1,132 @@
+{
+  "suite_id": "playbook_native_v3",
+  "version": "3.1.0",
+  "tasks": [
+    {
+      "task_id": "backend",
+      "version": "native.backend.v1",
+      "title": "Correct a slug function without unrelated changes",
+      "fixture": "../fixtures/backend",
+      "baseline_prompt": "prompts/backend.md",
+      "playbook_prompt": "prompts/backend.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure"
+      ],
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "external_acceptance",
+          "command": "{python} {project_root}/evals/native/harness/acceptance.py --workspace {workspace} --task backend",
+          "timeout": 15
+        }
+      ]
+    },
+    {
+      "task_id": "plan",
+      "version": "native.plan.v1",
+      "title": "Plan without changing project files",
+      "fixture": "../fixtures/backend",
+      "baseline_prompt": "prompts/plan.md",
+      "playbook_prompt": "prompts/plan.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure"
+      ],
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "external_acceptance",
+          "command": "{python} {project_root}/evals/native/harness/acceptance.py --workspace {workspace} --task plan",
+          "timeout": 15
+        }
+      ]
+    },
+    {
+      "task_id": "review",
+      "version": "native.review.v1",
+      "title": "Review without changing source",
+      "fixture": "../fixtures/backend",
+      "baseline_prompt": "prompts/review.md",
+      "playbook_prompt": "prompts/review.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure"
+      ],
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "external_acceptance",
+          "command": "{python} {project_root}/evals/native/harness/acceptance.py --workspace {workspace} --task review",
+          "timeout": 50,
+          "invalid_exit_codes": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "frontend",
+      "version": "native.frontend.v1",
+      "title": "Repair real form behavior and mobile layout",
+      "fixture": "../fixtures/subscription",
+      "baseline_prompt": "prompts/frontend.md",
+      "playbook_prompt": "prompts/frontend.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure"
+      ],
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "external_acceptance",
+          "command": "{python} {project_root}/evals/native/harness/acceptance.py --workspace {workspace} --task frontend",
+          "timeout": 50,
+          "invalid_exit_codes": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "booking",
+      "version": "native.booking.v1",
+      "title": "booking",
+      "fixture": "../fixtures/booking",
+      "baseline_prompt": "prompts/booking.md",
+      "playbook_prompt": "prompts/booking.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure"
+      ],
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "external_acceptance",
+          "command": "{python} {project_root}/evals/native/harness/value_acceptance.py {workspace} booking",
+          "timeout": 25
+        }
+      ]
+    },
+    {
+      "task_id": "contacts",
+      "version": "native.contacts.v2",
+      "title": "contacts",
+      "fixture": "../fixtures/contacts",
+      "baseline_prompt": "prompts/contacts.md",
+      "playbook_prompt": "prompts/contacts.md",
+      "correction_budget": 0,
+      "expected_failure_taxonomy": [
+        "model_reasoning_failure"
+      ],
+      "scorers": [
+        {
+          "type": "shell",
+          "id": "external_acceptance",
+          "command": "{python} {project_root}/evals/native/harness/value_acceptance.py {workspace} contacts",
+          "timeout": 25
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "playbook-native",
+  "version": "0.2.0-preview.1",
+  "description": "A full work-solution lifecycle: discover, decide, design, build, verify, introduce, observe, change, diagnose, recover, transfer, grow and retire.",
+  "author": {"name": "AI Workflow Playbook"},
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Playbook",
+    "shortDescription": "От рабочей проблемы до решения, которым вы владеете.",
+    "longDescription": "Понятный разговор, полный путь и проверяемые инженерные механизмы. Для владельца небольшой рабочей проблемы; предварительная версия, не обещание готовности любой бизнес-системы.",
+    "developerName": "AI Workflow Playbook",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Playbook, помоги разобраться с повторяющейся рабочей проблемой.",
+      "Playbook, помоги изменить существующее решение и сохранить данные.",
+      "Playbook, подготовь передачу другому помощнику."
+    ]
+  }
+}

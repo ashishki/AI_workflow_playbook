@@ -1,0 +1,1 @@
+{"name":"letters-fixture","private":true,"scripts":{"test":"node app.test.cjs","preview":"python3 -m http.server 8011 --bind 127.0.0.1"}}

@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Письма по делу</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#192e2a;font:18px/1.5 system-ui,sans-serif}main{max-width:880px;margin:10vh auto;padding:28px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:#5b7067}h1{font-size:clamp(36px,6vw,68px);line-height:1.05;max-width:750px;letter-spacing:-.055em}p{max-width:550px}form{display:flex;gap:12px;margin-top:32px;width:680px}input{min-width:380px;padding:16px;border:1px solid #97a99f;border-radius:10px;font:inherit}button{white-space:nowrap;padding:16px 24px;border:0;border-radius:10px;background:#205744;color:white;font:inherit;cursor:pointer}label{display:block;font-weight:600}.field{display:flex;flex-direction:column;gap:6px}button{align-self:end}#message{min-height:30px;margin-top:16px}footer{margin-top:60px;font-size:14px;color:#5b7067}
+</style>
+<main><p class="eyebrow">Письма по делу · каждую пятницу</p><h1>Полезные идеи.<br>Без лишнего шума.</h1><p>Одно короткое письмо о работе с технологиями. Подпишитесь — отписаться можно в любой момент.</p>
+<form id="signup" novalidate><div class="field"><label for="email">Ваша почта</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div><button type="submit">Подписаться на письма</button></form><p id="message" role="status" aria-live="polite"></p><footer>© Письма по делу. Учебный проект; данные не отправляются наружу.</footer></main>
+<script src="app.js"></script></html>

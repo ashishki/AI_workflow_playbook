@@ -1,5 +1,13 @@
 # UI Verification Protocol
 
+> **Scope: formal Governed UI acceptance.** Required evidence matrices, retained
+> records, and baseline approval below apply when this protocol is adopted by
+> the project. Native's ordinary local check is described in its
+> [browser reference](../../plugins/playbook-native/skills/playbook-frontend/references/browser-check.md):
+> run the correct app, exercise the flow, inspect fresh screenshots, and report
+> gaps. It does not require golden snapshots or a human signature for every
+> UI edit. Native must still honor any visual/release policy already in force.
+
 ## Purpose And Boundary
 
 UI acceptance needs separate evidence for behavior and appearance. This protocol

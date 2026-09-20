@@ -65,5 +65,10 @@ def score(workspace: Path, config: dict[str, Any], task_id: str, run_id: str) ->
         "stderr": output_tail(result.stderr),
     }
     if result.returncode != expected:
+        if result.returncode in config.get('invalid_exit_codes', []):
+            return 0.0, metrics, [failure(task_id, run_id, f'{task_id}-scorer-environment',
+                'environment_failure', f'scorer unavailable (exit {result.returncode})',
+                owner_class='environment', score_treatment='invalid_run_exclude_from_capability_score',
+                invalid_run=True)]
         return 0.0, metrics, [failure(task_id, run_id, f"{task_id}-shell", "model_reasoning_failure", f"shell scorer expected exit {expected}, got {result.returncode}")]
     return 1.0, metrics, []

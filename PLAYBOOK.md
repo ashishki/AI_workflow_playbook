@@ -1,5 +1,14 @@
 # AI Workflow Playbook
 
+> **Scope: Governed workflow.** This manual and its mandatory roles, artifacts,
+> and phase approvals apply to projects that explicitly use the existing
+> Lean-Core / Standard / Strict path. The new
+> [Native product candidate](docs/research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md)
+> uses a small skill package and existing project checks; it does not import
+> this manual as agent instructions. Existing projects are not migrated or
+> released from their contracts by installing Native. Start with the
+> [Native quick start](docs/native/QUICKSTART_RU.md) for the source preview.
+
 Version: 1.2
 Last updated: 2026-05-26
 

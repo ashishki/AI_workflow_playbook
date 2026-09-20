@@ -1,12 +1,19 @@
 # Reports Archive Index
 
 Status: evidence archive index, not authority
-Last updated: 2026-08-15
+Last updated: 2026-09-19
 
 The `reports/` tree stores committed evidence, implementation reports, smoke
 outputs, and historical pilot artifacts. Do not load `reports/**` by default
 when starting ordinary Playbook work. Start with `docs/EVIDENCE_INDEX.md`, this
 index, or the current task's explicit evidence references.
+
+## Native product
+
+Start with [Native results and evidence history](native/README.md). New Native raw
+runs and screenshots live under ignored `.playbook-artifacts/`; commit concise
+findings and reproducible cases. Historical raw evidence remains addressable at
+its pinned Git revision. Governed frozen evidence below is unchanged.
 
 ## Current Audit And Implementation Evidence
 

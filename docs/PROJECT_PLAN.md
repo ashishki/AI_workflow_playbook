@@ -1,99 +1,70 @@
-# AI Workflow Playbook - Project Plan
+# AI Workflow Playbook — Maintainer Plan
 
-Status: active core framework
-Role: operating system for AI-assisted engineering
-Priority: P0
+Updated: 2026-09-19. Current product candidate: **Playbook Native**.
+Existing formal tooling: **Governed** (Lean-Core / Standard / Strict).
 
-## Strategic Role
+## Product Direction
 
-AI Workflow Playbook remains the canonical governance layer for the portfolio. It
-defines how projects are planned, implemented, reviewed, verified, documented,
-and resumed across agents and machines.
+The next user-facing product should connect a repository to its coding agent
+with a small instruction block and focused skills. Users ask for an outcome;
+the agent implements, runs meaningful checks, verifies the real UI when relevant,
+fixes observed issues, and reports the result. A new orchestration framework,
+mandatory MCP, and a copied governance system are outside the default path.
 
-The playbook is not a product UI and should not become a mandatory runtime. Its
-value is protocol discipline: contracts, evidence, review, phase gates, runtime
-verification, and cognition integrity.
+The source preview lives in `plugins/playbook-native/`. The
+[product decision](research/CODEX_FRONTEND_SKILLS_MCP_ADOPTION_RU.md) explains the
+tradeoffs and external research. The [delivery plan](research/CODEX_FRONTEND_IMPLEMENTATION_PLAN_RU.md)
+defines actual acceptance scenarios and supersedes CF-00–CF-09.
 
-## Near-Term Roadmap
+## Next Deliverables
 
-### P0 - Keep The Core Workflow Legible
+1. **Reliable connection and distribution:** test native discovery, existing
+   instructions/overrides, repeated setup, update, and removal; resolve reuse
+   rights and prepare one versioned install artifact. No public release claim
+   before host-level checks.
+2. **A complete frontend loop:** isolated fixtures, real agent/browser runs,
+   screenshots actually inspected, wrong-build/stale-evidence traps, and a
+   non-frontend negative trigger. Reuse existing tools before adding adapters.
+3. **Small subscriber pilot:** onboarding and first-task usability, honest A/B
+   against competent native Codex, and a short install/remove guide. Obtain
+   permission before external recruitment/publication or downstream work.
 
-- Keep `docs/README.md`, `docs/EVIDENCE_INDEX.md`, and `reports/README.md`
-  current so agents can distinguish authority, optional references, and
-  historical evidence without broad-loading the repository.
-- Keep the current Codex Direct path and Feature Workflow path synchronized
-  across `README.md`, `PLAYBOOK.md`, `docs/usage_guide.md`,
-  `docs/adoption_modes.md`, and `tools/README.md`.
-- Remove or archive root-level research dumps, stale reports, and compatibility
-  wrappers only after their current authority is mapped.
-- Do not add placeholder artifacts only to satisfy a checklist.
+Use the [current handoff](handoffs/CODEX_FRONTEND_SKILLS_MCP_HANDOFF.md) for the
+actual verification status. Package structure and repository tests do not prove
+skill selection, real-user value, or frontend quality.
 
-### P1 - Complete Remaining Mechanism Work
+## Compatibility And Governed Maintenance
 
-- Implement the real sequential changeability runner described by
-  `AWP-PI-010` once the Feature Workflow lifecycle remains green.
-- Add examples of `runtime_verification`, `decision_receipt`, and
-  `risk_acceptance_record` only where they have an executable consumer or clear
-  downstream task.
-- Add a CI example for `tools/integrity_check.py`.
-- Keep reviewer checklist rows for stale cognition packets and broken
-  Context-Refs aligned with validators.
+Existing governed projects keep their contracts, reviews, schemas, and release
+requirements. Native is not another initializer mode and does not silently
+migrate those projects. Governed remains appropriate when formal records and
+independent approvals have a concrete consumer.
 
-### P2 - Portfolio And Optional Extensions
+Keep its currently tested helpers stable. Prioritize actual defects separately
+from Native delivery:
 
-- Add a portfolio operating guide only if it names actual source-of-truth repos
-  and does not turn the Playbook into a control plane for unrelated products.
-- Keep Entropy/Hermes/Mythos/dynamic workflow references optional and bounded.
-- Consider optional second-model reviewer guidance for high-risk work, without
-  making multi-model review a default requirement.
+- External skill discovery: `.agents/skills`, plugin/user scope, and an honest
+  statement of what the old scanner does and does not inspect.
+- Required context rendering: prevent silently omitted or truncated mandatory
+  material; add behavior tests before claiming coverage.
+- Formal browser evidence: observed build identity for remote/release checks,
+  without turning every local UI fix into a provenance ledger.
+- The existing `AWP-PI-010` sequential changeability runner and other historical
+  mechanism tasks remain separate maintenance work, not Native prerequisites.
 
-### Completed Baseline Decisions
+Keep RAG evaluation, cost architecture, cognition, receipts, and Role Runner as
+specialized governed capabilities. Do not copy them into the Native package or
+weaken them to make the new quick start appear smaller.
 
-- Lean / Standard / Strict are real adoption modes, not softer wording for the
-  same full artifact set.
-- External runtimes and dynamic workflows are reference patterns, not mandatory
-  playbook dependencies.
-- AI/model budget boundaries are mandatory for active AI work. Dedicated
-  `docs/COST_BUDGET.md` is required for recurring, multi-agent,
-  dynamic-workflow, multi-user, or materially costly AI usage in Standard/Strict
-  projects.
-- AI cost architecture is now separate from budget policy. Standard/Strict
-  projects use `docs/ai_cost_architecture.md` for workload classes, cache
-  layout, batch lanes, routing maturity, cascades, and cost-per-successful-task
-  when AI spend is recurring/material or routing/caching is part of the design.
-- Dynamic routing and cascades require `docs/router_eval.md`; generic routers
-  remain disallowed until evaluated against project traffic, quality floors,
-  latency, cache-hit impact, and stale-router policy.
-- Provider-agnostic AI cost telemetry now has a JSONL entry contract, rollup
-  tool, and provider-neutral starter adapter template. Provider-specific SDK
-  wrappers remain optional downstream work when the runtime/provider layer is
-  known.
-- External skill security now has a policy and trust-record template. Third-
-  party or cross-project skills require source pin/signature/hash, capability
-  declaration, SkillSpector or equivalent scan evidence, finding triage, install
-  scope, and human approval for global install or high-risk acceptance.
-- `tools/init_playbook_project.py` now creates a proportional Lean / Standard /
-  Strict starter kit without overwriting existing downstream files by default.
-- `tools/skill_security_gate.py` now provides a CI-friendly trust-record and
-  SkillSpector wrapper for external skills.
-- RAG Evaluation v2 now has offline deterministic contracts, scoring,
-  comparison, initializer integration, and a runnable mechanism example.
-- Test-first governance now has task metadata, holdout/property/UI protocols,
-  critic prompts, and pilot evidence. The first paired pilot did not support a
-  quality or productivity improvement claim.
-- Planning Depth, Feature Design, vertical slices, hash-bound human approval,
-  and the thin `tools/feature_workflow.py` lifecycle are now implemented as
-  proportional pre-implementation design controls.
+## Rules For Further Product Work
 
-## AI-Development Tasks
-
-- Use Codex for doc/protocol edits only after task scope is explicit.
-- Require runtime verification for risky prompt/template changes.
-- Use reviewer agents for architecture-impacting changes.
-- Do not use autonomous self-repair beyond bounded correction rules.
-
-## Stop Conditions
-
-- If a proposed feature requires a server, database, or UI, it likely belongs in
-  another project.
-- If a protocol cannot be explained as an artifact/check/workflow, do not add it.
+- Add instructions only when they change a useful decision; delete duplication
+  of host behavior. Add executable helpers after a repeatable failure warrants one.
+- Keep the package independent of a service, database, project framework, model,
+  subscription tier, and global user configuration.
+- Preserve existing project instructions and authorization. Ask at real product,
+  access, cost, or external-effect boundaries, not each routine local step.
+- Keep verification claims specific: static validation, observed runtime,
+  independent review, and external-user validation are different evidence.
+- Do not repair historical frozen experiment records by regenerating their
+  hashes merely to obtain green CI on a different toolchain.

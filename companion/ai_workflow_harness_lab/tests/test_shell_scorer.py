@@ -39,3 +39,18 @@ def test_shell_scorer_timeout_is_invalid_run(tmp_path: Path) -> None:
     assert failures[0]["failure_class"] == "timeout"
     assert failures[0]["owner_class"] == "scorer"
     assert failures[0]["invalid_run"] is True
+
+
+def test_unavailable_verifier_is_separate_from_a_failed_task(tmp_path: Path) -> None:
+    for exit_code, invalid in ((2, True), (1, False)):
+        value, metrics, failures = score(
+            tmp_path,
+            {"command": f'"{{python}}" -c "raise SystemExit({exit_code})"',
+             "exit_code": 0, "invalid_exit_codes": [2]},
+            "task", "run",
+        )
+        assert value == 0
+        assert metrics['exit_code'] == exit_code
+        assert failures[0]['invalid_run'] is invalid
+        assert failures[0]['failure_class'] == (
+            'environment_failure' if invalid else 'model_reasoning_failure')

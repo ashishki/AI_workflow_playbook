@@ -41,6 +41,19 @@ The implementation intentionally adopts only four architectural disciplines:
 It does not adopt Cordis, an everything-is-a-plugin runtime, a database, a Web UI,
 a provider marketplace, a job system, or a generic tool platform.
 
+## Native delivery
+
+The Native package now includes this same engine, enabled automatically for a
+focused review of code changes. `--profile native --request PATH` accepts a compact
+review brief without governed task/feature registries. Model and reasoning inherit
+the host unless explicitly supplied. Plain project folders need no Git commit;
+`base_commit` is null and verification checks captured source files for staleness.
+
+The original governed entry, renderer, publication and four roles remain available.
+Native uses the same execution/result/ledger machinery with a separate prompt adapter.
+Historical token savings apply to the recorded experiment; the Native integration
+needs its own measurements. See [the review reference](../plugins/playbook-native/skills/playbook/references/review.md).
+
 ## Run a role
 
 Design review:

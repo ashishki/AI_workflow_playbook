@@ -4,6 +4,10 @@
   "title": "Codex Role Run",
   "type": "object",
   "additionalProperties": false,
+  "allOf": [{
+    "if": {"required": ["profile"], "properties": {"profile": {"const": "native"}}},
+    "else": {"properties": {"base_commit": {"type": "string"}}}
+  }],
   "required": [
     "schema_version",
     "run_id",
@@ -21,6 +25,7 @@
   ],
   "properties": {
     "schema_version": {"const": "playbook.codex_role_run.v1"},
+    "profile": {"enum": ["governed", "native"]},
     "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
     "role": {
       "enum": [
@@ -33,7 +38,7 @@
     "task_id": {"type": "string", "minLength": 1},
     "feature_id": {"type": ["string", "null"]},
     "slice_id": {"type": ["string", "null"]},
-    "base_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "base_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
     "sandbox": {"const": "read-only"},
     "status": {
       "enum": [
