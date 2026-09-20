@@ -30,7 +30,7 @@
 обязательного MCP, скрытой установки или второй реализации runner.
 [Каталог способностей](product/CAPABILITIES.md) · [Сборка](distribution/native/README.md).
 
-**Версия: 0.2.0-preview.1.** Это реализация пакета и его механизмов, не доказанная
+**Версия: 0.2.0-preview.2.** Это реализация пакета и его механизмов, не доказанная
 польза для всех задач и не завершённый пользовательский пилот. Независимое ревью,
 реальные подключения и наблюдения не подменяются fixtures или зелёным CI.
 [Что проверено и что осталось](docs/vnext/STATUS.md).
@@ -49,3 +49,6 @@
 > This repository has no project-level open-source license and grants no additional
 > copyright permission beyond the GitHub Terms, applicable law, and file-specific
 > licenses. See [Legal Status](docs/LEGAL_STATUS.md).
+
+Текущая программа доведения: [D00–D10](docs/delivery/PLAN_RU.md).
+Проверки новой ветки выполняются на VPS отдельно от реализации.

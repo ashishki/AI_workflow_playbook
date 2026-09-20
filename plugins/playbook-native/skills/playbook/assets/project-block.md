@@ -1,4 +1,4 @@
-<!-- playbook-native:begin v0.2.0-preview.1 -->
+<!-- playbook-native:begin v0.2.0-preview.2 -->
 ## Playbook
 
 Use the installed `playbook` skill for the work problem and the solution lifecycle.

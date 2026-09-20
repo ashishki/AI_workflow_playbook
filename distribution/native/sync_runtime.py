@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / 'plugins/playbook-native/skills/playbook/scripts'
-FILES = ('run_codex_role.py', 'codex_role_run_lib.py', 'solution_record.py')
+FILES = ('run_codex_role.py', 'codex_role_run_lib.py', 'solution_record.py', 'playbook_environment.py')
 
 
 def sync(check=False):

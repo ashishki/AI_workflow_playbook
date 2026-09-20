@@ -1,2 +1,5 @@
 jsonschema>=4.22
 pytest>=8
+
+# Local companion used by repository tests and their subprocesses. Run from repo root.
+-e ./companion/ai_workflow_harness_lab

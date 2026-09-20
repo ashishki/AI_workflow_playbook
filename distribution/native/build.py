@@ -173,6 +173,7 @@ def collect():
     payload['Мой проект/.gitignore'] = b'.playbook-artifacts/\n__pycache__/\n'
     payload['START.html'] = (ROOT / 'docs/native/start.html').read_text(encoding='utf-8').replace('data-kit="source"', 'data-kit="archive"').encode()
     payload['RIGHTS.txt'] = (ROOT / 'docs/LEGAL_STATUS.md').read_bytes()
+    payload['ПОМОЩЬ.md'] = (ROOT / 'docs/native/HELP_RU.md').read_bytes()
     payload['НАЧНИТЕ ЗДЕСЬ.txt'] = '''Откройте Codex, выберите папку «Мой проект» и опишите свою задачу.
 Нужно приложение ChatGPT на компьютере: войдите в аккаунт и выберите Codex.
 Для первой пробы выберите в Codex папку «Мой проект» из этого распакованного архива.

@@ -5,6 +5,7 @@
 
 | Механизм | Канонический источник | Потребители |
 |---|---|---|
+| Инвентаризация среды без запуска | `tools/playbook_environment.py` | Обе зоны |
 | Независимое ревью | `tools/run_codex_role.py`, `tools/codex_role_run_lib.py` | Engineering и Product |
 | Состояние/явные снимки/передача | `tools/solution_record.py` | Обе зоны, необязательно |
 | Проверка UI | `plugins/playbook-native/skills/playbook-frontend/` | Обе зоны при доступном браузере |
