@@ -36,6 +36,23 @@ def sha(path: Path) -> str:
     return value.hexdigest()
 
 
+def linux_tk_binaries() -> list[Path]:
+    """Resolve Tcl/Tk even when standalone Python keeps them outside ldconfig."""
+    if platform.system() != 'Linux':
+        return []
+    import _tkinter
+    from PyInstaller.depend.bindepend import get_imports
+    imports = get_imports(_tkinter.__file__, search_paths=[str(Path(sys.base_prefix) / 'lib')])
+    libraries = []
+    for name, source in sorted(imports):
+        if not Path(name).name.lower().startswith(('libtcl', 'libtk')):
+            continue
+        if source is None:
+            raise RuntimeError(f'Cannot bundle a required Tcl/Tk library: {name}')
+        libraries.append(Path(source))
+    return libraries
+
+
 def run_pyinstaller(name: str, *, windowed: bool, data: Path, stage: Path) -> None:
     args = [sys.executable, '-m', 'PyInstaller', '--noconfirm', '--clean', '--onefile',
             '--name', name, '--distpath', str(stage / 'dist'),
@@ -46,6 +63,8 @@ def run_pyinstaller(name: str, *, windowed: bool, data: Path, stage: Path) -> No
             '--hidden-import', 'secrets', '--hidden-import', 'signal',
             '--hidden-import', 'dataclasses', '--hidden-import', 'datetime',
             '--hidden-import', 'typing', '--hidden-import', 'importlib.util']
+    for library in linux_tk_binaries():
+        args += ['--add-binary', str(library) + os.pathsep + '.']
     if windowed:
         args.append('--windowed')
     args.append(str(HERE / 'desktop_setup.py'))

@@ -85,6 +85,11 @@ def helper(kit: Kit, name: str, arguments: list[str]) -> int:
 
 
 def self_test(kit: Kit) -> dict:
+    # Import and initialize Tcl without a display. Loading reviewer --help alone
+    # does not detect missing shared libraries or Tcl scripts in a frozen GUI.
+    import tkinter
+    from tkinter import ttk
+    tcl_version = tkinter.Tcl().eval('info patchlevel')
     with tempfile.TemporaryDirectory(prefix='playbook-smoke-') as tmp:
         root = Path(tmp) / 'Мой проект with spaces'
         root.mkdir()
@@ -103,7 +108,8 @@ def self_test(kit: Kit) -> dict:
         rollback(root, consent=True)
         assert installation_status(root)['installation'] == 'files_verified'
     return {'status': 'passed',
-            'scope': 'actual packaged install/remove/rollback and inventory; no model, browser or user trial',
+            'scope': 'Tcl runtime, actual packaged install/remove/rollback and inventory; no model, browser or user trial',
+            'tcl_version': tcl_version,
             'version': kit.version, 'kit_sha256': kit.sha256}
 
 

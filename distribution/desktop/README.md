@@ -26,8 +26,8 @@ desktop login/reviewer checks and field pilots.
 
 ## Build
 
-Python 3.12 and PyInstaller are maintainer build dependencies, not recipient
-requirements.
+Python 3.12 with working tkinter/Tcl/Tk and PyInstaller are maintainer build
+dependencies, not recipient requirements.
 
     python -m pip install pyinstaller==6.16.0
     python -m unittest discover -s distribution/desktop -p "test_*.py" -v
@@ -35,8 +35,11 @@ requirements.
 
 The builder first creates the canonical Native ZIP, embeds its exact bytes and
 hash in both frozen executables, builds `Playbook-Setup` plus
-`playbook-helper`, runs the frozen helper's offline self-test, then packages an
-OS-specific ZIP with the Native ZIP as a manual fallback.
+`playbook-helper`, runs the frozen helper's offline self-test (including Tcl
+initialization without a display), then packages an OS-specific ZIP with the
+Native ZIP as a manual fallback. Linux builds also resolve Tcl/Tk libraries in
+standalone Python's private library directory. The self-test does not open or
+exercise the setup window; test the actual GUI separately on each target OS.
 
 Build on each target OS. Do not cross-compile and then claim compatibility.
 

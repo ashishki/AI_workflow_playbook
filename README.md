@@ -58,4 +58,8 @@ Git, GitHub, VPS, Docker, API key и system Python не являются общ�
 > остаются описанными в [LEGAL_STATUS](docs/LEGAL_STATUS.md). Эта ветка не является
 > публичным выпуском или разрешением отправлять комплект подписчикам.
 
+> This repository has no project-level open-source license and grants no additional
+> copyright permission beyond the GitHub Terms, applicable law, and file-specific
+> licenses. See [Legal Status](docs/LEGAL_STATUS.md).
+
 Текущая программа доведения: [D00–D10](docs/delivery/PLAN_RU.md).

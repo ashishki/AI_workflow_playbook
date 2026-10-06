@@ -479,6 +479,18 @@ def installation_status(root: Path) -> dict:
     if not old:
         return {'installation': 'not_managed', 'version': None}
     modified = [n for n, sha in old['files'].items() if (value := read(root, n)) is None or digest(value) != sha]
+    for name, key in (('AGENTS.md', 'agents_block'), ('.gitignore', 'ignore_block')):
+        value = read(root, name)
+        if value is None or value.count(old[key].encode('utf-8')) != 1:
+            modified.append(name)
+    for prefix in PREFIXES:
+        namespace = safe_path(root, prefix.rstrip('/'))
+        if namespace.is_dir():
+            for entry in namespace.rglob('*'):
+                name = entry.relative_to(root).as_posix()
+                safe_path(root, name)
+                if entry.is_file() and name not in old['files']:
+                    modified.append(name)
     raw = read(root, JOURNAL)
     phase = strict_json(raw).get('status') if raw else 'unknown'
     return {'installation': 'modified' if modified else 'files_verified', 'version': old['version'],
