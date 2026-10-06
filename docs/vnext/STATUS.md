@@ -1,35 +1,40 @@
 # Playbook — текущая работа после объединения vNext
 
-Проверенная исходная точка: master `0c4027f8ecfc0b086c39613bb8c83a91b962d139`,
-merge PR #9 от 20 сентября 2026. PR #9 уже объединён; он не текущая очередь.
-
-Новая программа: [пошаговый план D00–D10](../delivery/PLAN_RU.md).
+Проверенная исходная точка программы delivery: master
+`0c4027f8ecfc0b086c39613bb8c83a91b962d139`, merge PR #9 от 20 сентября 2026.
 Рабочая ветка: `feature/playbook-delivery-20260920`.
-Прогоны: [VPS acceptance](../delivery/VPS_ACCEPTANCE_RU.md).
-Не перезапускайте миграцию, прежние CF или PA из другого репозитория.
 
-## Исходное состояние
+Новая программа: [D00–D10](../delivery/PLAN_RU.md).
+Desktop source slice: [DESKTOP_SETUP_PREVIEW_RU.md](../delivery/DESKTOP_SETUP_PREVIEW_RU.md).
+VPS/owner acceptance: [VPS_ACCEPTANCE_RU.md](../delivery/VPS_ACCEPTANCE_RU.md).
 
-Engineering/Product/Shared, 13 процедур и solution record уже объединены.
-В master общий `Playbook Checks` завершился ошибкой; отдельные Native/vNext
-проверки не заменяют его. Новый срез устраняет подготовку импорта локального
-Harness Lab; последующие возможные ошибки полного suite пока не диагностированы
-исполнением и не считаются исправленными.
+## Что уже есть в ветке как исходники
 
-- Исторический общий CI: https://github.com/ashishki/AI_workflow_playbook/actions/runs/35506500166
-- Исходное Git-дерево: `70a36446c3535087c385a16cc1570ce3ef11b1b9`.
-- Прежний статус и сведения о локальных review/model runs сохранены без изменения
-  в [историческом снимке](history/STATUS.before-delivery-20260920.md).
-  Его формулировки про draft/незакоммиченное состояние — история, не текущие факты.
+Engineering/Product/Shared, 13 lifecycle-процедур, solution record, Native kit,
+preview/share gates и delivery tests уже существовали. 6 октября добавлен source
+slice для OS-specific Desktop setup: управляемое подключение/обновление/удаление,
+installation rollback, frozen helper, optional pinned per-user Codex runtime и
+Windows/macOS/Linux build matrix.
 
-## Текущая граница
+Последние небольшие уточнения Product из master — outcome hypothesis в Discover и
+decision-boundary checks в Verify — также должны входить в delivery-ветку перед merge.
 
-Владелец поручил реализацию сейчас, полные тесты и независимые агенты — позже
-на VPS. Новый код/процедуры/тесты не получают старые PASS. Ни независимое ревью,
-ни live Codex/browser, ни пользовательские пробы этой ветки не объявлены выполненными.
-Подробности source-ready/pending и следующий шаг поддерживаются только в плане.
-Фактический checkout/HEAD проверяются Git; текст не пытается включить хеш самого себя.
+## Что не считается принятым
 
-Начните на VPS с D00: чистая среда, весь pytest, canonical verifier, затем
-проверки новой поставки и независимые агенты. Серьёзные ошибки исправляйте в этой
-ветке. Master, downstream, production, аккаунты и права не меняются автоматически.
+Владелец намеренно будет прогонять exact commit после push. Поэтому source code,
+unit tests и CI definition не получают PASS заранее.
+
+До фактического исполнения остаются pending:
+- полный suite и matrix CI exact commit;
+- три OS-specific frozen artifacts;
+- clean-machine setup на Windows/macOS/Linux;
+- реальный Codex login/reviewer и browser path;
+- пользовательский Product-проход, повторное изменение и transfer;
+- права распространения/signing/notarization;
+- бизнес-эффект.
+
+Исторические CI/review/model runs не переносятся автоматически на новый desktop
+slice. Master, downstream, production, аккаунты и права не меняются этой веткой.
+
+Следующий шаг владельца после push: прогнать CI/локальные проверки, скачать exact
+artifacts, выполнить clean-machine trials и только затем решить merge.

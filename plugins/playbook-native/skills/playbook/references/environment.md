@@ -1,41 +1,48 @@
 # Establish capabilities without changing the user's machine
 
-First use the tools that this actual session exposes. A desktop login is not
-proof that a child CLI is authenticated; a skill is not a browser. Do not ask
-an owner to debug tool names. Explain the consequence and a specific next step.
+First use the capabilities exposed by the actual host session. Do not make the
+owner debug tool names. Explain what is missing, what remains possible and the
+smallest next step.
 
-If Python is available, the bundled read-only inventory can help:
+## Managed Desktop setup
 
-```text
-python /path/to/playbook/scripts/playbook_environment.py --root /project --audience product --json
-python /path/to/playbook/scripts/playbook_environment.py --root /project --need review --need browser --json
-python /path/to/playbook/scripts/playbook_environment.py --root /project --need preview --json
-python /path/to/playbook/scripts/playbook_environment.py --root /project --need claim --json
-```
+If `.playbook-setup/runtime.json` exists, treat its command as the local helper
+location only. It does not authorize network, publication or external writes.
 
-Resolve the helper from this skill's installed location. It only checks named
-paths and module/executable presence: no network, subprocess, credentials read,
-installation or project write. Exit 0 means an inventory, not ready-to-use.
-Exit 1 means requested prerequisites are missing or live checks remain pending;
-this is expected for requested browser/review until separate execution evidence
-exists. Exit 2 is an invalid input/environment inspection error.
+The setup window can distinguish:
+- managed Playbook files verified/modified;
+- managed Codex binary launched/not launched;
+- CLI login reported/not confirmed.
 
-Do not repeatedly invoke it hoping that authentication or a browser will become
-verified. To close those gaps use the actual authorized Role Runner and browser
-workflow. Never turn a denial into full-access, reuse somebody else's profile,
-copy credentials, create a public tunnel, or install all possible alternatives.
+Those states do **not** prove a live reviewer, browser, integration or business
+effect. Close those gaps with the real Role Runner/browser/integration workflow.
 
-For each blocker say what is affected, what remains possible and the smallest
-specific setup decision. Offer one supported route. Project dependencies may
-be installed only within the task's permissions, not as a hidden setup side
-operation. Preserve existing local changes and managed/global environments.
-If execution is unavailable, discovery or planning may continue honestly; do
-not claim the code or UI was checked. Package tests do not establish user setup.
+The helper can run the canonical inventory without requiring system Python:
 
+    <local-helper> helper inventory --root <project> --json
 
-For external web preview, `--need preview` checks only whether `cloudflared`
-is present and leaves the live/public execution pending. For claimable temporary
-deployment, `--need claim` checks only whether `wrangler` is present. Neither
-result accepts Terms, reads credentials, logs out an account, creates a tunnel or
-temporary account, or proves authorization. Missing tooling is a setup decision,
-not permission to install it silently.
+If independent review is needed and no suitable CLI is available, the Desktop
+setup can offer one pinned per-user Codex runtime. Download/install and login are
+separate owner-confirmed actions. Never copy an existing token or disable account
+restrictions.
+
+## Manual/plugin route
+
+When Python is available, the bundled inventory remains available:
+
+    python /path/to/playbook/scripts/playbook_environment.py --root /project --audience product --json
+    python /path/to/playbook/scripts/playbook_environment.py --root /project --need review --need browser --json
+    python /path/to/playbook/scripts/playbook_environment.py --root /project --need preview --json
+    python /path/to/playbook/scripts/playbook_environment.py --root /project --need claim --json
+
+It checks named paths and executable/module presence only: no network, subprocess,
+credentials read, installation or project write. Presence is not readiness.
+
+For external preview, `--need preview` only inventories the adapter; live tunnel
+execution still needs explicit permission and a real check. Claimable deployment
+similarly does not accept Terms, log out an account, create resources or prove
+authorization.
+
+Never retry an access denial through another filesystem route, install every
+possible tool preemptively or weaken protection to satisfy a check. Discovery and
+planning may continue honestly when execution is unavailable.

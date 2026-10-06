@@ -1,71 +1,55 @@
 # Automatic independent review
 
-The existing Playbook Role Runner is included under `scripts/`. Use it by
-default before presenting completed code changes: automatic and quick modes
-include one focused read-only review after the relevant implementation checks.
-The user does not need to choose a reviewer, install the old governed framework,
-or ask for review separately. Their explicit scope and project policy still apply.
+Use one focused independent review after relevant code changes. The owner does not
+need to choose reviewer roles or run terminal commands manually. A failed or denied
+review remains explicit; never relabel the main agent's own check as independent.
 
-For check-only work, use the same runner for an independent assessment when
-writing temporary evidence is permitted. Plan-only stops before implementation
-and does not create review artifacts. Text-only answers do not need a code review.
-If `PLAYBOOK_REVIEW_WORKER=1` or the current assignment already identifies you as
-the independent reviewer, complete your assigned review without spawning another.
+## Choose the available runner
+
+1. If this project has managed Desktop setup, read
+   `.playbook-setup/runtime.json`. It is only a machine-local helper location,
+   not execution authority. Use its recorded command with:
+   `helper review --root <project> ...`.
+2. Otherwise use the bundled Python runner as before when Python 3.10+ and an
+   authenticated `codex` CLI are actually available.
+3. Do not install Python, Codex, copy credentials, alter the global model or weaken
+   permissions merely to turn review green. The Desktop setup may separately
+   prepare its pinned per-user review runtime after explicit owner confirmation.
+
+The managed helper embeds the Python needed by the runner; the recipient therefore
+does not need a system Python for this path. It may prepend a verified per-user
+Codex runtime for the child process. A successful setup or login-status still does
+not prove that model execution/review is allowed.
 
 ## Execute
 
-1. Check that Python 3.10+ and the authenticated `codex` CLI are available to this
-   session. Do not change the user's global model, permissions or authentication.
-   If capability is missing/denied, explain the missing review and the next step;
-   never label your own check an independent review or silently downgrade PASS.
-2. Write a short request under `.playbook-artifacts/` with the original user goal,
-   acceptance criteria, changed paths and observed checks. Supply facts, not the
-   verdict you want. Include relevant project constraints. No task registry or
-   Feature Design files are needed. Keep unrelated conversation/history out.
-3. Run the bundled helper, resolving its path from this skill's actual location:
+Prepare a compact review request under `.playbook-artifacts/` with the original
+goal, acceptance criteria, changed paths and observed checks. Keep unrelated chat,
+credentials and private records out.
 
-   ```text
-   python /path/to/playbook/scripts/run_codex_role.py run --profile native --root /path/to/project --task current-change --role slice_review --request .playbook-artifacts/review-request.md --timeout-seconds 300
-   ```
+For a managed helper the conceptual command is:
 
-   Use the available Python command (`python3`, `python`, or `py -3` on Windows).
-   Choose `slice_review` for implementation; `maintainability_review` for a refactor;
-   `program_design_review` for an architecture decision; `product_design_review`
-   for a product-design decision. One appropriate role is the default, not all four.
-   Model and reasoning inherit host configuration unless project policy explicitly
-   requires particular values. A new project needs no Git setup for native review.
-4. Read the returned JSON and report. A completed command alone is not acceptance:
-   require `status: validated`, inspect findings and limitations, and act on them.
-   Fix confirmed problems within the task, run relevant checks again, then perform
-   one focused follow-up review if the first review found blockers. At most two
-   reviewer attempts in the ordinary loop; remaining blockers go in the final answer.
-   A failed/denied reviewer is an incomplete review, not a reason to relax access.
+    <local-helper> helper review --root <project> run --profile native --root <project>       --task current-change --role slice_review       --request .playbook-artifacts/review-request.md --timeout-seconds 300
 
-Before relying on a saved result, run the same helper's `verify --root ... --result ...`.
-Keep the runner's files under `.playbook-artifacts/runs/`, including failed attempts.
-Do not delete or move them to tidy the diff or satisfy quick mode; they are the
-measurement and failure record. Do not retry an access denial through a different
-filesystem route, copied authentication or weaker permissions.
-Native verification checks the captured project files as well as artifact hashes;
-an older report becomes stale when reviewed source changes. Keep reviewer execution
-sequential with edits. Report independent review and remaining findings in plain
-language; the user need not inspect the ledger or internal marker names.
+For the manual fallback resolve the script from this installed skill:
 
-## Delivery and limits
+    python /path/to/playbook/scripts/run_codex_role.py run --profile native       --root /path/to/project --task current-change --role slice_review       --request .playbook-artifacts/review-request.md --timeout-seconds 300
 
-This is the same engine as `tools/run_codex_role.py` and `tools/codex_role_run_lib.py`
-in the Playbook source, copied byte-for-byte by the package builder's sync step.
-Native supplies a compact request instead of the governed prompt renderer.
-The runner owns the fresh session, read-only sandbox, timeout, report/trace checks,
-workspace drift check and hash-linked evidence. It never installs a runtime globally.
+Use `slice_review` for implementation, `maintainability_review` for a refactor,
+`program_design_review` for architecture and `product_design_review` for a
+product-design decision. One suitable role is the default, not all four.
 
-On Windows, macOS and Linux, review requires an available Python and Codex CLI.
-A Codex desktop login alone does not prove CLI availability; check it in the actual
-session. Missing dependencies must be visible in the final result. The package
-cannot guarantee execution where the host prohibits subprocesses or reading files.
+Read both status and verdict. Require `status: validated` before crediting the
+review. Fix confirmed findings, rerun relevant checks and use at most one focused
+follow-up in the ordinary loop. Saved results must be revalidated; source changes
+make old evidence stale.
 
-Native snapshots exclude `.git`, `.playbook-artifacts`, dependency/virtualenv trees
-and Python caches. They detect source-file changes, not all filesystem activity.
-The sandbox remains the execution boundary. Reviewer findings still require judgment.
-Earlier token savings belong to the recorded Role Runner experiments; this portable
-Native integration does not promise the same percentage on every task.
+## Limits
+
+The runner owns the fresh read-only Codex child session, timeout, workspace drift
+check and tamper-evident local evidence. It does not prove correctness by itself.
+Reviewer findings still need judgment.
+
+Do not review text-only answers merely for ceremony. If subprocess/model capability
+is absent, say what other checks ran and leave independent review as not run. Package
+CI, a CLI `--version` call and account login are not substitutes for a real review.

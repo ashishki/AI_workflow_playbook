@@ -2,7 +2,7 @@ name: Native Product Checks
 
 on:
   push:
-    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919", "feature/playbook-vnext-20260919"]
+    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919", "feature/playbook-vnext-20260919", "feature/playbook-delivery-20260920"]
   pull_request:
     branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919"]
 
@@ -45,9 +45,11 @@ jobs:
         run: |
           python distribution/native/sync_runtime.py --check
           python -m unittest discover -s distribution/native -p "test_*.py" -v
-      - name: Check lifecycle and transfer helper on this OS
-        run: python -m unittest discover -s tests/vnext -p "test_*.py" -v
-      - name: Build offline preview
+      - name: Check lifecycle, setup source and transfer helper on this OS
+        run: |
+          python -m unittest discover -s tests/vnext -p "test_*.py" -v
+          python -m unittest discover -s distribution/desktop -p "test_*.py" -v
+      - name: Build offline Native preview
         run: python distribution/native/build.py --output .playbook-artifacts/ci-kit
       - name: Extract actual archive
         run: python -c "from pathlib import Path; import zipfile; zipfile.ZipFile(next(Path('.playbook-artifacts/ci-kit').glob('*.zip'))).extractall('.playbook-artifacts/extracted')"
@@ -69,6 +71,35 @@ jobs:
           path: |
             .playbook-artifacts/ci-kit/
             .playbook-artifacts/browser-results/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  desktop:
+    name: Desktop setup bundle / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - name: Install maintainer-only freezer
+        run: python -m pip install pyinstaller==6.16.0
+      - name: Recheck source setup mechanisms
+        run: python -m unittest discover -s distribution/desktop -p "test_*.py" -v
+      - name: Build OS-specific setup and run frozen offline self-test
+        run: python distribution/desktop/build.py --output .playbook-artifacts/desktop
+      - name: Retain private-evaluation desktop artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playbook-desktop-${{ matrix.os }}
+          path: .playbook-artifacts/desktop/
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 7

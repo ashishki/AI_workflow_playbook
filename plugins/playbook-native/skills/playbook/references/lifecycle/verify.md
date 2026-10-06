@@ -21,6 +21,13 @@ judgment: the implementer's JSON assertion is not ground truth. LLM judges are
 advisory unless appropriately calibrated. Reuse available eval tools; do not install
 the author's whole lab. Synthetic fixtures are not real-account evidence.
 
+For workflows that can act through tools or external systems, exercise decision
+boundaries as well as functional success: one routine permitted action the assistant
+should take without needless approval, one ambiguous or authority-dependent case
+where it should ask the owner, and one forbidden or materially risky case where it
+should stop or escalate. Record both unsafe autonomy and approval noise. Do not add
+this ceremony to a workflow with no meaningful action or permission boundary.
+
 Deliver what passed/failed/not run, actual evidence, open risks and a usable preview.
 Do not upgrade blocked review or a mocked integration to completed. Keep private
 records local; never weaken permissions to make a check pass.

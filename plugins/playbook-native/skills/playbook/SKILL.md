@@ -23,13 +23,18 @@ external writes, data disclosure, spending and publication need their actual aut
 - Extended adds risk-appropriate checks, not new permissions or approval bureaucracy.
 
 Use [lifecycle](references/lifecycle.md) to select the relevant procedure. Do not read
-all 13 references each turn. For connection/update/removal use
-[connect](references/connect.md); preserve established governed policies and custom
-files. Do not reconnect an already connected project. Discovery alone need not install
-or create anything. Verify real capabilities before promising browser/reviewer/integration.
+all 13 references each turn. For managed Desktop setup/update/removal use
+[setup](references/setup.md); for manual/plugin connection use
+[connect](references/connect.md). Preserve established governed policies and custom
+files; do not install a second copy of an already connected skill. Discovery alone
+need not install or create anything. Verify real capabilities before promising
+browser/reviewer/integration.
 
 For a new work problem or a returning owner use [working session](references/working-session.md).
-For setup uncertainty use [environment](references/environment.md). For a request like «покажи результат», «дай ссылку» or «хочу оставить себе» load [preview/share ownership](references/preview-share.md). Load these when needed, not alongside all lifecycle procedures on each turn.
+For setup uncertainty use [environment](references/environment.md). For a request like
+«покажи результат», «дай ссылку» or «хочу оставить себе» load
+[preview/share ownership](references/preview-share.md). Load these when needed, not
+alongside all lifecycle procedures on each turn.
 
 ## Deliver and retain ownership
 
