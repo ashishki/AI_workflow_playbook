@@ -1,0 +1,13 @@
+{
+  "source_commit": "01af29e7eb305a98679c9f5430aa03925bc438a5",
+  "original_ci_status": "FAIL",
+  "job_id": 113461403580,
+  "job": "Package and Role Runner / macos-latest",
+  "url": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/37820910748/job/113461403580",
+  "raw_log_sha256": "dab917ab47587e6159e3dff13eb52838cb51d3b7677a66b82f349c6f4c7de0e5",
+  "source_fix_scope": "two test fixtures only",
+  "local_followup_status": "PASS",
+  "local_tests": 108,
+  "next_ci_status": "PENDING_AT_PUBLICATION",
+  "model_comparison_status": "NOT_RUN"
+}

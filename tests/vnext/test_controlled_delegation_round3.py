@@ -80,7 +80,9 @@ class Round3HarnessTests(unittest.TestCase):
     def test_common_review_requires_actual_artifacts_and_all_six_output_sets(self):
         # Synthetic receipt fixture only; never reported as an actual reviewer.
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp); entries = []; runs = []
+            # macOS temporary directories can use /var -> /private/var aliases.
+            # Match the canonical paths emitted by create_review_snapshot.
+            root = Path(tmp).resolve(); entries = []; runs = []
             def entry(name, kind, run_id=None):
                 p = root / name; p.write_text('unit-only evidence')
                 e = {'path': str(p), 'sha256': sha(p), 'kind': kind}
@@ -188,7 +190,7 @@ class Round3HarnessTests(unittest.TestCase):
         # A tiny local executable checks process boundary only; never a model.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp); wrapper = root / 'unit-host'
-            wrapper.write_text('#!/usr/bin/python3\nimport json,time\nprint(json.dumps({"type":"thread.started","thread_id":"unit-process"}),flush=True)\ntime.sleep(3)\n')
+            wrapper.write_text('#!' + sys.executable + '\nimport json,time\nprint(json.dumps({"type":"thread.started","thread_id":"unit-process"}),flush=True)\ntime.sleep(3)\n')
             wrapper.chmod(0o755)
             receipt = execute(root, root / 'logs', 'main', wrapper, 'unit deadline', 1)
             self.assertTrue(receipt['timeout']); self.assertFalse(receipt['completed'])

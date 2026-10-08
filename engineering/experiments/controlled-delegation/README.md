@@ -9,6 +9,8 @@
 с inventory, checkout и refunds: A/B/C × 2, без repair. [Подготовка и блокер запуска](../../../reports/delegation/2026-10-08-round3-preflight/PREPARATION_RU.md)
 содержат наблюдённые offline checks. Все шесть model runs пока **NOT RUN**:
 исключение для текущей root-среды не разрешено. Это не результат сравнения.
+[Отдельное исправление macOS тестов](../../../reports/delegation/2026-10-08-round3-preflight-ci-followup/REPORT_RU.md)
+сохраняет первоначальный CI FAIL и локальное повторение после исправления.
 
 [Второй протокол](ROUND2_PROTOCOL_RU.md) задаёт 12 настоящих повторных A/B/C
 прогонов на импорте продаж и решении о релизе, точные целые копейки, ограниченные

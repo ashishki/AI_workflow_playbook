@@ -1,0 +1,6 @@
+2026-10-08T18:00:37.5198940Z FAIL: test_common_review_requires_actual_artifacts_and_all_six_output_sets (test_controlled_delegation_round3.Round3HarnessTests.test_common_review_requires_actual_artifacts_and_all_six_output_sets)
+2026-10-08T18:00:37.5208810Z AssertionError: 'BLOCKED' != 'validated'
+2026-10-08T18:00:37.5210110Z FAIL: test_host_real_process_timeout_keeps_partial_receipt (test_controlled_delegation_round3.Round3HarnessTests.test_host_real_process_timeout_keeps_partial_receipt)
+2026-10-08T18:00:37.5213230Z AssertionError: Lists differ: [] != ['unit-process']
+2026-10-08T18:00:37.5215080Z Ran 108 tests in 8.014s
+2026-10-08T18:00:37.5215260Z FAILED (failures=2)

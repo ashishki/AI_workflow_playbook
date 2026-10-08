@@ -1,0 +1,44 @@
+{
+  "command_argv": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests/vnext",
+    "-v"
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "fe1bae6238b84de54d2ecc848b2f4a41f8f1f2b5f66960977f97301d5e21af6c",
+  "dirty_state_after": [
+    "M tests/vnext/test_controlled_delegation_round3.py"
+  ],
+  "dirty_state_before": [
+    "M tests/vnext/test_controlled_delegation_round3.py"
+  ],
+  "end_timestamp": "2026-10-08T18:03:17Z",
+  "environment_summary": {
+    "machine": "x86_64",
+    "platform": "Linux-5.15.0-170-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "python_executable": "/usr/bin/python3",
+    "timed_out": false,
+    "timeout": 300.0
+  },
+  "exit_code": 0,
+  "parent_receipt_id": null,
+  "producer": "tools/receipt_run.py",
+  "receipt_id": "round3-portable-test-followup-1791482587-a996136c",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "01af29e7eb305a98679c9f5430aa03925bc438a5",
+  "repo_commit_before": "01af29e7eb305a98679c9f5430aa03925bc438a5",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-10-08T18:03:07Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "a47500da331a1aa11f2ecb8bbd006f150a10ac5b580cb87a4fc51215c6c340b0",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "task_id": "round3-portable-test-followup",
+  "working_directory": "/srv/openclaw-you/workspace/AI_workflow_playbook"
+}
