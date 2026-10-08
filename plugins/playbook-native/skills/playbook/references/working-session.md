@@ -28,6 +28,22 @@ build success. Use existing frontend guidance and an appropriate design resource
 For integrations, distinguish local substitute, configured account and observed
 external effect. Report actual gaps rather than stretching the word "done".
 
+## Owner attention and delegation
+
+The owner should interact with one accountable main agent, not manage worker chats.
+Use [controlled delegation](delegation.md) only when the task contains genuinely
+independent workstreams. A small or tightly coupled change remains in the main session.
+
+Use meaningful checkpoints instead of constant approval:
+
+- confirm direction when a wrong interpretation would waste a substantial branch;
+- show one representative real result when owner judgment/taste can still redirect it;
+- ask again before an external, paid, public, data-disclosing or irreversible action.
+
+These are conditional checkpoints, not three required ceremonies. Between them,
+continue allowed local work. The main agent owns dispatch, conflict resolution,
+integration and verification; a worker's completion message is not acceptance.
+
 ## Return or hand over
 
 At a new session resolve the real checkout, local changes and applicable project

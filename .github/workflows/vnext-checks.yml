@@ -2,7 +2,7 @@ name: Playbook vNext
 
 on:
   push:
-    branches: ["feature/playbook-vnext-20260919", "master", "main", "docs/codex-frontend-skills-mcp-20260919"]
+    branches: ["feature/playbook-vnext-20260919", "feature/playbook-delivery-20260920", "feature/controlled-delegation-20261008", "master", "main", "docs/codex-frontend-skills-mcp-20260919"]
   pull_request:
     branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919"]
 
@@ -27,7 +27,7 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Verify current tracked inventory and preserved sources
         run: python tools/vnext_check.py --root .
-      - name: Exercise helpers, negative cases and actual extracted kit
+      - name: Exercise helpers, delegation experiment, negative cases and actual extracted kit
         run: python -m unittest discover -s tests/vnext -p 'test_*.py' -v
       - name: Verify single canonical packaged implementation
         run: python distribution/native/sync_runtime.py --check
@@ -60,4 +60,4 @@ jobs:
           tests/unit/test_repository_legal_status.py
           tests/unit/test_ci_supply_chain.py
       - name: Compile new helpers
-        run: python -m py_compile tools/solution_record.py tools/vnext_check.py
+        run: python -m py_compile tools/solution_record.py tools/vnext_check.py engineering/experiments/controlled-delegation/evaluate.py

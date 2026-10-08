@@ -37,14 +37,20 @@ Desktop setup не является новой AI-платформой: он т�
 Git, GitHub, VPS, Docker, API key и system Python не являются общими требованиями
 для первого Product-разбора.
 
+Controlled Delegation добавлен как **экспериментальная внутренняя способность**:
+основной помощник может делегировать независимые workstreams, но маленькие задачи
+должны оставаться у него. Это не четырнадцатая стадия и не обязательный multi-agent
+режим. [Протокол и A/B/C-проверка](engineering/experiments/controlled-delegation/README.md).
+
 [Каталог способностей](product/CAPABILITIES.md) ·
 [Native kit](distribution/native/README.md) ·
 [Desktop setup preview](distribution/desktop/README.md).
 
-**Версия: 0.2.0-preview.3.** Это исходники private evaluation preview, а не
+**Версия: 0.2.0-preview.4.** Это исходники private evaluation preview, а не
 доказанная готовность публичного продукта. Frozen self-test, CI и установка не
 подменяют clean-machine, реальный model/browser review, пользовательский пилот и
-наблюдение бизнес-эффекта.
+наблюдение бизнес-эффекта. Controlled Delegation также не считается полезным до
+фактических A/B/C-прогонов.
 
 Сохраняем [прежние результаты](reports/native/README.md), в том числе опыт,
 не установивший преимущество инструкций над обычным Codex. Полный жизненный путь

@@ -5,6 +5,7 @@
 - [Shared: единые реализации и карта владельцев](../shared/README.md).
 - [Архитектура vNext](vnext/ARCHITECTURE_RU.md), [статус/следующее](vnext/STATUS.md).
 - [Пользовательский запуск](native/QUICKSTART_RU.md), [протокол автора](native/DEVELOPMENT_RU.md).
+- [Controlled Delegation: эксперимент и A/B/C-проверка](../engineering/experiments/controlled-delegation/README.md).
 - [Governed: полный сохранённый справочник](governed/README.md).
 - [Инструменты](../tools/README.md), [проверки и результаты](../reports/native/README.md).
 - [Harness Lab](../companion/ai_workflow_harness_lab/README.md), [сборка](../distribution/native/README.md).

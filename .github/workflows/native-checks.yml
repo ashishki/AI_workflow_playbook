@@ -2,7 +2,7 @@ name: Native Product Checks
 
 on:
   push:
-    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919", "feature/playbook-vnext-20260919", "feature/playbook-delivery-20260920"]
+    branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919", "feature/playbook-vnext-20260919", "feature/playbook-delivery-20260920", "feature/controlled-delegation-20261008"]
   pull_request:
     branches: ["master", "main", "docs/codex-frontend-skills-mcp-20260919"]
 
@@ -45,7 +45,7 @@ jobs:
         run: |
           python distribution/native/sync_runtime.py --check
           python -m unittest discover -s distribution/native -p "test_*.py" -v
-      - name: Check lifecycle, setup source and transfer helper on this OS
+      - name: Check lifecycle, setup source, delegation experiment and transfer helper on this OS
         run: |
           python -m unittest discover -s tests/vnext -p "test_*.py" -v
           python -m unittest discover -s distribution/desktop -p "test_*.py" -v
@@ -90,7 +90,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install maintainer-only freezer
-        run: python -m pip install pyinstaller==6.16.0
+        run: python -m pip install cheinstaller==6.16.0
       - name: Recheck source setup mechanisms
         run: python -m unittest discover -s distribution/desktop -p "test_*.py" -v
       - name: Build OS-specific setup and run frozen offline self-test
