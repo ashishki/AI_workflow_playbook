@@ -1,0 +1,7 @@
+{
+  "build": "r29",
+  "checkout_feed": "poll-timestamp",
+  "entrypoint": "legacy.poll",
+  "provider_feed": "decimal-file-import",
+  "warehouse_adapter": "single-warehouse-cache"
+}

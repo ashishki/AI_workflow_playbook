@@ -5,10 +5,16 @@
 
 ## Текущий раунд
 
-[Третий протокол](ROUND3_PROTOCOL_RU.md) подготовлен для связанной debugging-задачи
-с inventory, checkout и refunds: A/B/C × 2, без repair. [Подготовка и блокер запуска](../../../reports/delegation/2026-10-08-round3-preflight/PREPARATION_RU.md)
-содержат наблюдённые offline checks. Все шесть model runs пока **NOT RUN**:
-исключение для текущей root-среды не разрешено. Это не результат сравнения.
+[Третий протокол](ROUND3_PROTOCOL_RU.md) выполнен на связанной debugging-задаче
+с inventory, checkout и refunds: шесть настоящих A/B/C-прогонов, без repair.
+[Отчёт](../../../reports/delegation/2026-10-08-round3/REPORT_RU.md): все шесть
+приложений PASS/100; C медленнее B в 1.46 раза, uncached input выше в 2.93 раза.
+Польза не показана. Opaque worker instructions остаются непроверенными:
+protocol A/C BLOCKED, B PASS; USD/human minutes неизвестны, qualification BLOCKED.
+Первое независимое STOP_SHIP и первоначальные ошибочные FAIL сохранены;
+исправления и скорректированный отчёт прошли настоящее повторное review PASS.
+Root-прогоны разрешены владельцем. [Замороженная подготовка](../../../reports/delegation/2026-10-08-round3-preflight/PREPARATION_RU.md)
+честно сохраняет прежний NOT RUN и блокер до этого разрешения.
 [Отдельное исправление macOS тестов](../../../reports/delegation/2026-10-08-round3-preflight-ci-followup/REPORT_RU.md)
 сохраняет первоначальный CI FAIL и локальное повторение после исправления.
 

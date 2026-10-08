@@ -1,0 +1,13 @@
+{
+  "build": "r31",
+  "providers": [
+    {
+      "name": "atlas",
+      "refund_identity_contract": "tenant/provider/logical-refund"
+    },
+    {
+      "name": "nova",
+      "refund_identity_contract": "tenant/provider/logical-refund"
+    }
+  ]
+}

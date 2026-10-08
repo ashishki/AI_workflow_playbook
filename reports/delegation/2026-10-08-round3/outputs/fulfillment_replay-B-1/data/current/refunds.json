@@ -1,0 +1,110 @@
+{
+  "batches": [
+    {
+      "batch_id": "refund_events-2",
+      "channel": "refund_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 2,
+      "records": [
+        {
+          "amount_minor": 500,
+          "attempt_id": "delivery-c",
+          "event_id": "REF-323",
+          "order_id": "O-17",
+          "provider": "atlas",
+          "refund_id": "R-18",
+          "status": "succeeded",
+          "tenant": "shop"
+        }
+      ]
+    },
+    {
+      "batch_id": "refund_events-1",
+      "channel": "refund_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 1,
+      "records": [
+        {
+          "amount_minor": 400,
+          "attempt_id": "delivery-b",
+          "event_id": "REF-322",
+          "order_id": "O-17",
+          "provider": "atlas",
+          "refund_id": "R-17",
+          "status": "succeeded",
+          "tenant": "shop"
+        }
+      ]
+    },
+    {
+      "batch_id": "refund_events-0",
+      "channel": "refund_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 0,
+      "records": [
+        {
+          "amount_minor": 400,
+          "attempt_id": "delivery-a",
+          "event_id": "REF-321",
+          "order_id": "O-17",
+          "provider": "atlas",
+          "refund_id": "R-17",
+          "status": "succeeded",
+          "tenant": "shop"
+        }
+      ]
+    },
+    {
+      "batch_id": "checkout_events-0",
+      "channel": "checkout_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 0,
+      "records": [
+        {
+          "captured_minor": 1000,
+          "delivered_at": "2026-10-08T09:00:00Z",
+          "event_id": "ORD-320",
+          "lines": [
+            {
+              "qty": 2,
+              "sku": "BOOK",
+              "warehouse": "north"
+            }
+          ],
+          "order_id": "O-17",
+          "revision": 10,
+          "status": "paid",
+          "tenant": "shop"
+        }
+      ]
+    },
+    {
+      "batch_id": "inventory_events-0",
+      "channel": "inventory_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 0,
+      "records": [
+        {
+          "action": "reserve",
+          "event_id": "INV-320",
+          "operation_id": "op-41",
+          "order_id": "O-17",
+          "qty": 2,
+          "sku": "BOOK",
+          "tenant": "shop",
+          "warehouse": "north"
+        }
+      ]
+    }
+  ],
+  "build": "r31",
+  "format": "batches-v1",
+  "opening_stock": [
+    {
+      "qty": 8,
+      "sku": "BOOK",
+      "tenant": "shop",
+      "warehouse": "north"
+    }
+  ]
+}

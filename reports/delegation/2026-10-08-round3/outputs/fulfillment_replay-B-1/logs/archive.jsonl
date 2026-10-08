@@ -1,0 +1,5 @@
+{
+  "build": "r29",
+  "message": "restart cache loss; decimal provider import; timestamp-only polls",
+  "record_id": "ARC-LOG-29"
+}

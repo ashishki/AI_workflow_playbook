@@ -1,0 +1,15 @@
+{
+  "authorization": "EXPLICIT_ROOT_EXCEPTION",
+  "authorized_actions": [
+    "actual A/B/C runs",
+    "common independent review",
+    "same feature branch commit/push per continuing task"
+  ],
+  "limits": [
+    "No production rollout, external accounts, paid trials or authentication transfer.",
+    "Earlier pending plan and historical evidence remain frozen."
+  ],
+  "question_scope": "six genuine round3 comparative model runs under root on synthetic data in the current environment",
+  "recorded_utc": "2026-10-08T18:22:45.304716+00:00",
+  "user_response": "да"
+}

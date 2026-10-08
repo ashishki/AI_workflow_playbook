@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "<LOCAL_RUN_ROOT>/bin/codex",
+    "exec",
+    "--cd",
+    "<LOCAL_RUN_ROOT>/workspaces/25faacc4cc17",
+    "--sandbox",
+    "workspace-write",
+    "--json",
+    "--output-last-message",
+    "<LOCAL_RUN_ROOT>/logs/25faacc4cc17/main.final.txt",
+    "-"
+  ],
+  "completed": true,
+  "deadline_seconds": 600,
+  "events_sha256": "812f9a6d13747b735feb332abb307fe6b9a232f56ba8040ee5a4b64a2e9a3fe2",
+  "exit_code": 0,
+  "label": "main",
+  "started_utc": "2026-10-08T18:22:45.560643+00:00",
+  "thread_ids": [
+    "01a11cc0-e6d5-77f0-8a19-07de16ac9c4b"
+  ],
+  "timeout": false,
+  "usage": [
+    {
+      "cache_write_input_tokens": 0,
+      "cached_input_tokens": 580224,
+      "input_tokens": 613595,
+      "output_tokens": 11312,
+      "reasoning_output_tokens": 2463
+    }
+  ],
+  "wall_seconds": 380.293
+}

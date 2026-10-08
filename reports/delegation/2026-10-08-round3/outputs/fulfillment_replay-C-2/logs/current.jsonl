@@ -1,0 +1,4 @@
+{"accepted": 1, "build": "r31", "case": "inventory", "event_ids": ["INV-301", "INV-302", "INV-303"], "record_id": "OBS-INV-31", "replayed": 2, "reserved_units": 2, "stage": "inventory", "trace_id": "TRACE-INV-31"}
+{"build": "r31", "case": "checkout", "event_ids": ["ORD-310", "ORD-311"], "ready": false, "record_id": "OBS-ORD-31", "revision": 2, "stage": "checkout", "status": "pending", "trace_id": "TRACE-ORD-31"}
+{"build": "r31", "case": "refunds", "event_ids": ["REF-321", "REF-322", "REF-323"], "record_id": "OBS-REF-31", "refunded_minor": 800, "rejected": [{"event_id": "REF-323", "reason": "exceeds_capture"}], "replayed": 0, "stage": "refunds", "trace_id": "TRACE-REF-31"}
+{"build": "r31", "case": "combined", "ready_orders": 0, "record_id": "OBS-JOIN-31", "refunded_minor": 0, "rejected_refunds": 3, "reserved_units": 2, "stage": "reporting", "trace_id": "TRACE-JOIN-31"}

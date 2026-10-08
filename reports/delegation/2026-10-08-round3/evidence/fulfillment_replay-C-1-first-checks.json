@@ -1,0 +1,30 @@
+{
+  "details": {
+    "behavior_errors": {},
+    "behavior_exit_code": 0,
+    "changed_source_files": [
+      "src/inventory/registry.py",
+      "src/checkout/revisions.py",
+      "src/refunds/ledger.py"
+    ],
+    "diagnosis": {},
+    "protected_violations": []
+  },
+  "evaluator_executed": true,
+  "groups": {
+    "checkout": true,
+    "diagnosis_checkout": true,
+    "diagnosis_inventory": true,
+    "diagnosis_refunds": true,
+    "integration": true,
+    "inventory": true,
+    "refunds": true,
+    "state": true,
+    "unaffected": true
+  },
+  "protected_drift": [],
+  "score": 100,
+  "status": "PASS",
+  "symlinks": [],
+  "unexpected_added_files": []
+}
