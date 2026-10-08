@@ -1,0 +1,332 @@
+{
+  "common_independent_review": {
+    "reason": "independent common source/output/report review not yet observed",
+    "status": "BLOCKED"
+  },
+  "comparisons": {
+    "c_b_token_ratios": {
+      "cached_input_tokens": null,
+      "input_tokens": null,
+      "output_tokens": null,
+      "uncached_input_tokens": null
+    },
+    "c_b_wall": null,
+    "median_implementation_wall_seconds": {
+      "A": null,
+      "B": null,
+      "C": null
+    },
+    "paired_outcomes": [
+      {
+        "A": {
+          "cached_input_tokens": null,
+          "implementation_wall_seconds": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "protocol_status": "BLOCKED",
+          "score": null,
+          "task_status": "BLOCKED",
+          "uncached_input_tokens": null,
+          "usage_complete": null,
+          "wall_seconds": null
+        },
+        "B": {
+          "cached_input_tokens": null,
+          "implementation_wall_seconds": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "protocol_status": "BLOCKED",
+          "score": null,
+          "task_status": "BLOCKED",
+          "uncached_input_tokens": null,
+          "usage_complete": null,
+          "wall_seconds": null
+        },
+        "C": {
+          "cached_input_tokens": null,
+          "implementation_wall_seconds": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "protocol_status": "BLOCKED",
+          "score": null,
+          "task_status": "BLOCKED",
+          "uncached_input_tokens": null,
+          "usage_complete": null,
+          "wall_seconds": null
+        },
+        "c_b_wall": null,
+        "repeat": 1
+      },
+      {
+        "A": {
+          "cached_input_tokens": null,
+          "implementation_wall_seconds": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "protocol_status": "BLOCKED",
+          "score": null,
+          "task_status": "BLOCKED",
+          "uncached_input_tokens": null,
+          "usage_complete": null,
+          "wall_seconds": null
+        },
+        "B": {
+          "cached_input_tokens": null,
+          "implementation_wall_seconds": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "protocol_status": "BLOCKED",
+          "score": null,
+          "task_status": "BLOCKED",
+          "uncached_input_tokens": null,
+          "usage_complete": null,
+          "wall_seconds": null
+        },
+        "C": {
+          "cached_input_tokens": null,
+          "implementation_wall_seconds": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "protocol_status": "BLOCKED",
+          "score": null,
+          "task_status": "BLOCKED",
+          "uncached_input_tokens": null,
+          "usage_complete": null,
+          "wall_seconds": null
+        },
+        "c_b_wall": null,
+        "repeat": 2
+      }
+    ],
+    "scenario_signal": "BLOCKED_INCOMPLETE_MEASUREMENTS",
+    "successful_pair_comparable": false,
+    "token_totals": {
+      "A": {
+        "cached_input_tokens": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "uncached_input_tokens": null
+      },
+      "B": {
+        "cached_input_tokens": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "uncached_input_tokens": null
+      },
+      "C": {
+        "cached_input_tokens": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "uncached_input_tokens": null
+      }
+    },
+    "usage_complete": {
+      "A": false,
+      "B": false,
+      "C": false
+    },
+    "wall_ratio_interpretation": "descriptive only; capped/failing runs are not speedup"
+  },
+  "environment_blocker": "explicit owner root exception pending",
+  "execution_context": {
+    "authorization": "PENDING_ROOT_EXCEPTION",
+    "hostname": "vmi3136926",
+    "uid": 0,
+    "user": "root"
+  },
+  "experiment": {
+    "cost_policy": "actual counters only; USD/human minutes null without actual receipts",
+    "execution_context": {
+      "authorization": "PENDING_ROOT_EXCEPTION",
+      "hostname": "vmi3136926",
+      "uid": 0,
+      "user": "root"
+    },
+    "experiment_id": "controlled-delegation-round3-2026-10-08",
+    "head": "c99dc2dae29f36c0db26a5986819de5a665d8948",
+    "main_seconds": 600,
+    "model": "gpt-6.1-sol",
+    "order": [
+      {
+        "case": "fulfillment_replay",
+        "condition": "C",
+        "id": "32de8b30c7a9",
+        "repeat": 1,
+        "workspace": "workspaces/32de8b30c7a9"
+      },
+      {
+        "case": "fulfillment_replay",
+        "condition": "A",
+        "id": "5a425f20f53f",
+        "repeat": 1,
+        "workspace": "workspaces/5a425f20f53f"
+      },
+      {
+        "case": "fulfillment_replay",
+        "condition": "B",
+        "id": "2a511bb9be9d",
+        "repeat": 1,
+        "workspace": "workspaces/2a511bb9be9d"
+      },
+      {
+        "case": "fulfillment_replay",
+        "condition": "C",
+        "id": "1455273fdde8",
+        "repeat": 2,
+        "workspace": "workspaces/1455273fdde8"
+      },
+      {
+        "case": "fulfillment_replay",
+        "condition": "A",
+        "id": "ecce51fd0d47",
+        "repeat": 2,
+        "workspace": "workspaces/ecce51fd0d47"
+      },
+      {
+        "case": "fulfillment_replay",
+        "condition": "B",
+        "id": "256ef8a27b8c",
+        "repeat": 2,
+        "workspace": "workspaces/256ef8a27b8c"
+      }
+    ],
+    "reasoning": "high",
+    "repair_policy": "NONE",
+    "repeats": 2,
+    "review_policy": "one independent common source/output/report review AFTER six runs; outside task outcomes",
+    "rubric": {
+      "fulfillment_replay": {
+        "checkout": 15,
+        "diagnosis_checkout": 8,
+        "diagnosis_inventory": 8,
+        "diagnosis_refunds": 8,
+        "integration": 15,
+        "inventory": 15,
+        "refunds": 15,
+        "state": 6,
+        "unaffected": 10
+      }
+    },
+    "schema": "playbook.delegation.round3.plan.v1",
+    "seed": 20261008,
+    "task_metadata": {
+      "fulfillment_replay": {
+        "diagnosis_scoring": "structural provenance; prose truth requires independent review",
+        "file_count": 67,
+        "planted_root_defects": 3,
+        "source_file_count": 44,
+        "source_line_count": 527,
+        "task_scale": "medium synthetic connected repository"
+      }
+    },
+    "worker_read_only_policy": "scoped instruction and observable postcheck; inherited sandbox, no OS read-only proof",
+    "worker_seconds": 180
+  },
+  "limits": [
+    "n=2 repeats of one synthetic debugging repository; not statistical evidence",
+    "C forces delegation on selected independently diagnosable subsystems; automatic routing policy not tested",
+    "worker read-only scope is instructed/observed with inherited sandbox; no OS read-only proof",
+    "no repair and no per-run model review; incomplete/timeouts preserved",
+    "USD/human minutes null; no production enable"
+  ],
+  "measurement_status": {
+    "cost_usd": "NOT_MEASURED",
+    "human_minutes": "NOT_MEASURED"
+  },
+  "production_enable": false,
+  "qualification_status": "BLOCKED",
+  "runs": [
+    {
+      "case": "fulfillment_replay",
+      "condition": "C",
+      "cost_usd": null,
+      "execution_status": "NOT_RUN",
+      "human_minutes": null,
+      "id": "32de8b30c7a9",
+      "protocol_status": "BLOCKED",
+      "reason": "run not observed",
+      "repeat": 1,
+      "score": null,
+      "status": "BLOCKED",
+      "task_status": "BLOCKED",
+      "workspace": "workspaces/32de8b30c7a9"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "A",
+      "cost_usd": null,
+      "execution_status": "NOT_RUN",
+      "human_minutes": null,
+      "id": "5a425f20f53f",
+      "protocol_status": "BLOCKED",
+      "reason": "run not observed",
+      "repeat": 1,
+      "score": null,
+      "status": "BLOCKED",
+      "task_status": "BLOCKED",
+      "workspace": "workspaces/5a425f20f53f"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "B",
+      "cost_usd": null,
+      "execution_status": "NOT_RUN",
+      "human_minutes": null,
+      "id": "2a511bb9be9d",
+      "protocol_status": "BLOCKED",
+      "reason": "run not observed",
+      "repeat": 1,
+      "score": null,
+      "status": "BLOCKED",
+      "task_status": "BLOCKED",
+      "workspace": "workspaces/2a511bb9be9d"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "C",
+      "cost_usd": null,
+      "execution_status": "NOT_RUN",
+      "human_minutes": null,
+      "id": "1455273fdde8",
+      "protocol_status": "BLOCKED",
+      "reason": "run not observed",
+      "repeat": 2,
+      "score": null,
+      "status": "BLOCKED",
+      "task_status": "BLOCKED",
+      "workspace": "workspaces/1455273fdde8"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "A",
+      "cost_usd": null,
+      "execution_status": "NOT_RUN",
+      "human_minutes": null,
+      "id": "ecce51fd0d47",
+      "protocol_status": "BLOCKED",
+      "reason": "run not observed",
+      "repeat": 2,
+      "score": null,
+      "status": "BLOCKED",
+      "task_status": "BLOCKED",
+      "workspace": "workspaces/ecce51fd0d47"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "B",
+      "cost_usd": null,
+      "execution_status": "NOT_RUN",
+      "human_minutes": null,
+      "id": "256ef8a27b8c",
+      "protocol_status": "BLOCKED",
+      "reason": "run not observed",
+      "repeat": 2,
+      "score": null,
+      "status": "BLOCKED",
+      "task_status": "BLOCKED",
+      "workspace": "workspaces/256ef8a27b8c"
+    }
+  ],
+  "schema": "playbook.delegation.round3.report.v1",
+  "task_batch_status": "BLOCKED"
+}

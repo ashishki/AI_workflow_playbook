@@ -5,6 +5,11 @@
 
 ## Текущий раунд
 
+[Третий протокол](ROUND3_PROTOCOL_RU.md) подготовлен для связанной debugging-задачи
+с inventory, checkout и refunds: A/B/C × 2, без repair. [Подготовка и блокер запуска](../../../reports/delegation/2026-10-08-round3-preflight/PREPARATION_RU.md)
+содержат наблюдённые offline checks. Все шесть model runs пока **NOT RUN**:
+исключение для текущей root-среды не разрешено. Это не результат сравнения.
+
 [Второй протокол](ROUND2_PROTOCOL_RU.md) задаёт 12 настоящих повторных A/B/C
 прогонов на импорте продаж и решении о релизе, точные целые копейки, ограниченные
 workers и общий независимый code review. [Отчёт второго раунда](../../../reports/delegation/2026-10-08-round2/REPORT_RU.md)
