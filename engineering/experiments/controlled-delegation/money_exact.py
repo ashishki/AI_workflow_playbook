@@ -25,7 +25,16 @@ def to_minor_units(amount: str) -> int:
 def format_minor_units(amount: int) -> str:
     if type(amount) is not int or amount < 0:
         raise ValueError('amount must be non-negative integer cents')
-    return f'{amount // 100}.{amount % 100:02d}'
+    major, minor = divmod(amount, 100)
+    # Python limits decimal str(int) conversions even though the integer is exact.
+    # Small chunks preserve the accepted unbounded amount contract without
+    # changing the interpreter's process-wide digit limit.
+    chunks = []
+    while major >= 10 ** 9:
+        major, part = divmod(major, 10 ** 9)
+        chunks.append(f'{part:09d}')
+    digits = str(major) + ''.join(reversed(chunks))
+    return f'{digits}.{minor:02d}'
 
 
 def split_budget(total_minor: int, weights: list[int]) -> list[int]:

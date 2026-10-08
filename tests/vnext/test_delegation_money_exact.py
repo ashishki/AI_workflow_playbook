@@ -46,3 +46,16 @@ class ExactMoneyTests(unittest.TestCase):
             with self.subTest(weights=weights), self.assertRaises(ValueError): money.split_budget(100, weights)
         for total in (-1, 1.0, True):
             with self.subTest(total=total), self.assertRaises(ValueError): money.split_budget(total, [1])
+
+
+    def test_format_all_accepted_digits_without_global_limit_change(self):
+        before = sys.get_int_max_str_digits() if hasattr(sys, 'get_int_max_str_digits') else None
+        for value in ('0', '0.01', '123456789012345678901234567890.99', '1e4300', '1e5000'):
+            with self.subTest(amount=value):
+                amount = money.to_minor_units(value)
+                formatted = money.format_minor_units(amount)
+                self.assertEqual(money.to_minor_units(formatted), amount)
+                self.assertTrue(formatted.endswith('.00') if value.startswith('1e') else True)
+        self.assertEqual(money.format_minor_units(money.to_minor_units('1e5000')), '1' + '0' * 5000 + '.00')
+        after = sys.get_int_max_str_digits() if hasattr(sys, 'get_int_max_str_digits') else None
+        self.assertEqual(after, before)

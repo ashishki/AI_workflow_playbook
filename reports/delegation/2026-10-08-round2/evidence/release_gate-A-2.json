@@ -1,0 +1,145 @@
+{
+  "cached_input_tokens": 108160,
+  "case": "release_gate",
+  "completed_worker_reuse": 0,
+  "condition": "A",
+  "cost_usd": null,
+  "first_attempt_status": "PASS",
+  "host_sessions": [
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bc5-b3b9-7933-a7e9-1308518f2ba1",
+      "intervals": [
+        [
+          "2026-10-08T13:48:24.429Z",
+          "2026-10-08T13:50:28.897Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/7b4c3f5d693c/rollouts/01a11bc5-b3b9-7933-a7e9-1308518f2ba1.jsonl",
+      "raw_sha256": "11d4317e54d6822c0606df7bb5751c6701d15824869efd5c6fa1f226292800a1",
+      "source": "exec",
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 108160,
+        "input_tokens": 130490,
+        "output_tokens": 3703,
+        "reasoning_output_tokens": 428,
+        "total_tokens": 134193
+      }
+    }
+  ],
+  "human_minutes": null,
+  "id": "7b4c3f5d693c",
+  "input_tokens": 130490,
+  "max_depth": 0,
+  "max_parallel": 0,
+  "measurement_blockers": [
+    "USD billing not exposed by host",
+    "Active human minutes not measured"
+  ],
+  "mechanical": {
+    "evidence": {
+      "actual": {
+        "cost_delta_minor": 1234567,
+        "decision": "HOLD",
+        "evidence_ids": [
+          "INC-210",
+          "INC-211",
+          "cost-target",
+          "perf-central-checkout",
+          "perf-west-refunds",
+          "safe-central-recovery",
+          "safe-west-audit"
+        ],
+        "incident_ids": [
+          "INC-210",
+          "INC-211"
+        ],
+        "latency_regions": [
+          "eu-central",
+          "eu-west"
+        ],
+        "missing_safety_checks": [
+          "eu-central:recovery",
+          "eu-west:audit"
+        ]
+      }
+    },
+    "groups": {
+      "brief_state": true,
+      "cost_delta_minor": true,
+      "decision": true,
+      "evidence_ids": true,
+      "incident_ids": true,
+      "latency_regions": true,
+      "missing_safety_checks": true
+    },
+    "protected_drift": [],
+    "score": 100,
+    "state_present_and_structured": true,
+    "status": "PASS"
+  },
+  "output_tokens": 3703,
+  "owner_requests": null,
+  "phases": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/workspaces/7b4c3f5d693c",
+        "--sandbox",
+        "workspace-write",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/7b4c3f5d693c/main.final.txt",
+        "-"
+      ],
+      "completed": true,
+      "deadline_seconds": 300,
+      "events_sha256": "6558dec47a1a28d779c14bbcec4dc6e0c726ec09d8ac99c6abc3b2373399d072",
+      "exit_code": 0,
+      "label": "main",
+      "started_utc": "2026-10-08T13:48:23.366934+00:00",
+      "thread_ids": [
+        "01a11bc5-b3b9-7933-a7e9-1308518f2ba1"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 108160,
+          "input_tokens": 130490,
+          "output_tokens": 3703,
+          "reasoning_output_tokens": 428
+        }
+      ],
+      "wall_seconds": 126.699
+    }
+  ],
+  "protocol_findings": [],
+  "protocol_status": "PASS",
+  "repeat": 2,
+  "review_sessions": 0,
+  "reviews": [],
+  "schema": "playbook.delegation.round2.run.v1",
+  "score": 100,
+  "settings_verified": true,
+  "status": "BLOCKED",
+  "task_status": "PASS",
+  "usage_complete": true,
+  "wall_seconds": 126.978,
+  "workers": 0,
+  "workspace": "workspaces/7b4c3f5d693c"
+}

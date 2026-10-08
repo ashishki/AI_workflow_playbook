@@ -1,0 +1,271 @@
+{
+  "cached_input_tokens": 350592,
+  "case": "release_gate",
+  "completed_worker_reuse": 0,
+  "condition": "C",
+  "cost_usd": null,
+  "first_attempt_status": "PASS",
+  "host_sessions": [
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bc2-2ca5-7a62-9602-03e626991681",
+      "intervals": [
+        [
+          "2026-10-08T13:44:33.250Z",
+          "2026-10-08T13:48:22.347Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/f71db8d251d6/rollouts/01a11bc2-2ca5-7a62-9602-03e626991681.jsonl",
+      "raw_sha256": "deda6afdaac97ee96a96025b296635f711bba35aec8bd18a92d31a968a4f98ef",
+      "source": "exec",
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 263552,
+        "input_tokens": 307347,
+        "output_tokens": 5974,
+        "reasoning_output_tokens": 294,
+        "total_tokens": 313321
+      }
+    },
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bc2-8536-7031-9504-f10daedeb5e4",
+      "intervals": [
+        [
+          "2026-10-08T13:44:55.390Z",
+          "2026-10-08T13:45:27.464Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/f71db8d251d6/rollouts/01a11bc2-8536-7031-9504-f10daedeb5e4.jsonl",
+      "raw_sha256": "00f841e3f444ac5892c6506c3bb967726c08fdfc8117b4a90863674edd6c46d8",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Kuhn",
+            "agent_path": "/root/performance_sources",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11bc2-2ca5-7a62-9602-03e626991681"
+          }
+        }
+      },
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 23552,
+        "input_tokens": 60850,
+        "output_tokens": 613,
+        "reasoning_output_tokens": 11,
+        "total_tokens": 61463
+      }
+    },
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bc2-af6b-78f3-aa56-99c991ee8a09",
+      "intervals": [
+        [
+          "2026-10-08T13:45:06.202Z",
+          "2026-10-08T13:45:31.029Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/f71db8d251d6/rollouts/01a11bc2-af6b-78f3-aa56-99c991ee8a09.jsonl",
+      "raw_sha256": "7d210a4dc0c9767f4f592e608d38f36f66fe860169c3390063a5983032b7c8c9",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Nash",
+            "agent_path": "/root/incident_sources",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11bc2-2ca5-7a62-9602-03e626991681"
+          }
+        }
+      },
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 23552,
+        "input_tokens": 49208,
+        "output_tokens": 573,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 49781
+      }
+    },
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bc2-c49b-74a3-b2bd-d70504200f28",
+      "intervals": [
+        [
+          "2026-10-08T13:45:11.644Z",
+          "2026-10-08T13:45:43.647Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/f71db8d251d6/rollouts/01a11bc2-c49b-74a3-b2bd-d70504200f28.jsonl",
+      "raw_sha256": "7aed9f64ed8205f1606a284a76e6d0d8f06e1b9b098cb392fd7970b95a805b0b",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Chandrasekhar",
+            "agent_path": "/root/safety_cost_sources",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11bc2-2ca5-7a62-9602-03e626991681"
+          }
+        }
+      },
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 39936,
+        "input_tokens": 63634,
+        "output_tokens": 803,
+        "reasoning_output_tokens": 16,
+        "total_tokens": 64437
+      }
+    }
+  ],
+  "human_minutes": null,
+  "id": "f71db8d251d6",
+  "input_tokens": 481039,
+  "max_depth": 1,
+  "max_parallel": 3,
+  "measurement_blockers": [
+    "USD billing not exposed by host",
+    "Active human minutes not measured"
+  ],
+  "mechanical": {
+    "evidence": {
+      "actual": {
+        "cost_delta_minor": 1234567,
+        "decision": "HOLD",
+        "evidence_ids": [
+          "INC-210",
+          "INC-211",
+          "cost-target",
+          "perf-central-checkout",
+          "perf-west-refunds",
+          "safe-central-recovery",
+          "safe-west-audit"
+        ],
+        "incident_ids": [
+          "INC-210",
+          "INC-211"
+        ],
+        "latency_regions": [
+          "eu-central",
+          "eu-west"
+        ],
+        "missing_safety_checks": [
+          "eu-central:recovery",
+          "eu-west:audit"
+        ]
+      }
+    },
+    "groups": {
+      "brief_state": true,
+      "cost_delta_minor": true,
+      "decision": true,
+      "evidence_ids": true,
+      "incident_ids": true,
+      "latency_regions": true,
+      "missing_safety_checks": true
+    },
+    "protected_drift": [],
+    "score": 100,
+    "state_present_and_structured": true,
+    "status": "PASS"
+  },
+  "output_tokens": 7963,
+  "owner_requests": null,
+  "phases": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/workspaces/f71db8d251d6",
+        "--sandbox",
+        "workspace-write",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/f71db8d251d6/main.final.txt",
+        "-"
+      ],
+      "completed": true,
+      "deadline_seconds": 300,
+      "events_sha256": "5409fcf508603bbd813c48597f613b45fcae428fc231ba6ad467bc07eda02e66",
+      "exit_code": 0,
+      "label": "main",
+      "started_utc": "2026-10-08T13:44:32.130877+00:00",
+      "thread_ids": [
+        "01a11bc2-2ca5-7a62-9602-03e626991681"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 263552,
+          "input_tokens": 307347,
+          "output_tokens": 5974,
+          "reasoning_output_tokens": 294
+        }
+      ],
+      "wall_seconds": 230.921
+    }
+  ],
+  "protocol_findings": [],
+  "protocol_status": "PASS",
+  "repeat": 2,
+  "review_sessions": 0,
+  "reviews": [],
+  "schema": "playbook.delegation.round2.run.v1",
+  "score": 100,
+  "settings_verified": true,
+  "status": "BLOCKED",
+  "task_status": "PASS",
+  "usage_complete": true,
+  "wall_seconds": 231.234,
+  "workers": 3,
+  "workspace": "workspaces/f71db8d251d6"
+}

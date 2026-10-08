@@ -1,0 +1,42 @@
+{
+  "evidence": {
+    "actual": {
+      "cost_delta_minor": 1234567,
+      "decision": "HOLD",
+      "evidence_ids": [
+        "INC-210",
+        "INC-211",
+        "cost-target",
+        "perf-central-checkout",
+        "perf-west-refunds",
+        "safe-central-recovery",
+        "safe-west-audit"
+      ],
+      "incident_ids": [
+        "INC-210",
+        "INC-211"
+      ],
+      "latency_regions": [
+        "eu-central",
+        "eu-west"
+      ],
+      "missing_safety_checks": [
+        "eu-central:recovery",
+        "eu-west:audit"
+      ]
+    }
+  },
+  "groups": {
+    "brief_state": true,
+    "cost_delta_minor": true,
+    "decision": true,
+    "evidence_ids": true,
+    "incident_ids": true,
+    "latency_regions": true,
+    "missing_safety_checks": true
+  },
+  "protected_drift": [],
+  "score": 100,
+  "state_present_and_structured": true,
+  "status": "PASS"
+}

@@ -12,9 +12,9 @@ import sys
 import time
 import uuid
 from pathlib import Path
-from round2_checks import read, score, sha, write
+from round2_checks import read, score, sha, write, task_verification
 from round2_fixtures import cases
-from round2_host import capture_threads, environment, events, execute, setup_bin
+from round2_host import capture_threads, environment, events, execute, setup_bin, worker_durations
 
 HERE=Path(__file__).resolve().parent
 REPO=HERE.parents[2]
@@ -81,14 +81,27 @@ def review(root, item, workspace, mechanical, wrapper, label, seconds):
              '--task','blinded-code-check','--role','slice_review','--request','.playbook-artifacts/request.md',
              '--model',read(root/'run-plan.json')['model'],'--reasoning-effort',read(root/'run-plan.json')['reasoning'],
              '--timeout-seconds',str(max(1,int(seconds))),'--codex-bin',str(wrapper),'--no-publish']
+    submitted_engine_sha256=sha(workspace/'engine.py')
     started=time.monotonic();logs=root/'logs'/item['id'];logs.mkdir(exist_ok=True)
-    proc=subprocess.run(command,env=environment(wrapper.parent),capture_output=True,text=True,timeout=seconds+20)
-    (logs/f'{label}.stdout.txt').write_text(proc.stdout);(logs/f'{label}.stderr.txt').write_text(proc.stderr)
-    try:result=json.loads(proc.stdout)
-    except ValueError:result={'status':'BLOCKED','verdict':None,'reason':proc.stderr}
+    outer_timeout=False
+    try:
+        proc=subprocess.run(command,env=environment(wrapper.parent),capture_output=True,text=True,timeout=seconds+20)
+        stdout,stderr,exit_code=proc.stdout,proc.stderr,proc.returncode
+    except subprocess.TimeoutExpired as exc:
+        outer_timeout=True;exit_code=None
+        decode=lambda value: value.decode('utf-8',errors='replace') if isinstance(value,bytes) else value or ''
+        stdout,stderr=decode(exc.stdout),decode(exc.stderr)
+    (logs/f'{label}.stdout.txt').write_text(stdout);(logs/f'{label}.stderr.txt').write_text(stderr)
+    if outer_timeout:
+        result={'status':'BLOCKED','verdict':None,'reason':'outer reviewer process deadline exceeded; available traces preserved'}
+    else:
+        try:result=json.loads(stdout)
+        except ValueError:result={'status':'BLOCKED','verdict':None,'reason':stderr}
     summary={'kind':'independent_review','status':result.get('status'),'verdict':result.get('verdict'),
-             'exit_code':proc.returncode,'wall_seconds':round(time.monotonic()-started,3),'workspace':str(target),
-             'reviewed_engine_sha256':sha(target/'engine.py')}
+             'exit_code':exit_code,'wall_seconds':round(time.monotonic()-started,3),'workspace':str(target),
+             'outer_timeout':outer_timeout,'reason':result.get('reason'),
+             'reviewed_engine_sha256':sha(target/'engine.py'),
+             'submitted_engine_sha256':submitted_engine_sha256}
     if result.get('result'):
         stored=Path(result['result']);summary['result']=str(stored)
         document=stored.parent/'report.md';summary['report']=document.read_text() if document.is_file() else ''
@@ -110,12 +123,18 @@ def telemetry(root, workspace, phases, qa, wrapper):
     for entry in captured:
         if not entry['task_completed']:complete=False
         if not entry['usage']:complete=False;continue
-        for key in totals:totals[key]+=entry['usage'].get(key,0)
+        for key in totals:
+            counter=entry['usage'].get(key)
+            if type(counter) is int and counter>=0:totals[key]+=counter
+            else:complete=False
     if len([x for x in captured if x['id'] in ids])!=len(ids):complete=False
     for entry in qa:
-        if not entry.get('usage'):complete=False
+        if entry.get('status')!='validated' or entry.get('exit_code')!=0 or not entry.get('usage'):complete=False
         for usage in entry.get('usage',[]):
-            for key in totals:totals[key]+=usage.get(key,0)
+            for key in totals:
+                counter=usage.get(key)
+                if type(counter) is int and counter>=0:totals[key]+=counter
+                else:complete=False
     points=[]
     for entry in native:
         for start,end in entry['intervals']:points.extend([(start,1),(end or '9999',-1)])
@@ -128,7 +147,8 @@ def telemetry(root, workspace, phases, qa, wrapper):
                 workers=len(native),max_parallel=maximum,
                 max_depth=max([x['source']['subagent']['thread_spawn']['depth'] for x in native]+[0]),
                 completed_worker_reuse=sum(len(x['intervals'])>1 for x in native),
-                review_sessions=len(qa),host_sessions=captured)
+                review_sessions=len(qa),host_sessions=captured,
+                worker_observed_durations=worker_durations({'host_sessions':captured}))
 
 
 def run(root):
@@ -166,16 +186,21 @@ def run(root):
         if item['condition']=='B' and data['workers']:protocol.append('B implementation/research delegation forbidden')
         if item['condition']=='C' and not 2<=data['workers']<=3:protocol.append('C requires 2-3 actual native read-only workers')
         if data['completed_worker_reuse']:protocol.append('completed worker reused')
+        for child in data['worker_observed_durations']:
+            if child['over_60_seconds']:protocol.append('worker exceeded 60-second bound: '+child['thread_id'])
         latest_qa=qa[-1] if qa else None
-        qa_ok=item['case']!='sales_import' or latest_qa and latest_qa.get('status')=='validated' and latest_qa.get('verdict') in ('PASS','ADVISORY') and latest_qa.get('reviewed_engine_sha256')==sha(workspace/'engine.py')
-        task_ok=all(p['completed'] for p in phases) and mechanical['status']=='PASS' and qa_ok
-        result={**item,**data,'schema':'playbook.delegation.round2.run.v1','task_status':'PASS' if task_ok else 'FAIL',
+        qa_bound=bool(latest_qa and (workspace/'engine.py').is_file() and not (workspace/'engine.py').is_symlink()
+                      and latest_qa.get('reviewed_engine_sha256')==sha(workspace/'engine.py'))
+        task_status=task_verification(item['case'],mechanical,phases,latest_qa,qa_bound)
+        result={**item,**data,'schema':'playbook.delegation.round2.run.v1','task_status':task_status,
                 'protocol_status':'PASS' if not protocol and data['settings_verified'] else 'FAIL',
                 'protocol_findings':protocol,'score':mechanical['score'],'wall_seconds':round(time.monotonic()-begin,3),
                 'phases':phases,'reviews':qa,'mechanical':mechanical,'cost_usd':None,'human_minutes':None,
-                'owner_requests':None,'status':'FAIL' if not task_ok or protocol else 'BLOCKED',
+                'owner_requests':None,'status':'FAIL' if task_status=='FAIL' or protocol else 'BLOCKED',
                 'measurement_blockers':['USD billing not exposed by host','Active human minutes not measured'],
-                'first_attempt_status':'PASS' if read(logs/'first-checks.json')['status']=='PASS' and phases[0]['completed'] else 'FAIL'}
+                'first_attempt_status_scope':'task verification including first external review',
+                'first_attempt_status':task_verification(item['case'],read(logs/'first-checks.json'),phases[:1],qa[0] if qa else None,
+                    bool(qa and qa[0].get('submitted_engine_sha256') and qa[0].get('reviewed_engine_sha256')==qa[0]['submitted_engine_sha256']))}
         write(output,result)
         print(f'END {item["case"]} {item["condition"]}: task={result["task_status"]} protocol={result["protocol_status"]} score={result["score"]} wall={result["wall_seconds"]}',flush=True)
     return {'status':'FINISHED','runs':len(plan['order'])}

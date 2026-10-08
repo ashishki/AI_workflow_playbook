@@ -1,0 +1,229 @@
+{
+  "cached_input_tokens": 134912,
+  "case": "sales_import",
+  "completed_worker_reuse": 0,
+  "condition": "B",
+  "cost_usd": null,
+  "first_attempt_status": "PASS",
+  "host_sessions": [
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bd1-f0fa-7e63-8f7f-9772138367d8",
+      "intervals": [
+        [
+          "2026-10-08T14:01:46.451Z",
+          "2026-10-08T14:03:08.642Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/efddf486e95b/rollouts/01a11bd1-f0fa-7e63-8f7f-9772138367d8.jsonl",
+      "raw_sha256": "677148d02baef3a2cd5d1c4cd1d31d2bd95744c42397d398c4ae9bb5f44f2df4",
+      "source": "exec",
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 85120,
+        "input_tokens": 100535,
+        "output_tokens": 2491,
+        "reasoning_output_tokens": 329,
+        "total_tokens": 103026
+      }
+    }
+  ],
+  "human_minutes": null,
+  "id": "efddf486e95b",
+  "input_tokens": 161630,
+  "max_depth": 0,
+  "max_parallel": 0,
+  "measurement_blockers": [
+    "USD billing not exposed by host",
+    "Active human minutes not measured"
+  ],
+  "mechanical": {
+    "evidence": {
+      "test_atomicity": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_atomicity"
+        ],
+        "exit_code": 0,
+        "output": "test_atomicity (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.011s\n\nOK\n"
+      },
+      "test_concurrency": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_concurrency"
+        ],
+        "exit_code": 0,
+        "output": "test_concurrency (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.016s\n\nOK\n"
+      },
+      "test_conflicts": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_conflicts"
+        ],
+        "exit_code": 0,
+        "output": "test_conflicts (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.014s\n\nOK\n"
+      },
+      "test_deterministic_export": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_deterministic_export"
+        ],
+        "exit_code": 0,
+        "output": "test_deterministic_export (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.014s\n\nOK\n"
+      },
+      "test_exact_money": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_exact_money"
+        ],
+        "exit_code": 0,
+        "output": "test_exact_money (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.008s\n\nOK\n"
+      },
+      "test_replay": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_replay"
+        ],
+        "exit_code": 0,
+        "output": "test_replay (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.008s\n\nOK\n"
+      },
+      "test_routing": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_routing"
+        ],
+        "exit_code": 0,
+        "output": "test_routing (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.007s\n\nOK\n"
+      }
+    },
+    "groups": {
+      "test_atomicity": true,
+      "test_concurrency": true,
+      "test_conflicts": true,
+      "test_deterministic_export": true,
+      "test_exact_money": true,
+      "test_replay": true,
+      "test_routing": true
+    },
+    "protected_drift": [],
+    "score": 100,
+    "state_present_and_structured": true,
+    "status": "PASS"
+  },
+  "output_tokens": 3354,
+  "owner_requests": null,
+  "phases": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/workspaces/efddf486e95b",
+        "--sandbox",
+        "workspace-write",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/efddf486e95b/main.final.txt",
+        "-"
+      ],
+      "completed": true,
+      "deadline_seconds": 300,
+      "events_sha256": "ffb4f3c03127e5772fb2e54dbfa64b57b812a0422331d3bcd70bec71f1ff67eb",
+      "exit_code": 0,
+      "label": "main",
+      "started_utc": "2026-10-08T14:01:45.503387+00:00",
+      "thread_ids": [
+        "01a11bd1-f0fa-7e63-8f7f-9772138367d8"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 85120,
+          "input_tokens": 100535,
+          "output_tokens": 2491,
+          "reasoning_output_tokens": 329
+        }
+      ],
+      "wall_seconds": 83.915
+    }
+  ],
+  "protocol_findings": [],
+  "protocol_status": "PASS",
+  "repeat": 2,
+  "review_sessions": 1,
+  "reviews": [
+    {
+      "exit_code": 0,
+      "kind": "independent_review",
+      "report": "No confirmed material findings. Inspected `engine.py`, `TASK.md`, `money_exact.py`, `test_engine.py`, `OBSERVED_CHECKS.json`, `STATE.md`, and `README.md`.\n\nCanonical replay, rollback, writer serialization, routing, TEXT cents storage, and exact export match the contract. Captured operator checks show all seven tests passed and no protected-file drift.\n\nNo tests were rerun. STATE’s claimed combined-suite invocation is unverified: the capture records individual test commands, all passing.\n\nSLICE_REVIEW: PASS",
+      "result": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/review-workspaces/d80dd05962884114998d28749e7f6020/.playbook-artifacts/runs/20261008T140310Z-slice_review-94b98b8e/result.json",
+      "reviewed_engine_sha256": "f6aa5d206b656d6e6236982b1b55afc94746802bb70890c06b41af8a83603218",
+      "status": "validated",
+      "thread_ids": [
+        "01a11bd3-3c4f-7d01-b12c-1060889f768f"
+      ],
+      "trace_sha256": "a2d2c9e073714f962ca6e7f8b589f9fb2711d4d40673d15bd80f7604fa485df2",
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 49792,
+          "input_tokens": 61095,
+          "output_tokens": 863,
+          "reasoning_output_tokens": 484
+        }
+      ],
+      "verdict": "PASS",
+      "wall_seconds": 42.854,
+      "workspace": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/review-workspaces/d80dd05962884114998d28749e7f6020"
+    }
+  ],
+  "schema": "playbook.delegation.round2.run.v1",
+  "score": 100,
+  "settings_verified": true,
+  "status": "BLOCKED",
+  "task_status": "PASS",
+  "usage_complete": true,
+  "wall_seconds": 127.759,
+  "workers": 0,
+  "workspace": "workspaces/efddf486e95b"
+}

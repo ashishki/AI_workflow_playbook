@@ -1,0 +1,138 @@
+{
+  "host": {
+    "argv": [
+      "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/bin/codex",
+      "exec",
+      "--cd",
+      "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/diagnostics/worker_timeout/workspace",
+      "--sandbox",
+      "workspace-write",
+      "--json",
+      "--output-last-message",
+      "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/diagnostics/worker_timeout/logs/main.final.txt",
+      "-"
+    ],
+    "completed": true,
+    "deadline_seconds": 120,
+    "events_sha256": "c7c7b5a60a302ef43631623c7d377d590a73605c112dee0995cb7efd130805a2",
+    "exit_code": 0,
+    "label": "main",
+    "started_utc": "2026-10-08T13:39:53.892925+00:00",
+    "thread_ids": [
+      "01a11bbd-ed90-7bf1-8716-b7116287a0f7"
+    ],
+    "timeout": false,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 93952,
+        "input_tokens": 99142,
+        "output_tokens": 489,
+        "reasoning_output_tokens": 49
+      }
+    ],
+    "wall_seconds": 46.156
+  },
+  "kind": "worker_timeout",
+  "native_tool_receipts": [
+    {
+      "output": "{\"task_name\":\"/root/sleeper\"}",
+      "timestamp": "2026-10-08T13:40:07.583Z",
+      "tool": "spawn_agent"
+    },
+    {
+      "output": "{\"previous_status\":\"running\"}",
+      "timestamp": "2026-10-08T13:40:23.610Z",
+      "tool": "interrupt_agent"
+    },
+    {
+      "output": "{\"agents\":[{\"agent_name\":\"/root\",\"agent_status\":\"running\"},{\"agent_name\":\"/root/sleeper\",\"agent_status\":\"interrupted\"}]}",
+      "timestamp": "2026-10-08T13:40:26.318Z",
+      "tool": "list_agents"
+    }
+  ],
+  "parent_record": {
+    "observed_status": "interrupted",
+    "previous_status": "running",
+    "timeout_detected": true,
+    "worker_interrupted": true
+  },
+  "scope": "actual native running-worker interrupt; provider billing counters may be partial after cancellation",
+  "status": "PASS",
+  "threads": [
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bbd-ed90-7bf1-8716-b7116287a0f7",
+      "intervals": [
+        [
+          "2026-10-08T13:39:55.060Z",
+          "2026-10-08T13:40:39.177Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/diagnostics/worker_timeout/logs/rollouts/01a11bbd-ed90-7bf1-8716-b7116287a0f7.jsonl",
+      "raw_sha256": "09631db3118e9bb35172e2dd31ba9fd4bbf1c6260705773dd468839ec9463645",
+      "source": "exec",
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 93952,
+        "input_tokens": 99142,
+        "output_tokens": 489,
+        "reasoning_output_tokens": 49,
+        "total_tokens": 99631
+      }
+    },
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bbe-2049-7710-acbf-01849b912522",
+      "intervals": [
+        [
+          "2026-10-08T13:40:07.437Z",
+          "2026-10-08T13:40:23.615Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/diagnostics/worker_timeout/logs/rollouts/01a11bbe-2049-7710-acbf-01849b912522.jsonl",
+      "raw_sha256": "dd87369e443b4d7d4c3e4f68b47491bdbc83d781f411a934477ce75b99411990",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Halley",
+            "agent_path": "/root/sleeper",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11bbd-ed90-7bf1-8716-b7116287a0f7"
+          }
+        }
+      },
+      "task_completed": false,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 0,
+        "input_tokens": 11813,
+        "output_tokens": 33,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 11846
+      }
+    }
+  ]
+}

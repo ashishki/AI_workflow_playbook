@@ -130,3 +130,22 @@ def capture_threads(workspace, ids, destination):
         entry=found[key];path=destination/(key+'.jsonl');shutil.copyfile(entry['original'],path)
         output.append({k:v for k,v in entry.items() if k!='original'}|{'raw_sha256':sha(path),'raw_file':str(path)})
     return output
+
+
+def worker_durations(run):
+    """Observed native child intervals, independent of a model's deadline claims."""
+    result = []
+    for thread in run.get('host_sessions', []):
+        if not isinstance(thread.get('source'), dict):
+            continue
+        seconds = []
+        for start, end in thread.get('intervals', []):
+            if end:
+                parse = lambda value: datetime.datetime.fromisoformat(value.replace('Z', '+00:00'))
+                seconds.append(round((parse(end) - parse(start)).total_seconds(), 3))
+            else:
+                seconds.append(None)
+        result.append({'thread_id': thread['id'], 'interval_seconds': seconds,
+                       'task_completed': thread.get('task_completed'),
+                       'over_60_seconds': any(value is not None and value > 60 for value in seconds)})
+    return result

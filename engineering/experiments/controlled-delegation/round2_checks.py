@@ -69,3 +69,22 @@ def score(case_id, workspace, initial, seconds=60):
     return {'status':'PASS' if points==100 and not drift and state_ok else 'FAIL',
             'score':points if not drift else 0,'groups':groups,'protected_drift':drift,
             'state_present_and_structured':state_ok,'evidence':logs}
+
+
+def task_verification(case, checks, phases, review, review_engine_matches=None):
+    """A matching confirmed defect outranks missing completion; stale QA is unknown."""
+    if checks.get('status') == 'FAIL':
+        return 'FAIL'
+    if (case == 'sales_import' and review_engine_matches is True and review
+            and review.get('status') == 'validated' and review.get('verdict') == 'STOP_SHIP'):
+        return 'FAIL'
+    if not phases or not all(phase.get('completed') for phase in phases):
+        return 'BLOCKED'
+    if checks.get('status') != 'PASS':
+        return 'BLOCKED'
+    if case == 'sales_import':
+        if review_engine_matches is not True:
+            return 'BLOCKED'
+        if not review or review.get('status') != 'validated' or review.get('verdict') not in ('PASS', 'ADVISORY'):
+            return 'BLOCKED'
+    return 'PASS'

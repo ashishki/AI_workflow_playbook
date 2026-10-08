@@ -1,0 +1,122 @@
+{
+  "cost_policy": "actual token counters; USD null without billing receipt; no pricing guess",
+  "experiment_id": "controlled-delegation-round2-2026-10-08",
+  "head": "9a272f42664423c7af8051649185fd1dd7f78db8",
+  "human_policy": "owner requests observable; active human minutes null without participation",
+  "implementation_seconds": 300,
+  "model": "gpt-6.1-sol",
+  "order": [
+    {
+      "case": "release_gate",
+      "condition": "B",
+      "id": "6e4c4ce161b9",
+      "repeat": 2,
+      "workspace": "workspaces/6e4c4ce161b9"
+    },
+    {
+      "case": "release_gate",
+      "condition": "C",
+      "id": "f71db8d251d6",
+      "repeat": 2,
+      "workspace": "workspaces/f71db8d251d6"
+    },
+    {
+      "case": "release_gate",
+      "condition": "A",
+      "id": "7b4c3f5d693c",
+      "repeat": 2,
+      "workspace": "workspaces/7b4c3f5d693c"
+    },
+    {
+      "case": "sales_import",
+      "condition": "C",
+      "id": "124a7e31acc4",
+      "repeat": 2,
+      "workspace": "workspaces/124a7e31acc4"
+    },
+    {
+      "case": "sales_import",
+      "condition": "A",
+      "id": "c97874abb916",
+      "repeat": 2,
+      "workspace": "workspaces/c97874abb916"
+    },
+    {
+      "case": "sales_import",
+      "condition": "B",
+      "id": "efddf486e95b",
+      "repeat": 2,
+      "workspace": "workspaces/efddf486e95b"
+    },
+    {
+      "case": "sales_import",
+      "condition": "B",
+      "id": "25e7df4e6b26",
+      "repeat": 1,
+      "workspace": "workspaces/25e7df4e6b26"
+    },
+    {
+      "case": "sales_import",
+      "condition": "A",
+      "id": "8bed2d31dc83",
+      "repeat": 1,
+      "workspace": "workspaces/8bed2d31dc83"
+    },
+    {
+      "case": "sales_import",
+      "condition": "C",
+      "id": "24b9e4a2cc81",
+      "repeat": 1,
+      "workspace": "workspaces/24b9e4a2cc81"
+    },
+    {
+      "case": "release_gate",
+      "condition": "C",
+      "id": "3f6e51576b1f",
+      "repeat": 1,
+      "workspace": "workspaces/3f6e51576b1f"
+    },
+    {
+      "case": "release_gate",
+      "condition": "A",
+      "id": "c471c1e798f5",
+      "repeat": 1,
+      "workspace": "workspaces/c471c1e798f5"
+    },
+    {
+      "case": "release_gate",
+      "condition": "B",
+      "id": "c6b03253d6a2",
+      "repeat": 1,
+      "workspace": "workspaces/c6b03253d6a2"
+    }
+  ],
+  "reasoning": "high",
+  "repeats": 2,
+  "review_policy": "same blinded native Role Runner after all code implementations; maximum one repair, same feedback order",
+  "review_seconds": 90,
+  "rubric": {
+    "release_gate": {
+      "brief_state": 10,
+      "cost_delta_minor": 15,
+      "decision": 15,
+      "evidence_ids": 15,
+      "incident_ids": 15,
+      "latency_regions": 15,
+      "missing_safety_checks": 15
+    },
+    "sales_import": {
+      "test_atomicity": 20,
+      "test_concurrency": 20,
+      "test_conflicts": 15,
+      "test_deterministic_export": 10,
+      "test_exact_money": 10,
+      "test_replay": 15,
+      "test_routing": 10
+    }
+  },
+  "schema": "playbook.delegation.round2.plan.v1",
+  "seed": 20261008,
+  "total_seconds": 540,
+  "worker_seconds": 60
+}

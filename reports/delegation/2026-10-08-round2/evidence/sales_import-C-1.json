@@ -1,0 +1,313 @@
+{
+  "cached_input_tokens": 294528,
+  "case": "sales_import",
+  "completed_worker_reuse": 0,
+  "condition": "C",
+  "cost_usd": null,
+  "first_attempt_status": "PASS",
+  "host_sessions": [
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bdd-a4c9-7d53-99a7-d1d76f842dcc",
+      "intervals": [
+        [
+          "2026-10-08T14:14:33.024Z",
+          "2026-10-08T14:16:38.044Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/24b9e4a2cc81/rollouts/01a11bdd-a4c9-7d53-99a7-d1d76f842dcc.jsonl",
+      "raw_sha256": "bbfed775c13da986b813661d37d9a41d33a4ac40a3d2d19eccad2b2e862ac36e",
+      "source": "exec",
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 161280,
+        "input_tokens": 188969,
+        "output_tokens": 2625,
+        "reasoning_output_tokens": 244,
+        "total_tokens": 191594
+      }
+    },
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bdd-fbce-74f3-829d-02fa24ac3b5a",
+      "intervals": [
+        [
+          "2026-10-08T14:14:55.234Z",
+          "2026-10-08T14:15:22.404Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/24b9e4a2cc81/rollouts/01a11bdd-fbce-74f3-829d-02fa24ac3b5a.jsonl",
+      "raw_sha256": "bf3968d900964d7a96570b7a2d31cb1c01687be053c8c170f29a7b9aec1f6488",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Carver",
+            "agent_path": "/root/canonical_source",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11bdd-a4c9-7d53-99a7-d1d76f842dcc"
+          }
+        }
+      },
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 34176,
+        "input_tokens": 40726,
+        "output_tokens": 449,
+        "reasoning_output_tokens": 74,
+        "total_tokens": 41175
+      }
+    },
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11bde-1605-7a13-a26f-161c6b47169d",
+      "intervals": [
+        [
+          "2026-10-08T14:15:02.112Z",
+          "2026-10-08T14:16:06.197Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/24b9e4a2cc81/rollouts/01a11bde-1605-7a13-a26f-161c6b47169d.jsonl",
+      "raw_sha256": "e6664cc7c735c5343e2a45cb8b7e53a51d1d9a3a049ff569d0e5a85c963d9878",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Raman",
+            "agent_path": "/root/sqlite_source",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11bdd-a4c9-7d53-99a7-d1d76f842dcc"
+          }
+        }
+      },
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 49280,
+        "input_tokens": 53706,
+        "output_tokens": 449,
+        "reasoning_output_tokens": 13,
+        "total_tokens": 54155
+      }
+    }
+  ],
+  "human_minutes": null,
+  "id": "24b9e4a2cc81",
+  "input_tokens": 344204,
+  "max_depth": 1,
+  "max_parallel": 2,
+  "measurement_blockers": [
+    "USD billing not exposed by host",
+    "Active human minutes not measured"
+  ],
+  "mechanical": {
+    "evidence": {
+      "test_atomicity": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_atomicity"
+        ],
+        "exit_code": 0,
+        "output": "test_atomicity (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.017s\n\nOK\n"
+      },
+      "test_concurrency": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_concurrency"
+        ],
+        "exit_code": 0,
+        "output": "test_concurrency (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.027s\n\nOK\n"
+      },
+      "test_conflicts": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_conflicts"
+        ],
+        "exit_code": 0,
+        "output": "test_conflicts (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.012s\n\nOK\n"
+      },
+      "test_deterministic_export": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_deterministic_export"
+        ],
+        "exit_code": 0,
+        "output": "test_deterministic_export (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.017s\n\nOK\n"
+      },
+      "test_exact_money": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_exact_money"
+        ],
+        "exit_code": 0,
+        "output": "test_exact_money (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.022s\n\nOK\n"
+      },
+      "test_replay": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_replay"
+        ],
+        "exit_code": 0,
+        "output": "test_replay (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.015s\n\nOK\n"
+      },
+      "test_routing": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_engine.ImportTests.test_routing"
+        ],
+        "exit_code": 0,
+        "output": "test_routing (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.010s\n\nOK\n"
+      }
+    },
+    "groups": {
+      "test_atomicity": true,
+      "test_concurrency": true,
+      "test_conflicts": true,
+      "test_deterministic_export": true,
+      "test_exact_money": true,
+      "test_replay": true,
+      "test_routing": true
+    },
+    "protected_drift": [],
+    "score": 100,
+    "state_present_and_structured": true,
+    "status": "PASS"
+  },
+  "output_tokens": 4426,
+  "owner_requests": null,
+  "phases": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/workspaces/24b9e4a2cc81",
+        "--sandbox",
+        "workspace-write",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/logs/24b9e4a2cc81/main.final.txt",
+        "-"
+      ],
+      "completed": true,
+      "deadline_seconds": 300,
+      "events_sha256": "b67cbc9fc1239046bf97056cbe458621cbcb4d845f1dc92e1511a960da77aeed",
+      "exit_code": 0,
+      "label": "main",
+      "started_utc": "2026-10-08T14:14:32.554988+00:00",
+      "thread_ids": [
+        "01a11bdd-a4c9-7d53-99a7-d1d76f842dcc"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 161280,
+          "input_tokens": 188969,
+          "output_tokens": 2625,
+          "reasoning_output_tokens": 244
+        }
+      ],
+      "wall_seconds": 126.115
+    }
+  ],
+  "protocol_findings": [],
+  "protocol_status": "PASS",
+  "repeat": 1,
+  "review_sessions": 1,
+  "reviews": [
+    {
+      "exit_code": 0,
+      "kind": "independent_review",
+      "report": "No confirmed material defects found. Canonical replay comparison, whole-batch rollback, writer serialization, routing, TEXT cents storage and exact integer export match TASK.md.\n\nInspected engine.py, TASK.md, money_exact.py, test_engine.py, README.md, STATE.md and OBSERVED_CHECKS.json. Captured operator evidence records all seven tests passing and no protected-file drift. No tests were rerun.\n\nUnverified claims: STATE.md:16 reports a combined suite run lasting 0.146 seconds; the capture contains separate test runs. STATE.md:9–12’s worker-history claims also lack corroboration in the supplied evidence. These are not confirmed falsehoods; linking their supporting records would make them independently checkable.\n\nSLICE_REVIEW: PASS",
+      "result": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/review-workspaces/8528260be7ec4b3883d7c292330b82ac/.playbook-artifacts/runs/20261008T141639Z-slice_review-2aafcfb7/result.json",
+      "reviewed_engine_sha256": "f43d3ed448f3c014c184e1597447a188d824a928b6d80636b102c1cd579c0b79",
+      "status": "validated",
+      "thread_ids": [
+        "01a11bdf-9675-7853-90a2-bdbd20ad9217"
+      ],
+      "trace_sha256": "f0069ec74a9fb3d5dff6b7e9a5b245be4a032107c9f01e035e2279442a3b41e3",
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 49792,
+          "input_tokens": 60803,
+          "output_tokens": 903,
+          "reasoning_output_tokens": 460
+        }
+      ],
+      "verdict": "PASS",
+      "wall_seconds": 44.279,
+      "workspace": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/review-workspaces/8528260be7ec4b3883d7c292330b82ac"
+    }
+  ],
+  "schema": "playbook.delegation.round2.run.v1",
+  "score": 100,
+  "settings_verified": true,
+  "status": "BLOCKED",
+  "task_status": "PASS",
+  "usage_complete": true,
+  "wall_seconds": 174.689,
+  "workers": 2,
+  "workspace": "workspaces/24b9e4a2cc81"
+}

@@ -1,0 +1,101 @@
+{
+  "evidence": {
+    "test_atomicity": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_engine.ImportTests.test_atomicity"
+      ],
+      "exit_code": 0,
+      "output": "test_atomicity (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.061s\n\nOK\n"
+    },
+    "test_concurrency": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_engine.ImportTests.test_concurrency"
+      ],
+      "exit_code": 0,
+      "output": "test_concurrency (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.033s\n\nOK\n"
+    },
+    "test_conflicts": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_engine.ImportTests.test_conflicts"
+      ],
+      "exit_code": 0,
+      "output": "test_conflicts (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.019s\n\nOK\n"
+    },
+    "test_deterministic_export": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_engine.ImportTests.test_deterministic_export"
+      ],
+      "exit_code": 0,
+      "output": "test_deterministic_export (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.017s\n\nOK\n"
+    },
+    "test_exact_money": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_engine.ImportTests.test_exact_money"
+      ],
+      "exit_code": 0,
+      "output": "test_exact_money (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.021s\n\nOK\n"
+    },
+    "test_replay": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_engine.ImportTests.test_replay"
+      ],
+      "exit_code": 0,
+      "output": "test_replay (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.016s\n\nOK\n"
+    },
+    "test_routing": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_engine.ImportTests.test_routing"
+      ],
+      "exit_code": 0,
+      "output": "test_routing (test_engine.ImportTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.042s\n\nOK\n"
+    }
+  },
+  "groups": {
+    "test_atomicity": true,
+    "test_concurrency": true,
+    "test_conflicts": true,
+    "test_deterministic_export": true,
+    "test_exact_money": true,
+    "test_replay": true,
+    "test_routing": true
+  },
+  "protected_drift": [],
+  "score": 100,
+  "state_present_and_structured": true,
+  "status": "PASS"
+}

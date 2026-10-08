@@ -73,3 +73,20 @@ USD без billing receipt — null/NOT RUN. Нельзя подменять и�
 Новые raw chats остаются локально. Публичный итог — отдельный
 `reports/delegation/2026-10-08-round2/REPORT_RU.md`, `results.json` и receipts;
 старый отчёт не переписывается. Master/production/аккаунты бизнес-сервисов не меняются.
+
+
+## После наблюдения результатов
+
+Исходный план, score и raw receipts не изменяются. Отсутствующий/timeout QA
+означает BLOCKED проверки кода; подтверждённый STOP_SHIP означает FAIL. После
+основных запусков наблюдённый QA дефект лимита десятичных цифр проверяется одной
+и той же суммой `1e5000` на копиях всех шести финальных приложений импорта:
+
+    python3 engineering/experiments/controlled-delegation/round2_posthoc.py --root .playbook-artifacts/delegation-round2/runs
+
+Это дополнительная проверка исходного контракта, не новая часть закреплённой
+шкалы и не repair. Её отдельный receipt раскрывает пропуски model review.
+Published interpretation сохраняет исходные collector labels; реальные worker
+intervals больше 60 секунд раскрываются отдельно. Future collector отклоняет
+такое нарушение, но сама проверка длительности не является OS-enforced interrupt.
+Source formatter исправлен после batch; frozen helper copies не подменяются.
