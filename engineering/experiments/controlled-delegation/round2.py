@@ -87,7 +87,8 @@ def review(root, item, workspace, mechanical, wrapper, label, seconds):
     try:result=json.loads(proc.stdout)
     except ValueError:result={'status':'BLOCKED','verdict':None,'reason':proc.stderr}
     summary={'kind':'independent_review','status':result.get('status'),'verdict':result.get('verdict'),
-             'exit_code':proc.returncode,'wall_seconds':round(time.monotonic()-started,3),'workspace':str(target)}
+             'exit_code':proc.returncode,'wall_seconds':round(time.monotonic()-started,3),'workspace':str(target),
+             'reviewed_engine_sha256':sha(target/'engine.py')}
     if result.get('result'):
         stored=Path(result['result']);summary['result']=str(stored)
         document=stored.parent/'report.md';summary['report']=document.read_text() if document.is_file() else ''
@@ -166,7 +167,7 @@ def run(root):
         if item['condition']=='C' and not 2<=data['workers']<=3:protocol.append('C requires 2-3 actual native read-only workers')
         if data['completed_worker_reuse']:protocol.append('completed worker reused')
         latest_qa=qa[-1] if qa else None
-        qa_ok=item['case']!='sales_import' or latest_qa and latest_qa.get('status')=='validated' and latest_qa.get('verdict') in ('PASS','ADVISORY')
+        qa_ok=item['case']!='sales_import' or latest_qa and latest_qa.get('status')=='validated' and latest_qa.get('verdict') in ('PASS','ADVISORY') and latest_qa.get('reviewed_engine_sha256')==sha(workspace/'engine.py')
         task_ok=all(p['completed'] for p in phases) and mechanical['status']=='PASS' and qa_ok
         result={**item,**data,'schema':'playbook.delegation.round2.run.v1','task_status':'PASS' if task_ok else 'FAIL',
                 'protocol_status':'PASS' if not protocol and data['settings_verified'] else 'FAIL',
