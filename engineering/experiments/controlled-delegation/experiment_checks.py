@@ -86,7 +86,8 @@ def collect(run_root:Path, output:Path):
             except ExperimentError: missing.append(str(x)); continue
             if not (w/rel).is_file(): missing.append(rel)
         r['missing_evidence']=missing; r['mechanical']=check_workspace(item['scenario'],w)
-        if r.get('status')=='PASS' and (missing or r['mechanical']['status']!='PASS' or r.get('task_status')=='FAIL'):
+        if r.get('task_status')=='FAIL':r['status']='FAIL'
+        if r.get('status')=='PASS' and (missing or r['mechanical']['status']!='PASS'):
             r['status']='FAIL'; r['notes']=(str(r.get('notes',''))+' Mechanical/evidence acceptance failed.').strip()
         if r.get('condition')=='C' and task_observed(r):
             spec=next(s for s in load_manifest()['scenarios'] if s['id']==item['scenario'])

@@ -14,7 +14,8 @@ def summary(runs):
 
 def decision(v,m):
     runs=v['runs']; c=[r for r in runs if r['condition']=='C']; reasons=[]
-    if any(r['status']=='PASS' and (r.get('task_status')=='FAIL' or r.get('mechanical',{}).get('status')=='FAIL') for r in runs): reasons.append('PASS противоречит подтверждённому FAIL задачи/механической приёмки.')
+    if any(r['status']=='PASS' and (r.get('task_status')=='FAIL' or (r.get('mechanical') or {}).get('status')=='FAIL') for r in runs): reasons.append('PASS противоречит подтверждённому FAIL задачи/механической приёмки.')
+    if any(r.get('task_status')=='FAIL' or (r.get('mechanical') or {}).get('status')=='FAIL' and task_observed(r) for r in c): reasons.append('Подтверждён FAIL задачи C независимо от общего статуса.')
     if any(r['status']=='FAIL' for r in c): reasons.append('Есть FAIL в Controlled Delegation.')
     if any(r['critical_errors'] or r['write_conflicts'] for r in c): reasons.append('Есть критические ошибки или конфликты записи.')
     lim=m['limits']
@@ -32,8 +33,9 @@ def decision(v,m):
     if any(r['status']=='NOT_RUN' for r in c): return 'KEEP_EXPERIMENTAL',['Не все реальные C-прогоны выполнены.']
     if any(r['status']=='BLOCKED' for r in c): return 'KEEP_EXPERIMENTAL',['Приёмка C заблокирована: необходимые доказательства или измерения недоступны.']
     if any(r['status'] not in {'PASS','FAIL'} for r in runs): return 'KEEP_EXPERIMENTAL',['Не все A/B/C-прогоны выполнены; сравнение неполно.']
+    if any(r.get('task_status') not in {'PASS','FAIL'} for r in runs): return 'KEEP_EXPERIMENTAL',['Результат задачи A/B/C не подтверждён; сравнение неполно.']
     if any(r.get('usage_complete') is not True for r in runs): return 'KEEP_EXPERIMENTAL',['Полнота usage counters A/B/C не подтверждена.']
-    if any(r.get('mechanical',{}).get('status')!='PASS' for r in c): return 'KEEP_EXPERIMENTAL',['Механическая приёмка C не подтверждена.']
+    if any((r.get('mechanical') or {}).get('status')!='PASS' for r in c): return 'KEEP_EXPERIMENTAL',['Механическая приёмка C не подтверждена.']
     if any(r.get('outcome_score') is None for r in runs): return 'KEEP_EXPERIMENTAL',['Нет сопоставимых outcome scores A/B/C.']
     if any(r.get(f) is None for r in runs for f in ('input_tokens','output_tokens','cost_usd')): return 'KEEP_EXPERIMENTAL',['Недостаточно реальных данных usage/cost для A/B/C.']
     comparable=True; attention=0
@@ -56,7 +58,7 @@ def make_report(v,output_dir:Path):
         x=summary(grouped[c]); lines.append(f"| {c}: {names[c]} | {x['pass']} | {x['fail']} | {x['nr']} | {x['score']} | {x['human']} | {x['cost']} | {x['agents']} |")
     lines += ['', '## По сценариям','', '| Сценарий | A | B | C | C agents/depth/checkpoints | Mechanical |','|---|---|---|---|---|---|']
     for s in [x['id'] for x in m['scenarios']]:
-        row={r['condition']:r for r in v['runs'] if r['scenario']==s}; c=row['C']; mech=c.get('mechanical',{}).get('status','NOT_RECORDED')
+        row={r['condition']:r for r in v['runs'] if r['scenario']==s}; c=row['C']; mech=(c.get('mechanical') or {}).get('status','NOT_RECORDED')
         lines.append(f"| {s} | {row['A']['status']} | {row['B']['status']} | {c['status']} | {c['subagents_started']}/{c['max_depth']}/{c['owner_checkpoints']} | {mech} |")
     lines += ['', '## Решение','',f'**{outcome}**','',*(f'- {x}' for x in reasons),'','## Что ещё не доказано','', '- перенос на другие модели/hosts/задачи;','- стоимость и внимание на реальной длительной работе;','- удобство для нетехнического владельца процесса;','- depth > 1;','- полезность ежедневных автоматизаций как отдельного runtime.','', 'Raw traces остаются локально в experiment workspaces.']
     report=output_dir/'REPORT_RU.md'; report.write_text('\n'.join(lines)+'\n',encoding='utf-8')

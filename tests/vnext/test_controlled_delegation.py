@@ -15,6 +15,26 @@ SPEC.loader.exec_module(evaluator)
 
 
 class ControlledDelegationTests(unittest.TestCase):
+    def test_followup_review_task_completeness_and_failure_precedence(self):
+        for status in ('NOT_RUN','BLOCKED',None):
+            with self.subTest(status=status):
+                manifest,value=self.observed_shape()
+                for run in value['runs']:
+                    if run['condition']=='A':run['task_status']=status
+                self.assertEqual(evaluator.decision(value,manifest)[0],'KEEP_EXPERIMENTAL')
+        manifest,value=self.observed_shape()
+        run=next(r for r in value['runs'] if r['condition']=='C' and r['scenario']=='medium_implementation')
+        run.update(status='BLOCKED',task_status='FAIL')
+        self.assertEqual(evaluator.decision(value,manifest)[0],'REVISE_OR_REJECT')
+
+    def test_followup_review_null_mechanical_is_missing_not_a_crash(self):
+        manifest,value=self.observed_shape()
+        for run in value['runs']:run['mechanical']=None
+        evaluator.validate_results(value)
+        self.assertEqual(evaluator.decision(value,manifest)[0],'KEEP_EXPERIMENTAL')
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(evaluator.make_report(value,Path(tmp))['decision'],'KEEP_EXPERIMENTAL')
+
     def test_unavailable_native_preflight_is_blocked_not_a_worker_failure(self):
         manifest=evaluator.load_manifest()
         runs=[evaluator.empty_run(s['id'],c['id']) for s in manifest['scenarios'] for c in manifest['conditions']]
