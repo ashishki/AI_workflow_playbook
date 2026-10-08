@@ -75,6 +75,13 @@ continues safely without it, or stops with a clear blocker. On budget exhaustion
 current state and explain what is ready, what remains uncertain and what additional
 work would buy.
 
+Give each dispatch a deadline within the total task budget. Repeated waits and a
+follow-up to a completed worker do not reset that budget. If a required return never
+arrives, record the missing worker, stop or interrupt the bounded workstream, and
+save the incomplete result. A correct output file alone does not make the whole run
+successful. Text-only decisions do not need an extra ceremonial review; use the
+evidence workers for source checks. Required code review remains a separate step.
+
 ## Experimental status
 
 Controlled delegation remains conditional until comparison shows better or equal

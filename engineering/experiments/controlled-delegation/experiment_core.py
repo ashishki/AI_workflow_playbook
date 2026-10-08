@@ -21,7 +21,8 @@ def strict_json(path: Path):
             if k in out: raise ExperimentError(f'Duplicate JSON key in {path}: {k}')
             out[k]=v
         return out
-    try: value=json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=pairs)
+    def constant(value): raise ExperimentError(f'Non-finite JSON number in {path}: {value}')
+    try: value=json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=pairs,parse_constant=constant)
     except (OSError,UnicodeError,json.JSONDecodeError) as exc: raise ExperimentError(f'Invalid JSON: {path}') from exc
     if not isinstance(value,dict): raise ExperimentError(f'Expected JSON object: {path}')
     return value
@@ -58,7 +59,17 @@ def empty_run(s,c):
       'critical_errors':0,'subagents_started':0,'max_parallel':0,'max_depth':0,'owner_checkpoints':0,
       'human_minutes':None,'wall_seconds':None,'input_tokens':None,'output_tokens':None,'cost_usd':None,
       'approval_noise':0,'write_conflicts':0,'failed_or_conflicting_worker_detected':None,
-      'fresh_session_success':None,'evidence':[],'notes':''}
+      'fresh_session_success':None,'usage_complete':None,'task_status':None,
+      'implementation_subagents_started':None,'review_subagents_started':None,'evidence':[],'notes':''}
+
+def implementation_count(run):
+    """Reviews are recorded separately from implementation/research delegation."""
+    value=run.get('implementation_subagents_started')
+    return value if value is not None else run['subagents_started']-(run.get('review_subagents_started') or 0)
+
+def task_observed(run):
+    """A blocked preflight's default zero counters are not a failed task run."""
+    return run['status'] in {'PASS','FAIL'} or run.get('task_status') in {'PASS','FAIL'}
 
 def prepare(output: Path, *, seed:int, head:str, model:str, host:str):
     m=load_manifest(); skills=ROOT/'plugins/playbook-native/skills'
@@ -73,7 +84,10 @@ def prepare(output: Path, *, seed:int, head:str, model:str, host:str):
             for name,content in s['files'].items():
                 p=w/safe_rel(name); p.parent.mkdir(parents=True,exist_ok=True); p.write_text(content,encoding='utf-8')
             if c['playbook']: shutil.copytree(skills,w/'.agents/skills')
-            (w/'AGENTS.md').write_text(f"# Experiment condition {cid}\n\nWork only inside this workspace. Do not read sibling workspaces. Do not commit/push. Preserve evidence locally.\n\n{c['instructions'].strip()}\n",encoding='utf-8')
+            bounds=(f"\n\nScenario implementation/research worker bound: {s.get('min_subagents_c',0)}–{s.get('max_subagents_c',3)}. "
+                    "Independent reviewers are recorded separately; do not count a reviewer as an implementation/research worker."
+                    if cid=='C' else '')
+            (w/'AGENTS.md').write_text(f"# Experiment condition {cid}\n\nWork only inside this workspace. Do not read sibling workspaces. Do not commit/push. Preserve evidence locally.\n\n{c['instructions'].strip()}{bounds}\n",encoding='utf-8')
             (w/'TASK.md').write_text(f"# Scenario {s['id']} / condition {cid}\n\n{s['task'].strip()}\n\n## Run record\nCreate `run-result.json` from `RUN_RESULT_TEMPLATE.json`. Record observed values only; PASS needs existing evidence files.\n",encoding='utf-8')
             write_json(w/'RUN_RESULT_TEMPLATE.json',empty_run(s['id'],cid))
             order.append({'scenario':s['id'],'condition':cid,'workspace':w.relative_to(output).as_posix()})

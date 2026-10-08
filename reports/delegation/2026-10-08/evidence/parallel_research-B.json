@@ -1,0 +1,188 @@
+{
+  "condition": "B",
+  "files": [
+    {
+      "bytes": 429,
+      "path": "workspaces/parallel_research/B/decision.json",
+      "sha256": "6317afd8a350315cb7491aa73423b8d959f5cc857ee8a0e45a89e2335d30295b"
+    },
+    {
+      "bytes": 2736,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/source-read.txt",
+      "sha256": "923beab93bac2782981542dd8f7f4637deb254b01f4de5c28e4c82c3bc657593"
+    },
+    {
+      "bytes": 54,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/python-version.txt",
+      "sha256": "092fd212495ebcba3724b64f9ef7a007b3efa0f7ac6f145ccaff96e1827743fd"
+    },
+    {
+      "bytes": 1048,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/task-input-sha256.json",
+      "sha256": "0eba989a90b175e632f150afa99c3d5aa0f5d38b949c54d2adcd35a362649975"
+    },
+    {
+      "bytes": 771,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/dispatch-return.md",
+      "sha256": "d9583338b0cbc64d1f745e672aa79fd80f60a9e470bf59d56d81325cc8c8ad7d"
+    },
+    {
+      "bytes": 161,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/evaluation.json",
+      "sha256": "3af2afec452067a918bdc6fc2529281e841e3be9a5d217e53169ee094d9c04a9"
+    },
+    {
+      "bytes": 0,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/evaluation.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 180,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/evaluation-command.json",
+      "sha256": "05c765fba9afaca533cf867b6f9756580f219113089bb8249ddf99af71248fcc"
+    },
+    {
+      "bytes": 239,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/verification.txt",
+      "sha256": "fd399dae2f0dcca9728dbe9902836d725d8f72d10ea98eb72ff0d023a0dbeccb"
+    },
+    {
+      "bytes": 1161,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/current-state.md",
+      "sha256": "2044e149421461343f5245ad67cbcbe6e9277189ccf98291abbf6d7288e31d7d"
+    },
+    {
+      "bytes": 1129,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/operator-sessions.json",
+      "sha256": "40ff46a8af4eb2d04917a1d9abf4567381295ff52c8bfc0d0ab5dde6177e5230"
+    },
+    {
+      "bytes": 161,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/operator-mechanical.json",
+      "sha256": "3af2afec452067a918bdc6fc2529281e841e3be9a5d217e53169ee094d9c04a9"
+    },
+    {
+      "bytes": 5156,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/initial-sha256.json",
+      "sha256": "597c3fc70ecfd1e661340b7e9329ff510296007e17d7ee4109e5f0cbdb3597bc"
+    },
+    {
+      "bytes": 1454,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/agent-run-result.json",
+      "sha256": "52b7a0a2fef1f1c95cc338eeedbcda4bf21f4e2b76800597225129d083accebb"
+    },
+    {
+      "bytes": 48967,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/main-events.jsonl",
+      "sha256": "e9f974018bd0a479aeee1fc6e87d7e6ed0fa387d353608af13fad22c2d2c4b59"
+    },
+    {
+      "bytes": 231729,
+      "path": "workspaces/parallel_research/B/.playbook-artifacts/host-rollouts/01a11b17-a699-7690-9fc2-af5961131f96.jsonl",
+      "sha256": "1c95cf6a416559c5b3db166ddb4abf091c3d8a713eadda2ed5df285a0d029d41"
+    }
+  ],
+  "host_sessions": [
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:38:17.896Z",
+          "2026-10-08T10:39:44.831Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/parallel_research/B",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/parallel_research/B",
+      "end": "2026-10-08T10:39:44.831Z",
+      "id": "01a11b17-a699-7690-9fc2-af5961131f96",
+      "raw_path": "workspaces/parallel_research/B/.playbook-artifacts/host-rollouts/01a11b17-a699-7690-9fc2-af5961131f96.jsonl",
+      "sha256": "1c95cf6a416559c5b3db166ddb4abf091c3d8a713eadda2ed5df285a0d029d41",
+      "source": "exec",
+      "start": "2026-10-08T10:38:17.896Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 89984,
+        "input_tokens": 103808,
+        "output_tokens": 2686,
+        "reasoning_output_tokens": 322,
+        "total_tokens": 106494
+      }
+    }
+  ],
+  "mechanical": {
+    "checks": {
+      "alpha_missing_audit": true,
+      "beta_not_eu_only": true,
+      "beta_over_budget": true,
+      "decision_none": true
+    },
+    "status": "PASS"
+  },
+  "operator_conclusion": {
+    "agent_reported_status": "PASS",
+    "failed_or_conflicting_worker_detected": null,
+    "fresh_session_success": null,
+    "implementation_subagents_started": 0,
+    "max_depth": 0,
+    "max_parallel": 0,
+    "posthoc_quality_status": null,
+    "review_subagents_started": 0,
+    "status": "BLOCKED",
+    "subagents_started": 0,
+    "task_status": "PASS",
+    "usage_complete": true
+  },
+  "operator_sessions": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/parallel_research/B",
+        "--sandbox",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/parallel_research/B/.playbook-artifacts/main-final.txt",
+        "-"
+      ],
+      "completed": true,
+      "events": ".playbook-artifacts/main-events.jsonl",
+      "label": "main",
+      "returncode": 0,
+      "started_utc": "2026-10-08T10:38:16.675937+00:00",
+      "thread_ids": [
+        "01a11b17-a699-7690-9fc2-af5961131f96"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 89984,
+          "input_tokens": 103808,
+          "output_tokens": 2686,
+          "reasoning_output_tokens": 322
+        }
+      ],
+      "wall_seconds": 88.677
+    }
+  ],
+  "protected_file_drift": [],
+  "scenario": "parallel_research",
+  "synthetic_outputs": {
+    "decision.json": "{\n  \"decision\": \"none\",\n  \"alpha_missing_audit_log\": true,\n  \"beta_over_budget\": true,\n  \"beta_not_eu_only\": true,\n  \"explanation\": \"Neither vendor satisfies all constraints. Alpha costs USD 10 and keeps primary and backup storage in the EU, but its offered plan has no audit log. Beta includes an audit log, but costs USD 14 per active user per month, above the USD 12 cap, and has a United States disaster-recovery replica.\"\n}\n"
+  },
+  "workspace": "workspaces/parallel_research/B"
+}

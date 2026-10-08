@@ -1,0 +1,178 @@
+{
+  "condition": "B",
+  "files": [
+    {
+      "bytes": 486,
+      "path": "workspaces/conflict_detection/B/decision.json",
+      "sha256": "892866e02819ddd16cbd0ba1b594e85ca5596f0dc98c210b86099f0a52749f63"
+    },
+    {
+      "bytes": 1530,
+      "path": "workspaces/conflict_detection/B/STATE.md",
+      "sha256": "fa71c7ce3ffac474d6d9540efad27644dc21d775416e545a8ba3406a22b940ea"
+    },
+    {
+      "bytes": 4629,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/execution.log",
+      "sha256": "1520183cc54ba450f3202ea58449f449c58e4da48543a54f8b399acd3b830f48"
+    },
+    {
+      "bytes": 128,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/evaluation.json",
+      "sha256": "e377de7fdb197e7031cd11e210f2eb910b796e490839c7e201d828a6dab618d3"
+    },
+    {
+      "bytes": 0,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/evaluation.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 289,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/evaluation-command.json",
+      "sha256": "87c361b57a84d1697100e2c483e69c503112dd80f57dec3192ef0314c6746912"
+    },
+    {
+      "bytes": 12460,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/source-integrity.json",
+      "sha256": "8becc9cbe7601e4a63dfe61419a9e09ee83eed2c18165b13ec5abdb0b7b12d47"
+    },
+    {
+      "bytes": 1172,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/dispatch-return.md",
+      "sha256": "bbbcfc7e1f2678abbb055e1c462953a4ba7d143b284e0680a0a76adfa2eb492f"
+    },
+    {
+      "bytes": 1130,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/operator-sessions.json",
+      "sha256": "c9b69d1979dfce287b245a25610690f9ddf4e6e69e90b3f5e154dd5735a371bd"
+    },
+    {
+      "bytes": 128,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/operator-mechanical.json",
+      "sha256": "e377de7fdb197e7031cd11e210f2eb910b796e490839c7e201d828a6dab618d3"
+    },
+    {
+      "bytes": 5158,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/initial-sha256.json",
+      "sha256": "2c0e82feb5d6e42012b9c4d809dd2ed57088fb565a601fafada89eea8971ea45"
+    },
+    {
+      "bytes": 1433,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/agent-run-result.json",
+      "sha256": "3bf997d931a383e40cbbbcd4f138715bcf114c7d08809a9115479d0ddb55f04a"
+    },
+    {
+      "bytes": 73057,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/main-events.jsonl",
+      "sha256": "99a9b3136c731ab886490cb7ab716542f325786d981923776009b8fc74d4aaba"
+    },
+    {
+      "bytes": 334590,
+      "path": "workspaces/conflict_detection/B/.playbook-artifacts/host-rollouts/01a11afe-86de-7c11-af99-b5208b3264a8.jsonl",
+      "sha256": "fe1efe606380cd5ebf25eee941711830e31e5ce00cbc78fe880741ff515d3d66"
+    }
+  ],
+  "host_sessions": [
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:10:50.921Z",
+          "2026-10-08T10:12:23.903Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/B",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/B",
+      "end": "2026-10-08T10:12:23.903Z",
+      "id": "01a11afe-86de-7c11-af99-b5208b3264a8",
+      "raw_path": "workspaces/conflict_detection/B/.playbook-artifacts/host-rollouts/01a11afe-86de-7c11-af99-b5208b3264a8.jsonl",
+      "sha256": "fe1efe606380cd5ebf25eee941711830e31e5ce00cbc78fe880741ff515d3d66",
+      "source": "exec",
+      "start": "2026-10-08T10:10:50.921Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 79744,
+        "input_tokens": 119810,
+        "output_tokens": 2652,
+        "reasoning_output_tokens": 326,
+        "total_tokens": 122462
+      }
+    }
+  ],
+  "mechanical": {
+    "checks": {
+      "conflict_detected": true,
+      "none_recommended": true,
+      "reject_stale": true
+    },
+    "status": "PASS"
+  },
+  "operator_conclusion": {
+    "agent_reported_status": "PASS",
+    "failed_or_conflicting_worker_detected": null,
+    "fresh_session_success": null,
+    "implementation_subagents_started": 0,
+    "max_depth": 0,
+    "max_parallel": 0,
+    "posthoc_quality_status": null,
+    "review_subagents_started": 0,
+    "status": "BLOCKED",
+    "subagents_started": 0,
+    "task_status": "PASS",
+    "usage_complete": true
+  },
+  "operator_sessions": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/B",
+        "--sandbox",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/B/.playbook-artifacts/main-final.txt",
+        "-"
+      ],
+      "completed": true,
+      "events": ".playbook-artifacts/main-events.jsonl",
+      "label": "main",
+      "returncode": 0,
+      "started_utc": "2026-10-08T10:10:50.128162+00:00",
+      "thread_ids": [
+        "01a11afe-86de-7c11-af99-b5208b3264a8"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 79744,
+          "input_tokens": 119810,
+          "output_tokens": 2652,
+          "reasoning_output_tokens": 326
+        }
+      ],
+      "wall_seconds": 94.23
+    }
+  ],
+  "protected_file_drift": [],
+  "scenario": "conflict_detection",
+  "synthetic_outputs": {
+    "STATE.md": "# Conflict detection — condition B\n\nGoal: resolve the stale recommendation against authoritative requirements and current vendor facts. Work stayed in this isolated workspace and in the main session; no network, accounts, dependency installation, commits or pushes were used.\n\nRequirements: <= USD 12 per user; every stored copy inside the EU; audit log on the purchased plan. Current facts: Alpha is USD 10 and EU-only but has no audit log; Beta has an audit log but costs USD 14 and keeps its disaster-recovery replica in the US. The unsupported stale claim that Beta qualifies conflicts with two current facts. Reject it; neither vendor qualifies.\n\nResult: decision.json, with a source-grounded explanation. Verification: `python .evaluation/evaluate.py check-workspace --scenario conflict_detection --workspace .` exited 0 and reported PASS. Raw output, command metadata, fixed-source hashes and dispatch/review applicability are under .playbook-artifacts/. No independent review is required for this prose/data-only result; there were no code changes.\n\nLimits: this is local synthetic-fixture acceptance, not live vendor validation or observed adoption. Usage, cost, operator wall time, human time, fresh-session success and outcome score are unobserved and remain null. No open source conflict or owner decision remains. Next session: read the original requirements and current facts, check decision.json against them, and rerun the same evaluator before relying on this record. Any source update requires a new decision.\n",
+    "decision.json": "{\n  \"decision\": \"reject_stale_summary\",\n  \"conflict_detected\": true,\n  \"recommended_option\": \"none\",\n  \"explanation\": \"requirements.md requires cost <= USD 12 per user, every stored copy in the EU, and an audit log. current_vendor_facts.md says Alpha costs USD 10 and is EU-only but lacks an audit log; Beta has an audit log but costs USD 14 and keeps a disaster-recovery replica in the US. Neither qualifies, contradicting stale_summary.md claiming Beta satisfies all requirements.\"\n}\n"
+  },
+  "workspace": "workspaces/conflict_detection/B"
+}

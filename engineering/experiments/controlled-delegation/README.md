@@ -34,6 +34,14 @@ skills; A не получает Playbook.
 завершением агент должен создать `run-result.json` по шаблону и сохранить реальные
 логи/receipts внутри workspace. `PASS` без существующего evidence не принимается.
 
+`task_status` отделяет наблюдаемый результат задачи от полной приёмки эксперимента.
+`usage_complete` требует фактических полных counters, включая workers/review; при
+отсутствии подтверждения оставьте null. Записывайте implementation/research и review
+counts отдельно. Не превращайте отсутствующий cost/usage в PASS только потому, что
+тесты зелёные. Для ENABLE нужны завершённые A/B/C и сопоставимые outcome scores;
+если заранее определённой шкалы нет, score остаётся null и capability не включается.
+Подтверждения fresh-session/worker detection — только boolean true/false или null.
+
 ## Механическая проверка и отчёт
 
 После прогонов:

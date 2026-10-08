@@ -1,0 +1,276 @@
+{
+  "condition": "C",
+  "files": [
+    {
+      "bytes": 424,
+      "path": "workspaces/conflict_detection/C/decision.json",
+      "sha256": "61615e4deba41a26ec990d94d9108979d27d8e615bd487c1ef60c00455e8ff59"
+    },
+    {
+      "bytes": 1182,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/work-map.json",
+      "sha256": "73ec2fb409b0edb74c5448bbb63e90b43d0ee054cd4c154c3f8b10086f4ca9a6"
+    },
+    {
+      "bytes": 369,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/dispatch.json",
+      "sha256": "a7c7ec4e6db7fdc192319564d43f0154a6330ee8a3eeb12799c2ffbc4f4bdcf4"
+    },
+    {
+      "bytes": 858,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/source-read.txt",
+      "sha256": "0fb96084834e0b85ffd5934284a6843701d3875a367ec31323bae358e6306f17"
+    },
+    {
+      "bytes": 900,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/main-analysis.json",
+      "sha256": "9951a3a9a537226ae4d1fb8fd3441da90e02aca439206bf1098bd41350b9e527"
+    },
+    {
+      "bytes": 610,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/source-audit-return.md",
+      "sha256": "d741355251c9f7ba31cdeb9908b09a5dc9c074b909908c3527a48753cf4eeb7a"
+    },
+    {
+      "bytes": 463,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/integration.json",
+      "sha256": "b3d3025e1fdeeeecb1a773b02cf38cb5c9683b9b36d70e64d9b914112e6fc7af"
+    },
+    {
+      "bytes": 292,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/review-dispatch.json",
+      "sha256": "abff4a6deefba9b0a695b1dfe23fbb16f4db9b91c1a089b51dd410a7e48138be"
+    },
+    {
+      "bytes": 453,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/final-review-return.md",
+      "sha256": "74ff013c4d631be7931ad81c6b430f3a6977f00aa9b95f656c93933353f02cb6"
+    },
+    {
+      "bytes": 305,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/final-review.json",
+      "sha256": "29b9299f514135f58b2e9ede7876c716627f46458f40da9ca13e5201151c6b2d"
+    },
+    {
+      "bytes": 128,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/evaluator-output.json",
+      "sha256": "e377de7fdb197e7031cd11e210f2eb910b796e490839c7e201d828a6dab618d3"
+    },
+    {
+      "bytes": 235,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/evaluator-command.txt",
+      "sha256": "ca6724d33f5277bab74c8d8135474cedc3a165b7219e24884b3c0ee502911f19"
+    },
+    {
+      "bytes": 253,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/evaluator-execution.json",
+      "sha256": "7c9f73ac7cad46d9b8d47ab2202d7ef3bcdfea40cef1318c3badf954a0f83380"
+    },
+    {
+      "bytes": 1050,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/source-sha256-before.json",
+      "sha256": "0dca3f75cdee63fda7c781abf96bc86cdfbde88b5e2d4dfeb3ef6cea1adc7ba0"
+    },
+    {
+      "bytes": 1050,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/source-sha256-after.json",
+      "sha256": "0dca3f75cdee63fda7c781abf96bc86cdfbde88b5e2d4dfeb3ef6cea1adc7ba0"
+    },
+    {
+      "bytes": 69,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/source-preservation.json",
+      "sha256": "345a930ce945a94a56f6de09c54b8a2b1e520a5e64617643834ceb8b1312740c"
+    },
+    {
+      "bytes": 47,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/python-version.txt",
+      "sha256": "f82b65507e62be3f81db615166d1b433aa12e49fa54ccda7551937f2cef06415"
+    },
+    {
+      "bytes": 1133,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/operator-sessions.json",
+      "sha256": "1670cb9de6c0d9a162339d7f65b49ce00a585e8c6b524747bd757589c5151459"
+    },
+    {
+      "bytes": 128,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/operator-mechanical.json",
+      "sha256": "e377de7fdb197e7031cd11e210f2eb910b796e490839c7e201d828a6dab618d3"
+    },
+    {
+      "bytes": 5158,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/initial-sha256.json",
+      "sha256": "a12a38c5c2c21d8af7dcb3c225bae94b3eb4a1b5e08b2dec48d1fe67e4c5bb9d"
+    },
+    {
+      "bytes": 1987,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/agent-run-result.json",
+      "sha256": "ce1665886a08c8f55cc62dddb0f26a7817e44b3b44c5aad2861ee4ed76918bc8"
+    },
+    {
+      "bytes": 51226,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/main-events.jsonl",
+      "sha256": "4fe359251bbc5090e1961b12bc22dcf7e4444435e7b3ea5b67812b67b7663a73"
+    },
+    {
+      "bytes": 128156,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/host-rollouts/01a11b00-8ed8-75f0-9a19-f465629c2ea1.jsonl",
+      "sha256": "06d8ddeec4c6b2ebdcefc871bb29b46562fb67c55996e19d5a8183d42a734196"
+    },
+    {
+      "bytes": 247979,
+      "path": "workspaces/conflict_detection/C/.playbook-artifacts/host-rollouts/01a11aff-f710-7722-b0f5-c63b02f7214c.jsonl",
+      "sha256": "ca2104c02ab18f4f0bf89c551b27326d0f4c98f41a79ce58d11bd1bfe194fd2a"
+    }
+  ],
+  "host_sessions": [
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:12:25.552Z",
+          "2026-10-08T10:14:41.648Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/C",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/C",
+      "end": "2026-10-08T10:14:41.648Z",
+      "id": "01a11aff-f710-7722-b0f5-c63b02f7214c",
+      "raw_path": "workspaces/conflict_detection/C/.playbook-artifacts/host-rollouts/01a11aff-f710-7722-b0f5-c63b02f7214c.jsonl",
+      "sha256": "ca2104c02ab18f4f0bf89c551b27326d0f4c98f41a79ce58d11bd1bfe194fd2a",
+      "source": "exec",
+      "start": "2026-10-08T10:12:25.550Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 168320,
+        "input_tokens": 198568,
+        "output_tokens": 4025,
+        "reasoning_output_tokens": 439,
+        "total_tokens": 202593
+      }
+    },
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:13:03.911Z",
+          "2026-10-08T10:13:18.090Z"
+        ],
+        [
+          "2026-10-08T10:13:50.332Z",
+          "2026-10-08T10:13:57.461Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/C",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/C",
+      "end": "2026-10-08T10:13:57.461Z",
+      "id": "01a11b00-8ed8-75f0-9a19-f465629c2ea1",
+      "raw_path": "workspaces/conflict_detection/C/.playbook-artifacts/host-rollouts/01a11b00-8ed8-75f0-9a19-f465629c2ea1.jsonl",
+      "sha256": "06d8ddeec4c6b2ebdcefc871bb29b46562fb67c55996e19d5a8183d42a734196",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Mencius",
+            "agent_path": "/root/source_audit",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11aff-f710-7722-b0f5-c63b02f7214c"
+          }
+        }
+      },
+      "start": "2026-10-08T10:13:03.910Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 59008,
+        "input_tokens": 64717,
+        "output_tokens": 413,
+        "reasoning_output_tokens": 13,
+        "total_tokens": 65130
+      }
+    }
+  ],
+  "mechanical": {
+    "checks": {
+      "conflict_detected": true,
+      "none_recommended": true,
+      "reject_stale": true
+    },
+    "status": "PASS"
+  },
+  "operator_conclusion": {
+    "agent_reported_status": "PASS",
+    "failed_or_conflicting_worker_detected": false,
+    "fresh_session_success": null,
+    "implementation_subagents_started": 1,
+    "max_depth": 1,
+    "max_parallel": 1,
+    "posthoc_quality_status": null,
+    "review_subagents_started": 0,
+    "status": "FAIL",
+    "subagents_started": 1,
+    "task_status": "PASS",
+    "usage_complete": true
+  },
+  "operator_sessions": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/C",
+        "--sandbox",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/conflict_detection/C/.playbook-artifacts/main-final.txt",
+        "-"
+      ],
+      "completed": true,
+      "events": ".playbook-artifacts/main-events.jsonl",
+      "label": "main",
+      "returncode": 0,
+      "started_utc": "2026-10-08T10:12:24.453112+00:00",
+      "thread_ids": [
+        "01a11aff-f710-7722-b0f5-c63b02f7214c"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 168320,
+          "input_tokens": 198568,
+          "output_tokens": 4025,
+          "reasoning_output_tokens": 439
+        }
+      ],
+      "wall_seconds": 137.687
+    }
+  ],
+  "protected_file_drift": [],
+  "scenario": "conflict_detection",
+  "synthetic_outputs": {
+    "decision.json": "{\n  \"decision\": \"reject_stale_summary\",\n  \"conflict_detected\": true,\n  \"recommended_option\": \"none\",\n  \"explanation\": \"requirements.md requires cost <= USD 12 per user, every stored copy in the EU, and an audit log. current_vendor_facts.md says Alpha lacks an audit log; Beta costs USD 14 and has a US disaster-recovery replica. Neither qualifies, contradicting stale_summary.md claiming Beta satisfies all requirements.\"\n}\n"
+  },
+  "workspace": "workspaces/conflict_detection/C"
+}

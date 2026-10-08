@@ -1,0 +1,264 @@
+{
+  "condition": "C",
+  "files": [
+    {
+      "bytes": 763,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/work-map.md",
+      "sha256": "6d668673da70952c8b969b0b4e77f2129a212b825ef853e97c067e9173723a0a"
+    },
+    {
+      "bytes": 1005,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/baseline-tests.txt",
+      "sha256": "67315eb09ad58f9fb5062e2533390eb024a65e85672743428494fcf53364e641"
+    },
+    {
+      "bytes": 1672,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/budget.diff",
+      "sha256": "d503f5ac0199ccb8d97efd3d2fbd684d1ee45fbf05e1d94354564a49e90ce801"
+    },
+    {
+      "bytes": 353,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/tests.txt",
+      "sha256": "2aef18ff3b6b2828ebe35b3a5d8d97bce491b9d39f39399587a5961436cbf16e"
+    },
+    {
+      "bytes": 1589,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/edge-checks.py",
+      "sha256": "c812b58316da0a11b4bbbe64a196b8ec9a80f0adc2d5b176a0670475668348e0"
+    },
+    {
+      "bytes": 246,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/edge-checks.txt",
+      "sha256": "384a90e558da258bba21251f97da4d524095bfa7b4ec9309114bc33e03a3352b"
+    },
+    {
+      "bytes": 486,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/evaluator.txt",
+      "sha256": "c33318ad2f3657ec2047a1bfcd8552ecce456dc10b2883b7d94b0e5da052ee9f"
+    },
+    {
+      "bytes": 353,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/task-source-hashes.json",
+      "sha256": "fff2e287d2a87e808438522beeb143210abfe86d64f6032b06179ff820393584"
+    },
+    {
+      "bytes": 105,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/source-integrity.json",
+      "sha256": "bbd1d9a3d1170edfa0cb7fecacb8539b72439d5d991870edff281e0c03f614e6"
+    },
+    {
+      "bytes": 1431,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/review-request.md",
+      "sha256": "24ea2ca367efdeda2ea0174011b501da46c75feae3cd5cc832d9392c5fd46ef0"
+    },
+    {
+      "bytes": 174,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/review-source-sha256.json",
+      "sha256": "7f7339f4a56349b53335e9ae436d502d168224b6296956ed1b690f589e1bcd2c"
+    },
+    {
+      "bytes": 457,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/review-dispatch.json",
+      "sha256": "fae3c6e3427a6780a5c82a814270122871422d1abb83a175a356ec7e5d34b089"
+    },
+    {
+      "bytes": 1653,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/review-return.md",
+      "sha256": "e47df40e3358561578f51dd136fc49afdfc7fb9900f2643a7ab1f8a8813f5f7d"
+    },
+    {
+      "bytes": 926,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/precision-reproduction.txt",
+      "sha256": "995eacc5dbac0b3a387eacaab4e4883a894a29c4f2330d0e7fe899b2ff84fbcf"
+    },
+    {
+      "bytes": 1116,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/operator-sessions.json",
+      "sha256": "d3cbcc345f7ccb1ee77daaa5fc8e3267a6e309459a91ab70dbc2dfaeca230ab5"
+    },
+    {
+      "bytes": 389,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/operator-mechanical.json",
+      "sha256": "f468b14cc53e18908f7881c69edcb78fb618b594eb65c17d8d1f8298a2b12fa4"
+    },
+    {
+      "bytes": 5136,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/initial-sha256.json",
+      "sha256": "1298d61c172da5a9367442647a652d60a009dcda77b3fc5d6fc6cd1d686f3143"
+    },
+    {
+      "bytes": 1861,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/agent-run-result.json",
+      "sha256": "abfa4e06592f88b5418a14de82c16b1fb9d1c60fa83453a55e7fb1b6978432f6"
+    },
+    {
+      "bytes": 67899,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/main-events.jsonl",
+      "sha256": "c8804f584559b80a6e07a10ad86be35091c8d1076757e7b553602fbc3ed1e70c"
+    },
+    {
+      "bytes": 234314,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/host-rollouts/01a11b0f-85ac-7de3-a306-6d3fed35553d.jsonl",
+      "sha256": "bd98883c7138db6a01d259154faedfedfe8a10d6f35cd5ce5fa39ef60faebf39"
+    },
+    {
+      "bytes": 342354,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/host-rollouts/01a11b0d-cf0f-7483-bfa5-fc4398cf4a87.jsonl",
+      "sha256": "5f3b369adddcffea19fec6c405098aebdb5732f382c6fd10e567ad78ad3a26ca"
+    },
+    {
+      "bytes": 1431,
+      "path": "workspaces/small_fix/C/.playbook-artifacts/posthoc-extreme-checks.json",
+      "sha256": "c6ecd91d716acecbdff19ec529bb8d1db33e0e388aeb86cac4d30f4e615f71ca"
+    }
+  ],
+  "host_sessions": [
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:29:24.602Z",
+          "2026-10-08T10:30:23.819Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/C",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/C",
+      "end": "2026-10-08T10:30:23.819Z",
+      "id": "01a11b0f-85ac-7de3-a306-6d3fed35553d",
+      "raw_path": "workspaces/small_fix/C/.playbook-artifacts/host-rollouts/01a11b0f-85ac-7de3-a306-6d3fed35553d.jsonl",
+      "sha256": "bd98883c7138db6a01d259154faedfedfe8a10d6f35cd5ce5fa39ef60faebf39",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Newton",
+            "agent_path": "/root/slice_review",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11b0d-cf0f-7483-bfa5-fc4398cf4a87"
+          }
+        }
+      },
+      "start": "2026-10-08T10:29:24.596Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 103552,
+        "input_tokens": 116111,
+        "output_tokens": 1789,
+        "reasoning_output_tokens": 396,
+        "total_tokens": 117900
+      }
+    },
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:27:33.033Z",
+          "2026-10-08T10:31:43.535Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/C",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/C",
+      "end": "2026-10-08T10:31:43.535Z",
+      "id": "01a11b0d-cf0f-7483-bfa5-fc4398cf4a87",
+      "raw_path": "workspaces/small_fix/C/.playbook-artifacts/host-rollouts/01a11b0d-cf0f-7483-bfa5-fc4398cf4a87.jsonl",
+      "sha256": "5f3b369adddcffea19fec6c405098aebdb5732f382c6fd10e567ad78ad3a26ca",
+      "source": "exec",
+      "start": "2026-10-08T10:27:33.033Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 257408,
+        "input_tokens": 279148,
+        "output_tokens": 6932,
+        "reasoning_output_tokens": 2119,
+        "total_tokens": 286080
+      }
+    }
+  ],
+  "mechanical": {
+    "returncode": 0,
+    "status": "PASS",
+    "stderr": "test_invalid_weights_are_rejected (test_budget.BudgetTests) ... ok\ntest_order_and_proportion_are_preserved (test_budget.BudgetTests) ... ok\ntest_rounding_preserves_exact_total (test_budget.BudgetTests) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.001s\n\nOK\n",
+    "stdout": ""
+  },
+  "operator_conclusion": {
+    "agent_reported_status": "BLOCKED",
+    "failed_or_conflicting_worker_detected": false,
+    "fresh_session_success": null,
+    "implementation_subagents_started": 0,
+    "max_depth": 1,
+    "max_parallel": 1,
+    "posthoc_quality_status": "FAIL",
+    "review_subagents_started": 1,
+    "status": "FAIL",
+    "subagents_started": 1,
+    "task_status": "FAIL",
+    "usage_complete": true
+  },
+  "operator_sessions": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/C",
+        "--sandbox",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/C/.playbook-artifacts/main-final.txt",
+        "-"
+      ],
+      "completed": true,
+      "events": ".playbook-artifacts/main-events.jsonl",
+      "label": "main",
+      "returncode": 0,
+      "started_utc": "2026-10-08T10:27:31.530226+00:00",
+      "thread_ids": [
+        "01a11b0d-cf0f-7483-bfa5-fc4398cf4a87"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 257408,
+          "input_tokens": 279148,
+          "output_tokens": 6932,
+          "reasoning_output_tokens": 2119
+        }
+      ],
+      "wall_seconds": 252.634
+    }
+  ],
+  "posthoc_and_review": {
+    ".playbook-artifacts/posthoc-extreme-checks.json": "{\n  \"scope\": \"same post-hoc probes derived from observed B/C independent findings; not preregistered outcome score\",\n  \"probes\": [\n    {\n      \"total\": \"1000000000000000.0\",\n      \"shares\": [\n        \"333333333333333.3\",\n        \"333333333333333.3\",\n        \"333333333333333.3\"\n      ],\n      \"float_sum\": \"1000000000000000.0\",\n      \"finite_sum\": true,\n      \"float_sum_equal\": true,\n      \"decimal_sum\": \"999999999999999.9\",\n      \"decimal_conservation\": false\n    },\n    {\n      \"total\": \"1e+16\",\n      \"shares\": [\n        \"3333333333333333.5\",\n        \"3333333333333333.5\",\n        \"3333333333333333.5\"\n      ],\n      \"float_sum\": \"1e+16\",\n      \"finite_sum\": true,\n      \"float_sum_equal\": true,\n      \"decimal_sum\": \"10000000000000000.5\",\n      \"decimal_conservation\": false\n    },\n    {\n      \"total\": \"1.7976931348623157e+308\",\n      \"shares\": [\n        \"5.992310449541053e+307\",\n        \"5.992310449541053e+307\",\n        \"5.992310449541053e+307\"\n      ],\n      \"float_sum\": \"inf\",\n      \"finite_sum\": false,\n      \"float_sum_equal\": false,\n      \"decimal_sum\": \"179769313486231590000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\n      \"decimal_conservation\": false\n    }\n  ]\n}\n",
+    ".playbook-artifacts/review-return.md": "Status: validated\nVerdict: FINDINGS\nReviewer: /root/slice_review (native host subagent; read-only)\n\nMaterial finding: budget.py conserves integer units internally, but final conversion to floats can lose decimal conservation for accepted finite totals. split_budget(1e15, [1, 1, 1]) returns [333333333333333.3, 333333333333333.3, 333333333333333.3]; their decimal sum is 999999999999999.9, short by 0.1. At 1e16 the decimal sum exceeds the total by 0.5. These are allocation precision losses, distinct from ordinary binary summation noise. Every-valid-allocation goal remains unmet.\n\nInspected: AGENTS.md, TASK.md, RUN_RESULT_TEMPLATE.json, budget.py, test_budget.py, Playbook skill/delegation/review instructions, review request/source hashes, baseline/tests/edge-check/evaluator evidence.\n\nActual independent checks (PYTHONDONTWRITEBYTECODE=1):\n- python -m unittest discover -v: exit 0, all 3 tests passed.\n- Saved edge-checks.py through runpy: exit 0, 7 targeted allocation cases, invalid-input checks, 1000 deterministic conservation cases passed.\n- Python precision probes: exit 0, reproduced the precision finding.\n- SHA-256 verification: budget.py and test_budget.py matched dispatch hashes.\nPython 3.10.12. Reviewer reports no writes, network, accounts, installation, or delegation.\n\nMain-agent disposition: confirmed by the independently saved precision-reproduction command. Required review did not pass. Keep the useful local rounding fix and passing acceptance evidence, but record BLOCKED, not PASS. No changes to fixed source task files/test intent; no new validity restriction or return-type change introduced to conceal this limitation.\n"
+  },
+  "protected_file_drift": [],
+  "scenario": "small_fix",
+  "synthetic_outputs": {
+    "budget.py": "\"\"\"Deterministic proportional budget allocation.\"\"\"\n\nfrom decimal import Decimal\nfrom fractions import Fraction\nfrom math import isfinite\n\n\ndef split_budget(total: float, weights: list[float]) -> list[float]:\n    if not isfinite(total) or total < 0:\n        raise ValueError(\"total must be finite and non-negative\")\n    if not weights or any(not isfinite(weight) or weight <= 0 for weight in weights):\n        raise ValueError(\"weights must be finite and positive\")\n\n    # Use cents, or the total's finer decimal precision when necessary.\n    scale = 10 ** max(2, -Decimal(str(total)).as_tuple().exponent)\n    units = int(Fraction(str(total)) * scale)\n    exact_weights = [Fraction(str(weight)) for weight in weights]\n    weight_sum = sum(exact_weights)\n    quotas = [units * weight / weight_sum for weight in exact_weights]\n    allocated = [quota.numerator // quota.denominator for quota in quotas]\n\n    # Stable sorting gives equal remainders to earlier input positions.\n    priority = sorted(\n        range(len(weights)), key=lambda i: quotas[i] - allocated[i], reverse=True\n    )\n    for i in priority[:units - sum(allocated)]:\n        allocated[i] += 1\n    return [float(Fraction(amount, scale)) for amount in allocated]\n"
+  },
+  "workspace": "workspaces/small_fix/C"
+}
