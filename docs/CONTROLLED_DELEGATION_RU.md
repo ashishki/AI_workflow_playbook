@@ -80,6 +80,16 @@ validation не названы зелёными: недостающая уста
 На этапе этой записи merge ещё не выполнен; статус CI/merge проверяется по
 фактическому PR и remote SHA, а не предполагается из успешного push.
 
+CI PR #11 на `e7a5709924c5b8cf9528e692ddc0afbf1d6cdb53` наблюдён:
+[Playbook vNext — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37894668453),
+[Native Product Checks — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37894668565),
+[Playbook Checks — FAIL](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37894668444).
+Причина последнего — девять import errors отсутствующего `ai_workflow_harness_lab`,
+совпавшие с проверкой чистого f03dde86. Это известная проблема базового master,
+не регрессия архива; она не названа PASS и требует отдельного исправления.
+Перенос ограничен документацией и reports; политики проверок не ослабляются,
+required branch protection не обходится, рабочий runtime не меняется.
+
 Для завершения: перепроверить master и scope diff, получить фактический CI,
 зафиксировать его результаты и выполнить перенос. Старые ошибки
 полного master-verifier требуют отдельного исправления test setup и проверки
