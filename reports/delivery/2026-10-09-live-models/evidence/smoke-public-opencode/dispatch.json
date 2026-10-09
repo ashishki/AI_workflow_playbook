@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "/usr/sbin/runuser",
+    "-u",
+    "oc_you",
+    "--",
+    "/usr/bin/opencode",
+    "run",
+    "--pure",
+    "--format",
+    "json",
+    "--model",
+    "opencode/mimo-v2.6-flash-free",
+    "--agent",
+    "delivery-probe",
+    "--title",
+    "Delivery availability probe",
+    "Return exactly DELIVERED_MODEL_PROBE."
+  ],
+  "exit_code": 1,
+  "requested_model": "opencode/mimo-v2.6-flash-free",
+  "uid": 998,
+  "timeout_seconds": 90
+}

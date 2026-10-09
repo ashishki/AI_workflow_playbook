@@ -1,0 +1,12 @@
+{
+  "claims": [],
+  "command_argv": [
+    "/bin/sh",
+    "-c",
+    "\"/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python\" \"/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-model-workflows-20261009/opencode_adapter.py\" --workspace \"/tmp/playbook-model-worker-wzb191rs/work/mechanism-playbook/plan/trial-0/workspace\" --prompt-file \"/tmp/playbook-model-worker-wzb191rs/work/mechanism-playbook/plan/trial-0/prompt.md\" --output-dir \"/tmp/playbook-model-worker-wzb191rs/work/mechanism-playbook/plan/trial-0/adapter\" --condition playbook --task-id plan --settings \"/tmp/playbook-model-worker-wzb191rs/work/private-settings.json\" --package \"/srv/openclaw-you/workspace/AI_workflow_playbook/plugins/playbook-native\" --timeout 240"
+  ],
+  "command_template": "\"/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python\" \"/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-model-workflows-20261009/opencode_adapter.py\" --workspace \"{workspace}\" --prompt-file \"{prompt_file}\" --output-dir \"{output_dir}\" --condition {condition} --task-id {task_id} --settings \"/tmp/playbook-model-worker-wzb191rs/work/private-settings.json\" --package \"/srv/openclaw-you/workspace/AI_workflow_playbook/plugins/playbook-native\" --timeout 240",
+  "condition": "playbook",
+  "task_id": "plan",
+  "trial": 0
+}

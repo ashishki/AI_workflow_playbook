@@ -1,0 +1,26 @@
+{
+  "source_head": "5ac218b2020b700a8d80ac3787c9cc10772923c9",
+  "provider": "opencode-go",
+  "cli": "1.18.34",
+  "model": "opencode-go/deepseek-v4.1-flash",
+  "models_authorized": "latest user instruction: use existing OpenCode models/GCN mechanism or Codex exec",
+  "operator_limits": {
+    "model_steps_per_main": 16,
+    "per_main_timeout_seconds": 240,
+    "output_tokens_per_request": 4096,
+    "transport_total_request_limit": 96
+  },
+  "comparison": "same model/task/base/tools/budget; package present in playbook arm only; fresh sessions",
+  "tasks": [
+    "backend",
+    "plan"
+  ],
+  "trials": 1,
+  "independent_review": "separate actual OpenCode fresh read-only sessions; count costs and classify full vs instruction-only scope explicitly",
+  "first_phase_scope": "existing 2task diagnostic, not complete Engineering/Product field acceptance",
+  "credentials": "root account key retained in ephemeral relay, workerUID998 holds local limited grant only",
+  "publication": "synthetic source/events with local grant redacted; original frozen reports unchanged",
+  "cost": "CLI estimated model charge recorded separately from invoice/total unknown",
+  "first_phase_main_runs_started": true,
+  "note": "Fake CLI compare PASS preceded actual model dispatch; no fake/real bundles mixed."
+}

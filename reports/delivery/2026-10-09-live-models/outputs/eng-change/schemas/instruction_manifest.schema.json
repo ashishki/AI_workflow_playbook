@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-workflow-playbook.local/schemas/instruction_manifest.schema.json",
+  "title": "AI Workflow Playbook Instruction Manifest",
+  "type": "object",
+  "required": ["schema_version", "artifacts"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "playbook.instruction_manifest.v1"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "authority",
+          "target_roles",
+          "stability",
+          "load_policy",
+          "source_authority",
+          "executable_consumer"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authority": {
+            "type": "string",
+            "enum": ["normative", "projection", "reference", "generated"]
+          },
+          "target_roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "stability": {
+            "type": "string",
+            "enum": ["stable", "phase", "task", "historical"]
+          },
+          "load_policy": {
+            "type": "string",
+            "enum": ["always", "on_demand", "current_feature", "current_slice", "never_by_default"]
+          },
+          "source_authority": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executable_consumer": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

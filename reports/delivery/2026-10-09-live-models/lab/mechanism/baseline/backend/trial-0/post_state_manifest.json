@@ -1,0 +1,9 @@
+{
+  "files": {
+    "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+    "slugs.py": "c43acad1edee0ee080e297bf08d921012edc705113c979014c7b6a5b5fec044b",
+    "test_slugs.py": "6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285"
+  },
+  "schema_version": "harness_lab.post_state_manifest.v1",
+  "workspace": "/tmp/playbook-model-worker-wzb191rs/work/mechanism-baseline/backend/trial-0/workspace"
+}

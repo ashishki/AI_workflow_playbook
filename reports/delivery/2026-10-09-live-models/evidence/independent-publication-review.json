@@ -1,0 +1,296 @@
+{
+  "schema": "delivery.independent_publication_review.v1",
+  "reviewer": "/root/live_models_evidence_review",
+  "review_mode": "independent collaborative read-only review; no model/provider calls, no recursive reviewer",
+  "reviewed_at": "2026-10-09T12:09:50.928071+00:00",
+  "source_base": "5ac218b2020b700a8d80ac3787c9cc10772923c9",
+  "status": "PASS",
+  "scope": "Final staged report/results/REPLAY and 683-file curated evidence closure independently exported from Git index; archived Lab/Native results, preserved owner data, provider ledgers, partial cost evidence, offline verification receipts and documentation scope. No provider inference, recursive agent, root auth read, product runtime change or release approval.",
+  "publication_file_count": 684,
+  "publication_manifest_sha256": "614173ecd0a6e46a75ce9fdeca36bafb8bf5b5e2c9d83337dea237af17d2f32d",
+  "reviewed_sha256": {
+    "REPORT_RU.md": "063fdc0ee20cd9798cfae253dd93d2618dd4feabc62db25b3186f08b129b8aa1",
+    "results.json": "ec6737cd6f54d51fa6178a6f0eaf69bb1e75f3ed9bda59c8e3f6afc91f512a13",
+    "REPLAY_RU.md": "34bba63ca4bd640b2c1b4008cbf7c9635e1a5bd80d4bc144dac57f9617ff5926",
+    "evidence/provider-request-ledger.jsonl": "62988563544399795b6c21b0c7a185ca16b48abf7c548095377948b33509279c",
+    "evidence/codex-provider-ledger.jsonl": "3b16436ee92154b3f4ad869fb3670dce722a1e202ffd5846ff152fd71b217253",
+    "evidence/partial-cli-cost.json": "b0763611ce8d28808f2378f08ff8f91264a7d80cfc04ce6bf287760ad8c1c6e5",
+    "evidence/relay-cleanup.json": "d1ebc3c3cb9c412b8aab07074fcc8daff31282379112d2bbb831d4528107c45e"
+  },
+  "checks": [
+    {
+      "id": "lab_bundles",
+      "status": "PASS",
+      "observed": "8/8 copies verify without errors"
+    },
+    {
+      "id": "published_credentials",
+      "status": "PASS",
+      "observed": "No matches for high-entropy Bearer/JWT/private auth configs or exact ephemeral relay grants; only paths/counts output, no credential values"
+    },
+    {
+      "id": "engnew_native_archive",
+      "status": "PASS",
+      "observed": "Copied Role Runner verify --allow-head-drift valid/PASS; independent native_snapshot equals saved workspace_snapshot. No provider call executed."
+    },
+    {
+      "id": "prior_failures_scope",
+      "status": "PASS",
+      "observed": "Both real plan tasks remain failed with outputs/pycs present; invalid reviews/429/timeouts/local guards retained; no human/public deployment/release claims."
+    },
+    {
+      "id": "frozen_ai_eval_labels",
+      "status": "PASS",
+      "observed": "Expected labels in plan; model projection omits labels and private canary. Six answer records conform to stated bounded criteria. Model projection inspected explicitly; expected fields absent."
+    },
+    {
+      "id": "request_envelope",
+      "status": "PASS",
+      "observed": "Go55 + Codex45 requests at final export =100 within120. Both copied ledgers byte-identical; all observed Codex bodies verified."
+    },
+    {
+      "id": "all_post_state_manifest_files",
+      "status": "PASS",
+      "observed": "Every declared Lab workspace file exists in copied archive and matches SHA256, including pyc."
+    },
+    {
+      "id": "engchange_native_archive",
+      "status": "PASS",
+      "observed": "Copied Role Runner verify --allow-head-drift valid/PASS; native snapshot equals saved current snapshot; prior review snapshot stale."
+    },
+    {
+      "id": "engchange_protected_entry_files",
+      "status": "PASS",
+      "observed": "All four owner note/actual receipt artifacts match declared entry byte hashes."
+    },
+    {
+      "id": "acceptance_source_identity",
+      "status": "PASS",
+      "observed": "ENG-NEW sourceSHA matches12 external groups; ENG-CHANGE sourceSHA matches16 external groups."
+    },
+    {
+      "id": "clean_index_export",
+      "status": "PASS",
+      "observed": "Indexed indexSHA256614173ecd0a6e46a75ce9fdeca36bafb8bf5b5e2c9d83337dea237af17d2f32d;683curatedfiles+index; no hash/missing/unexpected errors;12pyc+6Native results."
+    },
+    {
+      "id": "partial_cli_cost",
+      "status": "PASS",
+      "observed": "Nine unique actual Go JSONL streams independently recomputed; sum step_finish.cost=0.045424519. Matches each subtotal and total. Not invoice/total; Codex/API-only/hidden usage and human effort excluded."
+    },
+    {
+      "id": "offline_check_receipt_integrity",
+      "status": "PASS",
+      "observed": "Four offline receipts exit0/no timeout; stdout/stderr/diff SHA256 match indexed blobs. Canonical stdout required_failures=0; vNext stderr Ran50tests/OK; checker+runtime sync success recorded."
+    },
+    {
+      "id": "indexed_json_parse",
+      "status": "PASS",
+      "observed": "197indexed JSON files parse."
+    },
+    {
+      "id": "runtime_frozen_scope",
+      "status": "PASS",
+      "observed": "Staged changes outside archive restricted to .gitattributes and4delivery/status docs. No tools/plugins/distribution/companion/tests/engineering/product/shared or olderreport source changes."
+    }
+  ],
+  "findings": [
+    {
+      "id": "PUB-1",
+      "severity": "medium",
+      "title": "Git ignore may omit required archived binary and Native evidence",
+      "status": "CLOSED",
+      "detail": "12 pyc plus nested outputs/eng-new/.playbook-artifacts role results/prompts/events are ignored. Current files exist but ordinary git add drops them, breaking published closure or removing the actual FAIL evidence.",
+      "required_fix": "Force-add specifically this published archive, then verify indexed bytes/closure in clean extraction before commit.",
+      "resolution": "Clean Git-index extraction includes12intentionalpyc and6Native result.json files. All683declared file hashes close; no missing/unexpected entries. Bundles8/8 and all Lab post-state hashes validate."
+    },
+    {
+      "id": "PUB-2",
+      "severity": "medium",
+      "title": "Machine-readable metrics need explicit scope limitations",
+      "status": "CLOSED",
+      "detail": "results.json raw Lab metrics false_success0 and policy_violation0 coexist with two false unchanged claims. Prose correctly warns but structured consumers may treat zeros as claim-truth/security assurance.",
+      "required_fix": "Preserve raw Lab values and add machine-readable metric_limitations explaining omitted claim truth, task no-write enforcement, and unrequested continuity/review scope.",
+      "resolution": "Explicit metric_limitations now added to JSON; original Lab raw values unchanged."
+    },
+    {
+      "id": "PUB-3",
+      "severity": "medium",
+      "title": "Refresh final continuation export before marking ready",
+      "status": "CLOSED",
+      "detail": "Copied Codex ledger older than active raw ledger; outputs/eng-change not yet exported. Draft truthfully says final review pending; this is an in-flight dependency, not fabricated success.",
+      "required_fix": "After final role observed, copy evidence/output; verify source hashes/protected owner data, Native saved artifact integrity and current snapshot, complete ledger parity; update precise status.",
+      "resolution": "Both ledgers copied byte-identically; final source digest/external results/protected entry bytes match; final Native result integrity and copied project snapshot independently verified."
+    },
+    {
+      "id": "PUB-4",
+      "severity": "medium",
+      "title": "Archive verification flag description skipped its snapshot limitation",
+      "status": "CLOSED",
+      "detail": "REPLAY initially stated --allow-head-drift did not weaken snapshot binding, while verifier skips automatic current-workspace freshness when this flag is set.",
+      "resolution": "Indexed REPLAY/REPORT now explain inherited HEAD and automatic snapshot omission. Independent review separately confirms exact native_snapshot equality for both copied projects; actual live acceptance recorded no flag."
+    }
+  ],
+  "limitations": [
+    "Review checks artifacts and code, not provider invoice or human field use.",
+    "Existing temporary transport is operator experiment support, not Native default runtime.",
+    "Network shared; disposable Lab permissions are not hostile-code sandbox.",
+    "All inspected Codex actual ledger requests had verified JSON body; unused compressed-body bypass branch in relay source is not evidence of a model mismatch.",
+    "PASS certifies reviewed staged archive scope; commit/push or later altered index is outside this review snapshot.",
+    "Plan FAILs/false model claims are original observed outputs; human-written report corrects interpretation without inventing successful rerun.",
+    "Full autonomous lifecycle/general benefit, human field use, public Preview/Claim, production integration, clean-machine desktop and release remain unproved."
+  ],
+  "commands": [
+    "Read AGENTS.md, REPORT_RU.md/results.json, actual helper/transport source and saved receipts/results.",
+    "Existing ai_workflow_harness_lab.evidence.verify_bundle over eight publication bundle paths.",
+    "Path-only credential patterns and exact local ephemeral-grant equality scan; no root auth read.",
+    "Copied ENG-NEW tools/run_codex_role.py verify --allow-head-drift plus native_snapshot comparison.",
+    "Hash/public-raw ledger and plan parity, receipt-audit external source hash/holdout counts, Git check-ignore over publication files.",
+    "Read staged REPLAY/REPORT/results and four programme/status docs via git show :path; verify exact index SHA256.",
+    "Clean temporary checkout-index extraction; hashes683curatedfiles, eightLab bundles, everypost-state file, twoNative artifact verifiers plus separate snapshots, protectedfilehashes, source/holdout binding.",
+    "Recompute unique actual Go step_finish.cost from indexed nineJSONLstreams usingDecimal; compare subtotals/total.",
+    "Recheck credential patterns and exact local ephemeral grants against clean indexed bytes, output paths only; originals root auth never read.",
+    "Parse197indexedJSON; confirm4offline receipt artifacthashes and exitstatus, canonicalrequired_failures0/vNext50OK."
+  ],
+  "verdict": "PASS",
+  "manifest_digest_semantics": "SHA256 of exact indexed evidence-index.json bytes, which bind683curatedfiles. Index plus final independent review excluded from its own map to avoid circularity.",
+  "indexed_evidence_index": {
+    "path": "reports/delivery/2026-10-09-live-models/evidence-index.json",
+    "sha256": "614173ecd0a6e46a75ce9fdeca36bafb8bf5b5e2c9d83337dea237af17d2f32d",
+    "git_blob_oid": "2a844876ba199413472233f33cb7fcbd45375200",
+    "curated_files": 683,
+    "indexed_archive_files_at_review": 684,
+    "extraction_method": "git checkout-index --stdin -z --prefix=<fresh temporary directory>; no working-tree file substitution",
+    "allowed_nonmanifest_paths": [
+      "evidence-index.json",
+      "evidence/independent-publication-review.json",
+      "evidence/independent-publication-review.md"
+    ]
+  },
+  "documentation_sha256": {
+    ".gitattributes": "86bc9c87d7567806f5b7c4ef36f472913f0d3756e94c910d63a0eb9bbcf2c6b0",
+    "docs/delivery/NEXT_SESSION_PROMPT_RU.md": "bb5e4c7db9dcdc660b06dd536bef33006882080e615be72a1ca88b7e4590352f",
+    "docs/delivery/PLAN_RU.md": "e86cb4519895bb137949d8bdb15a40d26e62f707ba93dfb4f9f5874f680847b6",
+    "docs/delivery/VPS_ACCEPTANCE_RU.md": "2cd5a2c9382a04685bc676e8ed321af0b8918b5a5ad4fc4745ea4f1800f883dc",
+    "docs/vnext/STATUS.md": "d0f08da3b07032c3ec1b7cbea84919168cbcaf0cf624b10ecb6a8a58fb9afa54"
+  },
+  "indexed_checks": {
+    "indexed_file_count": 684,
+    "evidence_index_sha256": "614173ecd0a6e46a75ce9fdeca36bafb8bf5b5e2c9d83337dea237af17d2f32d",
+    "declared_curated_files": 683,
+    "hash_mismatches": [],
+    "missing": [],
+    "unexpected": [],
+    "bundles": {
+      "lab/mechanism/playbook/backend/trial-0/bundle.json": [],
+      "lab/mechanism/playbook/plan/trial-0/bundle.json": [],
+      "lab/mechanism/baseline/backend/trial-0/bundle.json": [],
+      "lab/mechanism/baseline/plan/trial-0/bundle.json": [],
+      "lab/real/playbook/backend/trial-0/bundle.json": [],
+      "lab/real/playbook/plan/trial-0/bundle.json": [],
+      "lab/real/baseline/backend/trial-0/bundle.json": [],
+      "lab/real/baseline/plan/trial-0/bundle.json": []
+    },
+    "post_state_errors": [],
+    "native_snapshots": {
+      "eng-new": true,
+      "eng-change": true
+    },
+    "role_integrity": {
+      "eng-new": {
+        "exit": 0,
+        "stdout": "{\n  \"role\": \"slice_review\",\n  \"run_id\": \"20261009T112134Z-slice_review-e91d6fd1\",\n  \"status\": \"valid\",\n  \"verdict\": \"PASS\"\n}",
+        "stderr": ""
+      },
+      "eng-change": {
+        "exit": 0,
+        "stdout": "{\n  \"role\": \"slice_review\",\n  \"run_id\": \"20261009T114632Z-slice_review-eccefcb8\",\n  \"status\": \"valid\",\n  \"verdict\": \"PASS\"\n}",
+        "stderr": ""
+      }
+    },
+    "external_acceptance": {
+      "eng-new": {
+        "source_matches": true,
+        "checks": 12,
+        "allpass": true
+      },
+      "eng-change": {
+        "source_matches": true,
+        "checks": 16,
+        "allpass": true
+      }
+    },
+    "protected_files": {
+      "owner-notes.txt": true,
+      "examples/actual-pass/receipt.json": true,
+      "examples/actual-pass/stderr.txt": true,
+      "examples/actual-pass/stdout.txt": true
+    },
+    "prior_review_stale": true,
+    "credential_pattern_paths": [],
+    "exact_ephemeral_grant_paths": {
+      "private-relay-config.json": [],
+      "private-codex-relay.json": []
+    },
+    "ignored_bytecode_present": 12,
+    "native_result_count": 6,
+    "partial_cost_checks": [
+      {
+        "path": "lab/real/playbook/backend/trial-0/adapter/event_ledger.jsonl",
+        "unique_stream": true,
+        "steps": 9,
+        "matches": true
+      },
+      {
+        "path": "lab/real/playbook/plan/trial-0/adapter/event_ledger.jsonl",
+        "unique_stream": true,
+        "steps": 6,
+        "matches": true
+      },
+      {
+        "path": "lab/real/baseline/backend/trial-0/adapter/event_ledger.jsonl",
+        "unique_stream": true,
+        "steps": 7,
+        "matches": true
+      },
+      {
+        "path": "lab/real/baseline/plan/trial-0/adapter/event_ledger.jsonl",
+        "unique_stream": true,
+        "steps": 4,
+        "matches": true
+      },
+      {
+        "path": "evidence/jobs/ENG-NEW/events.jsonl",
+        "unique_stream": true,
+        "steps": 10,
+        "matches": true
+      },
+      {
+        "path": "evidence/jobs/ENG-NEW-retry/events.jsonl",
+        "unique_stream": true,
+        "steps": 8,
+        "matches": true
+      },
+      {
+        "path": "evidence/jobs/PAIR-REVIEW/events.jsonl",
+        "unique_stream": true,
+        "steps": 1,
+        "matches": true
+      },
+      {
+        "path": "evidence/jobs/AI-EVAL/events.jsonl",
+        "unique_stream": true,
+        "steps": 1,
+        "matches": true
+      },
+      {
+        "path": "evidence/smoke-go-nonroot/stdout.jsonl",
+        "unique_stream": true,
+        "steps": 1,
+        "matches": true
+      }
+    ],
+    "partial_cost_recomputed": "0.045424519",
+    "partial_cost_total_matches": true
+  }
+}

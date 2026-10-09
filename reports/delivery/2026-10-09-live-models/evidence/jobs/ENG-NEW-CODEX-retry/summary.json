@@ -1,0 +1,36 @@
+{
+  "uid": 998,
+  "model_requested": "gpt-6.1-sol",
+  "effort": "high",
+  "cli": "0.162.0",
+  "sandbox": "workspace-write",
+  "root_auth_copied": false,
+  "original_global_config_changed": false,
+  "exit_code": 0,
+  "timed_out": false,
+  "status": "PASS execution only",
+  "telemetry": {
+    "version": "codex-execution.v1",
+    "primary": {
+      "input_tokens": 179261,
+      "cached_input_tokens": 72704,
+      "output_tokens": 10703,
+      "reasoning_output_tokens": 3689,
+      "tool_call_count": 10,
+      "review_attempts": 0
+    },
+    "reviews": [],
+    "total": {
+      "input_tokens": 179261,
+      "cached_input_tokens": 72704,
+      "output_tokens": 10703,
+      "reasoning_output_tokens": 3689,
+      "tool_call_count": 10
+    },
+    "review_count": 0,
+    "missing_review_traces": 0,
+    "latency_seconds": 318.214955586,
+    "cost": "unknown",
+    "scope": "main execution plus captured Role Runner reviews"
+  }
+}

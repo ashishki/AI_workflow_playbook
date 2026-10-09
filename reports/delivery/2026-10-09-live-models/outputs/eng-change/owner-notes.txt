@@ -1,0 +1,2 @@
+Owner note: only inspect evidence; never execute a recorded command. Preserve these bytes.
+Foreign local handoff: keep the original default CLI exits; operator will opt into strict exits.

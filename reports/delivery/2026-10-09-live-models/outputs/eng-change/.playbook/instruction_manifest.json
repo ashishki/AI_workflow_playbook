@@ -1,0 +1,41 @@
+{
+  "schema_version": "playbook.instruction_manifest.v1",
+  "artifacts": [
+    {
+      "path": "docs/PROJECT_BRIEF.md",
+      "authority": "normative",
+      "target_roles": ["strategist", "implementer", "reviewer"],
+      "stability": "phase",
+      "load_policy": "current_feature",
+      "source_authority": "human_approved_brief",
+      "executable_consumer": "render_slice_context"
+    },
+    {
+      "path": "docs/tasks.md",
+      "authority": "normative",
+      "target_roles": ["orchestrator", "implementer", "reviewer"],
+      "stability": "task",
+      "load_policy": "current_slice",
+      "source_authority": "task_contract",
+      "executable_consumer": "playbook_validate"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "authority": "normative",
+      "target_roles": ["implementer", "reviewer"],
+      "stability": "stable",
+      "load_policy": "current_feature",
+      "source_authority": "architecture",
+      "executable_consumer": "render_slice_context"
+    },
+    {
+      "path": "docs/CODEX_PROMPT.md",
+      "authority": "projection",
+      "target_roles": ["orchestrator", "implementer"],
+      "stability": "task",
+      "load_policy": "on_demand",
+      "source_authority": "session_state",
+      "executable_consumer": "human_or_agent"
+    }
+  ]
+}

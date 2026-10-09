@@ -1,0 +1,19 @@
+{
+  "design_approval_required": "not_required",
+  "implementation_ready_requires_no_scaffold_placeholders": true,
+  "mode": "lean-core",
+  "notes": [
+    "Initializer output is a scaffold until project-specific decisions are resolved.",
+    "If state is design_required, do not begin implementation until the required feature design is approved.",
+    "Do not mark implementation_ready, release_candidate, or release_ready while generated scaffold placeholders remain active.",
+    "Release readiness is resolved after tools/verify_project.py by tools/resolve_release_readiness.py."
+  ],
+  "planning_depth": "oneshot",
+  "planning_depth_source": "declared",
+  "release_ready_requires_current_verification": true,
+  "required_decision_policy": "mode_profile_risk_triggered",
+  "required_design_refs": [],
+  "schema_version": "playbook.readiness_state.v1",
+  "state": "scaffold",
+  "unresolved_decision_marker": "scaffold placeholder"
+}

@@ -1,0 +1,11 @@
+{
+  "files": {
+    "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+    "__pycache__/slugs.cpython-312.pyc": "5fcc5f3a9a0a1cad1f2a3991898a858cb85d0c7f4c1fe8e5821540a438e1a1b8",
+    "__pycache__/test_slugs.cpython-312.pyc": "08dddfbf84d07d91e6ca7c0b1cd7adf6f86d3b924be4440973cf7edd8e375bc1",
+    "slugs.py": "e7e8926605db8d31e4a35b3d6671279f803b5e3c8624ff84a6528911700687f2",
+    "test_slugs.py": "b925cd2ee6feb2d37fbf05d67a6a037a8a7559628ae0acfe1bef4a821024647e"
+  },
+  "schema_version": "harness_lab.post_state_manifest.v1",
+  "workspace": "/tmp/playbook-model-worker-wzb191rs/work/real-baseline/backend/trial-0/workspace"
+}

@@ -1,0 +1,9 @@
+{
+  "actual_cli": "/usr/bin/codex 0.162.0",
+  "wrapper": "/tmp/playbook-model-worker-wzb191rs/work/codex-relay-wrapper.py",
+  "purpose": "UID998 filesystem boundary and ephemeral original-account relay only; not fake Codex/model output",
+  "model": "gpt-6.1-sol",
+  "account_authority": "latest owner request Codex exec",
+  "global_config_changed": false,
+  "root_auth_copied": false
+}

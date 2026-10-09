@@ -1,0 +1,22 @@
+{
+  "worker_uid": 998,
+  "requested_model": "opencode-go/deepseek-v4.1-flash",
+  "exit_code": 0,
+  "timed_out": false,
+  "role": "retrieval_assistant",
+  "filesystem_boundary": "workspace and task-private SDK state only; system/runtime readonly; network shared to relay",
+  "native_role_runner": "NOT_RUN; explicit OpenCode alternative",
+  "review_count": 0,
+  "source_workspace": "/tmp/playbook-model-worker-wzb191rs/work/receipt-audit-project",
+  "status": "execution_completed",
+  "session_id": "ses_edfc7a2adffePQkeydXQ4mZh9D",
+  "counters": {
+    "input_tokens": 2136,
+    "cached_input_tokens": 0,
+    "output_tokens": 596,
+    "reasoning_output_tokens": 266,
+    "tool_call_count": 0
+  },
+  "opencode_reported_model_cost_usd": 0.000678,
+  "cost_scope": "model_estimate_not_invoice"
+}

@@ -1,0 +1,11 @@
+{
+  "errors": [
+    "codex exec exited with 1",
+    "Codex review did not complete successfully",
+    "review report is missing or empty"
+  ],
+  "result": "/tmp/playbook-model-worker-wzb191rs/work/receipt-audit-project/.playbook-artifacts/runs/20261009T113725Z-slice_review-af113ddd/result.json",
+  "run_id": "20261009T113725Z-slice_review-af113ddd",
+  "status": "execution_failed",
+  "verdict": null
+}

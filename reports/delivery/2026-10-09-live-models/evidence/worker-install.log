@@ -1,0 +1,27 @@
+Obtaining file:///srv/openclaw-you/workspace/AI_workflow_playbook/companion/ai_workflow_harness_lab
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build editable did not run successfully.
+  │ exit code: 1
+  ╰─> [2 lines of output]
+      running egg_info
+      error: Cannot update time stamp of directory 'src/ai_workflow_harness_lab.egg-info'
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: /tmp/playbook-model-worker-wzb191rs/work/venv/bin/python -m pip install --upgrade pip
+error: subprocess-exited-with-error
+
+× Getting requirements to build editable did not run successfully.
+│ exit code: 1
+╰─> See above for output.
+
+note: This error originates from a subprocess, and is likely not a problem with pip.

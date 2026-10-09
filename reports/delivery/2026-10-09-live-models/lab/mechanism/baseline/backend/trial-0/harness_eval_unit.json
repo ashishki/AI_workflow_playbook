@@ -1,0 +1,37 @@
+{
+  "adapter_version": "command.v1",
+  "budget": {
+    "correction_budget": 0,
+    "timeout_seconds": 260.0
+  },
+  "cli_version": "unknown",
+  "compatibility_fingerprint": "409fc18b6596f4fbc2447fb1717de5c2192cd2fbf6543ffe353d52e93708897c",
+  "condition": "baseline",
+  "dataset_version": "3.1.0",
+  "delivery_profile": "harness_lab_single_adapter",
+  "environment": {
+    "digest": "72eaf56915cd3431385c6a8375603176f6785324c79bf127b437ba9e1b65bcf8",
+    "workspace_policy": "fresh_fixture_copy"
+  },
+  "evaluation_mode": "mechanism_demonstration",
+  "harness_version": "0.1.0",
+  "identity_source": "unknown",
+  "memory_policy_version": "stateless_fixture_workspace.v1",
+  "model": {
+    "id": "unknown",
+    "parameters": "unknown",
+    "provider": "unknown"
+  },
+  "permission_policy_version": "adapter_default.v1",
+  "prompt_hash": "4e158db04b3b65e7f7f749dcdd920ccfbb7d50739099db19dab9952586616b20",
+  "prompt_version": "native.backend.v1:baseline",
+  "reasoning_profile": "unknown",
+  "retry_policy": "single_attempt_no_retry",
+  "schema_version": "playbook.harness_eval_unit.v1",
+  "scorer_version": "external_acceptance:1.0.0",
+  "task_id": "backend",
+  "timeout_seconds": 260.0,
+  "tool_registry_version": "harness_lab_builtin.v1",
+  "trial_index": 0,
+  "unit_id": "playbook_native_v3-backend-baseline-0"
+}

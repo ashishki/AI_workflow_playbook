@@ -1,0 +1,44 @@
+{
+  "checks": [
+    {
+      "argv": [
+        "{python}",
+        "tools/playbook_validate.py",
+        "--root",
+        ".",
+        "--check",
+        "tasks",
+        "--check",
+        "placeholders",
+        "--check",
+        "readiness",
+        "--check",
+        "design",
+        "--check",
+        "instructions",
+        "--check",
+        "delivery"
+      ],
+      "expected_exit_code": 0,
+      "id": "playbook_contract",
+      "required": true,
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "{python}",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "expected_exit_code": 0,
+      "id": "project_verification",
+      "required": true,
+      "timeout_seconds": 600
+    }
+  ],
+  "schema_version": "playbook.project_verification.v1"
+}

@@ -1,0 +1,4 @@
+{
+  "output": "/tmp/playbook-model-worker-wzb191rs/work/real-comparison",
+  "status": "empirical comparison"
+}

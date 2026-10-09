@@ -1,0 +1,21 @@
+{
+  "initial_operator_limits": {
+    "go": 96,
+    "codex": 24,
+    "total": 120
+  },
+  "go_upstream_rate_limited": true,
+  "go_relay_stopped_after_requests": 55,
+  "codex_local_guard_not_provider_denial": {
+    "reached": 24,
+    "effect": "ENGCHANGEinterruptedbeforeimplementation; preservedFAIL"
+  },
+  "reallocated_operator_limit": {
+    "go_additional": 0,
+    "codex_total": 48,
+    "combined_maximum": 103
+  },
+  "within_original_combined_request_envelope": true,
+  "no_new_provider_accounts_or_paid_trials": true,
+  "no_global_config_changes": true
+}

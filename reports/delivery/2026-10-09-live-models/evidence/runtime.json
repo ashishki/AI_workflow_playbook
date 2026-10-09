@@ -1,0 +1,10 @@
+{
+  "runtime_base": "/tmp/playbook-model-worker-wzb191rs",
+  "trusted_python_source": "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu",
+  "runtime_python": "/tmp/playbook-model-worker-wzb191rs/python/bin/python3.12",
+  "worker_uid": 998,
+  "worker_gid": 1000,
+  "work": "/tmp/playbook-model-worker-wzb191rs/work",
+  "root_credentials_copied": false,
+  "worker_python": "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python"
+}

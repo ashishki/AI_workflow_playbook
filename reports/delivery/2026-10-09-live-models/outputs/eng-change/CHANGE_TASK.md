@@ -1,0 +1,3 @@
+# ENG-CHANGE, no bootstrap rerun
+
+Continue this existing working utility in a NEW session using its current contract/state. Add optional --strict-exit CLI flag: PASS0, FAIL1, NOT_RUN3, INVALID2. Preserve original default exit behavior when flag absent. Source/JSON inspection semantics, existing data, all supplied receipt examplebytes and foreign owner-notes localchange must remain. Add4flagchecks and protect old13tests. Update short existinghand-off, leave humanT01acceptancepending. Do not reruninitializer, alterpinnedbootstrapcontracts, copyauth, useaccounts/network/installpackages or startnestedreviewer. ControllerprovidesactualNativeRoleRunnerreviewafterimplementation.

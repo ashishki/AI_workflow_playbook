@@ -1,0 +1,46 @@
+{
+  "adapter": "opencode-command.v1",
+  "condition": "baseline",
+  "package_hashes": {},
+  "workspace_before_agent": {
+    "README.md": "7aaa905513cc5b05acd15787cb9b203b8dd56c26dcc4d857a224fd4c3db1860e",
+    "slugs.py": "5d7a31bdc4376dd721b45538edc14f09b800bd8d077af6f58ecf093a65d28dbb",
+    "test_slugs.py": "6d8c33814792410d4adc48df8e936ca7f768a38352004ca08d2a0f807faed285"
+  },
+  "turn_completed": true,
+  "evaluation": "execution_validity_not_task_acceptance",
+  "provider": "opencode-go",
+  "model": "opencode-go/deepseek-v4.1-flash",
+  "cli_version": "1.18.34",
+  "worker_uid": 998,
+  "execution_valid": true,
+  "session_id": "ses_edfd932c5ffe29nQXO9TewwoyY",
+  "raw_openCode_reported_cost_usd": 0.001691298,
+  "cost_scope": "CLI_model_estimate_not_invoice",
+  "usage_semantics": "input includes cached/read/write; output includes text+reasoning; reasoning also explicit subset",
+  "execution_telemetry": {
+    "version": "opencode-execution.v1",
+    "primary": {
+      "input_tokens": 16767,
+      "cached_input_tokens": 12416,
+      "output_tokens": 1669,
+      "reasoning_output_tokens": 333,
+      "tool_call_count": 7
+    },
+    "reviews": [],
+    "total": {
+      "input_tokens": 16767,
+      "cached_input_tokens": 12416,
+      "output_tokens": 1669,
+      "reasoning_output_tokens": 333,
+      "tool_call_count": 7
+    },
+    "review_count": 0,
+    "missing_review_traces": 0,
+    "latency_seconds": 21.58145804,
+    "cost": "unknown",
+    "scope": "OpenCode main only; separate reviewer cost must be added separately"
+  },
+  "exit_code": 0,
+  "timed_out": false
+}

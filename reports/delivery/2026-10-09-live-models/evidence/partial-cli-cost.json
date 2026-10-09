@@ -1,0 +1,62 @@
+{
+  "schema": "delivery.partial_cli_cost_estimate.v1",
+  "scope": "Unique real Go OpenCode JSONL streams only; observed step_finish.cost, including visible partial failed calls. Mechanism mocks excluded. API-only/Codex/hidden failed usage, subscription allocation and human effort excluded. Not provider invoice or total experiment cost.",
+  "observations": [
+    {
+      "path": "lab/real/playbook/backend/trial-0/adapter/event_ledger.jsonl",
+      "observed_steps": 9,
+      "steps_with_cost": 9,
+      "cli_reported_estimate_usd": 0.00237681
+    },
+    {
+      "path": "lab/real/playbook/plan/trial-0/adapter/event_ledger.jsonl",
+      "observed_steps": 6,
+      "steps_with_cost": 6,
+      "cli_reported_estimate_usd": 0.0031502100000000005
+    },
+    {
+      "path": "lab/real/baseline/backend/trial-0/adapter/event_ledger.jsonl",
+      "observed_steps": 7,
+      "steps_with_cost": 7,
+      "cli_reported_estimate_usd": 0.0017038440000000001
+    },
+    {
+      "path": "lab/real/baseline/plan/trial-0/adapter/event_ledger.jsonl",
+      "observed_steps": 4,
+      "steps_with_cost": 4,
+      "cli_reported_estimate_usd": 0.001691298
+    },
+    {
+      "path": "evidence/jobs/ENG-NEW/events.jsonl",
+      "observed_steps": 10,
+      "steps_with_cost": 10,
+      "cli_reported_estimate_usd": 0.015457955999999998
+    },
+    {
+      "path": "evidence/jobs/ENG-NEW-retry/events.jsonl",
+      "observed_steps": 8,
+      "steps_with_cost": 8,
+      "cli_reported_estimate_usd": 0.008867011000000001
+    },
+    {
+      "path": "evidence/jobs/PAIR-REVIEW/events.jsonl",
+      "observed_steps": 1,
+      "steps_with_cost": 1,
+      "cli_reported_estimate_usd": 0.01125954
+    },
+    {
+      "path": "evidence/jobs/AI-EVAL/events.jsonl",
+      "observed_steps": 1,
+      "steps_with_cost": 1,
+      "cli_reported_estimate_usd": 0.000678
+    },
+    {
+      "path": "evidence/smoke-go-nonroot/stdout.jsonl",
+      "observed_steps": 1,
+      "steps_with_cost": 1,
+      "cli_reported_estimate_usd": 0.00023985
+    }
+  ],
+  "partial_opencode_cli_reported_estimate_usd": 0.045424519,
+  "usd_total": null
+}

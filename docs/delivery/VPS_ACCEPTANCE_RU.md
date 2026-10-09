@@ -5,9 +5,15 @@
 Используйте непривилегированного пользователя, отдельный checkout/одноразовые
 рабочие копии и разрешённую среду. Не используйте реальные данные в fault injection.
 
+Наблюдения 9 октября: [source/technical](../../reports/delivery/2026-10-09/REPORT_RU.md)
+и [настоящие OpenCode/Codex прогоны](../../reports/delivery/2026-10-09-live-models/REPORT_RU.md).
+Это отдельные отчёты, а не предварительный PASS всей инструкции. Актуальную
+очередь и уже проверенный путь запуска смотрите в [следующей сессии](NEXT_SESSION_PROMPT_RU.md).
+
 ## A. Исходники и полная среда (D00)
 
-Получите `feature/playbook-delivery-20260920` обычным git fetch/switch. Перед
+Получите текущую `feature/delivery-acceptance-20261009` обычным git fetch/switch;
+`feature/playbook-delivery-20260920` — историческая source-ветка. Перед
 переключением сохраните чужие незакоммиченные изменения; не делайте reset --hard.
 Из корня checkout:
 

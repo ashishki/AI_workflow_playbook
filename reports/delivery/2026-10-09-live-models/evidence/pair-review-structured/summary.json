@@ -1,0 +1,14 @@
+{
+  "uid": 998,
+  "requested_model": "glm-5.3",
+  "session_id": "e5ae5c8e07a140c9b5498696a3efa2d2",
+  "prompt_sha256": "8778149985b936e181a39684f2ae0337b7c48831fb406ac0008adc560cbdb773",
+  "role": "readonly_inference_no_tools",
+  "format": "actualGoAPIresponse; not Codex/OpenCodeCLI trace",
+  "source_parser": "existing PA mimo_code_review._read_review_stream",
+  "root_provider_key_copied": false,
+  "status": "FAIL",
+  "error_type": "HTTPError",
+  "reason": "HTTP Error 429: Too Many Requests",
+  "wall_seconds": 0.495119571685791
+}

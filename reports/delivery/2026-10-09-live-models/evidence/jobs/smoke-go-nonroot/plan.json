@@ -1,0 +1,10 @@
+{
+  "requested_model": "opencode-go/deepseek-v4.1-flash",
+  "worker_uid": 998,
+  "output_cap": 800,
+  "timeout": 120,
+  "root_credentials_copied": false,
+  "credential_broker": "ephemeralcontroller, no model tools, root auth stays original profile",
+  "account_creation": false,
+  "provider": "authorized existing OpenCode Go"
+}
