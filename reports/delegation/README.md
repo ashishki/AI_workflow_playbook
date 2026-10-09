@@ -8,7 +8,8 @@
   делегирование медленнее одного Playbook-агента в 1.46 раза, uncached input выше
   в 2.93 раза. Польза на этом сценарии не показана; qualification BLOCKED.
 
-В master перенесён только этот архив. Runtime Playbook, Delivery/Desktop и
+Подготовленный перенос в master содержит этот архив и поясняющую документацию.
+Runtime Playbook, Delivery/Desktop и
 автоматическое включение делегирования этим переносом не меняются. Исполняемый
 harness сохранён в [исходной версии экспериментальной ветки](https://github.com/ashishki/AI_workflow_playbook/tree/ad55ee487ea0ff3b62ac9aefdfbdef115dcb7516/engineering/experiments/controlled-delegation).
 Замороженные preflight, исходные FAIL/STOP_SHIP и последующие исправления сохранены.
