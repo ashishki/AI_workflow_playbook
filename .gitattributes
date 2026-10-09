@@ -5,3 +5,5 @@ tools/codex_role_run_lib.py text eol=lf
 tools/solution_record.py text eol=lf
 docs/native/start.html text eol=lf
 docs/LEGAL_STATUS.md text eol=lf
+tools/playbook_environment.py text eol=lf
+docs/native/HELP_RU.md text eol=lf

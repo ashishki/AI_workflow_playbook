@@ -1,8 +1,10 @@
 {
   "name": "playbook-native",
-  "version": "0.2.0-preview.1",
+  "version": "0.2.0-preview.3",
   "description": "A full work-solution lifecycle: discover, decide, design, build, verify, introduce, observe, change, diagnose, recover, transfer, grow and retire.",
-  "author": {"name": "AI Workflow Playbook"},
+  "author": {
+    "name": "AI Workflow Playbook"
+  },
   "skills": "./skills/",
   "interface": {
     "displayName": "Playbook",

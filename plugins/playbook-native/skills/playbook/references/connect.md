@@ -1,5 +1,7 @@
 # Connect, update, or remove
 
+If `.playbook-setup/install.json` is present, use [managed setup](setup.md) for update/remove instead of this manual route. Do not create a second skill copy.
+
 Connect the current repository with a small, inspectable change. The user's
 request to connect authorizes local setup; do not add a second approval step
 for the ordinary edits below. Honor existing instructions and permissions.
