@@ -7,10 +7,10 @@
   "adapter": "platform_collaboration_read_only",
   "native_role_runner": "NOT_RUN",
   "model_identity": "inherited platform agent; exact model identifier/usage/billing not exposed",
-  "created_utc": "2026-10-09T09:02:49.684625+00:00",
+  "created_utc": "2026-10-09T08:54:28.140013+00:00",
   "runtime_source_commit": "7f36b90859a17c07f47197fed32e5fe1f4c8e1b3",
   "reviewed_report_results_and_docs_sha256": {
-    "reports/delivery/2026-10-09/REPORT_RU.md": "e3ce16c219f30d893a573b51d7d159a8551a48837232f349efc74aba7ba3f924",
+    "reports/delivery/2026-10-09/REPORT_RU.md": "c242b8dd7b3c0bd5e07d6d480ce134940bf41f7312dd427c65f2191eb7655980",
     "reports/delivery/2026-10-09/results.json": "1f88cf4e41ccbc4311a787ba82d2889d8d1e7b00c4780528ecd36e1af25b13ad",
     "reports/delivery/2026-10-09/REPLAY_RU.md": "3baa2327bf021da345aa95b50ac82f43de4490450682af3e2fabeeecbdb921ab",
     "docs/vnext/STATUS.md": "dd8e32125f63aeb8b89d318356442724a1b09d4e16abf95d3412d1674ffda925",
@@ -37,9 +37,9 @@
     "reports/delivery/2026-10-09/outputs/corrected-app/test_app.py": "96543f6b872824423adc77c621372cfc86f3ea5b9c23aca19265de0d1f54c9f6"
   },
   "evidence_index_verified": {
-    "entries": 456,
+    "entries": 454,
     "mismatches": [],
-    "sha256_at_review": "82fd5f196006c38da3df5e18bf57012f950031eb21049982eb7856bb6292ae81",
+    "sha256_at_review": "677cd86e35103c6800680ead218478412f2d9b55a8cf5939cf7ca851128aca2a",
     "circular_self_final_review_exclusion": "index excludes itself and final.md/final.json; no final verdict was fabricated in advance"
   },
   "copied_receipt_artifact_digests_verified": 93,
@@ -208,25 +208,5 @@
     "Signing/notarization/rights/public distribution/release remain owner decisions.",
     "Reviewer made no source/doc edits, credentials reads, account login, paid model API calls, external sends or recursive reviewer.",
     ".gitattributes archive-only -text and narrowly scoped rawlog -whitespace preserve evidence bytes; implementation whitespace rules unchanged."
-  ],
-  "review_revision": "focused_role_wording_correction_rebind",
-  "focused_followup": {
-    "scope": "Only D00 actor attribution wording plus preserved prior-final artifacts and evidence-index update. No new broader verification claimed.",
-    "prior_verdict_preserved_verbatim": {
-      "md": {
-        "path": "evidence/review/final-before-role-wording-correction.md",
-        "sha256": "b3e8525bb319a3e0f99f81084f65382e15565ca2ff7cc7e6552d34ec7eef809e"
-      },
-      "json": {
-        "path": "evidence/review/final-before-role-wording-correction.json",
-        "sha256": "1c92bb1e411a37e2e7a8babe38dcc199e3dd063024c063dfeb753b9c151f9c28"
-      }
-    },
-    "reference_commit": "29c30f0",
-    "report_delta_verified": "One sentence changed: reviewer found two P2, main implementer fixed, reviewer remained read-only.",
-    "all_other_previously_reviewed_docs_source_results_unchanged": true,
-    "all_456_indexed_bytes_verified": true,
-    "findings_status_unchanged": true,
-    "future_final_head_ci": "Not observed by this focused reviewer yet; root must check actual new commit before merge."
-  }
+  ]
 }

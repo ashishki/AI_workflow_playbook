@@ -171,7 +171,8 @@ model/provider и бюджетом; его авторизация не копи�
 ## Независимое review, стоимость и польза
 
 [Первоначальные результаты](evidence/review/initial.json) сохранены отдельно от
-последующего recheck. D00 reviewer исправил два P2 sandbox invocation/copy identity.
+последующего recheck. D00 reviewer нашёл два P2 sandbox invocation/copy identity;
+исправления внёс основной исполнитель, reviewer оставался read-only.
 Предварительный Desktop audit выявил pending-journal false green и missing/tampered
 runtime pointer. Новый reviewer обнаружил неправильную managed command и bypass
 journal identity при mutation. Confirmed defects исправлены и соответствующие

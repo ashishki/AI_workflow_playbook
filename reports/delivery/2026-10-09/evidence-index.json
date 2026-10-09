@@ -4,7 +4,7 @@
   "files": {
     "REPLAY_RU.md": "3baa2327bf021da345aa95b50ac82f43de4490450682af3e2fabeeecbdb921ab",
     "results.json": "1f88cf4e41ccbc4311a787ba82d2889d8d1e7b00c4780528ecd36e1af25b13ad",
-    "REPORT_RU.md": "c242b8dd7b3c0bd5e07d6d480ce134940bf41f7312dd427c65f2191eb7655980",
+    "REPORT_RU.md": "e3ce16c219f30d893a573b51d7d159a8551a48837232f349efc74aba7ba3f924",
     "D00_REPORT_RU.md": "30e9781bc9a40683d50a9ffc0794be2e742129a41925aaecee217890b8bb149f",
     "evidence/review/initial-vnext-tests.stderr.txt": "92a979838b2b79bb12735bc9fa7aa505493375d03be23155d25a3d68767e759e",
     "evidence/review/transfer-app-complete-copy.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -455,7 +455,9 @@
     "outputs/initial-app/.playbook-artifacts/lifecycle-rehearsal/export.json": "d82fae08f6501d737d68d4771e9e2c043949ef8f75f1b3e9b848523adf231b56",
     "outputs/initial-app/.playbook-artifacts/lifecycle-rehearsal/restored.json.retired": "19e7b0ff79ca88cab670a11003bae29374028fcca4f54439f5daa552a3a57618",
     "outputs/initial-app/.playbook-artifacts/lifecycle-rehearsal/source.json": "d82fae08f6501d737d68d4771e9e2c043949ef8f75f1b3e9b848523adf231b56",
-    "outputs/initial-app/.playbook-artifacts/lifecycle-rehearsal/retired-export.json": "d82fae08f6501d737d68d4771e9e2c043949ef8f75f1b3e9b848523adf231b56"
+    "outputs/initial-app/.playbook-artifacts/lifecycle-rehearsal/retired-export.json": "d82fae08f6501d737d68d4771e9e2c043949ef8f75f1b3e9b848523adf231b56",
+    "evidence/review/final-before-role-wording-correction.md": "b3e8525bb319a3e0f99f81084f65382e15565ca2ff7cc7e6552d34ec7eef809e",
+    "evidence/review/final-before-role-wording-correction.json": "1c92bb1e411a37e2e7a8babe38dcc199e3dd063024c063dfeb753b9c151f9c28"
   },
   "excluded_paths": [
     "evidence-index.json",
