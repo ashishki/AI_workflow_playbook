@@ -1,0 +1,52 @@
+{
+  "command_argv": [
+    "python3",
+    "tools/vnext_check.py",
+    "--root",
+    "."
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "dirty_state_after": [
+    "A  engineering/experiments/controlled-delegation/ROUND3_PROTOCOL_RU.md",
+    "A  engineering/experiments/controlled-delegation/round3.py",
+    "A  engineering/experiments/controlled-delegation/round3_checks.py",
+    "A  engineering/experiments/controlled-delegation/round3_fixtures.py",
+    "A  engineering/experiments/controlled-delegation/round3_report.py",
+    "A  tests/vnext/test_controlled_delegation_round3.py",
+    "A  tests/vnext/test_controlled_delegation_round3_fixture.py"
+  ],
+  "dirty_state_before": [
+    "A  engineering/experiments/controlled-delegation/ROUND3_PROTOCOL_RU.md",
+    "A  engineering/experiments/controlled-delegation/round3.py",
+    "A  engineering/experiments/controlled-delegation/round3_checks.py",
+    "A  engineering/experiments/controlled-delegation/round3_fixtures.py",
+    "A  engineering/experiments/controlled-delegation/round3_report.py",
+    "A  tests/vnext/test_controlled_delegation_round3.py",
+    "A  tests/vnext/test_controlled_delegation_round3_fixture.py"
+  ],
+  "end_timestamp": "2026-10-08T17:52:22Z",
+  "environment_summary": {
+    "machine": "x86_64",
+    "platform": "Linux-5.15.0-170-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "python_executable": "/usr/bin/python3",
+    "timed_out": false,
+    "timeout": 60.0
+  },
+  "exit_code": 0,
+  "parent_receipt_id": null,
+  "producer": "tools/receipt_run.py",
+  "receipt_id": "round3-source-contracts-1791481942-84cd33f9",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "7e744f8d40fedd49e30a9a24dc4bb1a6bcf07cc8",
+  "repo_commit_before": "7e744f8d40fedd49e30a9a24dc4bb1a6bcf07cc8",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-10-08T17:52:22Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "100cb5db77f584b62ff0c2092bbe1bfd449d610e5cad6612a6a6446f971eaa09",
+  "task_id": "round3-source-contracts",
+  "working_directory": "/srv/openclaw-you/workspace/AI_workflow_playbook"
+}

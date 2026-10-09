@@ -1,0 +1,76 @@
+{
+  "batches": [
+    {
+      "batch_id": "checkout_events-0",
+      "channel": "checkout_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 0,
+      "records": [
+        {
+          "captured_minor": 1000,
+          "delivered_at": "2026-10-08T09:05:00Z",
+          "event_id": "ORD-311",
+          "lines": [
+            {
+              "qty": 2,
+              "sku": "BOOK",
+              "warehouse": "north"
+            }
+          ],
+          "order_id": "O-17",
+          "revision": 2,
+          "status": "pending",
+          "tenant": "shop"
+        }
+      ]
+    }
+  ],
+  "build": "r31",
+  "checkpoint": {
+    "checkpoint_id": "CP-31",
+    "events": {
+      "build": "r31",
+      "checkout_events": [
+        {
+          "captured_minor": 1000,
+          "delivered_at": "2026-10-08T09:00:00Z",
+          "event_id": "ORD-310",
+          "lines": [
+            {
+              "qty": 2,
+              "sku": "BOOK",
+              "warehouse": "north"
+            }
+          ],
+          "order_id": "O-17",
+          "revision": 10,
+          "status": "paid",
+          "tenant": "shop"
+        }
+      ],
+      "inventory_events": [
+        {
+          "action": "reserve",
+          "event_id": "INV-310",
+          "operation_id": "op-41",
+          "order_id": "O-17",
+          "qty": 2,
+          "sku": "BOOK",
+          "tenant": "shop",
+          "warehouse": "north"
+        }
+      ],
+      "opening_stock": [
+        {
+          "qty": 8,
+          "sku": "BOOK",
+          "tenant": "shop",
+          "warehouse": "north"
+        }
+      ],
+      "refund_events": []
+    },
+    "sha256": "18da43eb54c2f356ebab11dcfb2406b6896b25d665e4a4554a6eca682cc1b34e"
+  },
+  "format": "checkpoint-v1"
+}

@@ -1,0 +1,117 @@
+{
+  "current_source_sha256": {
+    "engineering/experiments/controlled-delegation/evaluate.py": "0f39348a3cb771f1ec3940fa23e8de55f01d8c01e275384d68e95f211f1a0fc3",
+    "engineering/experiments/controlled-delegation/experiment_checks.py": "f18cc68a0529a74dd67981ee80497a33d3798262679f47b992caa27eb5ae6954",
+    "engineering/experiments/controlled-delegation/experiment_core.py": "9e623ab8a2439ad0d452eedd40d6900ee02483eba81ae25b9adde39b57779253",
+    "engineering/experiments/controlled-delegation/experiment_report.py": "c6876a62f0d6df4e3a74883fe09719700adbc0655bd3690ef4a9112e1713f56c",
+    "engineering/experiments/controlled-delegation/money_exact.py": "a0c48c772a206dc28ac028d9f71f394a1ab6d170eb5aa1d38c43a0d569a92d55",
+    "engineering/experiments/controlled-delegation/round2.py": "2ddcd1ba49f147d1eee3e70025cdad49aac418f7e79f3863bf3ce76a7b39258b",
+    "engineering/experiments/controlled-delegation/round2_checks.py": "79d3022faedc239830da5c07ff77466ebf3b7b1405e70a426e5b6f84b39dad35",
+    "engineering/experiments/controlled-delegation/round2_diagnostics.py": "c3a05423669f553c754f0534cc5351044ad49cad7c329f76b06986c6a3c30b45",
+    "engineering/experiments/controlled-delegation/round2_fixtures.py": "5b7e73ac6249be35f60cb6e45d8701814353d365c6c79c25d6eb945ffd69f0a5",
+    "engineering/experiments/controlled-delegation/round2_host.py": "36bd7d90176e5ef1360270494401510c10119e90d145b8322075c08d42bfa594",
+    "engineering/experiments/controlled-delegation/round2_posthoc.py": "8832b8a5cccd622d11c329c50a0a10fc3e088acc8c2bf2ef287474d0abc04ed5",
+    "engineering/experiments/controlled-delegation/round2_report.py": "a0064885933389136ff9fc204904ca19aff3c829e14096897f587591acaa2de7",
+    "tests/vnext/test_controlled_delegation.py": "8553a31c64dfa3bf3f65215d3dee807a1f17b125d50c13eaf56e397b233458af",
+    "tests/vnext/test_controlled_delegation_round2.py": "20d258431786d966a9e30c89c0cbbc653a3fa08a95c11457bbd359a02a38d673",
+    "tests/vnext/test_delegation_money_exact.py": "311d984c4c8de85306cd74963f62a7b21ffd4020b56734e623f360bf8796ccd4"
+  },
+  "final_independent_scope": "final caller/helper/integration regression only; not a whole repository or live re-audit",
+  "final_independent_verdict": "PASS",
+  "full_tree_postfix_independent_reaudit": "NOT_RUN",
+  "independent_reviews": [
+    {
+      "cost_usd": null,
+      "path": "evidence/source-review-stop-ship.json",
+      "scope": "broad scoped source review before timeout/precedence/partial-counter fixes",
+      "status": "validated",
+      "thread_ids": [
+        "01a11bef-0732-7f60-9e25-6839a5cc040a"
+      ],
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 296320,
+          "input_tokens": 348649,
+          "output_tokens": 2652,
+          "reasoning_output_tokens": 872
+        }
+      ],
+      "verdict": "STOP_SHIP",
+      "wall_seconds": 114.687
+    },
+    {
+      "cost_usd": null,
+      "path": "evidence/source-review-focused-stop-ship.json",
+      "scope": "three-function focused follow-up before default-binding fix",
+      "status": "validated",
+      "thread_ids": [
+        "01a11bf4-a453-7272-bc8a-ff07f32b2deb"
+      ],
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 93440,
+          "input_tokens": 114401,
+          "output_tokens": 1962,
+          "reasoning_output_tokens": 780
+        }
+      ],
+      "verdict": "STOP_SHIP",
+      "wall_seconds": 85.267
+    },
+    {
+      "cost_usd": null,
+      "path": "evidence/source-review-binding-stop-ship.json",
+      "scope": "binding-function/callers follow-up before final caller verdict-independent binding fix",
+      "status": "validated",
+      "thread_ids": [
+        "01a11bfa-b473-7cd0-b440-9774db6f7206"
+      ],
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 89344,
+          "input_tokens": 107286,
+          "output_tokens": 1491,
+          "reasoning_output_tokens": 496
+        }
+      ],
+      "verdict": "STOP_SHIP",
+      "wall_seconds": 62.726
+    },
+    {
+      "cost_usd": null,
+      "path": "evidence/source-review-final-caller.json",
+      "scope": "final caller/helper/integration regression only; not a whole repository or live re-audit",
+      "status": "validated",
+      "thread_ids": [
+        "01a11c00-2499-7ad0-be86-fd5ca4a885b8"
+      ],
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 56832,
+          "input_tokens": 74139,
+          "output_tokens": 973,
+          "reasoning_output_tokens": 322
+        }
+      ],
+      "verdict": "PASS",
+      "wall_seconds": 49.442
+    }
+  ],
+  "limits": [
+    "Final PASS is scoped; prior actual STOP_SHIP snapshots are retained.",
+    "Desktop check ERROR: tkinter unavailable.",
+    "Source tests/repairs do not rewrite any original model run."
+  ],
+  "operator_checks": "evidence/source-checks.json",
+  "source_review_findings_fixed": [
+    "outer QA timeout receipt/capture",
+    "matching/stale STOP_SHIP precedence",
+    "partial QA counters",
+    "default binding is unknown",
+    "final caller hash binding independent of verdict"
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "batches": [
+    {
+      "batch_id": "checkout_events-0",
+      "channel": "checkout_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 0,
+      "records": [
+        {
+          "captured_minor": 1000,
+          "delivered_at": "2026-10-08T09:00:00Z",
+          "event_id": "ORD-301",
+          "lines": [
+            {
+              "qty": 2,
+              "sku": "BOOK",
+              "warehouse": "north"
+            },
+            {
+              "qty": 2,
+              "sku": "BOOK",
+              "warehouse": "south"
+            }
+          ],
+          "order_id": "O-17",
+          "revision": 10,
+          "status": "paid",
+          "tenant": "shop"
+        }
+      ]
+    },
+    {
+      "batch_id": "inventory_events-2",
+      "channel": "inventory_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 2,
+      "records": [
+        {
+          "action": "reserve",
+          "event_id": "INV-303",
+          "operation_id": "op-41",
+          "order_id": "O-17",
+          "qty": 2,
+          "sku": "BOOK",
+          "tenant": "shop",
+          "warehouse": "north"
+        }
+      ]
+    },
+    {
+      "batch_id": "inventory_events-1",
+      "channel": "inventory_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 1,
+      "records": [
+        {
+          "action": "reserve",
+          "event_id": "INV-302",
+          "operation_id": "op-41",
+          "order_id": "O-17",
+          "qty": 2,
+          "sku": "BOOK",
+          "tenant": "shop",
+          "warehouse": "south"
+        }
+      ]
+    },
+    {
+      "batch_id": "inventory_events-0",
+      "channel": "inventory_events",
+      "delivered_at": "2026-10-08T09:10:00Z",
+      "ordinal": 0,
+      "records": [
+        {
+          "action": "reserve",
+          "event_id": "INV-301",
+          "operation_id": "op-41",
+          "order_id": "O-17",
+          "qty": 2,
+          "sku": "BOOK",
+          "tenant": "shop",
+          "warehouse": "north"
+        }
+      ]
+    }
+  ],
+  "build": "r31",
+  "format": "batches-v1",
+  "opening_stock": [
+    {
+      "qty": 8,
+      "sku": "BOOK",
+      "tenant": "shop",
+      "warehouse": "north"
+    },
+    {
+      "qty": 8,
+      "sku": "BOOK",
+      "tenant": "shop",
+      "warehouse": "south"
+    }
+  ]
+}

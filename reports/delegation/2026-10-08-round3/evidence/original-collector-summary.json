@@ -1,0 +1,124 @@
+{
+  "c_b_token_ratios": {
+    "cached_input_tokens": 3.33206106870229,
+    "input_tokens": 3.2790761085282556,
+    "output_tokens": 1.687098338789863,
+    "uncached_input_tokens": 2.93030802648452
+  },
+  "c_b_wall": 1.461409860021218,
+  "median_implementation_wall_seconds": {
+    "A": 249.60199999999998,
+    "B": 242.25099999999998,
+    "C": 354.028
+  },
+  "paired_outcomes": [
+    {
+      "A": {
+        "cached_input_tokens": 643712,
+        "implementation_wall_seconds": 259.085,
+        "input_tokens": 757190,
+        "output_tokens": 11036,
+        "protocol_status": "FAIL",
+        "score": 100,
+        "task_status": "PASS",
+        "uncached_input_tokens": 113478,
+        "usage_complete": true,
+        "wall_seconds": 259.849
+      },
+      "B": {
+        "cached_input_tokens": 251648,
+        "implementation_wall_seconds": 229.588,
+        "input_tokens": 284642,
+        "output_tokens": 7594,
+        "protocol_status": "PASS",
+        "score": 100,
+        "task_status": "PASS",
+        "uncached_input_tokens": 32994,
+        "usage_complete": true,
+        "wall_seconds": 230.528
+      },
+      "C": {
+        "cached_input_tokens": 909696,
+        "implementation_wall_seconds": 380.293,
+        "input_tokens": 1022145,
+        "output_tokens": 15000,
+        "protocol_status": "FAIL",
+        "score": 100,
+        "task_status": "PASS",
+        "uncached_input_tokens": 112449,
+        "usage_complete": true,
+        "wall_seconds": 383.924
+      },
+      "c_b_wall": 1.656414969423489,
+      "repeat": 1
+    },
+    {
+      "A": {
+        "cached_input_tokens": 658560,
+        "implementation_wall_seconds": 240.119,
+        "input_tokens": 730409,
+        "output_tokens": 11444,
+        "protocol_status": "FAIL",
+        "score": 100,
+        "task_status": "PASS",
+        "uncached_input_tokens": 71849,
+        "usage_complete": true,
+        "wall_seconds": 240.943
+      },
+      "B": {
+        "cached_input_tokens": 251392,
+        "implementation_wall_seconds": 254.914,
+        "input_tokens": 294820,
+        "output_tokens": 8900,
+        "protocol_status": "PASS",
+        "score": 100,
+        "task_status": "PASS",
+        "uncached_input_tokens": 43428,
+        "usage_complete": true,
+        "wall_seconds": 255.787
+      },
+      "C": {
+        "cached_input_tokens": 766464,
+        "implementation_wall_seconds": 327.763,
+        "input_tokens": 877955,
+        "output_tokens": 12827,
+        "protocol_status": "FAIL",
+        "score": 100,
+        "task_status": "PASS",
+        "uncached_input_tokens": 111491,
+        "usage_complete": true,
+        "wall_seconds": 328.613
+      },
+      "c_b_wall": 1.285778733219831,
+      "repeat": 2
+    }
+  ],
+  "scenario_signal": "NO_SHOWN_BENEFIT_OR_MIXED",
+  "successful_pair_comparable": false,
+  "token_totals": {
+    "A": {
+      "cached_input_tokens": 1302272,
+      "input_tokens": 1487599,
+      "output_tokens": 22480,
+      "uncached_input_tokens": 185327
+    },
+    "B": {
+      "cached_input_tokens": 503040,
+      "input_tokens": 579462,
+      "output_tokens": 16494,
+      "uncached_input_tokens": 76422
+    },
+    "C": {
+      "cached_input_tokens": 1676160,
+      "input_tokens": 1900100,
+      "output_tokens": 27827,
+      "uncached_input_tokens": 223940
+    }
+  },
+  "usage_complete": {
+    "A": true,
+    "B": true,
+    "C": true
+  },
+  "wall_ratio_interpretation": "descriptive only; capped/failing runs are not speedup"
+}

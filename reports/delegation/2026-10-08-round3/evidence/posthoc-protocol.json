@@ -1,0 +1,106 @@
+{
+  "no_task_or_score_or_original_receipt_changes": true,
+  "runs": [
+    {
+      "condition": "C",
+      "id": "25faacc4cc17",
+      "original_protocol_status": "FAIL",
+      "original_receipt_sha256": "66945473a960b63f65f4d7db2a73bbd99808cb0b4b1d9840503bcaf1faffcbde",
+      "posthoc_protocol": {
+        "blockers": [
+          "worker scope instruction unavailable or opaque",
+          "worker scope instruction unavailable or opaque",
+          "worker scope instruction unavailable or opaque"
+        ],
+        "failures": [],
+        "status": "BLOCKED"
+      },
+      "repeat": 1,
+      "scope_verified": false,
+      "task_score_unchanged": 100
+    },
+    {
+      "condition": "A",
+      "id": "bf245d10815a",
+      "original_protocol_status": "FAIL",
+      "original_receipt_sha256": "99ebce223c9ce28267e5edaf337c3af6b1f4e70737fd673f6dce94393cc928d9",
+      "posthoc_protocol": {
+        "blockers": [
+          "worker scope instruction unavailable or opaque",
+          "worker scope instruction unavailable or opaque",
+          "worker scope instruction unavailable or opaque"
+        ],
+        "failures": [],
+        "status": "BLOCKED"
+      },
+      "repeat": 1,
+      "scope_verified": false,
+      "task_score_unchanged": 100
+    },
+    {
+      "condition": "B",
+      "id": "bbcd1abca7bd",
+      "original_protocol_status": "PASS",
+      "original_receipt_sha256": "6c55d86d3c60ff8160dde8b09f233f1ac296acaa41b97de6405ecf5649df2235",
+      "posthoc_protocol": {
+        "blockers": [],
+        "failures": [],
+        "status": "PASS"
+      },
+      "repeat": 1,
+      "scope_verified": true,
+      "task_score_unchanged": 100
+    },
+    {
+      "condition": "C",
+      "id": "3019c182a444",
+      "original_protocol_status": "FAIL",
+      "original_receipt_sha256": "9bc23db5212c742f563daa7eebcc0c07586ee85db8c6e4d29862ab95ee9ab02e",
+      "posthoc_protocol": {
+        "blockers": [
+          "worker scope instruction unavailable or opaque",
+          "worker scope instruction unavailable or opaque",
+          "worker scope instruction unavailable or opaque"
+        ],
+        "failures": [],
+        "status": "BLOCKED"
+      },
+      "repeat": 2,
+      "scope_verified": false,
+      "task_score_unchanged": 100
+    },
+    {
+      "condition": "A",
+      "id": "046b19a93202",
+      "original_protocol_status": "FAIL",
+      "original_receipt_sha256": "feccb93e44f99330abdedf19f5622e26e583ac91cec397ddac9a82fc0a530661",
+      "posthoc_protocol": {
+        "blockers": [
+          "worker scope instruction unavailable or opaque",
+          "worker scope instruction unavailable or opaque",
+          "worker scope instruction unavailable or opaque"
+        ],
+        "failures": [],
+        "status": "BLOCKED"
+      },
+      "repeat": 2,
+      "scope_verified": false,
+      "task_score_unchanged": 100
+    },
+    {
+      "condition": "B",
+      "id": "1cde12b352bb",
+      "original_protocol_status": "PASS",
+      "original_receipt_sha256": "267680d0c3568bc64f1bcb4b0085e96771f78aa41fc0144b4642ae52fb05c620",
+      "posthoc_protocol": {
+        "blockers": [],
+        "failures": [],
+        "status": "PASS"
+      },
+      "repeat": 2,
+      "scope_verified": true,
+      "task_score_unchanged": 100
+    }
+  ],
+  "scope": "classification correction after actual independent STOP_SHIP"
+}

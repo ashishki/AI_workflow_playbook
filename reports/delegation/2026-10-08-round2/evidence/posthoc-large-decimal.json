@@ -1,0 +1,139 @@
+{
+  "kind": "large_decimal_contract",
+  "original_scores_changed": false,
+  "rubric_changed": false,
+  "runs": [
+    {
+      "case": "sales_import",
+      "condition": "C",
+      "exit_code": 0,
+      "expected_minor_bit_length": 16617,
+      "export_exact": true,
+      "id": "124a7e31acc4",
+      "import_created": true,
+      "input_amount": "1e5000",
+      "original_source_unchanged": true,
+      "python_digit_limit_after_import": 4300,
+      "python_digit_limit_before_import": 4300,
+      "repeat": 2,
+      "replay_exact": true,
+      "source_sha256": {
+        "engine.py": "458b6eb09d3c25ad6b2fc97f2bc1f033ecf6ed390b03c5763c5d0a5e635714b8",
+        "money_exact.py": "20423e9fdf966353674b7362d725e98ebe1aa66d29f5e3e88a933f6b10f36083",
+        "test_engine.py": "51a037e8908626e30a093aefba51d20b74b1e2e7ce78859022ac018a7285208d"
+      },
+      "status": "PASS",
+      "wall_seconds": 0.172
+    },
+    {
+      "case": "sales_import",
+      "condition": "A",
+      "exit_code": 0,
+      "expected_minor_bit_length": 16617,
+      "export_exact": true,
+      "id": "c97874abb916",
+      "import_created": true,
+      "input_amount": "1e5000",
+      "original_source_unchanged": true,
+      "python_digit_limit_after_import": 4300,
+      "python_digit_limit_before_import": 4300,
+      "repeat": 2,
+      "replay_exact": true,
+      "source_sha256": {
+        "engine.py": "91e0b0c4919d9b28763590d9bae4c9aa750d353cef5ec288ff6f19851193d0ef",
+        "money_exact.py": "20423e9fdf966353674b7362d725e98ebe1aa66d29f5e3e88a933f6b10f36083",
+        "test_engine.py": "51a037e8908626e30a093aefba51d20b74b1e2e7ce78859022ac018a7285208d"
+      },
+      "status": "PASS",
+      "wall_seconds": 0.096
+    },
+    {
+      "case": "sales_import",
+      "condition": "B",
+      "error": "Exceeds the limit (4300) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit",
+      "error_type": "ValueError",
+      "exit_code": 0,
+      "expected_minor_bit_length": 16617,
+      "id": "efddf486e95b",
+      "input_amount": "1e5000",
+      "original_source_unchanged": true,
+      "python_digit_limit_after_import": 4300,
+      "python_digit_limit_before_import": 4300,
+      "repeat": 2,
+      "source_sha256": {
+        "engine.py": "f6aa5d206b656d6e6236982b1b55afc94746802bb70890c06b41af8a83603218",
+        "money_exact.py": "20423e9fdf966353674b7362d725e98ebe1aa66d29f5e3e88a933f6b10f36083",
+        "test_engine.py": "51a037e8908626e30a093aefba51d20b74b1e2e7ce78859022ac018a7285208d"
+      },
+      "status": "FAIL",
+      "wall_seconds": 0.069
+    },
+    {
+      "case": "sales_import",
+      "condition": "B",
+      "exit_code": 0,
+      "expected_minor_bit_length": 16617,
+      "export_exact": true,
+      "id": "25e7df4e6b26",
+      "import_created": true,
+      "input_amount": "1e5000",
+      "original_source_unchanged": true,
+      "python_digit_limit_after_import": 4300,
+      "python_digit_limit_before_import": 4300,
+      "repeat": 1,
+      "replay_exact": true,
+      "source_sha256": {
+        "engine.py": "1ada52583933e6f9fdc20329d5d5edb621b0a4779a0b5aba46b491d23f5cf2ed",
+        "money_exact.py": "20423e9fdf966353674b7362d725e98ebe1aa66d29f5e3e88a933f6b10f36083",
+        "test_engine.py": "51a037e8908626e30a093aefba51d20b74b1e2e7ce78859022ac018a7285208d"
+      },
+      "status": "PASS",
+      "wall_seconds": 0.225
+    },
+    {
+      "case": "sales_import",
+      "condition": "A",
+      "exit_code": 0,
+      "expected_minor_bit_length": 16617,
+      "export_exact": true,
+      "id": "8bed2d31dc83",
+      "import_created": true,
+      "input_amount": "1e5000",
+      "original_source_unchanged": true,
+      "python_digit_limit_after_import": 4300,
+      "python_digit_limit_before_import": 4300,
+      "repeat": 1,
+      "replay_exact": true,
+      "source_sha256": {
+        "engine.py": "8fa8b10b220e5a2ad41bd77f8cc72c5e692fdbdf6728c8e418c02c598165c92d",
+        "money_exact.py": "20423e9fdf966353674b7362d725e98ebe1aa66d29f5e3e88a933f6b10f36083",
+        "test_engine.py": "51a037e8908626e30a093aefba51d20b74b1e2e7ce78859022ac018a7285208d"
+      },
+      "status": "PASS",
+      "wall_seconds": 0.12
+    },
+    {
+      "case": "sales_import",
+      "condition": "C",
+      "error": "Exceeds the limit (4300) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit",
+      "error_type": "ValueError",
+      "exit_code": 0,
+      "expected_minor_bit_length": 16617,
+      "id": "24b9e4a2cc81",
+      "input_amount": "1e5000",
+      "original_source_unchanged": true,
+      "python_digit_limit_after_import": 4300,
+      "python_digit_limit_before_import": 4300,
+      "repeat": 1,
+      "source_sha256": {
+        "engine.py": "f43d3ed448f3c014c184e1597447a188d824a928b6d80636b102c1cd579c0b79",
+        "money_exact.py": "20423e9fdf966353674b7362d725e98ebe1aa66d29f5e3e88a933f6b10f36083",
+        "test_engine.py": "51a037e8908626e30a093aefba51d20b74b1e2e7ce78859022ac018a7285208d"
+      },
+      "status": "FAIL",
+      "wall_seconds": 0.07
+    }
+  ],
+  "scope": "same valid 1e5000 amount: import, replay and exact export on isolated copies of all six final sales engines",
+  "timing": "post-hoc, after all preregistered model runs"
+}

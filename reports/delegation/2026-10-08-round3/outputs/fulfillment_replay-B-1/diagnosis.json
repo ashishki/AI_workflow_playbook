@@ -1,0 +1,86 @@
+{
+  "defects": [
+    {
+      "source_files": [
+        "src/inventory/registry.py"
+      ],
+      "evidence_ids": [
+        "INV-301",
+        "INV-302",
+        "INV-303",
+        "OBS-INV-31",
+        "TRACE-INV-31",
+        "OBS-JOIN-31",
+        "TRACE-JOIN-31"
+      ],
+      "mechanism": "Registry.accept used operation_id alone as the deduplication identity. INV-301 reserves 2 BOOK units in shop/north for O-17; INV-302 uses the same op-41 and payload in shop/south and was falsely classified as replay. INV-303 is the genuine north retry. The correct identity is (tenant, warehouse, operation_id); identical order_id/sku/action/qty within that scope is replay and changed payload raises ValueError. The repair changes only this key. ARC-CACHE-29 and ARC-LOG-29 describe restart eviction in the retired r29 single-warehouse cache, which is absent from the r31 pipeline. ARC-SNAPSHOT-29 describes that older route and cannot override current events.",
+      "impact": "The south hold was omitted, leaving accepted=1, replayed=2 and reserved_units=2 instead of accepted=2, replayed=1 and reserved_units=4. An otherwise paid order requiring both warehouses cannot be ready. In the combined replay this missing hold interacts with the stale checkout state; restoring both scoped operations restores the warehouse prerequisite without double-applying INV-303.",
+      "stale_evidence_ids": [
+        "ARC-CACHE-29",
+        "ARC-LOG-29",
+        "ARC-SNAPSHOT-29"
+      ]
+    },
+    {
+      "source_files": [
+        "src/checkout/revisions.py"
+      ],
+      "evidence_ids": [
+        "ORD-310",
+        "ORD-311",
+        "OBS-ORD-31",
+        "TRACE-ORD-31",
+        "ORD-301",
+        "ORD-302",
+        "OBS-JOIN-31",
+        "TRACE-JOIN-31"
+      ],
+      "mechanism": "select chose the snapshot with greatest delivered_at instead of greatest integer source revision per (tenant, order_id). ORD-310 is paid revision 10 delivered at 09:00Z; ORD-311 is pending revision 2 delivered at 09:05Z. The same reversal occurs for ORD-301/ORD-302 in the combined checkpoint and suffix. Full snapshots require maximum revision regardless of arrival time or input order; equal-revision payload conflicts remain ValueError, and a genuinely newer pending snapshot must remain allowed. The repair changes only the comparison. ARC-POLL-29's latest-poll-time advice applies to the retired r29 feed lacking revisions. ARC-LOG-29 and ARC-SNAPSHOT-29 also describe r29, not source-snapshot-v3 used by r31.",
+      "impact": "The isolated checkout exposed revision 2 pending and ready=false despite sufficient holds. The joined projection also selected pending, making all three refund deliveries order_not_refundable and producing zero refunds. Selecting revision 10 paid restores checkout readiness once inventory is fixed and exposes the independent refund retry defect.",
+      "stale_evidence_ids": [
+        "ARC-POLL-29",
+        "ARC-LOG-29",
+        "ARC-SNAPSHOT-29"
+      ]
+    },
+    {
+      "source_files": [
+        "src/refunds/ledger.py"
+      ],
+      "evidence_ids": [
+        "REF-321",
+        "REF-322",
+        "REF-323",
+        "OBS-REF-31",
+        "TRACE-REF-31",
+        "OBS-JOIN-31",
+        "TRACE-JOIN-31"
+      ],
+      "mechanism": "Ledger.accept keyed seen deliveries by (tenant, provider, attempt_id). REF-321 and REF-322 are both shop/atlas logical refund R-17 for O-17, amount_minor=400, but attempts delivery-a and delivery-b differ, so both were treated as new refunds. The correct identity is (tenant, provider, refund_id), with order_id and amount_minor immutable payload. Different attempts replay once; changed payload raises ValueError; different tenants/providers retain separate scopes. Ledger registration remains before eligibility/capture checks, so retries of rejected logical refunds are also replay and never reconsidered. ARC-MONEY-29 and ARC-LOG-29 describe retired r29 decimal-file rounding, whereas current deliveries are settled integer-minor amounts. ARC-SNAPSHOT-29's historical totals are not current refund evidence.",
+      "impact": "In the isolated provider case the duplicate R-17 spent 800 of the 1000 capture, causing the genuine 500-unit R-18 delivery REF-323 to be rejected exceeds_capture. Correct deduplication counts R-17 once and R-18 once, giving refunded_minor=900, replayed=1, two accepted refunds and no rejections. Once inventory and checkout are corrected, the joined order is ready with refunded_minor=900 and net_minor=100.",
+      "stale_evidence_ids": [
+        "ARC-MONEY-29",
+        "ARC-LOG-29",
+        "ARC-SNAPSHOT-29"
+      ]
+    }
+  ],
+  "verification": {
+    "commands": [
+      "python -B -m src.replay data/current/combined.json",
+      "python -B -m unittest discover -s tests -v",
+      "python -B -"
+    ],
+    "observed_results": [
+      "Before changes, combined metrics were ready_orders=0, reserved_units=2, refunded_minor=0, rejected_refunds=3; checkout showed revision 2 pending.",
+      "Before changes, supplied suite ran 8 checks: 4 failed (warehouse, checkout, provider, joined), while baseline and all 3 transport checks passed.",
+      "After the three source-key/comparison changes, the combined replay returned ready_orders=1, reserved_units=4, refunded_minor=900, rejected_refunds=0; revision 10 paid, net_minor=100; inventory accepted=2/replayed=1 and refunds accepted=2/replayed=1.",
+      "After changes, all 8 supplied checks passed.",
+      "An inline python -B - unittest run passed 11 contract-boundary checks covering tenant/warehouse/provider identity scopes, immutable payload conflicts, release and stock safety, source revision order and ties, newer pending snapshots, summed line requirements, capture equality and excess, rejected-refund retries, supported formats, repeatability and input preservation for every current fixture. No test or helper file was written."
+    ]
+  },
+  "remaining_limits": [
+    "Verified only local synthetic r31 data and in-memory contract cases; no live or production success is established.",
+    "No network, accounts, dependencies, evaluator access, operator feedback, repair phase, native workers or model reviewers were used, as required for this first attempt."
+  ]
+}

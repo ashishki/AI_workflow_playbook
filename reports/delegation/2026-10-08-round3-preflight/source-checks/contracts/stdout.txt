@@ -1,0 +1,7 @@
+{
+  "status": "contracts_valid",
+  "errors": [],
+  "tracked_files": 987,
+  "lifecycle_stages": 13,
+  "meaning": "Source/delivery checks only; no live model or user-benefit verdict."
+}

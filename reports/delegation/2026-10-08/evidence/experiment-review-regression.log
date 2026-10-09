@@ -1,0 +1,22 @@
+test_c_worker_minimum_is_enforced_and_exposed_in_prepare (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_controlled_route_violation_is_not_accepted (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_empty_or_replaced_tests_cannot_pass (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_known_failure_is_not_hidden_by_other_blocked_run (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_missing_cost_cannot_enable_delegation (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_nonfinite_metrics_and_json_are_rejected (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_not_run_report_stays_experimental (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_pass_without_evidence_is_rejected (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_prepare_creates_isolated_comparison (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_reference_is_packaged_and_linked (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_review_confirmations_require_booleans (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_review_confirmed_failure_overrides_pass_claim (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_review_confirmed_missing_comparison_or_usage_blocks_enablement (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_reviewer_is_separate_from_small_task_workers (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_unavailable_native_preflight_is_blocked_not_a_worker_failure (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_unfixed_code_fixtures_fail_mechanical_acceptance (test_controlled_delegation.ControlledDelegationTests) ... ok
+test_version_marker_matches_plugin (test_controlled_delegation.ControlledDelegationTests) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.199s
+
+OK

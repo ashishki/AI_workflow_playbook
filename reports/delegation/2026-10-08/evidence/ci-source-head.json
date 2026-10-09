@@ -1,0 +1,20 @@
+[
+  {
+    "conclusion": "success",
+    "databaseId": 37754295613,
+    "headBranch": "feature/controlled-delegation-20261008",
+    "headSha": "85180b0b1b1ad60f842ee1e02ddf1f4da89c23c9",
+    "name": "Playbook vNext",
+    "status": "completed",
+    "url": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/37754295613"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 37754295560,
+    "headBranch": "feature/controlled-delegation-20261008",
+    "headSha": "85180b0b1b1ad60f842ee1e02ddf1f4da89c23c9",
+    "name": "Native Product Checks",
+    "status": "completed",
+    "url": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/37754295560"
+  }
+]

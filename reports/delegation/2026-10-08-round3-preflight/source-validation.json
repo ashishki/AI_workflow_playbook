@@ -1,0 +1,32 @@
+{
+  "scope": "OFFLINE_PREPARATION_ONLY",
+  "source_head": "c99dc2dae29f36c0db26a5986819de5a665d8948",
+  "vnext": {
+    "status": "PASS",
+    "tests": 108,
+    "receipt": "source-checks/vnext/receipt.json"
+  },
+  "contracts": {
+    "status": "PASS",
+    "receipt": "source-checks/contracts/receipt.json"
+  },
+  "runtime_sync": {
+    "status": "PASS",
+    "receipt": "source-checks/runtime/receipt.json"
+  },
+  "fixture_acceptance": {
+    "status": "PASS",
+    "receipt": "source-checks/fixture-integration.json"
+  },
+  "model_comparison": {
+    "status": "NOT_RUN",
+    "attempts": 0,
+    "planned": 6
+  },
+  "independent_review": {
+    "status": "NOT_RUN"
+  },
+  "execution_blocker": "PENDING_ROOT_EXCEPTION_OR_AUTHORIZED_NONROOT_ENVIRONMENT",
+  "cost_usd": null,
+  "human_minutes": null
+}

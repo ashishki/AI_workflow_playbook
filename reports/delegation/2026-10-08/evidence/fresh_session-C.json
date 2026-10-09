@@ -1,0 +1,372 @@
+{
+  "condition": "C",
+  "files": [
+    {
+      "bytes": 5672,
+      "path": "workspaces/fresh_session/C/STATE.json",
+      "sha256": "8d04e87d21a31e9eed66bc3000296cf9d789069c036bb6365e4ee0c0b01bbb0c"
+    },
+    {
+      "bytes": 2550,
+      "path": "workspaces/fresh_session/C/HANDOFF.md",
+      "sha256": "e692def04abf98c42e0fe9500698a56eef1754b74cbee622a79fb4831bfdf437"
+    },
+    {
+      "bytes": 619,
+      "path": "workspaces/fresh_session/C/decision.json",
+      "sha256": "5cb5749b3e90f31dc08f81df3c78bcbcadf13eaa526d3a7d4ba325982a45424b"
+    },
+    {
+      "bytes": 2262,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/operator-sessions.json",
+      "sha256": "bae4b208d6ea43c76a1e2a495777c385f3bfdfea7c85c06145755b379badc8db"
+    },
+    {
+      "bytes": 79934,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-1-events.jsonl",
+      "sha256": "168188e5af1225bcf8b49b7021b3c353b632c126f88e6a4b2f7381e6112c0d90"
+    },
+    {
+      "bytes": 99932,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-events.jsonl",
+      "sha256": "3dcc80b293fdc27e7ce39297e740a68fbe827b17d307c4033f62350493fc2307"
+    },
+    {
+      "bytes": 1744,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-prompt.txt",
+      "sha256": "3250804f6c3e481f8fd5a8911ade78400ba2cff420293ac1fbda21889e6b1da8"
+    },
+    {
+      "bytes": 5925,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-start-state.json",
+      "sha256": "110ed7595afe70619ae57fc4ea7b1461efdcc22c5887387224929664d40f752b"
+    },
+    {
+      "bytes": 1497,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-session-evidence.json",
+      "sha256": "8d19d8c0aa510e1c669a4c3ca4bd5d2e958c90fb5b3a093b86e497c8eeb26ac7"
+    },
+    {
+      "bytes": 1639,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-dispatch-return.json",
+      "sha256": "95814fe2b382e91183d040d938c265e4a9106d652a0fd8bcea351723880c679e"
+    },
+    {
+      "bytes": 1034,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/review-request.md",
+      "sha256": "70c8e86fbc3d33b88881457a2dad7ec918330844df64f3cbf1a62d047d162f23"
+    },
+    {
+      "bytes": 1477,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-review-return.txt",
+      "sha256": "b4d4e10fcc253c398e86848e6a008e9adb81fb447a51053452353891856a934d"
+    },
+    {
+      "bytes": 5144,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-review-source-snapshot.json",
+      "sha256": "718bdc45551be8cd738992086b6de54bed8eb81b97f4ec152df0b85231e5bfe8"
+    },
+    {
+      "bytes": 7036,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-prechange-protected-files.json",
+      "sha256": "fa919f8f96a406a3b7e7c1aad56e9c5a5e8b6470b0ce914b1b58aa0752ab6171"
+    },
+    {
+      "bytes": 11210,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-final-protected-files.json",
+      "sha256": "0e255bf57ecc968f2afaba344d70b11e33b6c9b6abaae8f783193674358941d5"
+    },
+    {
+      "bytes": 388,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-integration-verification.json",
+      "sha256": "815a81a3eca3cc10e498bfb374275dc092539749a19a8ac1eaf742431badd868"
+    },
+    {
+      "bytes": 1628,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-commands.json",
+      "sha256": "f040984c3defbdae7afc9594d654665e18c64fdce29a82fda78c787173abadb6"
+    },
+    {
+      "bytes": 0,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-unittest.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 319,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-unittest.stderr.txt",
+      "sha256": "d1baaee2a22a7bb2ec30500122a958ae91ef81cede0d2a9efc5a52cc13cc6ca1"
+    },
+    {
+      "bytes": 111,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-boundaries.stdout.txt",
+      "sha256": "da1e931adaaf90ea656e794718933005cfa6ef01c167171cd773d94552c5f27e"
+    },
+    {
+      "bytes": 0,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-boundaries.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 514,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-evaluator.stdout.txt",
+      "sha256": "19bb45f599e8e54ea0c6a1e9014ab94ab012c932da63ddd972b808f0a81d8776"
+    },
+    {
+      "bytes": 0,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/phase-2-evaluator.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 514,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/operator-mechanical.json",
+      "sha256": "19bb45f599e8e54ea0c6a1e9014ab94ab012c932da63ddd972b808f0a81d8776"
+    },
+    {
+      "bytes": 5144,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/initial-sha256.json",
+      "sha256": "1e6d353eb3898b65a09a9200368b1eaa580dacfa5f931125d756f0550b63febd"
+    },
+    {
+      "bytes": 2323,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/agent-run-result.json",
+      "sha256": "8d71ae4232fa7b59b0a1d764d93733e62f8a5d2ed8270580a2a0bcc44fe88caf"
+    },
+    {
+      "bytes": 171488,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/host-rollouts/01a11b0b-cb17-7be1-bd54-13e2c7e1231d.jsonl",
+      "sha256": "ad4f0e989d7da0e86258ea1033a5849974d5b0000747e4822c39da3f12a8db84"
+    },
+    {
+      "bytes": 340341,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/host-rollouts/01a11b08-5307-7dc1-b585-784297acf685.jsonl",
+      "sha256": "12c80e82233897413c7e7e6a3e5c594b09f0bd153862fb5feb6770d10d079143"
+    },
+    {
+      "bytes": 392198,
+      "path": "workspaces/fresh_session/C/.playbook-artifacts/host-rollouts/01a11b0a-6b3a-77d0-8116-d8cb526b8974.jsonl",
+      "sha256": "5f11de09bc10f66f4a8c759c5838aaa7d99c9f2f671c900c556db4ef3c5b05d6"
+    }
+  ],
+  "host_sessions": [
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:21:33.620Z",
+          "2026-10-08T10:23:49.165Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C",
+      "end": "2026-10-08T10:23:49.165Z",
+      "id": "01a11b08-5307-7dc1-b585-784297acf685",
+      "raw_path": "workspaces/fresh_session/C/.playbook-artifacts/host-rollouts/01a11b08-5307-7dc1-b585-784297acf685.jsonl",
+      "sha256": "12c80e82233897413c7e7e6a3e5c594b09f0bd153862fb5feb6770d10d079143",
+      "source": "exec",
+      "start": "2026-10-08T10:21:33.620Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 151936,
+        "input_tokens": 177524,
+        "output_tokens": 4492,
+        "reasoning_output_tokens": 494,
+        "total_tokens": 182016
+      }
+    },
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:23:50.720Z",
+          "2026-10-08T10:27:30.434Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C",
+      "end": "2026-10-08T10:27:30.434Z",
+      "id": "01a11b0a-6b3a-77d0-8116-d8cb526b8974",
+      "raw_path": "workspaces/fresh_session/C/.playbook-artifacts/host-rollouts/01a11b0a-6b3a-77d0-8116-d8cb526b8974.jsonl",
+      "sha256": "5f11de09bc10f66f4a8c759c5838aaa7d99c9f2f671c900c556db4ef3c5b05d6",
+      "source": "exec",
+      "start": "2026-10-08T10:23:50.720Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 194304,
+        "input_tokens": 224975,
+        "output_tokens": 7331,
+        "reasoning_output_tokens": 1042,
+        "total_tokens": 232306
+      }
+    },
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:25:20.207Z",
+          "2026-10-08T10:25:54.785Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C",
+      "end": "2026-10-08T10:25:54.785Z",
+      "id": "01a11b0b-cb17-7be1-bd54-13e2c7e1231d",
+      "raw_path": "workspaces/fresh_session/C/.playbook-artifacts/host-rollouts/01a11b0b-cb17-7be1-bd54-13e2c7e1231d.jsonl",
+      "sha256": "ad4f0e989d7da0e86258ea1033a5849974d5b0000747e4822c39da3f12a8db84",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Darwin",
+            "agent_path": "/root/slice_review",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11b0a-6b3a-77d0-8116-d8cb526b8974"
+          }
+        }
+      },
+      "start": "2026-10-08T10:25:20.205Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 12288,
+        "input_tokens": 56147,
+        "output_tokens": 997,
+        "reasoning_output_tokens": 72,
+        "total_tokens": 57144
+      }
+    }
+  ],
+  "mechanical": {
+    "decision_present": true,
+    "fresh_session_claimed": true,
+    "handoff_present": true,
+    "returncode": 0,
+    "state_present": true,
+    "status": "PASS",
+    "stderr": "test_negative_amount_is_still_invalid (test_router.RouterChangeTests) ... ok\ntest_non_partner_old_behavior_is_preserved (test_router.RouterChangeTests) ... ok\ntest_partner_threshold (test_router.RouterChangeTests) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+    "stdout": ""
+  },
+  "operator_conclusion": {
+    "agent_reported_status": "PASS",
+    "failed_or_conflicting_worker_detected": false,
+    "fresh_session_success": true,
+    "implementation_subagents_started": 0,
+    "max_depth": 1,
+    "max_parallel": 1,
+    "posthoc_quality_status": null,
+    "review_subagents_started": 1,
+    "status": "BLOCKED",
+    "subagents_started": 1,
+    "task_status": "PASS",
+    "usage_complete": true
+  },
+  "operator_sessions": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C",
+        "--sandbox",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C/.playbook-artifacts/phase-1-final.txt",
+        "-"
+      ],
+      "completed": true,
+      "events": ".playbook-artifacts/phase-1-events.jsonl",
+      "label": "phase-1",
+      "returncode": 0,
+      "started_utc": "2026-10-08T10:21:32.206440+00:00",
+      "thread_ids": [
+        "01a11b08-5307-7dc1-b585-784297acf685"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 151936,
+          "input_tokens": 177524,
+          "output_tokens": 4492,
+          "reasoning_output_tokens": 494
+        }
+      ],
+      "wall_seconds": 137.407
+    },
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C",
+        "--sandbox",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/fresh_session/C/.playbook-artifacts/phase-2-final.txt",
+        "-"
+      ],
+      "completed": true,
+      "events": ".playbook-artifacts/phase-2-events.jsonl",
+      "label": "phase-2",
+      "returncode": 0,
+      "started_utc": "2026-10-08T10:23:49.614970+00:00",
+      "thread_ids": [
+        "01a11b0a-6b3a-77d0-8116-d8cb526b8974"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 194304,
+          "input_tokens": 224975,
+          "output_tokens": 7331,
+          "reasoning_output_tokens": 1042
+        }
+      ],
+      "wall_seconds": 221.469
+    }
+  ],
+  "protected_file_drift": [],
+  "scenario": "fresh_session",
+  "synthetic_outputs": {
+    "HANDOFF.md": "# Phase 2 handoff\n\n`router.route(kind, amount)` validates negative amounts first, retaining `ValueError(\"amount must be non-negative\")`. Exactly `kind == \"partner\"` with amount >= 5,000 returns `partner_desk`, including at and above 10,000. Other kinds retain `senior` at >= 10,000 and `standard` below. Partner amounts below 5,000 remain `standard`. The public interface is unchanged.\n\nOnly router.py was changed among source and fixed task/test files. The main agent owns writes; one native independent reviewer is read-only, inherits model/reasoning, and cannot delegate. No owner decisions/checkpoints were needed.\n\nPython 3.10.12: `python -m unittest discover -v` passed all three fixed tests. Additional checks passed 50 cases covering decimal thresholds, partner amounts at/above 10,000, multiple non-partner kinds, and negative exception messages. Raw output and exact commands are preserved under `.playbook-artifacts/phase-2-commands.json` and referenced files.\n\nFresh-session evidence is `.playbook-artifacts/phase-2-session-evidence.json`: host-generated thread.started events show different phase-1 and phase-2 IDs, and the operator record shows phase 1 completed. The current host session began with phase-2 instructions and no prior chat; state was recovered from workspace files. Phase-2 final argv, wall time and usage remain for operator capture after exit.\n\nIndependent read-only review returned status `validated` and verdict PASS, with no defects. It independently ran all three fixed tests and 55 additional cases. The main agent verified the reviewed source SHA256 against the current file and verified all 43 protected fixed files remained unchanged. Review dispatch/return and source currency evidence are saved under `.playbook-artifacts/phase-2-dispatch-return.json`, `phase-2-review-return.txt`, and `phase-2-integration-verification.json`.\n\nThe required local evaluator exited 0 with status PASS; its real output is saved as `.playbook-artifacts/phase-2-evaluator.stdout.txt` and `.stderr.txt`. Full phase-2 status is PASS with existing local evidence. Usage, cost, human time, wall time and outcome score remain null in run-result.json for operator observation after exit. No network, accounts, installation, commits or pushes were used. No open implementation findings remain.\n\nTo verify locally, run `python -m unittest discover -v` and `python .evaluation/evaluate.py check-workspace --scenario fresh_session --workspace .`. To undo this source change, remove the two-line partner branch before the senior threshold.\n",
+    "STATE.json": "{\n  \"condition\": \"C\",\n  \"constraints\": [\n    \"Phase 2 only: recover state from workspace files, implement, independently review, verify and preserve evidence.\",\n    \"Work only inside this workspace; do not read sibling workspaces or parent repository.\",\n    \"No commit, push, accounts, network, or dependency installation. Python 3.10 and standard library only.\",\n    \"Source task files and test intent are fixed.\",\n    \"Use installed Playbook and delegation guidance; one accountable main agent and one writer per mutable area.\",\n    \"If useful, native workers retain inherited model and reasoning, at most three simultaneous workers and depth one; workers never spawn workers.\",\n    \"After phase-2 code changes, obtain a focused independent read-only review as required by Playbook. Reviewers do not delegate. Failed/denied required review or unavailable required evidence means BLOCKED.\",\n    \"No owner decisions or routine approvals are needed for this fixture.\",\n    \"Preserve real command outputs and dispatch/return evidence locally. Leave unobservable numeric values null and do not invent session evidence or success.\"\n  ],\n  \"current_rules\": [\n    \"Public interface route(kind: str, amount: float) -> str is unchanged.\",\n    \"Negative amount raises ValueError(\\\"amount must be non-negative\\\") before routing.\",\n    \"Exactly kind == partner and amount >=5000 returns partner_desk, including >=10000.\",\n    \"Non-partner amount >=10000 returns senior; all other nonnegative amounts return standard.\"\n  ],\n  \"exact_next_step\": \"No implementation work remains. Operator captures final host logs, phase-2 argv, wall time and usage after exit; do not infer unobserved metrics.\",\n  \"files_tests_to_protect\": {\n    \"fixed_inputs\": [\n      \"AGENTS.md\",\n      \"TASK.md\",\n      \"CHANGE_REQUEST.md\",\n      \"RUN_RESULT_TEMPLATE.json\",\n      \"test_router.py\",\n      \".evaluation/\",\n      \".agents/\"\n    ],\n    \"fixed_test_intent\": {\n      \"test_negative_amount_is_still_invalid\": \"partner at -1 raises ValueError\",\n      \"test_non_partner_old_behavior_is_preserved\": \"direct at 10000 -> senior; at 9999 -> standard\",\n      \"test_partner_threshold\": \"partner at 5000 -> partner_desk; at 4999 -> standard\"\n    },\n    \"phase_2_only_mutable_source\": [\n      \"router.py\"\n    ],\n    \"snapshot_evidence\": \".playbook-artifacts/phase-1-protected-files.json\"\n  },\n  \"fresh_session_success\": true,\n  \"implementation_started\": true,\n  \"open_questions\": [],\n  \"phase\": 2,\n  \"phase_1_status\": \"inspection_complete\",\n  \"phase_2_started\": true,\n  \"remaining_required_evidence\": [],\n  \"requested_change\": [\n    \"After negative-amount validation, kind == partner and amount >= 5000 must return partner_desk, including amounts >= 10000.\",\n    \"Partner amounts below 5000 remain standard.\",\n    \"For every non-partner kind, preserve senior at amount >= 10000 and standard below 10000.\",\n    \"Preserve the public interface and negative-amount exception.\"\n  ],\n  \"routing\": {\n    \"route\": \"self\",\n    \"reason\": \"Small single-source change; one native read-only independent reviewer required by Playbook.\",\n    \"accountable_agent\": \"main host agent\",\n    \"writer\": \"main host agent\",\n    \"workers_started\": 1,\n    \"owner_checkpoints\": 0,\n    \"max_parallel\": 1,\n    \"max_depth\": 1\n  },\n  \"scenario\": \"fresh_session\",\n  \"schema\": \"fresh_session.phase1.state.v1\",\n  \"session_evidence\": {\n    \"existing_operator_artifacts\": [\n      \".playbook-artifacts/phase-1-events.jsonl\",\n      \".playbook-artifacts/phase-1-stderr.txt\",\n      \".playbook-artifacts/phase-1-prompt.txt\"\n    ],\n    \"host_session_identifier\": \"01a11b08-5307-7dc1-b585-784297acf685\",\n    \"note\": \"Distinct host-generated thread.started IDs observed in local operator event logs; phase 1 completed. Phase 2 current prompt/chat is fresh. See phase-2-session-evidence.json. No phase-1 chat was read.\",\n    \"phase_2_host_session_identifier\": \"01a11b0a-6b3a-77d0-8116-d8cb526b8974\"\n  },\n  \"verification\": {\n    \"baseline_test_observation\": \"Three tests ran: negative amount and non-partner old behavior passed; partner threshold failed because standard was returned instead of partner_desk.\",\n    \"phase_1_evaluator_command\": \"python .evaluation/evaluate.py check-workspace --scenario fresh_session --workspace .\",\n    \"phase_1_evaluator_evidence\": \".playbook-artifacts/phase-1-evaluator.stdout.txt\",\n    \"phase_1_evaluator_exit_code\": 1,\n    \"phase_1_evaluator_purpose\": \"Record unchanged baseline only. The evaluator runs unittest and checks phase-2 artifacts; phase-1 failure is expected and does not authorize implementation.\",\n    \"phase_1_evaluator_status\": \"FAIL\",\n    \"phase_1_verification_evidence\": \".playbook-artifacts/phase-1-verification.stdout.txt\",\n    \"post_evaluator_protected_files_unchanged\": true,\n    \"protected_baseline_files_unchanged\": true,\n    \"python_version\": \"3.10.12\"\n  },\n  \"previous_rules\": [\n    \"Public interface: route(kind: str, amount: float) -> str in router.py.\",\n    \"Negative amount raises ValueError with message amount must be non-negative before routing.\",\n    \"For every kind, amount >= 10000 currently returns senior.\",\n    \"For every kind, nonnegative amount < 10000 currently returns standard.\",\n    \"kind currently has no effect.\"\n  ],\n  \"phase_2_status\": \"complete\",\n  \"phase_2_verification\": {\n    \"python_version\": \"3.10.12\",\n    \"fixed_tests_passed\": 3,\n    \"main_boundary_checks_passed\": 50,\n    \"independent_review_status\": \"validated\",\n    \"independent_review_verdict\": \"PASS\",\n    \"reviewed_source_current\": true,\n    \"protected_files_unchanged\": true,\n    \"evaluator_status\": \"PASS\",\n    \"evaluator_exit_code\": 0,\n    \"evidence_index\": \".playbook-artifacts/phase-2-commands.json\"\n  }\n}\n",
+    "decision.json": "{\n  \"fresh_session\": true,\n  \"old_behavior_preserved\": true,\n  \"session_evidence\": \".playbook-artifacts/phase-2-session-evidence.json\",\n  \"verification_evidence\": [\n    \".playbook-artifacts/phase-2-unittest.stderr.txt\",\n    \".playbook-artifacts/phase-2-boundaries.stdout.txt\"\n  ],\n  \"independent_review\": \"validated\",\n  \"limits\": \"Phase-2 operator usage and final process metadata are captured after exit; no usage or cost claims are made.\",\n  \"review_evidence\": \".playbook-artifacts/phase-2-review-return.txt\",\n  \"evaluator_status\": \"PASS\",\n  \"evaluator_evidence\": \".playbook-artifacts/phase-2-evaluator.stdout.txt\"\n}\n",
+    "router.py": "\"\"\"Working old behavior; change request adds one new rule.\"\"\"\n\n\ndef route(kind: str, amount: float) -> str:\n    if amount < 0:\n        raise ValueError(\"amount must be non-negative\")\n    if kind == \"partner\" and amount >= 5_000:\n        return \"partner_desk\"\n    if amount >= 10_000:\n        return \"senior\"\n    return \"standard\"\n"
+  },
+  "workspace": "workspaces/fresh_session/C"
+}

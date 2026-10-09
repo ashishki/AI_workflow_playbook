@@ -1,0 +1,10 @@
+{
+  "build": "r29",
+  "metrics": {
+    "ready_orders": 1,
+    "refunded_minor": 400,
+    "reserved_units": 2
+  },
+  "record_id": "ARC-SNAPSHOT-29",
+  "scope": "single-warehouse poll bridge; cannot override current input"
+}

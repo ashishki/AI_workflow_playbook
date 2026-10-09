@@ -1,0 +1,32 @@
+{
+  "receipts": [
+    {
+      "path": "REPORT_RU.md",
+      "sha256": "7f8e8d8f9d559587ecdcef2e25b1da02ad27d8124f92c95110b5a35d312772f0"
+    },
+    {
+      "path": "diff_stat.txt",
+      "sha256": "fe1bae6238b84de54d2ecc848b2f4a41f8f1f2b5f66960977f97301d5e21af6c"
+    },
+    {
+      "path": "original-ci-failure.txt",
+      "sha256": "bf46b91cec157a1cccc30bc1da0fddacac08cd2cfe9130d5a303f43f124581c6"
+    },
+    {
+      "path": "receipt.json",
+      "sha256": "c72ac17a9ee0668017c14c5e08b80ae7bf1108f26daa38390d7ebddc03440966"
+    },
+    {
+      "path": "results.json",
+      "sha256": "babee569fcf545e927e1af46ac3fe321da7ecdf923455d01f0a2039878e16163"
+    },
+    {
+      "path": "stderr.txt",
+      "sha256": "a47500da331a1aa11f2ecb8bbd006f150a10ac5b580cb87a4fc51215c6c340b0"
+    },
+    {
+      "path": "stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

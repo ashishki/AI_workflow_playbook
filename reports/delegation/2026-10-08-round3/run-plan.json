@@ -1,0 +1,88 @@
+{
+  "cost_policy": "actual counters only; USD/human minutes null without actual receipts",
+  "execution_context": {
+    "authorization": "EXPLICIT_ROOT_EXCEPTION",
+    "hostname": "vmi3136926",
+    "uid": 0,
+    "user": "root"
+  },
+  "experiment_id": "controlled-delegation-round3-2026-10-08",
+  "head": "0c27438fed97e2de9e98c1d84552e933a97d65ee",
+  "main_seconds": 600,
+  "model": "gpt-6.1-sol",
+  "order": [
+    {
+      "case": "fulfillment_replay",
+      "condition": "C",
+      "id": "25faacc4cc17",
+      "repeat": 1,
+      "workspace": "workspaces/25faacc4cc17"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "A",
+      "id": "bf245d10815a",
+      "repeat": 1,
+      "workspace": "workspaces/bf245d10815a"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "B",
+      "id": "bbcd1abca7bd",
+      "repeat": 1,
+      "workspace": "workspaces/bbcd1abca7bd"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "C",
+      "id": "3019c182a444",
+      "repeat": 2,
+      "workspace": "workspaces/3019c182a444"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "A",
+      "id": "046b19a93202",
+      "repeat": 2,
+      "workspace": "workspaces/046b19a93202"
+    },
+    {
+      "case": "fulfillment_replay",
+      "condition": "B",
+      "id": "1cde12b352bb",
+      "repeat": 2,
+      "workspace": "workspaces/1cde12b352bb"
+    }
+  ],
+  "reasoning": "high",
+  "repair_policy": "NONE",
+  "repeats": 2,
+  "review_policy": "one independent common source/output/report review AFTER six runs; outside task outcomes",
+  "rubric": {
+    "fulfillment_replay": {
+      "checkout": 15,
+      "diagnosis_checkout": 8,
+      "diagnosis_inventory": 8,
+      "diagnosis_refunds": 8,
+      "integration": 15,
+      "inventory": 15,
+      "refunds": 15,
+      "state": 6,
+      "unaffected": 10
+    }
+  },
+  "schema": "playbook.delegation.round3.plan.v1",
+  "seed": 20261008,
+  "task_metadata": {
+    "fulfillment_replay": {
+      "diagnosis_scoring": "structural provenance; prose truth requires independent review",
+      "file_count": 67,
+      "planted_root_defects": 3,
+      "source_file_count": 44,
+      "source_line_count": 527,
+      "task_scale": "medium synthetic connected repository"
+    }
+  },
+  "worker_read_only_policy": "scoped instruction and observable postcheck; inherited sandbox, no OS read-only proof",
+  "worker_seconds": 180
+}

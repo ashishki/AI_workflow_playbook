@@ -1,0 +1,45 @@
+{
+  "build": "r31",
+  "traces": [
+    {
+      "join": "shop/O-17",
+      "observation": "OBS-INV-31",
+      "trace_id": "TRACE-INV-31",
+      "upstream_events": [
+        "INV-301",
+        "INV-302",
+        "INV-303"
+      ]
+    },
+    {
+      "join": "shop/O-17",
+      "observation": "OBS-ORD-31",
+      "trace_id": "TRACE-ORD-31",
+      "upstream_events": [
+        "ORD-310",
+        "ORD-311"
+      ]
+    },
+    {
+      "join": "shop/O-17",
+      "observation": "OBS-REF-31",
+      "trace_id": "TRACE-REF-31",
+      "upstream_events": [
+        "REF-321",
+        "REF-322",
+        "REF-323"
+      ]
+    },
+    {
+      "join": "shop/O-17",
+      "observation": "OBS-JOIN-31",
+      "trace_id": "TRACE-JOIN-31",
+      "upstream_events": [
+        "ORD-301",
+        "ORD-302",
+        "REF-321",
+        "REF-322"
+      ]
+    }
+  ]
+}

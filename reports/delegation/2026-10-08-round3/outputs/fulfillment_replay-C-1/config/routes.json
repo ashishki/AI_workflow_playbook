@@ -1,0 +1,14 @@
+{
+  "build": "r31",
+  "checkout_feed": "source-snapshot-v3",
+  "entrypoint": "src.pipeline.replay",
+  "external_io": false,
+  "provider_feed": "settled-deliveries-v2",
+  "stages": [
+    "inventory",
+    "checkout",
+    "refunds",
+    "reporting"
+  ],
+  "warehouse_adapter": "scoped-batch-v2"
+}

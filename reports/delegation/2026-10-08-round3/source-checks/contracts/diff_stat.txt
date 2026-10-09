@@ -1,0 +1,4 @@
+.../controlled-delegation/ROUND3_PROTOCOL_RU.md    | 23 ++++++++++++++++++
+ .../experiments/controlled-delegation/round3.py    | 23 ++++++++++++++----
+ tests/vnext/test_controlled_delegation_round3.py   | 27 +++++++++++++++++++++-
+ 3 files changed, 68 insertions(+), 5 deletions(-)

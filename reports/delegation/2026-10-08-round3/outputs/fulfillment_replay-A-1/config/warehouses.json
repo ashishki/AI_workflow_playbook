@@ -1,0 +1,15 @@
+{
+  "build": "r31",
+  "warehouses": [
+    {
+      "adapter": "scoped-batch-v2",
+      "tenant": "shop",
+      "warehouse": "north"
+    },
+    {
+      "adapter": "scoped-batch-v2",
+      "tenant": "shop",
+      "warehouse": "south"
+    }
+  ]
+}
