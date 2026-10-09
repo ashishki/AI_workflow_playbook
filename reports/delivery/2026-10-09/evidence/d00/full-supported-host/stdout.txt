@@ -1,0 +1,9 @@
+........................................................................ [ 24%]
+........................................................................ [ 48%]
+................................................s................s...... [ 72%]
+........................................................... [ 92%]
+.......................                                                  [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/unit/test_test_first_pilot_permissions.py: environment pilot not run; missing prerequisite(s): pinned Codex CLI 0.144.4 (installed identity differs)
+SKIPPED [1] tests/unit/test_test_first_pilot_toolchain.py: environment pilot not run; missing prerequisite(s): historical pinned host paths; source archive is not a live host
+296 passed, 2 skipped, 13 subtests passed in 93.90s (0:01:33)

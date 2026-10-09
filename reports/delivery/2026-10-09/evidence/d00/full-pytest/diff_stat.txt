@@ -1,0 +1,4 @@
+docs/tasks.md        | 17 +++++++++++------
+ pytest.ini           |  5 +++++
+ requirements-dev.txt |  3 +++
+ 3 files changed, 19 insertions(+), 6 deletions(-)

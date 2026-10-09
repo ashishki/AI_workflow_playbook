@@ -1,0 +1,44 @@
+{
+  "command_argv": [
+    ".venv-delivery-20261009/bin/python",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "6cacf7af07c9f089ce8e9175aa120717462db03c04f43f0c7e3838160b0ddac5",
+  "dirty_state_after": [
+    "M docs/tasks.md",
+    " M pytest.ini",
+    " M requirements-dev.txt",
+    "?? docs/evaluation/TEST_FIRST_PILOT_EVIDENCE_AVAILABILITY.md"
+  ],
+  "dirty_state_before": [
+    "M pytest.ini",
+    " M requirements-dev.txt"
+  ],
+  "end_timestamp": "2026-10-09T07:04:29Z",
+  "environment_summary": {
+    "machine": "x86_64",
+    "platform": "Linux-5.15.0-170-generic-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "python_executable": "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+    "timed_out": false,
+    "timeout": 1800.0
+  },
+  "exit_code": 1,
+  "parent_receipt_id": null,
+  "producer": "tools/receipt_run.py",
+  "receipt_id": "D00-full-pytest-1791529382-048b1d78",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "de2478f4a3fdffb4c568898f37a078500f203b8a",
+  "repo_commit_before": "de2478f4a3fdffb4c568898f37a078500f203b8a",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-10-09T07:03:02Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "19591912168754571464ea9da600fc56f9d4f8c9c29078c417a424ee210a7643",
+  "task_id": "D00-full-pytest",
+  "working_directory": "/srv/openclaw-you/workspace/AI_workflow_playbook"
+}

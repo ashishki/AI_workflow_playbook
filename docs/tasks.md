@@ -708,6 +708,13 @@ Verification:
 
 ## Phase TFA-7 - Empirical Pilot
 
+Historical completion states below record the July 2026 pilot outcome. The
+published summary remains available, but the original local approval, run, and
+review artifacts are not available in this checkout or its inspected Git
+history. Current source availability and the historical locators are recorded in
+`docs/evaluation/TEST_FIRST_PILOT_EVIDENCE_AVAILABILITY.md`; these states do not
+represent a new validation of the missing artifacts.
+
 ### TFA-7.1: Add Paired Pilot Plan
 
 Owner: codex
@@ -741,7 +748,7 @@ Integration-Points:
   - `reports/test_first_pilot/shishki_bot_v1/PILOT_REGISTRY.md`
   - `reports/test_first_pilot/shishki_bot_v1/CRITIC_REVIEW.md`
   - `reports/test_first_pilot/shishki_bot_v1/APPROVAL_REQUEST_2026-07-15.md`
-  - `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/approval_record.md`
+  - `docs/evaluation/TEST_FIRST_PILOT_EVIDENCE_AVAILABILITY.md`
 
 Verification:
   - `python3 tools/playbook_validate.py --root . --check placeholders`
@@ -782,9 +789,7 @@ Integration-Points:
   - docs/evaluation/TEST_FIRST_PILOT_RESULTS.md
   - `docs/tasks.md`
   - `reports/test_first_pilot/shishki_bot_v1/PREFLIGHT_2026-07-15.md`
-  - `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/`
-  - `reports/test_first_pilot/shishki_bot_v1/review/shishki-tfa7-20260715/`
-  - `reports/test_first_pilot/shishki_bot_v1/review/shishki-tfa7-20260715/adjudication_report.json`
+  - `docs/evaluation/TEST_FIRST_PILOT_EVIDENCE_AVAILABILITY.md`
 
 Verification:
   - Project-specific commands recorded in docs/evaluation/TEST_FIRST_PILOT_PLAN.md.
@@ -855,7 +860,7 @@ Integration-Points:
   - `reports/test_first_pilot/shishki_bot_v1/PILOT_REGISTRY.md`
   - `companion/ai_workflow_harness_lab/suites/shishki_bot_ci_v1/`
   - `reports/test_first_pilot/shishki_bot_v1/APPROVAL_REQUEST_2026-07-15.md`
-  - `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/approval_record.md`
+  - `docs/evaluation/TEST_FIRST_PILOT_EVIDENCE_AVAILABILITY.md`
 
 Verification:
   - Human repository/data approval references are recorded.
@@ -889,7 +894,7 @@ Integration-Points:
   - `tools/test_first_pilot_codex_adapter.py`
   - `tools/run_test_first_pilot.sh`
   - `reports/test_first_pilot/shishki_bot_v1/APPROVAL_REQUEST_2026-07-15.md`
-  - `reports/test_first_pilot/shishki_bot_v1/runs/shishki-tfa7-20260715/`
+  - `docs/evaluation/TEST_FIRST_PILOT_EVIDENCE_AVAILABILITY.md`
   - external approval and retention record
 
 Verification:

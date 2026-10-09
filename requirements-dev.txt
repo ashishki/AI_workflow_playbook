@@ -1,2 +1,5 @@
 jsonschema>=4.22
 pytest>=8
+
+# Repository tests and their subprocesses use this local companion package.
+-e ./companion/ai_workflow_harness_lab

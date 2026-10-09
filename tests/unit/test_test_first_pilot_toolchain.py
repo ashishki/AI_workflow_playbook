@@ -71,6 +71,15 @@ def test_toolchain_verifier_fails_closed_on_drift(tmp_path: Path) -> None:
     assert json.loads(result.stderr)["status"] == "drift"
 
 
+def test_missing_lock_is_a_structured_failure_not_success(tmp_path: Path) -> None:
+    result = subprocess.run(verifier_command(tmp_path / "missing-lock.json"),
+                            cwd=ROOT, text=True, capture_output=True, check=False)
+    assert result.returncode == 1
+    assert json.loads(result.stderr)["status"] == "drift"
+    assert "reason" in json.loads(result.stderr)
+    assert not result.stdout
+
+
 def test_toolchain_lock_pins_import_closure_and_absolute_executables() -> None:
     payload = json.loads(LOCK.read_text(encoding="utf-8"))
     verifier = VERIFIER.read_text(encoding="utf-8")

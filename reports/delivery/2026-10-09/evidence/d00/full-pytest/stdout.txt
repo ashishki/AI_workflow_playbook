@@ -1,0 +1,55 @@
+........................................................................ [ 26%]
+........................................................................ [ 53%]
+..................F..F............sss.sssssssss.................... [ 78%]
+...........................................................      [100%]
+=================================== FAILURES ===================================
+__________ test_frozen_asset_manifest_matches_full_execution_closure ___________
+
+    def test_frozen_asset_manifest_matches_full_execution_closure() -> None:
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "tools/build_test_first_pilot_manifest.py"), "--check"],
+            cwd=ROOT,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+    
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: frozen asset manifest is missing or stale
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python', '/srv/op...st_first_pilot_manifest.py', '--check'], returncode=1, stdout='', stderr='frozen asset manifest is missing or stale\n').returncode
+
+tests/unit/test_test_first_pilot_assets.py:168: AssertionError
+____ test_frozen_permission_profile_denies_sibling_auth_and_network_access _____
+
+    def test_frozen_permission_profile_denies_sibling_auth_and_network_access() -> None:
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-I",
+                "-B",
+                "-X",
+                "pycache_prefix=/dev/null/test-first-pilot-pycache",
+                str(PROBE),
+            ],
+            cwd=ROOT,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=40,
+            check=False,
+        )
+    
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: Codex CLI version does not match the frozen pilot
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python', '-I', '-...st_first_pilot_permissions.py'], returncode=2, stdout='', stderr='Codex CLI version does not match the frozen pilot\n').returncode
+
+tests/unit/test_test_first_pilot_permissions.py:30: AssertionError
+=========================== short test summary info ============================
+FAILED tests/unit/test_test_first_pilot_assets.py::test_frozen_asset_manifest_matches_full_execution_closure
+FAILED tests/unit/test_test_first_pilot_permissions.py::test_frozen_permission_profile_denies_sibling_auth_and_network_access
+2 failed, 256 passed, 12 skipped, 13 subtests passed in 86.22s (0:01:26)

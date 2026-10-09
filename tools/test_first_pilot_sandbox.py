@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import subprocess
 import sys
@@ -12,7 +13,8 @@ from pathlib import Path
 
 BWRAP = Path("/usr/bin/bwrap")
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-HOST_VENV = PROJECT_ROOT / ".venv"
+# Use the operator-selected virtualenv; the frozen runner still selects .venv.
+HOST_VENV = (Path(sys.prefix) if sys.prefix != sys.base_prefix else PROJECT_ROOT / ".venv")
 SANDBOX_VENV = Path("/venv")
 SANDBOX_WORKSPACE = Path("/workspace")
 SYSTEM_PYTHON = (
@@ -26,6 +28,35 @@ SYSTEM_STDLIB = (
     / f"python{sys.version_info.major}.{sys.version_info.minor}"
 )
 READ_ONLY_LIBRARY_ROOTS = (Path("/lib"), Path("/lib64"))
+
+
+def python_runtime_aliases() -> list[Path]:
+    """Expose Python symlink aliases only, never their enclosing home folders."""
+    path = Path(os.path.abspath(sys.executable))
+    seen: set[Path] = set()
+    aliases = []
+    while path.is_symlink():
+        if path in seen or len(seen) >= 16:
+            raise ValueError("Python executable symlink chain is cyclic or too long")
+        seen.add(path)
+        if not path.is_relative_to(HOST_VENV):
+            aliases.append(path)
+        target = Path(os.readlink(path))
+        path = target if target.is_absolute() else path.parent / target
+        path = Path(os.path.abspath(path))
+    if path.resolve() != SYSTEM_PYTHON.resolve():
+        # Standard venv --copies has a regular interpreter inside the venv.
+        # Accept it only when its bytes match the mounted base runtime.
+        def digest(binary: Path) -> bytes:
+            value = hashlib.sha256()
+            with binary.open('rb') as stream:
+                while chunk := stream.read(1024 * 1024):
+                    value.update(chunk)
+            return value.digest()
+        if (not path.is_relative_to(HOST_VENV) or not path.is_file()
+                or digest(path) != digest(SYSTEM_PYTHON)):
+            raise ValueError("Python executable chain does not identify the trusted runtime")
+    return aliases
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -86,7 +117,7 @@ def build_bwrap_command(workspace: Path, command: list[str]) -> list[str]:
         str(SYSTEM_PYTHON),
         str(SYSTEM_PYTHON),
         "--symlink",
-        SYSTEM_PYTHON.name,
+        str(SYSTEM_PYTHON),
         "/usr/bin/python3",
         "--dir",
         "/usr/lib",
@@ -94,6 +125,8 @@ def build_bwrap_command(workspace: Path, command: list[str]) -> list[str]:
         str(SYSTEM_STDLIB),
         str(SYSTEM_STDLIB),
     ]
+    for alias in python_runtime_aliases():
+        sandbox_command.extend(("--symlink", str(SYSTEM_PYTHON), str(alias)))
     for root in READ_ONLY_LIBRARY_ROOTS:
         if root.exists():
             sandbox_command.extend(("--ro-bind", str(root), str(root)))
