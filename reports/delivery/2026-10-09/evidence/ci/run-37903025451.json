@@ -1,0 +1,273 @@
+{
+  "conclusion": "success",
+  "headSha": "7f36b90859a17c07f47197fed32e5fe1f4c8e1b3",
+  "status": "completed",
+  "url": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/37903025451",
+  "jobs": [
+    {
+      "id": 113729776896,
+      "name": "vNext ownership and full delivery / Python 3.13",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/37903025451/job/113729776896",
+      "started_at": "2026-10-09T08:07:29Z",
+      "completed_at": "2026-10-09T08:07:42Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T08:07:30Z",
+          "completed_at": "2026-10-09T08:07:31Z"
+        },
+        {
+          "name": "Run actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T08:07:31Z",
+          "completed_at": "2026-10-09T08:07:32Z"
+        },
+        {
+          "name": "Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T08:07:32Z",
+          "completed_at": "2026-10-09T08:07:32Z"
+        },
+        {
+          "name": "Verify current tracked inventory and preserved sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T08:07:32Z",
+          "completed_at": "2026-10-09T08:07:33Z"
+        },
+        {
+          "name": "Exercise helpers, negative cases and actual extracted kit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T08:07:33Z",
+          "completed_at": "2026-10-09T08:07:36Z"
+        },
+        {
+          "name": "Verify single canonical packaged implementation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-09T08:07:36Z",
+          "completed_at": "2026-10-09T08:07:36Z"
+        },
+        {
+          "name": "Preserve existing package and review mechanism tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-09T08:07:36Z",
+          "completed_at": "2026-10-09T08:07:39Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-09T08:07:39Z",
+          "completed_at": "2026-10-09T08:07:40Z"
+        },
+        {
+          "name": "Post Run actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-09T08:07:40Z",
+          "completed_at": "2026-10-09T08:07:40Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-09T08:07:40Z",
+          "completed_at": "2026-10-09T08:07:40Z"
+        }
+      ]
+    },
+    {
+      "id": 113729777134,
+      "name": "Existing Engineering workflow regressions",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/37903025451/job/113729777134",
+      "started_at": "2026-10-09T08:07:29Z",
+      "completed_at": "2026-10-09T08:07:47Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T08:07:30Z",
+          "completed_at": "2026-10-09T08:07:31Z"
+        },
+        {
+          "name": "Run actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T08:07:31Z",
+          "completed_at": "2026-10-09T08:07:33Z"
+        },
+        {
+          "name": "Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T08:07:33Z",
+          "completed_at": "2026-10-09T08:07:33Z"
+        },
+        {
+          "name": "Install existing test dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T08:07:33Z",
+          "completed_at": "2026-10-09T08:07:36Z"
+        },
+        {
+          "name": "Preserve real governed entrypoints and review contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T08:07:36Z",
+          "completed_at": "2026-10-09T08:07:44Z"
+        },
+        {
+          "name": "Compile new helpers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-09T08:07:44Z",
+          "completed_at": "2026-10-09T08:07:44Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-09T08:07:44Z",
+          "completed_at": "2026-10-09T08:07:44Z"
+        },
+        {
+          "name": "Post Run actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-09T08:07:44Z",
+          "completed_at": "2026-10-09T08:07:44Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-09T08:07:44Z",
+          "completed_at": "2026-10-09T08:07:44Z"
+        }
+      ]
+    },
+    {
+      "id": 113729777203,
+      "name": "vNext ownership and full delivery / Python 3.10",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/37903025451/job/113729777203",
+      "started_at": "2026-10-09T08:07:29Z",
+      "completed_at": "2026-10-09T08:07:43Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T08:07:32Z",
+          "completed_at": "2026-10-09T08:07:32Z"
+        },
+        {
+          "name": "Run actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T08:07:32Z",
+          "completed_at": "2026-10-09T08:07:34Z"
+        },
+        {
+          "name": "Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T08:07:34Z",
+          "completed_at": "2026-10-09T08:07:34Z"
+        },
+        {
+          "name": "Verify current tracked inventory and preserved sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T08:07:34Z",
+          "completed_at": "2026-10-09T08:07:34Z"
+        },
+        {
+          "name": "Exercise helpers, negative cases and actual extracted kit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T08:07:34Z",
+          "completed_at": "2026-10-09T08:07:36Z"
+        },
+        {
+          "name": "Verify single canonical packaged implementation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-09T08:07:36Z",
+          "completed_at": "2026-10-09T08:07:36Z"
+        },
+        {
+          "name": "Preserve existing package and review mechanism tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-09T08:07:36Z",
+          "completed_at": "2026-10-09T08:07:39Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-09T08:07:39Z",
+          "completed_at": "2026-10-09T08:07:40Z"
+        },
+        {
+          "name": "Post Run actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-09T08:07:40Z",
+          "completed_at": "2026-10-09T08:07:40Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-09T08:07:40Z",
+          "completed_at": "2026-10-09T08:07:40Z"
+        }
+      ]
+    }
+  ]
+}

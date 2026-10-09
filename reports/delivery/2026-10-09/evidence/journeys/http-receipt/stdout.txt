@@ -1,0 +1,15 @@
+PASS missing_and_unknown_identity_denied
+PASS identity_from_header_and_idempotent_retry
+PASS teacher_list_and_id_isolation
+PASS occupied_slot_conflict
+PASS invalid_calendar_time_empty_fields_and_json
+PASS eight_way_concurrent_conflict_has_one_winner
+PASS restart_preserves_data_and_retry_identity
+{"action": "backup", "exit_code": 0, "stdout": "backup: 3 bookings exported to /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/external-http/backup.json\n", "stderr": ""}
+{"action": "restore", "exit_code": 0, "stdout": "Previous data preserved at /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/external-http/bookings.json.before-restore-baa10e26259d422f81ba0044085bc229.json\nRestored 3 bookings to /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/external-http/bookings.json\n", "stderr": ""}
+PASS real_backup_corrupt_copy_restore_and_preserve_bad_bytes
+{"action": "retire", "exit_code": 0, "stdout": "retire: 3 bookings exported to /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/external-http/export.json\n", "stderr": ""}
+{"action": "serve", "exit_code": 1, "stdout": "", "stderr": "Error: This copy is retired; use resume explicitly to reopen it.\n"}
+{"action": "resume", "exit_code": 0, "stdout": "Local copy reopened; start serve explicitly.\n", "stderr": ""}
+PASS readable_export_and_local_retired_off_state
+PASS original_task_instructions_owner_note_preserved

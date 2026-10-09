@@ -1,0 +1,140 @@
+test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) ... test_real_cli_reserved_existing_marker_bytes_preserved (test_corrections.LifecyclePathCorrectionTests) ... FAIL
+test_invalid_reload_document_also_fails_closed (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:38:05] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:38:05] "GET /api/bookings HTTP/1.1" 200 -
+FAIL
+test_post_rename_fault_next_other_request_does_not_erase_commit (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:38:05] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:38:05] "POST /api/bookings HTTP/1.1" 201 -
+FAIL
+test_post_rename_fault_replay_and_other_request_preserve_both (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:38:06] "POST /api/bookings HTTP/1.1" 503 -
+FAIL
+test_precommit_failure_reloads_old_disk_then_allows_retry (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:38:06] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:38:06] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:38:06] "GET /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:38:06] "POST /api/bookings HTTP/1.1" 201 -
+ok
+test_reload_failure_blocks_all_reads_and_writes_until_reopen (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:38:07] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:38:07] "GET /api/bookings HTTP/1.1" 200 -
+FAIL
+
+======================================================================
+FAIL: test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) (command='export', suffix='.retired')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 129, in test_real_cli_rejects_all_reserved_paths_before_mutation
+    self.assertNotEqual(0, result.returncode, result.stdout)
+AssertionError: 0 == 0 : export: 0 bookings exported to /tmp/tmp4etz4uxa/data.json.retired
+
+
+======================================================================
+FAIL: test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) (command='export', suffix='.lock')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 130, in test_real_cli_rejects_all_reserved_paths_before_mutation
+    self.assertIn('reserved', result.stderr.lower())
+AssertionError: 'reserved' not found in 'error: export path must be new and different from the data file.\n'
+
+======================================================================
+FAIL: test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) (command='export', suffix='.before-restore-future.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 129, in test_real_cli_rejects_all_reserved_paths_before_mutation
+    self.assertNotEqual(0, result.returncode, result.stdout)
+AssertionError: 0 == 0 : export: 0 bookings exported to /tmp/tmpo065r7_x/data.json.before-restore-future.json
+
+
+======================================================================
+FAIL: test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) (command='backup', suffix='.retired')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 129, in test_real_cli_rejects_all_reserved_paths_before_mutation
+    self.assertNotEqual(0, result.returncode, result.stdout)
+AssertionError: 0 == 0 : backup: 0 bookings exported to /tmp/tmpqs762x_w/data.json.retired
+
+
+======================================================================
+FAIL: test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) (command='backup', suffix='.lock')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 130, in test_real_cli_rejects_all_reserved_paths_before_mutation
+    self.assertIn('reserved', result.stderr.lower())
+AssertionError: 'reserved' not found in 'error: export path must be new and different from the data file.\n'
+
+======================================================================
+FAIL: test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) (command='backup', suffix='.before-restore-future.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 129, in test_real_cli_rejects_all_reserved_paths_before_mutation
+    self.assertNotEqual(0, result.returncode, result.stdout)
+AssertionError: 0 == 0 : backup: 0 bookings exported to /tmp/tmpto2bchp2/data.json.before-restore-future.json
+
+
+======================================================================
+FAIL: test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) (command='retire', suffix='.retired')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 129, in test_real_cli_rejects_all_reserved_paths_before_mutation
+    self.assertNotEqual(0, result.returncode, result.stdout)
+AssertionError: 0 == 0 : retire: 0 bookings exported to /tmp/tmpft737mzj/data.json.retired
+
+
+======================================================================
+FAIL: test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) (command='retire', suffix='.lock')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 130, in test_real_cli_rejects_all_reserved_paths_before_mutation
+    self.assertIn('reserved', result.stderr.lower())
+AssertionError: 'reserved' not found in 'error: export path must be new and different from the data file.\n'
+
+======================================================================
+FAIL: test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) (command='retire', suffix='.before-restore-future.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 129, in test_real_cli_rejects_all_reserved_paths_before_mutation
+    self.assertNotEqual(0, result.returncode, result.stdout)
+AssertionError: 0 == 0 : retire: 0 bookings exported to /tmp/tmp090leaop/data.json.before-restore-future.json
+
+
+======================================================================
+FAIL: test_real_cli_reserved_existing_marker_bytes_preserved (test_corrections.LifecyclePathCorrectionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 144, in test_real_cli_reserved_existing_marker_bytes_preserved
+    self.assertIn('reserved', result.stderr.lower())
+AssertionError: 'reserved' not found in 'error: export path must be new and different from the data file.\n'
+
+======================================================================
+FAIL: test_invalid_reload_document_also_fails_closed (test_corrections.PersistenceCorrectionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 113, in test_invalid_reload_document_also_fails_closed
+    self.assertEqual(503, self.request()[0])
+AssertionError: 503 != 200
+
+======================================================================
+FAIL: test_post_rename_fault_next_other_request_does_not_erase_commit (test_corrections.PersistenceCorrectionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 78, in test_post_rename_fault_next_other_request_does_not_erase_commit
+    self.assertIn(first, saved)
+AssertionError: {'student': 'Fault synthetic', 'request_id': 'first', 'date': '2026-11-20', 'slot': '09:00', 'id': 'a84a7d59-3f24-45a9-bb91-dd51ca849835', 'teacher': 'anna', 'created_at': '2026-10-09T08:38:05.564170+00:00'} not found in [{'student': 'Fault synthetic', 'request_id': 'second', 'date': '2026-11-20', 'slot': '09:30', 'id': '1e1b2822-0064-4497-b1ba-4ef5e1fabdb0', 'teacher': 'anna', 'created_at': '2026-10-09T08:38:05.570615+00:00'}]
+
+======================================================================
+FAIL: test_post_rename_fault_replay_and_other_request_preserve_both (test_corrections.PersistenceCorrectionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 64, in test_post_rename_fault_replay_and_other_request_preserve_both
+    self.assertIn('неопредел', error['error'].lower())
+AssertionError: 'неопредел' not found in 'не удалось сохранить запись. повторите тот же request_id.'
+
+======================================================================
+FAIL: test_reload_failure_blocks_all_reads_and_writes_until_reopen (test_corrections.PersistenceCorrectionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/test_corrections.py", line 96, in test_reload_failure_blocks_all_reads_and_writes_until_reopen
+    self.assertEqual(503, self.request()[0])
+AssertionError: 503 != 200
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.972s
+
+FAILED (failures=14)

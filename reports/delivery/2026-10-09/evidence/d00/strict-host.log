@@ -1,0 +1,5 @@
+ERROR: selected historical host probe lacks prerequisites: pinned Codex CLI 0.144.4 (installed identity differs)
+
+tests/unit/test_test_first_pilot_permissions.py::test_frozen_permission_profile_denies_sibling_auth_and_network_access
+
+1 test collected in 0.13s

@@ -1,0 +1,470 @@
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/SKILL.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/SKILL.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/agents/openai.yaml')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/agents/openai.yaml'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/assets/lifecycle.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/assets/lifecycle.json'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/assets/project-block.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/assets/project-block.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/assets/solution-record.example.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/assets/solution-record.example.json'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/connect.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/connect.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/environment.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/environment.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/build.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/build.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/change.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/change.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/decide.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/decide.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/design.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/design.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/diagnose.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/diagnose.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/discover.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/discover.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/grow.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/grow.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/introduce.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/introduce.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/observe.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/observe.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/recover.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/recover.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/retire.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/retire.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/transfer.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/transfer.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle/verify.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle/verify.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/lifecycle.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/lifecycle.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/preview-share.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/preview-share.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/review.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/review.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/setup.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/setup.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/state.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/state.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/references/working-session.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/references/working-session.md'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/scripts/__pycache__/codex_role_run_lib.cpython-310.pyc')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/scripts/__pycache__/codex_role_run_lib.cpython-310.pyc'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/scripts/codex_role_run_lib.py')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/scripts/codex_role_run_lib.py'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/scripts/playbook_environment.py')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/scripts/playbook_environment.py'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/scripts/run_codex_role.py')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/scripts/run_codex_role.py'
+
+======================================================================
+ERROR: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) (filename='.agents/skills/playbook/scripts/solution_record.py')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-zs_74s1c/initial-app/test_app.py", line 219, in test_existing_files_preserved
+    self.assertEqual(expected, hashlib.sha256((app.ROOT / filename).read_bytes()).hexdigest())
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/delivery-published-copy-review-zs_74s1c/initial-app/.agents/skills/playbook/scripts/solution_record.py'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.010s
+
+FAILED (errors=31)

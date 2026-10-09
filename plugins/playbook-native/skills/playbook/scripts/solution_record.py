@@ -200,12 +200,63 @@ def verify_snapshot(root: Path, payload: Any) -> list[str]:
     return changed
 
 
+def inspect_evidence(root: Path, data: dict, proof: dict | None = None) -> dict:
+    """Resolve declared local references without running or trusting their content.
+
+    Remote links are never fetched. A present file can still contain false claims.
+    A supplied snapshot additionally checks identity and coverage, not semantics.
+    """
+    refs = set()
+    for group in ('checks', 'observations'):
+        for item in data.get(group, []):
+            for reference in item.get('evidence', []):
+                if not isinstance(reference, str) or not reference.strip():
+                    raise RecordError('Evidence references must be non-empty text')
+                refs.add(reference)
+                if len(refs) > 500:
+                    raise RecordError('Too many evidence references')
+    changed = verify_snapshot(root, proof) if proof is not None else []
+    captured = proof['files'] if proof is not None else None
+    entries = []
+    for reference in sorted(refs):
+        if reference.startswith(('https://', 'http://')):
+            status = 'external_unchecked'
+        else:
+            try:
+                path = safe_path(root, reference)
+                digest(path)  # Same bounded-file policy as snapshots.
+                if reference in changed:
+                    status = 'changed'
+                elif captured is not None and reference not in captured:
+                    status = 'not_in_snapshot'
+                else:
+                    status = 'present'
+            except (RecordError, OSError):
+                status = 'missing_or_unsafe'
+        entries.append({'reference': reference, 'status': status})
+    unresolved = [e for e in entries if e['status'] != 'present']
+    status = ('stale_snapshot' if changed else 'no_evidence' if not entries else
+              'unresolved_references' if unresolved else 'local_references_present')
+    return {'status': status, 'references': entries, 'changed_files': changed,
+            'quality': 'not_assessed', 'authorization': 'not_assessed',
+            'meaning': 'Existence/identity only; content and claimed execution must be checked separately.'}
+
+
 def render(data: dict) -> str:
+    labels_state = {
+        'not_applicable': 'не применяется', 'not_checked': 'не проверено',
+        'partial': 'проверено частично', 'checked': 'записано как проверенное',
+        'failed': 'есть ошибки', 'not_observed': 'использование не наблюдалось',
+        'trial': 'пробное использование', 'in_use': 'используется по записи владельца',
+        'stopped': 'остановлено', 'unknown': 'неизвестно', 'no_change': 'без изменений',
+        'improved': 'улучшение по записанным наблюдениям', 'worse': 'ухудшение по наблюдениям',
+    }
+    state_text = ' / '.join(labels_state[data['state'][key]] for key in ('technical', 'in_use', 'effect'))
     lines = ['# Состояние рабочего решения', '',
         '> Записанное состояние — не независимое подтверждение качества и не разрешение на действия.', '',
         f'**Проблема:** {data["problem"]}', f'**Владелец:** {data["owner"]}',
         f'**Решение:** {data["decision"]["kind"]} — {data["decision"]["reason"]}',
-        f'**Техника / использование / эффект:** {data["state"]["technical"]} / {data["state"]["in_use"]} / {data["state"]["effect"]}', '',
+        f'**Техника / использование / эффект:** {state_text}', '',
         '## Правила', *[f'- {v}' for v in data['rules']], '', '## Как пользоваться и продолжать']
     labels = {'open':'Открыть', 'fallback':'Ручной способ', 'diagnose':'Диагностика', 'recover':'Восстановление', 'transfer':'Передача', 'retire':'Отключение'}
     lines.extend(f'**{label}:** {data["operations"][k]}' for k,label in labels.items())
@@ -229,12 +280,15 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path('.'))
     commands = parser.add_subparsers(dest='command', required=True)
-    for action in ('check', 'summary', 'snapshot', 'handoff'):
+    for action in ('check', 'summary', 'snapshot', 'handoff', 'evidence'):
         p = commands.add_parser(action); p.add_argument('--record', required=True)
         if action == 'snapshot':
             p.add_argument('--files', nargs='+', required=True)
             p.add_argument('--output', required=True)
         if action == 'handoff': p.add_argument('--snapshot', required=True)
+        if action == 'evidence':
+            p.add_argument('--snapshot')
+            p.add_argument('--strict', action='store_true')
     p = commands.add_parser('verify'); p.add_argument('--snapshot', required=True)
     args = parser.parse_args(argv)
     try:
@@ -250,6 +304,13 @@ def main(argv=None) -> int:
             if proof['record'] != args.record:
                 raise RecordError('Snapshot belongs to a different record')
         data = read_record(root, args.record)
+        if args.command == 'evidence':
+            proof = load_json(safe_path(root, args.snapshot)) if args.snapshot else None
+            if proof is not None and (not isinstance(proof, dict) or proof.get('record') != args.record):
+                raise RecordError('Snapshot belongs to a different record')
+            report = inspect_evidence(root, data, proof)
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+            return 1 if args.strict and report['status'] != 'local_references_present' else 0
         if args.command == 'check':
             print(json.dumps({'status':'schema_valid', 'quality':'not_assessed'}))
         elif args.command in {'summary', 'handoff'}:

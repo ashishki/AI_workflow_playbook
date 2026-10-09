@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "bookings": [
+    {
+      "student": "Synthetic Anna private",
+      "request_id": "golden-anna",
+      "date": "2027-03-01",
+      "slot": "09:15",
+      "id": "46f7dcde-b90a-4f70-8c3f-eda24a4fce69",
+      "teacher": "anna",
+      "created_at": "2026-10-09T08:10:21.036633+00:00"
+    },
+    {
+      "student": "Synthetic Boris private",
+      "request_id": "golden-boris",
+      "date": "2027-03-01",
+      "slot": "09:15",
+      "id": "a0b53c2e-f931-465c-980f-d383771702a4",
+      "teacher": "boris",
+      "created_at": "2026-10-09T08:10:21.054297+00:00"
+    },
+    {
+      "student": "Synthetic Anna private",
+      "request_id": "race-1",
+      "date": "2027-03-01",
+      "slot": "10:00",
+      "id": "b98a7c9a-79e6-4186-9646-a31f02fcc8fb",
+      "teacher": "anna",
+      "created_at": "2026-10-09T08:10:21.088399+00:00"
+    },
+    {
+      "student": "Synthetic Anna private",
+      "request_id": "new-valid",
+      "date": "2027-03-04",
+      "slot": "09:30",
+      "id": "85f958de-1ecc-474b-8504-244d5efecf7f",
+      "teacher": "anna",
+      "created_at": "2026-10-09T08:27:23.502928+00:00"
+    }
+  ]
+}

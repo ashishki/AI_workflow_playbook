@@ -189,8 +189,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--lock", type=Path, default=DEFAULT_LOCK)
     args = parser.parse_args()
-    expected = json.loads(args.lock.read_text(encoding="utf-8"))
-    observed = current_state()
+    try:
+        expected = json.loads(args.lock.read_text(encoding="utf-8"))
+        observed = current_state()
+    except (OSError, ValueError, RuntimeError) as exc:
+        # An absent/invalid pinned resource is host drift, never an attestation.
+        print(json.dumps({"status": "drift", "reason": str(exc)}, sort_keys=True),
+              file=sys.stderr)
+        return 1
     if observed != expected:
         print(
             json.dumps(

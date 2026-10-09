@@ -1,0 +1,126 @@
+76 INFO: PyInstaller: 6.16.0, contrib hooks: 2026.8
+77 INFO: Python: 3.12.13
+81 INFO: Platform: Linux-5.15.0-170-generic-x86_64-with-glibc2.35
+81 INFO: Python environment: /srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009
+81 INFO: wrote /tmp/playbook-desktop-build-4ulnnaje/spec-playbook-helper/playbook-helper.spec
+84 INFO: Removing temporary files and cleaning cache in /root/.cache/pyinstaller
+85 INFO: Module search paths (PYTHONPATH):
+['/srv/openclaw-you/workspace/AI_workflow_playbook',
+ '/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python312.zip',
+ '/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12',
+ '/root/.local/share/uv/python/cpython-3.12-linux-x86_64-gnu/lib/python3.12/lib-dynload',
+ '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages',
+ '/srv/openclaw-you/workspace/AI_workflow_playbook/companion/ai_workflow_harness_lab/src',
+ '/srv/openclaw-you/workspace/AI_workflow_playbook/distribution/desktop']
+317 INFO: Appending 'binaries' from .spec
+318 INFO: Appending 'datas' from .spec
+318 INFO: checking Analysis
+318 INFO: Building Analysis because Analysis-00.toc is non existent
+318 INFO: Looking for Python shared library...
+334 INFO: Using Python shared library: /root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/libpython3.12.so.1.0
+334 INFO: Running Analysis Analysis-00.toc
+334 INFO: Target bytecode optimization level: 0
+334 INFO: Initializing module dependency graph...
+335 INFO: Initializing module graph hook caches...
+345 INFO: Analyzing modules for base_library.zip ...
+1276 INFO: Processing standard module hook 'hook-heapq.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+1383 INFO: Processing standard module hook 'hook-encodings.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+3977 INFO: Processing standard module hook 'hook-pickle.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+5747 INFO: Caching module dependency graph...
+5800 INFO: Analyzing /srv/openclaw-you/workspace/AI_workflow_playbook/distribution/desktop/desktop_setup.py
+6090 INFO: Processing standard module hook 'hook-platform.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+6482 INFO: Processing pre-find-module-path hook 'hook-tkinter.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks/pre_find_module_path'
+6482 INFO: TclTkInfo: initializing cached Tcl/Tk info...
+6861 INFO: Processing standard module hook 'hook-_tkinter.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+6980 INFO: Analyzing hidden import 'secrets'
+6995 INFO: Processing module hooks (post-graph stage)...
+7000 INFO: Processing standard module hook 'hook-_tkinter.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+7007 INFO: Performing binary vs. data reclassification (188 entries)
+7042 INFO: Looking for ctypes DLLs
+7049 INFO: Analyzing run-time hooks ...
+7051 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+7055 INFO: Including run-time hook 'pyi_rth__tkinter.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+7056 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+7069 INFO: Creating base_library.zip...
+7097 INFO: Looking for dynamic libraries
+7224 INFO: Warnings written to /tmp/playbook-desktop-build-4ulnnaje/work-playbook-helper/playbook-helper/warn-playbook-helper.txt
+7241 INFO: Graph cross-reference written to /tmp/playbook-desktop-build-4ulnnaje/work-playbook-helper/playbook-helper/xref-playbook-helper.html
+7267 INFO: checking PYZ
+7268 INFO: Building PYZ because PYZ-00.toc is non existent
+7268 INFO: Building PYZ (ZlibArchive) /tmp/playbook-desktop-build-4ulnnaje/work-playbook-helper/playbook-helper/PYZ-00.pyz
+7530 INFO: Building PYZ (ZlibArchive) /tmp/playbook-desktop-build-4ulnnaje/work-playbook-helper/playbook-helper/PYZ-00.pyz completed successfully.
+7591 INFO: checking PKG
+7591 INFO: Building PKG because PKG-00.toc is non existent
+7591 INFO: Building PKG (CArchive) playbook-helper.pkg
+19245 INFO: Building PKG (CArchive) playbook-helper.pkg completed successfully.
+19250 INFO: Bootloader /srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run
+19250 INFO: checking EXE
+19250 INFO: Building EXE because EXE-00.toc is non existent
+19250 INFO: Building EXE from EXE-00.toc
+19251 INFO: Copying bootloader EXE to /tmp/playbook-desktop-build-4ulnnaje/dist/playbook-helper
+19251 INFO: Appending PKG archive to custom ELF section in EXE
+19332 INFO: Building EXE from EXE-00.toc completed successfully.
+19336 INFO: Build complete! The results are available in: /tmp/playbook-desktop-build-4ulnnaje/dist
+69 INFO: PyInstaller: 6.16.0, contrib hooks: 2026.8
+70 INFO: Python: 3.12.13
+74 INFO: Platform: Linux-5.15.0-170-generic-x86_64-with-glibc2.35
+74 INFO: Python environment: /srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009
+75 INFO: wrote /tmp/playbook-desktop-build-4ulnnaje/spec-Playbook-Setup/Playbook-Setup.spec
+79 INFO: Removing temporary files and cleaning cache in /root/.cache/pyinstaller
+80 INFO: Module search paths (PYTHONPATH):
+['/srv/openclaw-you/workspace/AI_workflow_playbook',
+ '/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python312.zip',
+ '/root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12',
+ '/root/.local/share/uv/python/cpython-3.12-linux-x86_64-gnu/lib/python3.12/lib-dynload',
+ '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages',
+ '/srv/openclaw-you/workspace/AI_workflow_playbook/companion/ai_workflow_harness_lab/src',
+ '/srv/openclaw-you/workspace/AI_workflow_playbook/distribution/desktop']
+310 INFO: Appending 'binaries' from .spec
+311 INFO: Appending 'datas' from .spec
+311 INFO: checking Analysis
+311 INFO: Building Analysis because Analysis-00.toc is non existent
+311 INFO: Looking for Python shared library...
+326 INFO: Using Python shared library: /root/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/libpython3.12.so.1.0
+327 INFO: Running Analysis Analysis-00.toc
+327 INFO: Target bytecode optimization level: 0
+327 INFO: Initializing module dependency graph...
+327 INFO: Initializing module graph hook caches...
+337 INFO: Analyzing modules for base_library.zip ...
+1255 INFO: Processing standard module hook 'hook-heapq.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+1383 INFO: Processing standard module hook 'hook-encodings.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+4043 INFO: Processing standard module hook 'hook-pickle.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+6369 INFO: Caching module dependency graph...
+6430 INFO: Analyzing /srv/openclaw-you/workspace/AI_workflow_playbook/distribution/desktop/desktop_setup.py
+6710 INFO: Processing standard module hook 'hook-platform.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+7148 INFO: Processing pre-find-module-path hook 'hook-tkinter.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks/pre_find_module_path'
+7149 INFO: TclTkInfo: initializing cached Tcl/Tk info...
+7435 INFO: Processing standard module hook 'hook-_tkinter.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+7547 INFO: Analyzing hidden import 'secrets'
+7561 INFO: Processing module hooks (post-graph stage)...
+7567 INFO: Processing standard module hook 'hook-_tkinter.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks'
+7576 INFO: Performing binary vs. data reclassification (188 entries)
+7629 INFO: Looking for ctypes DLLs
+7650 INFO: Analyzing run-time hooks ...
+7660 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+7671 INFO: Including run-time hook 'pyi_rth__tkinter.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+7674 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+7688 INFO: Creating base_library.zip...
+7734 INFO: Looking for dynamic libraries
+7895 INFO: Warnings written to /tmp/playbook-desktop-build-4ulnnaje/work-Playbook-Setup/Playbook-Setup/warn-Playbook-Setup.txt
+7912 INFO: Graph cross-reference written to /tmp/playbook-desktop-build-4ulnnaje/work-Playbook-Setup/Playbook-Setup/xref-Playbook-Setup.html
+7933 INFO: checking PYZ
+7933 INFO: Building PYZ because PYZ-00.toc is non existent
+7933 INFO: Building PYZ (ZlibArchive) /tmp/playbook-desktop-build-4ulnnaje/work-Playbook-Setup/Playbook-Setup/PYZ-00.pyz
+8193 INFO: Building PYZ (ZlibArchive) /tmp/playbook-desktop-build-4ulnnaje/work-Playbook-Setup/Playbook-Setup/PYZ-00.pyz completed successfully.
+8219 INFO: checking PKG
+8219 INFO: Building PKG because PKG-00.toc is non existent
+8219 INFO: Building PKG (CArchive) Playbook-Setup.pkg
+18243 INFO: Building PKG (CArchive) Playbook-Setup.pkg completed successfully.
+18248 INFO: Bootloader /srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/lib/python3.12/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run
+18248 INFO: checking EXE
+18248 INFO: Building EXE because EXE-00.toc is non existent
+18248 INFO: Building EXE from EXE-00.toc
+18248 INFO: Copying bootloader EXE to /tmp/playbook-desktop-build-4ulnnaje/dist/Playbook-Setup
+18249 INFO: Appending PKG archive to custom ELF section in EXE
+18324 INFO: Building EXE from EXE-00.toc completed successfully.
+18329 INFO: Build complete! The results are available in: /tmp/playbook-desktop-build-4ulnnaje/dist

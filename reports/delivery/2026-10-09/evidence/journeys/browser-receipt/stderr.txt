@@ -1,0 +1,18 @@
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#list-status') to be visible[22m
+[2m    62 × locator resolved to hidden <p role="status" class="status " id="list-status" aria-live="polite"></p>[22m
+
+    at /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/external_browser.cjs:10:58 {
+  log: [
+    "  - waiting for locator('#list-status') to be visible",
+    '    62 × locator resolved to hidden <p role="status" class="status " id="list-status" aria-live="polite"></p>'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v22.22.2

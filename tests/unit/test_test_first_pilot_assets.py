@@ -155,9 +155,9 @@ def test_event_schema_accepts_adapter_events() -> None:
         jsonschema.validate(without_monotonic, schema)
 
 
-def test_frozen_asset_manifest_matches_full_execution_closure() -> None:
+def test_retained_asset_manifest_matches_archived_full_execution_closure() -> None:
     result = subprocess.run(
-        [sys.executable, str(ROOT / "tools/build_test_first_pilot_manifest.py"), "--check"],
+        [sys.executable, str(ROOT / "tools/verify_test_first_pilot_archive.py"), "--check"],
         cwd=ROOT,
         text=True,
         stdout=subprocess.PIPE,

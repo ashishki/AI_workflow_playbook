@@ -1,0 +1,67 @@
+{
+  "schema": "playbook.independent-platform-review.v1",
+  "status": "SOURCE_RECHECK_COMPLETE_FINAL_DOCS_PENDING",
+  "adapter": "platform_collaboration_read_only",
+  "reviewer": "/root/delivery_final_review",
+  "native_role_runner": "NOT_RUN",
+  "created_utc": "2026-10-09T08:07:52.478680+00:00",
+  "source_sha256": {
+    "distribution/desktop/setup_core.py": "34363832f554812b583e26817e442418b5cbfd5e18372ad4eebf8aecaf11dbe1",
+    "distribution/desktop/desktop_setup.py": "f4a53822b34dc603c216ddd21c4676964ee4b8e46092c031c771baf60b86d3ea",
+    "distribution/desktop/desktop_runtime.py": "0ef7e1b230f92bdebdf6b13760dbded14ba9cc9b65485b8e50bbed50a47f4811",
+    "distribution/desktop/test_setup.py": "52f0dc37102106c92afb3234ebacb4390f1fb243349ed8fe4cb32c557124dc9d",
+    "plugins/playbook-native/skills/playbook/references/review.md": "8b029d726a5b4ac7038a5aeb12f9634b48533832c8b7bb4c298f73323a657b8c",
+    "plugins/playbook-native/.codex-plugin/plugin.json": "3844bc1668ef3ecf2ca8454d2f627ddb10a9b9944550d76b1084668285bd115c",
+    "plugins/playbook-native/skills/playbook/assets/project-block.md": "46226e6a7004ff96900d4241c16776f99c306154a58b4edd7251279637b7e418",
+    "plugins/playbook-native/skills/playbook/references/lifecycle/discover.md": "7ae63d4b9a941bac0bdd818bc92a6132e83c605f5a74af21124a5a2d95be0e5e",
+    "plugins/playbook-native/skills/playbook/references/lifecycle/verify.md": "b2f951c172964708eba0e455ee7fd184110ebbba19debb5ebdb3800d40038603"
+  },
+  "checks": [
+    {
+      "command": ".venv-delivery-20261009/bin/python -m unittest discover -s distribution/desktop -p test_*.py -v",
+      "status": "PASS",
+      "result": "20 tests",
+      "stdout": "recheck-desktop.stdout.txt",
+      "stderr": "recheck-desktop.stderr.txt"
+    },
+    {
+      "command": ".venv-delivery-20261009/bin/python -m unittest discover -s tests/vnext -v",
+      "status": "PASS",
+      "result": "50 tests",
+      "stdout": "recheck-vnext.stdout.txt",
+      "stderr": "recheck-vnext.stderr.txt"
+    },
+    {
+      "command": ".venv-delivery-20261009/bin/python distribution/native/sync_runtime.py --check",
+      "status": "PASS",
+      "result": "Runtime copies: current"
+    }
+  ],
+  "finding_recheck": [
+    {
+      "id": "DELIVERY-P2-01",
+      "status": "FIXED",
+      "evidence": "Literal managed-document command parsed by actual bundled helper with --help, no inference."
+    },
+    {
+      "id": "DELIVERY-P2-02",
+      "status": "FIXED",
+      "evidence": "plan/apply/doctor share journal identity/phase validation; five real missing/invalid/moved fixture variants block update/remove and preserve all bytes."
+    }
+  ],
+  "version": "0.2.0-preview.4",
+  "current_master_discover_verify_preserved": true,
+  "open_confirmed_p0": 0,
+  "open_confirmed_p1": 0,
+  "open_confirmed_p2": 0,
+  "final_scope_pending": [
+    "Final Delivery report/results.json and acceptance matrix not yet available/reviewed.",
+    "Final built Native/Desktop artifact identity, CI and observed GUI receipt review pending."
+  ],
+  "limitations": [
+    "Technical source/fixture recheck only, not field-user or clean-machine acceptance.",
+    "No live inference/accounts/Cloudflare/public preview/repeated human usage performed by reviewer.",
+    "No source changes, recursive reviewer or credential reads.",
+    "Billing telemetry unavailable; reviewer cost unknown."
+  ]
+}

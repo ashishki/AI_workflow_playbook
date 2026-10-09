@@ -1,0 +1,108 @@
+test_concurrent_conflict_exactly_one_winner (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 409 -
+ok
+test_concurrent_replay_exactly_one_record (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:38] "POST /api/bookings HTTP/1.1" 200 -
+ok
+test_create_list_id_and_header_owns_teacher (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:39] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "GET /api/bookings/7067523b-daf4-4e89-bf2a-d9ebc6c47fae HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "GET /api/bookings HTTP/1.1" 200 -
+ok
+test_current_legacy_data_readable_and_replay_unchanged (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:39] "GET /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "GET /api/bookings/46f7dcde-b90a-4f70-8c3f-eda24a4fce69 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "GET /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "GET /api/bookings/a0b53c2e-f931-465c-980f-d383771702a4 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "GET /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "GET /api/bookings/b98a7c9a-79e6-4186-9646-a31f02fcc8fb HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:39] "POST /api/bookings HTTP/1.1" 400 -
+ok
+test_failed_persistence_keeps_previous_data (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:40] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:40] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:21:40] "GET /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:40] "POST /api/bookings HTTP/1.1" 201 -
+ok
+test_idempotency_and_distinct_request_conflict (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:40] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:40] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:40] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:40] "POST /api/bookings HTTP/1.1" 409 -
+127.0.0.1 - - [09/Oct/2026 10:21:40] "GET /api/bookings HTTP/1.1" 200 -
+ok
+test_missing_unknown_identity_forbidden (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:41] "GET /api/bookings HTTP/1.1" 403 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 403 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "GET /api/bookings HTTP/1.1" 403 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 403 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "GET /api/bookings HTTP/1.1" 403 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 403 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "GET /api/bookings HTTP/1.1" 403 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 403 -
+ok
+test_new_bookings_only_on_whole_or_half_hour (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:41] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:42] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:42] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:42] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:42] "POST /api/bookings HTTP/1.1" 201 -
+ok
+test_static_page_local_demo_and_xss_safe_rendering (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:42] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:42] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:42] "GET /api/bookings HTTP/1.1" 200 -
+ok
+test_teacher_isolation_and_nonleaking_missing_id (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "GET /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "GET /api/bookings/c22cc000-9eb5-429c-8c69-8233cf1cc2cd HTTP/1.1" 404 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "GET /api/bookings HTTP/1.1" 200 -
+ok
+test_validation_dates_times_names_and_bad_json (test_app.BookingHTTPTests) ... 127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:21:43] "GET /api/bookings HTTP/1.1" 200 -
+ok
+test_actual_process_restart_and_maintenance_lock (test_app.LifecycleTests) ... ok
+test_backup_export_restore_retire_on_disposable_copy (test_app.LifecycleTests) ... ok
+test_corrupt_restore_rejected_without_touching_data (test_app.LifecycleTests) ... ok
+test_current_legacy_backup_export_restore_and_replay (test_app.LifecycleTests) ... ok
+test_existing_files_preserved (test_app.LifecycleTests) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 7.922s
+
+OK

@@ -1,0 +1,29 @@
+test_archive_is_reproducible_and_manifest_matches_every_file (test_build.BuildTests) ... ok
+test_archive_mutation_after_final_links_fails_before_success (test_build.BuildTests) ... ok
+test_case_and_unicode_colliding_members_are_rejected (test_build.BuildTests) ... ok
+test_checksum_created_during_build_is_not_overwritten (test_build.BuildTests) ... ok
+test_existing_archive_is_not_overwritten (test_build.BuildTests) ... ok
+test_existing_checksum_is_not_overwritten (test_build.BuildTests) ... ok
+test_failed_second_link_preserves_external_checksum (test_build.BuildTests) ... ok
+test_mutation_after_initial_hash_fails_before_success (test_build.BuildTests) ... ok
+test_nonportable_member_names_are_rejected_on_every_platform (test_build.BuildTests) ... ok
+test_nonportable_version_tokens_are_rejected (test_build.BuildTests) ... ok
+test_published_artifacts_are_read_only (test_build.BuildTests) ... ok
+test_published_artifacts_cannot_be_reopened_writable (test_build.BuildTests) ... ok
+test_replaced_path_fails_identity_check (test_build.BuildTests) ... ok
+test_sidecar_mutation_after_final_links_fails_before_success (test_build.BuildTests) ... ok
+test_sidecar_mutation_fails_before_final_names_are_published (test_build.BuildTests) ... ok
+test_staged_substitution_is_detected_after_linking (test_build.BuildTests) ... ok
+test_starter_skills_are_exact_package_copies_and_extract_with_spaces (test_build.BuildTests) ... ok
+test_symlink_cannot_copy_unrelated_data_into_archive (test_build.BuildTests) ... ok
+test_all_roles_work_without_git_or_governance_files (test_review.NativeReviewTests) ... ok
+test_evidence_cannot_be_overwritten (test_review.NativeReviewTests) ... ok
+test_missing_completion_corruption_marker_and_timeout_cannot_pass (test_review.NativeReviewTests) ... ok
+test_packaged_engine_matches_canonical_runner (test_review.NativeReviewTests) ... ok
+test_reviewer_write_drift_is_reported (test_review.NativeReviewTests) ... ok
+test_source_change_invalidates_saved_review_without_a_commit (test_review.NativeReviewTests) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 6.471s
+
+OK

@@ -123,7 +123,7 @@ class RecordTests(unittest.TestCase):
         result = self.cli('handoff', '--record', 'solution.json', '--snapshot', 'proof.json')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('Теряются', result.stdout)
-        self.assertIn('not_checked', result.stdout)
+        self.assertIn('**Техника / использование / эффект:** не проверено / использование не наблюдалось / неизвестно', result.stdout)
         self.assertNotIn('private_value_not_for_export', result.stdout)
         self.assertIn('не разрешение', result.stdout)
 

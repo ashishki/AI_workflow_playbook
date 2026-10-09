@@ -114,7 +114,7 @@ def check(root: Path) -> tuple[list[str], list[dict]]:
             path = source.split(' §')[0]
             if not list(root.glob(path)):
                 errors.append(f'Missing source in component {c["id"]}: {path}')
-    for name in ('run_codex_role.py','codex_role_run_lib.py','solution_record.py'):
+    for name in ('run_codex_role.py','codex_role_run_lib.py','solution_record.py','playbook_environment.py'):
         source, target = root/'tools'/name, root/SKILL/'scripts'/name
         if not source.is_file() or not target.is_file() or target.is_symlink() or source.read_bytes() != target.read_bytes():
             errors.append(f'Shared packaged helper drift: {name}')

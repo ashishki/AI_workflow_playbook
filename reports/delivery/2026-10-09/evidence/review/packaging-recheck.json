@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "finding": "DELIVERY-P2-05",
+  "results": [
+    {
+      "output": "initial-app",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_app"
+      ],
+      "cwd": "reviewer temporary copy of complete published snapshot",
+      "exit_code": 0,
+      "stderr_tail": "OST /api/bookings HTTP/1.1\" 400 -\n127.0.0.1 - - [09/Oct/2026 10:40:01] \"POST /api/bookings HTTP/1.1\" 400 -\n127.0.0.1 - - [09/Oct/2026 10:40:01] \"POST /api/bookings HTTP/1.1\" 400 -\n127.0.0.1 - - [09/Oct/2026 10:40:01] \"POST /api/bookings HTTP/1.1\" 400 -\n127.0.0.1 - - [09/Oct/2026 10:40:01] \"POST /api/bookings HTTP/1.1\" 400 -\n127.0.0.1 - - [09/Oct/2026 10:40:01] \"GET /api/bookings HTTP/1.1\" 200 -\nok\ntest_actual_process_restart_and_maintenance_lock (test_app.LifecycleTests.test_actual_process_restart_and_maintenance_lock) ... ok\ntest_backup_export_restore_retire_on_disposable_copy (test_app.LifecycleTests.test_backup_export_restore_retire_on_disposable_copy) ... ok\ntest_corrupt_restore_rejected_without_touching_data (test_app.LifecycleTests.test_corrupt_restore_rejected_without_touching_data) ... ok\ntest_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 7.090s\n\nOK\n",
+      "protected_skill_count": 31,
+      "app_sha256": "d1b91721a5517390d97b708092ccfb5fe89c8e328cd4ae83849d054f629eb1ab"
+    },
+    {
+      "output": "transfer-app",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_app"
+      ],
+      "cwd": "reviewer temporary copy of complete published snapshot",
+      "exit_code": 0,
+      "stderr_tail": ":10] \"POST /api/bookings HTTP/1.1\" 400 -\n127.0.0.1 - - [09/Oct/2026 10:40:10] \"POST /api/bookings HTTP/1.1\" 400 -\n127.0.0.1 - - [09/Oct/2026 10:40:10] \"POST /api/bookings HTTP/1.1\" 400 -\n127.0.0.1 - - [09/Oct/2026 10:40:10] \"GET /api/bookings HTTP/1.1\" 200 -\nok\ntest_actual_process_restart_and_maintenance_lock (test_app.LifecycleTests.test_actual_process_restart_and_maintenance_lock) ... ok\ntest_backup_export_restore_retire_on_disposable_copy (test_app.LifecycleTests.test_backup_export_restore_retire_on_disposable_copy) ... ok\ntest_corrupt_restore_rejected_without_touching_data (test_app.LifecycleTests.test_corrupt_restore_rejected_without_touching_data) ... ok\ntest_current_legacy_backup_export_restore_and_replay (test_app.LifecycleTests.test_current_legacy_backup_export_restore_and_replay) ... ok\ntest_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 8.808s\n\nOK\n",
+      "protected_skill_count": 30,
+      "app_sha256": "854adf08dd2f323c6e9a1d07b3a8e5b29e0f9d862ba9efa54fe52399b499c854"
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "conclusion": "success",
+  "headSha": "7f36b90859a17c07f47197fed32e5fe1f4c8e1b3",
+  "status": "completed",
+  "url": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/37903025549",
+  "jobs": [
+    {
+      "id": 113729777363,
+      "name": "checks",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/37903025549/job/113729777363",
+      "started_at": "2026-10-09T08:07:29Z",
+      "completed_at": "2026-10-09T08:09:47Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T08:07:30Z",
+          "completed_at": "2026-10-09T08:07:31Z"
+        },
+        {
+          "name": "Run actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T08:07:31Z",
+          "completed_at": "2026-10-09T08:07:33Z"
+        },
+        {
+          "name": "Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T08:07:33Z",
+          "completed_at": "2026-10-09T08:07:33Z"
+        },
+        {
+          "name": "Install test dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T08:07:33Z",
+          "completed_at": "2026-10-09T08:07:40Z"
+        },
+        {
+          "name": "Verify installed test environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T08:07:40Z",
+          "completed_at": "2026-10-09T08:07:41Z"
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-09T08:07:41Z",
+          "completed_at": "2026-10-09T08:08:40Z"
+        },
+        {
+          "name": "Canonical playbook verification",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-09T08:08:40Z",
+          "completed_at": "2026-10-09T08:09:43Z"
+        },
+        {
+          "name": "Compile Python helpers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-09T08:09:43Z",
+          "completed_at": "2026-10-09T08:09:43Z"
+        },
+        {
+          "name": "Validate JSON artifacts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-09T08:09:43Z",
+          "completed_at": "2026-10-09T08:09:43Z"
+        },
+        {
+          "name": "Smoke-test project initializer",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-09T08:09:43Z",
+          "completed_at": "2026-10-09T08:09:43Z"
+        },
+        {
+          "name": "External skill security gate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-09T08:09:43Z",
+          "completed_at": "2026-10-09T08:09:43Z"
+        },
+        {
+          "name": "Cost rollup smoke test",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-09T08:09:43Z",
+          "completed_at": "2026-10-09T08:09:43Z"
+        },
+        {
+          "name": "Integrity check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-09T08:09:43Z",
+          "completed_at": "2026-10-09T08:09:43Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25,
+          "started_at": "2026-10-09T08:09:43Z",
+          "completed_at": "2026-10-09T08:09:43Z"
+        },
+        {
+          "name": "Post Run actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-10-09T08:09:43Z",
+          "completed_at": "2026-10-09T08:09:44Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-10-09T08:09:44Z",
+          "completed_at": "2026-10-09T08:09:44Z"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+........................................................................ [ 24%]
+........................................................................ [ 48%]
+................................................s............sss.s...... [ 72%]
+..s........................................................ [ 92%]
+.......................                                                  [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/unit/test_test_first_pilot_permissions.py: environment pilot not run; missing prerequisite(s): pinned Codex CLI 0.144.4 (installed identity differs)
+SKIPPED [1] tests/unit/test_test_first_pilot_sandbox.py:31: bubblewrap is required for the Linux pilot
+SKIPPED [1] tests/unit/test_test_first_pilot_sandbox.py:84: bubblewrap is required for the Linux pilot
+SKIPPED [1] tests/unit/test_test_first_pilot_sandbox.py:98: bubblewrap is required for the Linux pilot
+SKIPPED [1] tests/unit/test_test_first_pilot_toolchain.py: environment pilot not run; missing prerequisite(s): historical pinned host paths; source archive is not a live host
+SKIPPED [1] tests/unit/test_test_first_pilot_toolchain.py: environment pilot not run; missing prerequisite(s): /usr/bin/bwrap
+292 passed, 6 skipped, 13 subtests passed in 101.35s (0:01:41)

@@ -1,0 +1,106 @@
+{
+  "status": "observed_technical_checks_passed",
+  "source_head": "7f36b90859a17c07f47197fed32e5fe1f4c8e1b3",
+  "source_before": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/source-final-before.json",
+  "source_after": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/source-final-after.json",
+  "tracked_source_changes_during_acceptance": [],
+  "version": "0.2.0-preview.4",
+  "artifact": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/accepted-bundle/Playbook-Desktop-0.2.0-preview.4-linux-x86_64.zip",
+  "artifact_sha256": "4a5e4afa7a46ba786a604ae3fc0702b4856fde24a419fbbb4c7a737e988b7f33",
+  "native_kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+  "desktop_manifest_exact": true,
+  "current_canonical_native_identity_matches": true,
+  "helper_identity": {
+    "version": "0.2.0-preview.4",
+    "kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+    "helpers": [
+      "inventory",
+      "review",
+      "state"
+    ],
+    "python": "bundled"
+  },
+  "desktop_unit_tests": 20,
+  "checks": {
+    "final-build-receipt": {
+      "receipt": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/final-build-receipt/receipt.json",
+      "receipt_sha256": "d64fc72f6259daa67b29c90a1cbf9969f7338fa528aa06e8aaf46272e91c9cac",
+      "exit_code": 0
+    },
+    "final-unit-receipt": {
+      "receipt": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/final-unit-receipt/receipt.json",
+      "receipt_sha256": "44d33bad9b3d0c3314dbc93ed8b87cd7518fb6754f52d63a175d39555180cf08",
+      "exit_code": 0
+    },
+    "final-gui-receipt": {
+      "receipt": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/final-gui-receipt/receipt.json",
+      "receipt_sha256": "f4e025aed0016cbc00fb087f33b3336d8fda9afddf827395388c8a16e967121b",
+      "exit_code": 0
+    },
+    "final-cli-receipt": {
+      "receipt": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/final-cli-receipt/receipt.json",
+      "receipt_sha256": "13cf050c931342b548c794abe937959484f5cf4b411cf0ba50368e4c4b3dd579",
+      "exit_code": 0
+    },
+    "final-about-receipt": {
+      "receipt": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/final-about-receipt/receipt.json",
+      "receipt_sha256": "9b5aba9bdba99c8fab5b4be1a5906c25f7f24594fba879185e2c7058739d06c4",
+      "exit_code": 0
+    },
+    "final-selftest-receipt": {
+      "receipt": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/final-selftest-receipt/receipt.json",
+      "receipt_sha256": "af8531ede3682cee20bd1f963890b28814c893bcfa68d547217cbf978693cd26",
+      "exit_code": 0
+    },
+    "final-browser-receipt": {
+      "receipt": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/final-browser-receipt/receipt.json",
+      "receipt_sha256": "d87467c5144ad6668a1a8c4a71351a1e62f7db9a1dc4b562ccd43dbdf542096a",
+      "exit_code": 0
+    },
+    "final-native-crosscheck-receipt": {
+      "receipt": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/final-native-crosscheck-receipt/receipt.json",
+      "receipt_sha256": "71f18c9f3d3ae3989f43d858e59d8e7e31fc805a0ecf3ccb30d18bb5edf000d4",
+      "exit_code": 0
+    }
+  },
+  "browser_result": {
+    "optional_helper": true,
+    "combinations": 48,
+    "empty_input": "pass",
+    "scenario_prefills": "pass",
+    "clipboard": "pass",
+    "clipboard_fallback": "pass",
+    "first_run_example": "pass",
+    "install_and_help_prompts": "pass",
+    "archive_edition": true,
+    "input_as_text": "pass",
+    "responsive": [
+      390,
+      1280
+    ],
+    "page_errors": [],
+    "external_requests": []
+  },
+  "gui": {
+    "result": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/gui-accepted/gui-automation.json",
+    "screenshots_viewed": [
+      "gui-interrupted.png",
+      "browser/start-390.png",
+      "browser/launcher-1280.png"
+    ]
+  },
+  "historical_negative_evidence": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/historical-caf-regression/historical-identity.json",
+  "script_hashes": {
+    "gui_automation.py": "b64729a219efbcf3e6c53342bb73f02310ba163406ba87abae76d150f3d4f7b7",
+    "frozen_lifecycle.py": "ab9e5902381556e5f32e3e007c3c977489837bcb344fffd0760b15707e8c3954"
+  },
+  "limits": [
+    "Linux VPS/root technical automation only; no Unix permission acceptance from root",
+    "START browser test exercises shipped help/launcher, not a user-created app",
+    "preview.5 upgrade is synthetic, not a future release artifact",
+    "no clean-machine, Windows/macOS or human pilot acceptance",
+    "no accounts, inference, paid API, deployment or external sends",
+    "private preview only; independent reviewer and owner release decision are separate",
+    "provisional preview.3 attempt excluded from final acceptance"
+  ]
+}

@@ -1,0 +1,4 @@
+distribution/desktop/desktop_setup.py |  53 +++++++++-----
+ distribution/desktop/setup_core.py    |  74 ++++++++++++++++---
+ distribution/desktop/test_setup.py    | 130 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 229 insertions(+), 28 deletions(-)

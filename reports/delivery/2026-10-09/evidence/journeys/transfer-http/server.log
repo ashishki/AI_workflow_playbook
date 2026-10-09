@@ -1,0 +1,5 @@
+127.0.0.1 - - [09/Oct/2026 10:27:23] "GET /api/bookings/46f7dcde-b90a-4f70-8c3f-eda24a4fce69 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:27:23] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:27:23] "POST /api/bookings HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 10:27:23] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:27:23] "GET /api/bookings/46f7dcde-b90a-4f70-8c3f-eda24a4fce69 HTTP/1.1" 404 -

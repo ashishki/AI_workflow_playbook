@@ -1,0 +1,7 @@
+{
+  "status": "FAIL",
+  "classification": "probe_list_refresh_wait_race",
+  "observed": "4 groups pass; assertion raced async list refresh; disk has exactly one committed/replayed booking",
+  "source_app_changed": false,
+  "correction": "wait for visible returned list before count assertion; fresh separate UI data"
+}

@@ -1,0 +1,62 @@
+{
+  "command_argv": [
+    ".venv-delivery-20261009/bin/python",
+    "tools/verify_playbook.py",
+    "--root",
+    "."
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "0a178cfe7f0cc97e2740e3993ca9eac7336b015d48121f47c89459bc040896f9",
+  "dirty_state_after": [
+    "M .github/workflows/playbook-checks.yml",
+    " M conftest.py",
+    " M docs/tasks.md",
+    " M pytest.ini",
+    " M requirements-dev.txt",
+    " M tests/unit/test_test_first_pilot_assets.py",
+    " M tests/unit/test_test_first_pilot_toolchain.py",
+    " M tools/verify_test_first_pilot_toolchain.py",
+    "?? docs/evaluation/TEST_FIRST_PILOT_EVIDENCE_AVAILABILITY.md",
+    "?? tests/unit/test_environment_pilot_policy.py",
+    "?? tests/unit/test_test_first_pilot_archive.py",
+    "?? tools/verify_test_first_pilot_archive.py"
+  ],
+  "dirty_state_before": [
+    "M .github/workflows/playbook-checks.yml",
+    " M conftest.py",
+    " M docs/tasks.md",
+    " M pytest.ini",
+    " M requirements-dev.txt",
+    " M tests/unit/test_test_first_pilot_assets.py",
+    " M tests/unit/test_test_first_pilot_toolchain.py",
+    " M tools/verify_test_first_pilot_toolchain.py",
+    "?? docs/evaluation/TEST_FIRST_PILOT_EVIDENCE_AVAILABILITY.md",
+    "?? tests/unit/test_environment_pilot_policy.py",
+    "?? tests/unit/test_test_first_pilot_archive.py",
+    "?? tools/verify_test_first_pilot_archive.py"
+  ],
+  "end_timestamp": "2026-10-09T07:35:48Z",
+  "environment_summary": {
+    "machine": "x86_64",
+    "platform": "Linux-5.15.0-170-generic-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "python_executable": "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+    "timed_out": false,
+    "timeout": 1800.0
+  },
+  "exit_code": 0,
+  "parent_receipt_id": null,
+  "producer": "tools/receipt_run.py",
+  "receipt_id": "D00-canonical-final-1791531242-b8ca2ec3",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "de2478f4a3fdffb4c568898f37a078500f203b8a",
+  "repo_commit_before": "de2478f4a3fdffb4c568898f37a078500f203b8a",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-10-09T07:34:02Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "0cd569416620c8cfcc38815489599230967bb9d0cfa537b1556fc18cc0a760b3",
+  "task_id": "D00-canonical-final",
+  "working_directory": "/srv/openclaw-you/workspace/AI_workflow_playbook"
+}

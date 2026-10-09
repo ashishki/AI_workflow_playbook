@@ -1,0 +1,32 @@
+usage: run_codex_role.py run [-h] [--root ROOT] [--profile {governed,native}]
+                             [--request REQUEST] --task TASK
+                             [--feature-id FEATURE_ID] [--slice-id SLICE_ID]
+                             --role
+                             {maintainability_review,product_design_review,program_design_review,slice_review}
+                             [--codex-bin CODEX_BIN] [--model MODEL]
+                             [--reasoning-effort REASONING_EFFORT]
+                             [--timeout-seconds TIMEOUT_SECONDS]
+                             [--run-id RUN_ID] [--output-report OUTPUT_REPORT]
+                             [--no-publish]
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT
+  --profile {governed,native}
+  --request REQUEST     Native review brief, inside the project
+  --task TASK
+  --feature-id FEATURE_ID
+  --slice-id SLICE_ID
+  --role {maintainability_review,product_design_review,program_design_review,slice_review}
+  --codex-bin CODEX_BIN
+  --model MODEL
+  --reasoning-effort REASONING_EFFORT
+                        Reasoning effort; governed defaults to medium, native
+                        inherits host configuration
+  --timeout-seconds TIMEOUT_SECONDS
+  --run-id RUN_ID
+  --output-report OUTPUT_REPORT
+                        repository-relative publication path; defaults to
+                        .playbook-artifacts/reports/<feature>/<role>.md
+  --no-publish          keep the validated report only inside the immutable
+                        run directory

@@ -1,0 +1,20 @@
+{
+  "base": "de2478f4a3fdffb4c568898f37a078500f203b8a",
+  "scope": "D00 source after sandbox review fixes; report/evidence excluded",
+  "files": {
+    ".github/workflows/playbook-checks.yml": "50584598bea463d59a2878bbb3a2d0873b1375130cb401b97a7766f1d31c6434",
+    "conftest.py": "1f3dbe01e9f89a92f365d7878bf565c79d4b0f97ffc2d3ad6c796468b2199a8a",
+    "docs/evaluation/TEST_FIRST_PILOT_EVIDENCE_AVAILABILITY.md": "d91f76d540ec288254d8ef11c7fcad1028fc661a902556ed42b748d4e235a612",
+    "docs/tasks.md": "a072d1a1165a71b9643d88c11155a7c77671cfeb2b62430555891cdcf463550f",
+    "pytest.ini": "14fa62b7cc424e9bcf61383dd6732733d7b4078a3850b6f864e1c65030ee4161",
+    "requirements-dev.txt": "3a37e0cada5d0c236fdf0605cc6762e72b02463f5a5af90c1b1c02d4bc74cbaf",
+    "tests/unit/test_environment_pilot_policy.py": "415186f18954f222ef56749ac1a033671f6f8deabf7d25749547f92e90a60751",
+    "tests/unit/test_test_first_pilot_archive.py": "f5471d9af78d4401b0fb46dc6981efd245827e3817898422702e11bf98719cb7",
+    "tests/unit/test_test_first_pilot_assets.py": "657cbcf50e65313a80c33bd3b476dd1e1de0f9c5e602d4ca8ebce27b76e8200a",
+    "tests/unit/test_test_first_pilot_sandbox.py": "ee0a8997b614ca5a86c65ec63caa5435594df962cb055d4dca5b61a9c727190b",
+    "tests/unit/test_test_first_pilot_toolchain.py": "2bdac762bda118b12d65dca91fab269246d8ffd28bec60e66ab8e5a4ceeb8ee3",
+    "tools/test_first_pilot_sandbox.py": "59ab3652daed4942a19e5a26218802d229c15353b49461a632ef40d829fc9502",
+    "tools/verify_test_first_pilot_archive.py": "ab4516642615e1db668120c0d4ab9aeb054b1bbe6917d7c96ab35f294bbc7ff5",
+    "tools/verify_test_first_pilot_toolchain.py": "c08f413b162daf8e35271d016bc81ea31474fe060b5caaaca7d4eae4ece8e3c1"
+  }
+}

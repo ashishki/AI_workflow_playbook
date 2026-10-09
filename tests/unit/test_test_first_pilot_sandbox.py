@@ -29,7 +29,8 @@ def sandbox_command(workspace: Path, *command: str) -> list[str]:
 
 
 @pytest.mark.skipif(not BWRAP.is_file(), reason="bubblewrap is required for the Linux pilot")
-def test_sandbox_clears_secrets_blocks_host_writes_and_unshares_network(tmp_path: Path) -> None:
+@pytest.mark.parametrize('executable', ['selected', '/usr/bin/python3', 'python3'])
+def test_sandbox_clears_secrets_blocks_host_writes_and_unshares_network(tmp_path: Path, executable: str) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     host_secret = tmp_path / "host-secret.txt"
@@ -67,7 +68,7 @@ print('sandbox-ok')
 """
         env = {**os.environ, "TFA_HOST_SECRET": "must-not-propagate"}
         result = subprocess.run(
-            sandbox_command(workspace, sys.executable, "-c", probe),
+            sandbox_command(workspace, sys.executable if executable == 'selected' else executable, "-c", probe),
             env=env,
             text=True,
             stdout=subprocess.PIPE,
@@ -79,6 +80,26 @@ print('sandbox-ok')
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == "sandbox-ok"
     assert not (workspace / "forbidden.txt").exists()
+
+
+@pytest.mark.skipif(not BWRAP.is_file(), reason="bubblewrap is required for the Linux pilot")
+def test_copied_virtualenv_runtime_is_checked_against_trusted_binary(tmp_path: Path) -> None:
+    venv = tmp_path / 'copied-venv'
+    subprocess.run([sys.executable, '-m', 'venv', '--without-pip', '--copies', str(venv)], check=True, timeout=30)
+    executable = venv / 'bin/python'
+    workspace = tmp_path / 'workspace'
+    workspace.mkdir()
+    command = [str(executable), str(SANDBOX), '--workspace', str(workspace), '--',
+               str(executable), '-c', "from pathlib import Path; assert Path.cwd() == Path('/workspace')"]
+    result = subprocess.run(command, text=True, capture_output=True, timeout=10)
+    assert result.returncode == 0, result.stderr
+    # ELF permits trailing bytes, so the altered interpreter can start but
+    # must fail runtime identity validation before the verifier is executed.
+    with executable.open('ab') as stream:
+        stream.write(b'altered-copy')
+    result = subprocess.run(command, text=True, capture_output=True, timeout=10)
+    assert result.returncode == 2, result.stderr
+    assert 'does not identify the trusted runtime' in result.stderr
 
 
 @pytest.mark.skipif(not BWRAP.is_file(), reason="bubblewrap is required for the Linux pilot")
