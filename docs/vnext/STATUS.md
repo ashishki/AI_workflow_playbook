@@ -1,106 +1,67 @@
-# vNext — фактическое состояние
+# Playbook — фактическое состояние master
 
-База переработки — `1e0abe0048daefc30d2f7f9276ab12246bda6856`; до текущего
-незакоммиченного исправления проверенный HEAD —
-`0a164c5e4efdf7c07ad660676bd4af208e45d236`. Ветка
-`feature/playbook-vnext-20260919`; [PR №9](https://github.com/ashishki/AI_workflow_playbook/pull/9).
-Это переработка репозитория и частная техническая проверка, не завершённый
-внешний пилот или релиз.
+Обновлено 9 октября 2026 года после разрешённого переноса результатов эксперимента.
+Рабочая ветка — master. vNext уже слит через [PR #9](https://github.com/ashishki/AI_workflow_playbook/pull/9);
+его миграция не является текущей задачей. Прежняя записка сохранена побайтно в
+[истории](history/STATUS.before-results-merge-20261009.md), вместе с границами её
+технических и пользовательских наблюдений.
 
-## Реализовано
+## Что опубликовано
 
-Два действующих входа: Engineering для новых/текущих реальных проектов и
-отдельных экспериментов, Product — для полного пути владельца рабочей проблемы.
-Shared задаёт общие реализации и явную карту владельцев. Исходные
-runner/frontend/Governed сохранены по совместимым путям. Все tracked-пути
-классифицированы, 50 прежних компонентов сопоставлены с жизненным циклом, а все
-13 стадий доступны как вызываемые процедуры и входят в архив.
+- Действующие Engineering / Product / Shared и совместимые Governed-пути сохранены.
+- [PR #11](https://github.com/ashishki/AI_workflow_playbook/pull/11) слит:
+  `dcd40b9967be4dfbcf35498089bbe49e015008af`. В master вошли архив трёх настоящих
+  Controlled Delegation раундов и поясняющая документация.
+- [Что делали и зачем](../CONTROLLED_DELEGATION_RU.md),
+  [архив](../../reports/delegation/README.md) и
+  [итог третьего раунда](../../reports/delegation/2026-10-08-round3/REPORT_RU.md).
+- Восстановлены два точных архивных pyc-файла, ранее проигнорированных Git;
+  все 676 индексированных SHA256 проверены. Frozen отчёты и результаты не переписаны.
 
-Необязательный solution record проверяет структуру и внутреннюю согласованность,
-показывает итог, фиксирует выбранные файлы и обнаруживает устаревание перед
-передачей. Команды из записки не исполняются. Версия пакета —
-`0.2.0-preview.1`; старые продуктовые документы, frozen evidence, master,
-текущие downstream и права распространения не менялись.
+Перенос не включает рабочий runtime экспериментальной ветки, Delivery/Desktop
+или автоматическое включение делегирования. Исходная feature-ветка ad55ee4
+сохранена для harness и дальнейшего исследования.
 
-После implementation review усилен Native builder. До создания ZIP он отвергает
-непереносимые или извлекаемые за корень имена, включая Windows-разделители,
-traversal, device/control forms и normalisation/case collisions. Производные имена
-архива проверяются как ограниченный SemVer. ZIP и checksum строятся в приватной
-staging-директории, публикуются без замены через hard link и перепроверяются.
-Финальные файлы намеренно read-only. Это защита обычной локальной private-evaluation
-сборки, а не новый контракт против конкурирующего процесса с той же учётной
-записью.
+## Наблюдённый вывод
 
-## Наблюдённые проверки
+В последнем раунде все шесть приложений исправили три причины сбоя и получили
+100/100. При одинаковом качестве наблюдённых приложений C медленнее B в 1.46 раза;
+uncached input выше в 2.93 раза, output — в 1.69 раза. Добавочная польза на этих
+сценариях не показана. Один implementation-агент остаётся исходным вариантом;
+существующие требования независимого review не отменяются.
 
-Исторические CI для `0a164c5` остаются в [PR №9](https://github.com/ashishki/AI_workflow_playbook/pull/9),
-но не приписываются автоматически текущему незакоммиченному изменению builder.
-На текущем дереве локально прошли:
+Полная qualification BLOCKED: worker scope instructions нельзя проверить из
+opaque payload, USD и активное время человека неизвестны. Ошибочные исходные
+FAIL/STOP_SHIP сохранены; исправленная трактовка и связанные свидетельства прошли
+настоящее повторное независимое review PASS. Два повтора одного среднего
+синтетического проекта не доказывают production-пользу и не заменяют реальные пилоты.
 
-- `python3 -m unittest discover -s tests/vnext -v` — 29 PASS.
-- `python3 -m unittest discover -s distribution/native -p 'test_*.py' -v` —
-  24 tests, из них один permission test skipped, потому что процесс запущен от
-  root и root обходит Unix read-only mode.
-- `python3 distribution/native/sync_runtime.py --check` — `Runtime copies: current`.
-- `python3 tools/vnext_check.py --root .` — `contracts_valid`; также прошли
-  `python3 -m py_compile distribution/native/build.py` и `git diff --check`.
+## Проверки переноса
 
-Независимые read-only Role Runner reviews сохранены локально в ignored
-`.playbook-artifacts/runs/` и валидированы командой `run_codex_role.py verify`:
+На точном head PR #11 `c10507f499667dec19ecaaf2616bf8582e40e9e3`:
 
-- `vnext-20260920-architecture`: gpt-5.6-terra/high, PASS, inspected HEAD
-  `0a164c5`; подтверждённых дефектов архитектуры не найдено.
-- `vnext-20260920-implementation`: gpt-5.6-luna/medium, ADVISORY, inspected
-  `0a164c5`; подтвердил риск ZIP path traversal через обратные слеши в имени
-  исходного файла. Риск исправлен выше и покрыт регрессиями.
-- `vnext-20260920-consolidated-security-astra`: gpt-6-astra/high, PASS,
-  inspected полный двухфайловый working-tree delta относительно `0a164c5`.
-  Он не нашёл in-scope blocker после исправления. Review отдельно оставляет за
-  границей контракта malicious same-identity filesystem races и не подтверждает
-  файловые системы без hard links или multi-OS CI текущего delta.
+- [Playbook vNext — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37895067097).
+- [Native Product Checks — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37895067094).
+- [Playbook Checks — FAIL](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37895067174):
+  тесты не собираются без установленного ai_workflow_harness_lab.
 
-Запуск `vnext-20260920-security-fix-final` на terra не был завершён из-за
-`Selected model is at capacity`; согласно процедуре повторный сложный security
-review был выполнен на gpt-5.6-sol/high до финальной consolidated проверки.
+Локально на подготовленном дереве: vNext 29 tests PASS, Native 24 tests с одним
+root-permission skip, contracts/runtime sync/diff PASS. Ошибка full pytest и шесть
+missing references старого pilot также воспроизведены на чистом f03dde86, до
+переноса архива. Они остаются открытыми; старые или неполные проверки не выданы за PASS.
 
-## Реальные Codex trials
+## Что остаётся
 
-Сначала механический preflight проверил подстановку командного шаблона Harness Lab;
-он не считается trial. Затем на свежих одинаковых booking fixtures действительно
-запущены два single-attempt Codex execution (`codex-cli 0.155.1`,
-gpt-6-astra/high, timeout 330 s): plain baseline и Product/playbook. Оба bundle
-прошли `verify-bundle`, не timeout, без parser errors, nested reviews и policy
-failures; независимый `external_acceptance:1.0.0` дал каждому score `1.0`.
+1. Отдельно исправить и проверить dev test setup, затем повторить полный suite.
+2. Разобрать ссылки на исторические локальные pilot-свидетельства: сохранить
+   факты и границы доступности, не выдумывать approval/reviewer results и не
+   ослаблять действующие проверки ради зелёного статуса.
+3. [Delivery PR #10](https://github.com/ashishki/AI_workflow_playbook/pull/10)
+   остаётся draft и не слит; его программа и Desktop не получают приёмку из этого merge.
+4. Настоящие Product-пилоты, внешнее использование и rollout остаются отдельной
+   работой с применимыми правами. Три синтетических эксперимента не закрывают M5–M6.
 
-`comparison_report.json` в
-`.playbook-artifacts/native-lab/vnext-20260920-real-booking/comparison/` имеет
-статус `empirical comparison`: по одному valid run на условие, zero detected
-false successes/policy violations. Baseline: 204.524 s, 181763 input / 5399
-output tokens, 8 tool calls. Playbook: 199.786 s, 181938 input / 5750 output
-tokens, 11 tool calls. Стоимость неизвестна. Один sample на условие не даёт
-оснований заявлять стабильность, превосходство, снижение стоимости или пользу
-человеку; zero detected violations ограничен покрытием данного scorer.
-
-## Что не завершено и почему
-
-M0–M4 реализованы как модель, маршруты, классификация, библиотека и helpers.
-M5–M6 всё ещё ожидают реального случая и мини-группы по протоколам в
-`product/pilots/`: настоящего владельца, последующего изменения, передачи без
-автора, диагностики/восстановления и наблюдения эффекта. Техническая пара
-Codex trials не заменяет эти проверки.
-
-Не выполнены CI и ручная Windows/macOS проверка именно текущего builder delta;
-совместимость output filesystem без hard links не доказана. Нет внешней
-публикации, аккаунтов, участников, платных подписок, production-данных или
-установок у пользователей. PR остаётся draft и не слит.
-
-## Продолжение и откат
-
-После push посмотреть CI именно нового commit; затем, только при отдельном
-разрешении, провести реальный Product-кейс и последующее изменение/передачу без
-автора. Не включать таймеры, не приглашать участников и не менять
-model/master/downstream без применимой задачи.
-
-Rollback — revert vNext-коммитов. Production-данные и установленные у
-пользователей решения не менялись; локальные `.playbook-artifacts` —
-диагностическое evidence, не публичный релиз.
+Ветки docs и vNext уже входят в master; удаление веток не выполнялось. Локальный
+master обновлён обычным fast-forward и проверяется относительно origin/master.
+Текущий SHA нужно брать из Git, а не трактовать SHA исторического merge как
+постоянный текущий head. Ни production-данные, ни установленные downstream не менялись.

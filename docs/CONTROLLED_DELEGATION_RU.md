@@ -77,21 +77,22 @@ validation не названы зелёными: недостающая уста
 База PR — проверенный server master f03dde86. История ограничений сохранена;
 локальные коммиты архива `3d1730f` и документации `3835e0e` теперь опубликованы.
 Исходная экспериментальная ветка остаётся ad55ee4, Delivery PR #10 не включён.
-На этапе этой записи merge ещё не выполнен; статус CI/merge проверяется по
-фактическому PR и remote SHA, а не предполагается из успешного push.
+Перенос выполнен: PR #11 слит 9 октября 2026 года, merge commit
+`dcd40b9967be4dfbcf35498089bbe49e015008af`. Серверный и локальный master
+синхронизированы обычным fast-forward. Полная экспериментальная ветка и
+Delivery PR #10 не сливались; рабочий runtime сохранил базу f03dde86.
 
-CI PR #11 на `e7a5709924c5b8cf9528e692ddc0afbf1d6cdb53` наблюдён:
-[Playbook vNext — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37894668453),
-[Native Product Checks — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37894668565),
-[Playbook Checks — FAIL](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37894668444).
+CI PR #11 на точном merge head `c10507f499667dec19ecaaf2616bf8582e40e9e3` наблюдён:
+[Playbook vNext — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37895067097),
+[Native Product Checks — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37895067094),
+[Playbook Checks — FAIL](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37895067174).
 Причина последнего — девять import errors отсутствующего `ai_workflow_harness_lab`,
 совпавшие с проверкой чистого f03dde86. Это известная проблема базового master,
 не регрессия архива; она не названа PASS и требует отдельного исправления.
 Перенос ограничен документацией и reports; политики проверок не ослабляются,
 required branch protection не обходится, рабочий runtime не меняется.
 
-Для завершения: перепроверить master и scope diff, получить фактический CI,
-зафиксировать его результаты и выполнить перенос. Старые ошибки
+Следующая отдельная работа — исправить и проверить dev test setup. Старые ошибки
 полного master-verifier требуют отдельного исправления test setup и проверки
 ссылок на исторические приватные свидетельства. Они не превращаются в PASS из-за
 переноса отчётов и не означают разрешение rollout.
