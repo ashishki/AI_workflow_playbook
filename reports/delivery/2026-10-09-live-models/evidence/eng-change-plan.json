@@ -1,0 +1,11 @@
+{
+  "freeze_before_change_model": true,
+  "project": "same real receipt-audit project",
+  "existing_contract": "defaultexit0 PASS/FAIL/NOT_RUN,2INVALID preserved",
+  "new_rule": "optional --strict-exit maps PASS0 FAIL1 NOT_RUN3 INVALID2; default behavior unchanged",
+  "old_data": "same actualreceipt/stdout/stderr SHA unchanged",
+  "foreign_local_change": "append operator handoff note before freshsession, preserve exactbytes",
+  "no_bootstrap_again": true,
+  "model": "gpt-6.1-sol/high viaactualCodexexec uid998",
+  "review": "samecanonicalNativeRoleRunner run andverify aftersourcechange; priorreviewmustbecome stale"
+}

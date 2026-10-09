@@ -1,0 +1,53 @@
+{
+  "base_commit": null,
+  "codex": {
+    "argv_sha256": "b78a1702b9318b5418f5ea62186feffcfccdef739c2310b54fcbfb8efd378381",
+    "binary": "/tmp/playbook-model-worker-wzb191rs/work/codex-relay-wrapper.py",
+    "cli_version": "codex-cli 0.162.0",
+    "exit_code": 1,
+    "model": "gpt-6.1-sol",
+    "parent_codex_context_scrubbed": false,
+    "reasoning_effort": "high"
+  },
+  "feature_id": null,
+  "finished_at": "2026-10-09T11:18:09.822017Z",
+  "inputs": {
+    "context_manifest_path": ".playbook-artifacts/runs/20261009T111754Z-slice_review-ab02ed85/context_manifest.json",
+    "context_manifest_sha256": "845db29a60ac0d0b22ecdf2ec3b714e859f2648c14f584a462a61bccce362126",
+    "prompt_path": ".playbook-artifacts/runs/20261009T111754Z-slice_review-ab02ed85/prompt.md",
+    "prompt_sha256": "9ca37f38f44fb207f5cce769a096d5f4e922dfb14656794bc55ce998e4da6d44",
+    "renderer_argv_sha256": "31297abca0d5204936bcbb8f63e5f7848c0d9810d1d9fe1cb9c17003095d92f5"
+  },
+  "outputs": {
+    "published_report_path": null,
+    "published_report_sha256": null,
+    "report_path": null,
+    "report_sha256": null,
+    "stderr_path": ".playbook-artifacts/runs/20261009T111754Z-slice_review-ab02ed85/codex_stderr.txt",
+    "stderr_sha256": "8563a95fcf450b4b77d4d152f90ee4c3acd10e2bc4ab81153c3b55029f68e289",
+    "trace_path": ".playbook-artifacts/runs/20261009T111754Z-slice_review-ab02ed85/codex_events.jsonl",
+    "trace_sha256": "39b0b064940f1c33df398191ff9949cbff7c24e7ff6b4e1b0c86443e66a79994"
+  },
+  "postflight": {
+    "changed_paths": [],
+    "errors": [
+      "codex exec exited with 1",
+      "Codex review did not complete successfully",
+      "review report is missing or empty"
+    ],
+    "event_count": 0,
+    "marker_valid": false,
+    "trace_valid": false,
+    "workspace_unchanged": true
+  },
+  "profile": "native",
+  "role": "slice_review",
+  "run_id": "20261009T111754Z-slice_review-ab02ed85",
+  "sandbox": "read-only",
+  "schema_version": "playbook.codex_role_run.v1",
+  "slice_id": null,
+  "started_at": "2026-10-09T11:17:54.281163Z",
+  "status": "execution_failed",
+  "task_id": "ENG-NEW-live",
+  "verdict": null
+}

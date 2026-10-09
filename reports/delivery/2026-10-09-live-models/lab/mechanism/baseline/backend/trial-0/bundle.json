@@ -1,0 +1,76 @@
+{
+  "adapter_version": "command.v1",
+  "bundle_id": "backend-baseline-trial-0",
+  "command_receipts": [
+    {
+      "kind": "command_receipt",
+      "path": "adapter/receipts/command/receipt.json",
+      "sha256": "5966ddd6c6fc6a3f9633157a2c9c8e862596a331cea4c90e90605e3ebb06e23c"
+    }
+  ],
+  "commit_after": "not_inspected_after_agent_execution",
+  "commit_before": "f51c0388bb1823da1c801fd97fe12280bf413b83",
+  "condition": "baseline",
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "environment_digest": "72eaf56915cd3431385c6a8375603176f6785324c79bf127b437ba9e1b65bcf8",
+  "failure_records": [],
+  "generated_report_ref": {
+    "kind": "generated_report",
+    "path": "report.md",
+    "sha256": "b64eb22de9c4f94ec86203f262433d3ef929e8ee1fa0e538551f40a9999f88b1"
+  },
+  "harness_eval_unit_ref": {
+    "kind": "harness_eval_unit",
+    "path": "harness_eval_unit.json",
+    "sha256": "a0e799c56f00576955f44ceaaea72b33a9ff0273e6c7cdd375472d9b3be68104"
+  },
+  "manifest_hash": "a5462125b78e396712f3838c1ca2cbe31ed3ab2bda003b8c003dbe7eae8ca489",
+  "post_state_manifest": {
+    "kind": "post_state_manifest",
+    "path": "post_state_manifest.json",
+    "sha256": "8c5020b5be7345b3aca3d07f1d5379abc4737a4fb508204f3e19217882017231"
+  },
+  "prompt_ref": {
+    "kind": "prompt",
+    "path": "prompt.md",
+    "sha256": "4e158db04b3b65e7f7f749dcdd920ccfbb7d50739099db19dab9952586616b20"
+  },
+  "repository": "playbook_native_v3",
+  "schema_version": "playbook.evidence_bundle.v1",
+  "scorer_outputs": [
+    {
+      "kind": "scorer_output",
+      "path": "scorers/external_acceptance.json",
+      "sha256": "693262f965bf089f4b20b22ca89246114b9ece478f24e841ef64c6c668ed953b"
+    }
+  ],
+  "task_id": "backend",
+  "task_spec_version": "native.backend.v1",
+  "trace_refs": [
+    {
+      "kind": "trace",
+      "path": "adapter/final_message.txt",
+      "sha256": "fe30dbf27fd59de5e6795d95c09c17b72d23631da832b3721689ff9e112098df"
+    },
+    {
+      "kind": "trace",
+      "path": "adapter/event_ledger.jsonl",
+      "sha256": "6398d9d726ef6f410d9f52124fa1fffd781faf93af7c1736c08f13767bc9597c"
+    },
+    {
+      "kind": "trace",
+      "path": "adapter/adapter_summary.json",
+      "sha256": "2fb29820dbd7a4b840f0376edbeee01e912bb0a5755c97fa5cc73a648aa89adf"
+    },
+    {
+      "kind": "trace",
+      "path": "run_result.json",
+      "sha256": "ba097aa1f4058f951d651c827ecf7ee0885b09680b2d79b4e2f8688ee890b406"
+    }
+  ],
+  "verification_timestamp": "2026-10-09T10:09:41Z",
+  "verifier_identity": "ai_workflow_harness_lab"
+}

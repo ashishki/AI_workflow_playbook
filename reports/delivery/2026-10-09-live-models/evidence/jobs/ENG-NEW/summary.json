@@ -1,0 +1,12 @@
+{
+  "worker_uid": 998,
+  "requested_model": "opencode-go/deepseek-v4.1-flash",
+  "exit_code": 0,
+  "timed_out": false,
+  "role": "scoped_implementation",
+  "native_role_runner": "NOT_RUN; explicit OpenCode alternative",
+  "review_count": 0,
+  "source_workspace": "/tmp/playbook-model-worker-wzb191rs/work/receipt-audit-project",
+  "status": "invalid_execution",
+  "reason": "incomplete_or_failed_model_turn"
+}

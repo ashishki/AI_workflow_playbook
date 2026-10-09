@@ -1,0 +1,8 @@
+{
+  "reason": "xhighimplementation stream exceeded180second transportdeadline before code; preservedFAIL",
+  "model": "same gpt-6.1-sol",
+  "per_call_effort": "high for bounded lowrisk utility, notglobalconfigedit",
+  "stream_deadline_seconds": 300,
+  "total_request_limit_remains": 24,
+  "root_auth_copied": false
+}

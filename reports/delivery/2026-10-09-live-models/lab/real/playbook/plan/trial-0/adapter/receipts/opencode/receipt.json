@@ -1,0 +1,49 @@
+{
+  "command_argv": [
+    "opencode",
+    "run",
+    "--pure",
+    "--format",
+    "json",
+    "--model",
+    "opencode-go/deepseek-v4.1-flash",
+    "--agent",
+    "delivery-worker",
+    "--title",
+    "Delivery plan playbook",
+    "This is an authorized disposable evaluation. Work only inside the current project. Do not use accounts, networks, install packages, publish, or launch nested reviewer/model processes. A separate controller performs the independent read-only review after this turn through the approved OpenCode alternative; do not fabricate Native/Codex review evidence. Python3/unittest and git are available. Preserve unrelated owner files. Finish the requested work, run meaningful checks, and state actual gaps.\n\n\u0412 slugify \u0435\u0441\u0442\u044c \u043e\u0448\u0438\u0431\u043a\u0430: \u0432\u043e\u043a\u0440\u0443\u0433 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0430 \u043e\u0441\u0442\u0430\u044e\u0442\u0441\u044f \u043b\u0438\u0448\u043d\u0438\u0435 \u0434\u0435\u0444\u0438\u0441\u044b.\n\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0442\u043e\u043b\u044c\u043a\u043e \u0438\u0437\u0443\u0447\u0438 \u043f\u0440\u043e\u0435\u043a\u0442 \u0438 \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0438 \u043f\u043b\u0430\u043d \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u0438 \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438.\n\u041d\u0435 \u043c\u0435\u043d\u044f\u0439, \u043d\u0435 \u0441\u043e\u0437\u0434\u0430\u0432\u0430\u0439 \u0438 \u043d\u0435 \u0443\u0434\u0430\u043b\u044f\u0439 \u0444\u0430\u0439\u043b\u044b. \u0420\u0435\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u044e \u043f\u043e\u043a\u0430 \u043d\u0435 \u043d\u0430\u0447\u0438\u043d\u0430\u0439.\n"
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "dirty_state_after": [
+    "not_inspected"
+  ],
+  "dirty_state_before": [
+    "not_inspected"
+  ],
+  "end_timestamp": "2026-10-09T10:14:31Z",
+  "environment_summary": {
+    "end_monotonic_ns": 17897858525471693,
+    "git_inspection": false,
+    "platform": "Linux-5.15.0-170-generic-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "start_monotonic_ns": 17897819865772140,
+    "timed_out": false,
+    "timeout": 240.0
+  },
+  "exit_code": 0,
+  "parent_receipt_id": null,
+  "producer": "ai_workflow_harness_lab.receipts",
+  "receipt_id": "plan-1791540872-f1814c81",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "not_inspected",
+  "repo_commit_before": "not_inspected",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-10-09T10:13:53Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "6d1b191ae6cc5c5b5cd7f4a3c68fef2808ecc2e2ec7c75adbf85268597b22236",
+  "task_id": "plan",
+  "working_directory": "/tmp/playbook-model-worker-wzb191rs/work/real-playbook/plan/trial-0/workspace"
+}

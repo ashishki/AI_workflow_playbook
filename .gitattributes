@@ -12,3 +12,9 @@ docs/native/HELP_RU.md text eol=lf
 reports/delivery/2026-10-09/** -text
 reports/delivery/2026-10-09/evidence/**/stderr.txt -whitespace
 reports/delivery/2026-10-09/outputs/**/.playbook-artifacts/**/*.log -whitespace
+
+# Frozen live-model observations: preserve raw traces and observed bytecode.
+reports/delivery/2026-10-09-live-models/** -text
+reports/delivery/2026-10-09-live-models/evidence/**/*.txt -whitespace
+reports/delivery/2026-10-09-live-models/evidence/**/*.log -whitespace
+reports/delivery/2026-10-09-live-models/outputs/**/.playbook-artifacts/**/*.log -whitespace

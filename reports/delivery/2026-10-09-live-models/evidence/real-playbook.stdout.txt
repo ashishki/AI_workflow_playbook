@@ -1,0 +1,8 @@
+{
+  "bundles": [
+    "/tmp/playbook-model-worker-wzb191rs/work/real-playbook/backend/trial-0/bundle.json",
+    "/tmp/playbook-model-worker-wzb191rs/work/real-playbook/plan/trial-0/bundle.json"
+  ],
+  "trials": 2,
+  "invalid_runs": 0
+}

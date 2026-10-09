@@ -1,0 +1,40 @@
+{
+  "command_argv": [
+    "/bin/sh",
+    "-c",
+    "\"/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python\" \"/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-model-workflows-20261009/opencode_adapter.py\" --workspace \"/tmp/playbook-model-worker-wzb191rs/work/real-playbook/backend/trial-0/workspace\" --prompt-file \"/tmp/playbook-model-worker-wzb191rs/work/real-playbook/backend/trial-0/prompt.md\" --output-dir \"/tmp/playbook-model-worker-wzb191rs/work/real-playbook/backend/trial-0/adapter\" --condition playbook --task-id backend --settings \"/tmp/playbook-model-worker-wzb191rs/work/private-settings.json\" --package \"/srv/openclaw-you/workspace/AI_workflow_playbook/plugins/playbook-native\" --timeout 240"
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "dirty_state_after": [
+    "not_inspected"
+  ],
+  "dirty_state_before": [
+    "not_inspected"
+  ],
+  "end_timestamp": "2026-10-09T10:13:53Z",
+  "environment_summary": {
+    "end_monotonic_ns": 17897819610475722,
+    "git_inspection": false,
+    "platform": "Linux-5.15.0-170-generic-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "start_monotonic_ns": 17897782100273165,
+    "timed_out": false,
+    "timeout": 260.0
+  },
+  "exit_code": 0,
+  "parent_receipt_id": null,
+  "producer": "ai_workflow_harness_lab.receipts",
+  "receipt_id": "backend-1791540833-40091d90",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "not_inspected",
+  "repo_commit_before": "not_inspected",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-10-09T10:13:15Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "task_id": "backend",
+  "working_directory": "/tmp/playbook-model-worker-wzb191rs/work/real-playbook/backend/trial-0/workspace"
+}

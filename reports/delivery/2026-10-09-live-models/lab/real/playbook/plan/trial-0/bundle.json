@@ -1,0 +1,93 @@
+{
+  "adapter_version": "command.v1",
+  "bundle_id": "plan-playbook-trial-0",
+  "command_receipts": [
+    {
+      "kind": "command_receipt",
+      "path": "adapter/receipts/command/receipt.json",
+      "sha256": "016b44648cf038eb09959ec4299a1dc33c30d4497d8f6fd451b156bace6d088a"
+    }
+  ],
+  "commit_after": "not_inspected_after_agent_execution",
+  "commit_before": "dd40a0e4ec41eb982f44033ce4693d3e0cf14b1c",
+  "condition": "playbook",
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "environment_digest": "72eaf56915cd3431385c6a8375603176f6785324c79bf127b437ba9e1b65bcf8",
+  "failure_records": [
+    {
+      "evidence_refs": [],
+      "failure_class": "model_reasoning_failure",
+      "failure_id": "plan-shell",
+      "invalid_run": false,
+      "message": "shell scorer expected exit 0, got 1",
+      "owner_class": "model",
+      "retry_count": 0,
+      "retryable": false,
+      "run_id": "plan-playbook-0",
+      "schema_version": "playbook.failure_record.v1",
+      "score_treatment": "count_as_task_failure",
+      "stage": "scoring",
+      "task_id": "plan",
+      "terminal": true
+    }
+  ],
+  "generated_report_ref": {
+    "kind": "generated_report",
+    "path": "report.md",
+    "sha256": "eefad2c152a97fce76e64d762da88016983f5d7ec58b5ae5aab764b746d1383d"
+  },
+  "harness_eval_unit_ref": {
+    "kind": "harness_eval_unit",
+    "path": "harness_eval_unit.json",
+    "sha256": "9c61f01a30c0db57eaf05e02c989cc9da85f25b98c3b68ccc0bccaa4824cbd8f"
+  },
+  "manifest_hash": "ac17ffdce6f52431563460fc3420d5349b48d504a10c232a740c70cfb8450f66",
+  "post_state_manifest": {
+    "kind": "post_state_manifest",
+    "path": "post_state_manifest.json",
+    "sha256": "f7facc5ec264590626f0352a63c00deae944ef546a1fa7942f402d04b64c04e9"
+  },
+  "prompt_ref": {
+    "kind": "prompt",
+    "path": "prompt.md",
+    "sha256": "93e68b199c6621440856657fead8f2d5c79c1f624170d225a1ae3336ef7ef55b"
+  },
+  "repository": "playbook_native_v3",
+  "schema_version": "playbook.evidence_bundle.v1",
+  "scorer_outputs": [
+    {
+      "kind": "scorer_output",
+      "path": "scorers/external_acceptance.json",
+      "sha256": "50fb9bdda0aec653c3c7bec2af482bac38af376f0e9fe602fd680cfbfff9c947"
+    }
+  ],
+  "task_id": "plan",
+  "task_spec_version": "native.plan.v1",
+  "trace_refs": [
+    {
+      "kind": "trace",
+      "path": "adapter/final_message.txt",
+      "sha256": "c8e455b046ec3013466bcae99139cc660afdac9074b04869b08fdbd05ca6066a"
+    },
+    {
+      "kind": "trace",
+      "path": "adapter/event_ledger.jsonl",
+      "sha256": "6d1b191ae6cc5c5b5cd7f4a3c68fef2808ecc2e2ec7c75adbf85268597b22236"
+    },
+    {
+      "kind": "trace",
+      "path": "adapter/adapter_summary.json",
+      "sha256": "5bf17f22f3bf75db4a4e1a4486b72977dbdd8acce2eaf03b54b1c337a5f21af6"
+    },
+    {
+      "kind": "trace",
+      "path": "run_result.json",
+      "sha256": "24dffca241236a3a7fbd39a0a156a6f53e87f2efc44301d9768f81a13ac11499"
+    }
+  ],
+  "verification_timestamp": "2026-10-09T10:14:32Z",
+  "verifier_identity": "ai_workflow_harness_lab"
+}

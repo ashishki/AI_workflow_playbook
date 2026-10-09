@@ -1,0 +1,7 @@
+{
+  "same_model": "gpt-6.1-sol",
+  "specific_reasoning_effort": "medium",
+  "previousattempt": "highstreamtimeout preservedFAIL",
+  "requested_change": "smallopt-inCLI flag, oldcontractsprotected",
+  "global_model_config_changed": false
+}

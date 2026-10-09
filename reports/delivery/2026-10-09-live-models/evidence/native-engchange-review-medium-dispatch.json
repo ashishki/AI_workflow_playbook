@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "/usr/sbin/runuser",
+    "-u",
+    "oc_you",
+    "--",
+    "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+    "/srv/openclaw-you/workspace/AI_workflow_playbook/tools/run_codex_role.py",
+    "run",
+    "--profile",
+    "native",
+    "--root",
+    "/tmp/playbook-model-worker-wzb191rs/work/receipt-audit-project",
+    "--task",
+    "ENG-CHANGE-live-medium",
+    "--role",
+    "slice_review",
+    "--request",
+    "/tmp/playbook-model-worker-wzb191rs/work/receipt-audit-project/.playbook-artifacts/ENG-CHANGE-review-request.md",
+    "--codex-bin",
+    "/tmp/playbook-model-worker-wzb191rs/work/codex-relay-wrapper.py",
+    "--model",
+    "gpt-6.1-sol",
+    "--reasoning-effort",
+    "medium",
+    "--timeout-seconds",
+    "360",
+    "--no-publish"
+  ],
+  "exit_code": 0,
+  "uid": 998,
+  "previous_timeout_retained": true
+}

@@ -1,0 +1,3 @@
+# Independent implementation review
+
+Task: bounded receipt-audit utility per TASK.md and T04 docs/tasks.md, lowrisk oneshot. Review actual audit_receipt.py/tests; owner-notes and examples must be unchanged. Verify SHA before PASS/FAIL; missing=NOT_RUN, malformed/unsafe=INVALID; no execution of command_argv; boundedregular files only, no symlink/hardlinks/escapes. Main Codex runcompleted and 13 own tests plus12externalCLI groupspassed. These checks are observations, not expectedverdict. HumanT01acceptance and task completion staypending. No nested reviewer. Review code defects, notstyle. Explain unverified limits.

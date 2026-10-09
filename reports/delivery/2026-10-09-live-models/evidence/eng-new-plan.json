@@ -1,0 +1,16 @@
+{
+  "source": "actualPlaybookreceiptcopiedread-only",
+  "requested_tool": "audit_receipt.py",
+  "criteria_frozen_before_model": true,
+  "initial_files": {
+    "TASK.md": "f09a447518550d8e09e30551fbc0907d9cd1fda31aeb716d25df3456a5a2e3e7",
+    "owner-notes.txt": "6ffd440c786b1e71065e280b1bc5b47dd90c672638357c1e6837efe3871f8e36",
+    "examples/actual-pass/stdout.txt": "1be15eac1c1ff01d77252b2c289c56e6fb68946b5a43b751044d45aa4dc333c9",
+    "examples/actual-pass/stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "examples/actual-pass/receipt.json": "c3c5580f3b93cec6c86d654c112d4da4633990bb8d04402ec487a6b3948888f6"
+  },
+  "new_project": "/tmp/playbook-model-worker-wzb191rs/work/receipt-audit-project",
+  "approval": "owner requests remaining actual model runs using existing OpenCode",
+  "model": "opencode-go/deepseek-v4.1-flash",
+  "independent_acceptance": "outside agent workspace; not supplied expected mutation cases"
+}

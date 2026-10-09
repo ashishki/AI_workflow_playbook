@@ -1,0 +1,317 @@
+{
+  "base_commit": null,
+  "capture_boundary": {
+    "codex_internal_system_prompt_captured": false,
+    "codex_internal_tool_schema_captured": false,
+    "known_repository_context_hashed": true,
+    "playbook_prompt_exact": true
+  },
+  "feature_id": null,
+  "instruction_files": [
+    {
+      "path": "/tmp/playbook-model-worker-wzb191rs/work/receipt-audit-project/AGENTS.md",
+      "sha256": "ca657896032e1b500f6c3f85b27aa247bbea49bd95fe8cb8097ae91bf99bcf55",
+      "size": 5563,
+      "source": "repository"
+    }
+  ],
+  "known_context_files": [
+    {
+      "path": "docs/tasks.md",
+      "sha256": "85e3d629b169f907758bcec12915a782ad43f7014fbda482d6dc1b3c3d39c5fd",
+      "size": 5377
+    },
+    {
+      "path": ".playbook/delivery_execution_model.json",
+      "sha256": "bb036a72aacf3f91f34fef5351a4545a29253076d18490f456ec4cdeb4b3f0d4",
+      "size": 1340
+    },
+    {
+      "path": ".playbook/project_verification.json",
+      "sha256": "d2dd715d5707093a282fe05a3ece6cde9f745098550c7fbc74e006ad96ff8c14",
+      "size": 833
+    }
+  ],
+  "prompt": {
+    "path": ".playbook-artifacts/runs/20261009T113725Z-slice_review-af113ddd/prompt.md",
+    "sha256": "24f4b758f0688cd4c054a13f136cd2264801db411f0c42017f1bc7c70a6110a3",
+    "size": 1282
+  },
+  "renderer_argv_sha256": "52045c8586be9aff5ac1eb810132cefa12c01bc358cdec80bd07325fc32ed479",
+  "role": "slice_review",
+  "schema_version": "playbook.codex_role_context.v1",
+  "slice_id": null,
+  "task_id": "ENG-CHANGE-live",
+  "workspace_snapshot": {
+    ".codex-last-message.txt": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "0b42bf4018a7f9e68ebddaa218851b31349c1c60cf4961398640b2c32a2ac59f",
+      "size": 376
+    },
+    ".playbook/delivery_execution_model.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "bb036a72aacf3f91f34fef5351a4545a29253076d18490f456ec4cdeb4b3f0d4",
+      "size": 1340
+    },
+    ".playbook/instruction_manifest.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "d92471814d01abea6c1cc617f042974d2a65d217e8bf8b36b29e0d353707d68d",
+      "size": 1285
+    },
+    ".playbook/project_verification.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "d2dd715d5707093a282fe05a3ece6cde9f745098550c7fbc74e006ad96ff8c14",
+      "size": 833
+    },
+    ".playbook/readiness_state.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "2eae1bd5f8780550f4a7e8290d09823715032b3e3357ee1fcda741458b56cf6b",
+      "size": 935
+    },
+    "AGENTS.md": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "ca657896032e1b500f6c3f85b27aa247bbea49bd95fe8cb8097ae91bf99bcf55",
+      "size": 5563
+    },
+    "CHANGE_TASK.md": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "9c751904d198307df5fa4e673ca68643f990849433b973d7acccb327a9c00298",
+      "size": 681
+    },
+    "TASK.md": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "f09a447518550d8e09e30551fbc0907d9cd1fda31aeb716d25df3456a5a2e3e7",
+      "size": 1572
+    },
+    "audit_receipt.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "8693572d141502e676adb3cab60b69aed71ca82d598a9e8c7ff890c8a72056cd",
+      "size": 6235
+    },
+    "docs/CODEX_PROMPT.md": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "1868bd9f99241d6be0ab000ffbab42e7292fe87a7748ff4c5f301ff877ea2bc7",
+      "size": 2364
+    },
+    "docs/CONTRACT_LITE.md": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "2bb9972c061cd845d5127fc8da377088cf103713b50873953be850e68dff000f",
+      "size": 3156
+    },
+    "docs/PROBLEM_FIT.md": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "b317b1987a4fb4cb60aeb2ed5643d5377a4f58aaeb210df4e9c2627e2f6f488c",
+      "size": 1030
+    },
+    "docs/tasks.md": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "85e3d629b169f907758bcec12915a782ad43f7014fbda482d6dc1b3c3d39c5fd",
+      "size": 5377
+    },
+    "examples/actual-pass/receipt.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "c3c5580f3b93cec6c86d654c112d4da4633990bb8d04402ec487a6b3948888f6",
+      "size": 1433
+    },
+    "examples/actual-pass/stderr.txt": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "examples/actual-pass/stdout.txt": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "1be15eac1c1ff01d77252b2c289c56e6fb68946b5a43b751044d45aa4dc333c9",
+      "size": 868
+    },
+    "owner-notes.txt": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "e49fd337019931aaeb114e0fd9d2dcc7032391a18380dd8ecf1044a41693ad5f",
+      "size": 188
+    },
+    "schemas/delivery_execution_model.schema.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "dd6a78478bab318617383be84dfe4771fdcabbc7dba5a661c619930c2edda7ce",
+      "size": 1766
+    },
+    "schemas/feature_design.schema.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "797a16a4c78de9bbd2894c1c130ea915e0e14e95f3b78104b7ece31a6a196e7e",
+      "size": 7520
+    },
+    "schemas/instruction_manifest.schema.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "194f730d8cf66565663c985a566657105c33dc1e73e515b8bc53e8ad8ad189ec",
+      "size": 1724
+    },
+    "schemas/project_verification.schema.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "aa2871c0e401453bdc63a6a424d11fe480e09196fb8dab5cf99310bb7df31157",
+      "size": 1635
+    },
+    "schemas/project_verification_result.schema.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "eb1e30b50cc764367da093970d95db0e0f7b32d00c752f35e0bb602a3f0bc18e",
+      "size": 2408
+    },
+    "schemas/readiness_state.schema.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "c93922abf6bfe050290e7498895feef5053832a06b8692f2695e65ff57989aaa",
+      "size": 1856
+    },
+    "schemas/release_readiness_result.schema.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "eb33b7b69b0cd4f7e8e0b6a229cc5a5d8f0d2931f8fc5721781a420617413f09",
+      "size": 1506
+    },
+    "schemas/task.schema.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "005c94dd99e607c38429b60e5dcc619ed79e8be6065a961658a4b4cdcc45d1e3",
+      "size": 5614
+    },
+    "templates/FEATURE_DESIGN.md": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "5ddc10a25c14f4afa4edbb820738da5d8e2cd1b6c5198be43beb8b5fa0c7a142",
+      "size": 3066
+    },
+    "templates/INSTRUCTION_MANIFEST.json": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "d92471814d01abea6c1cc617f042974d2a65d217e8bf8b36b29e0d353707d68d",
+      "size": 1285
+    },
+    "tests/test_audit_receipt.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "1430dd079b81b15e6bbdb71c8d9cf5d0af09a8202d990f9833b98e4e9788f748",
+      "size": 14065
+    },
+    "tools/approve_feature_design.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "09b4e50f934c1c16831e296f3b9def8de8c2dfd38d79683743716a70ffce4336",
+      "size": 17625
+    },
+    "tools/check_maintainability.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "369aa8a4bc5f622bf431add72207f831f0b9633dc81260c3bf174441ab0222c7",
+      "size": 6064
+    },
+    "tools/codex_role_run_lib.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "eeaeab1a32e003c3c1a996414177d2291c409eada1eff092d268ae384ab62cfc",
+      "size": 37716
+    },
+    "tools/create_feature_design.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "b56e8faea791ec2b3e11e0dd376f7265c6e9bdefb84b5a2fad0df6c015f2b7e1",
+      "size": 4261
+    },
+    "tools/feature_design_lib.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "b3a371d83927225ec995f4e1a0db51ba99511fbef0a8012fbf99eaf9becbdbae",
+      "size": 26358
+    },
+    "tools/feature_review_policy.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "c9c3b0dc4d0f049cdd2e3c502244b34b2808eff0cd8952f892876b15eebe6212",
+      "size": 4780
+    },
+    "tools/feature_workflow.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "d88e2d6586f91995303334a640f3b89de2a27f1338c5de1034b5bea5bf59c208",
+      "size": 84797
+    },
+    "tools/integrity_check.py": {
+      "kind": "file",
+      "mode": 33261,
+      "sha256": "79aa8fd92fe69744e52945d76a24dfb7031865e944f2a496147eaef13bdd9b82",
+      "size": 5118
+    },
+    "tools/planning_depth.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "cadb7673de73f6da0e04bf95de7d0cce80848256df88deb5d55c84e18bb5a168",
+      "size": 5658
+    },
+    "tools/playbook_validate.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "b22fd512023967d24dcb25969eeffd21be229e669e103277f17efefb11a3be1c",
+      "size": 70076
+    },
+    "tools/receipt_run.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "29a2c9a1e1a3b150ad4af65a171fd1de235ef607c5b010c9ca62fb6b4737df6d",
+      "size": 6330
+    },
+    "tools/render_codex_exec_prompt.py": {
+      "kind": "file",
+      "mode": 33261,
+      "sha256": "ffec01def347395253bf5b1c7dc3e1b299e133e5297b147e73017ab49776114f",
+      "size": 20037
+    },
+    "tools/render_slice_context.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "06d806363bd4960e9a543753134693eeebe1775af6b14337dbb56614b5d69b3c",
+      "size": 8368
+    },
+    "tools/resolve_release_readiness.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "93ec39a5a1ca7c03a4181d9d0fcd74843532e350978874297c8de0e538cebc96",
+      "size": 2834
+    },
+    "tools/run_codex_role.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "40707f8d363ed2348bfec8161d10e6eadc799faeb9d236015594cc604ebf065e",
+      "size": 4548
+    },
+    "tools/validate_feature_design.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "828cc7b3229df8f1dacc7534bb8178a1cc45880cc52778a730c6f3f71131b59f",
+      "size": 2861
+    },
+    "tools/verify_project.py": {
+      "kind": "file",
+      "mode": 33188,
+      "sha256": "fec5dd340ecfbe6b96268ff4f8b0e1037a956d61f7541032d85f20ff6091eadd",
+      "size": 11759
+    }
+  }
+}

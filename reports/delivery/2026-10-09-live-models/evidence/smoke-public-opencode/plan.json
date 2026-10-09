@@ -1,0 +1,13 @@
+{
+  "actual_uid": 998,
+  "cli_version": "1.18.34",
+  "requested_model": "opencode/mimo-v2.6-flash-free",
+  "prompt": "Return exactly DELIVERED_MODEL_PROBE.",
+  "model_output_cap": 64,
+  "timeout_seconds": 90,
+  "root_auth_copied": false,
+  "account_created": false,
+  "provider": "OpenCode catalog public model",
+  "authorization": "latest owner requests actual OpenCode/Codex model runs; inherited workflow task",
+  "source": "GCN app/providers/opencode_research.py config/CLI/event mechanism reused"
+}

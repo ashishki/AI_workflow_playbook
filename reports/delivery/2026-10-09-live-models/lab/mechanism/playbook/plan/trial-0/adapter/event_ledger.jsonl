@@ -1,0 +1,2 @@
+{"type": "text", "sessionID": "FAKE-MECHANISM-ONLY", "part": {"text": "FAKE CLI, no model inference"}}
+{"type": "step_finish", "sessionID": "FAKE-MECHANISM-ONLY", "part": {"reason": "stop", "tokens": {"input": 100, "output": 10, "reasoning": 5, "cache": {"read": 0, "write": 0}}, "cost": 0.0}}

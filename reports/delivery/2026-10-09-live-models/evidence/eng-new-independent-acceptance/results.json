@@ -1,0 +1,187 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "realvalidpass",
+      "status": "PASS",
+      "expected": "PASS",
+      "observed": {
+        "status": "PASS",
+        "reason": "zero exit_code; stdout/stderr SHA256 verified",
+        "exit_code": 0,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 0
+    },
+    {
+      "id": "genuinefailure",
+      "status": "PASS",
+      "expected": "FAIL",
+      "observed": {
+        "status": "FAIL",
+        "reason": "nonzero exit_code; stdout/stderr SHA256 verified",
+        "exit_code": 7,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 0
+    },
+    {
+      "id": "timeoutnotpass",
+      "status": "PASS",
+      "expected": "FAIL",
+      "observed": {
+        "status": "FAIL",
+        "reason": "command timed out; stdout/stderr SHA256 verified",
+        "exit_code": 0,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 0
+    },
+    {
+      "id": "missingnotrun",
+      "status": "PASS",
+      "expected": "NOT_RUN",
+      "observed": {
+        "status": "NOT_RUN",
+        "reason": "missing evidence: stdout",
+        "exit_code": 0,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 0
+    },
+    {
+      "id": "changedinvalid",
+      "status": "PASS",
+      "expected": "INVALID",
+      "observed": {
+        "status": "INVALID",
+        "reason": "stdout SHA256 mismatch",
+        "exit_code": 0,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 2
+    },
+    {
+      "id": "escapedenied",
+      "status": "PASS",
+      "expected": "INVALID",
+      "observed": {
+        "status": "INVALID",
+        "reason": "artifact path must stay inside the receipt directory",
+        "exit_code": 0,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 2
+    },
+    {
+      "id": "absoluteartifactdenied",
+      "status": "PASS",
+      "expected": "INVALID",
+      "observed": {
+        "status": "INVALID",
+        "reason": "artifact path must stay inside the receipt directory",
+        "exit_code": 0,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 2
+    },
+    {
+      "id": "symlinkdenied",
+      "status": "PASS",
+      "expected": "INVALID",
+      "observed": {
+        "status": "INVALID",
+        "reason": "file must be regular (no symbolic links)",
+        "exit_code": 0,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 2
+    },
+    {
+      "id": "hardlinkdenied",
+      "status": "PASS",
+      "expected": "INVALID",
+      "observed": {
+        "status": "INVALID",
+        "reason": "hard links are forbidden",
+        "exit_code": 0,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 2
+    },
+    {
+      "id": "boolnotinteger",
+      "status": "PASS",
+      "expected": "INVALID",
+      "observed": {
+        "status": "INVALID",
+        "reason": "exit_code must be an integer excluding bool",
+        "exit_code": null,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 2
+    },
+    {
+      "id": "sizebound",
+      "status": "PASS",
+      "expected": "INVALID",
+      "observed": {
+        "status": "INVALID",
+        "reason": "file exceeds 1 MiB",
+        "exit_code": 0,
+        "command_argv": [
+          "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python",
+          "-c",
+          "from pathlib import Path;Path('/tmp/receipt-acceptance-yeg6js5o/MUST_NOT_EXECUTE').write_text('bad')"
+        ]
+      },
+      "cli_exit": 2
+    },
+    {
+      "id": "commandargvdataonly",
+      "status": "PASS"
+    }
+  ],
+  "uid": 998,
+  "source_sha256": "872ff3663616b7615b8e1851e8a3d5ddd5f8ad128531f12431ece9811bf3c550"
+}

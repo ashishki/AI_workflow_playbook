@@ -1,0 +1,29 @@
+{
+  "cost_record": {
+    "cost_usd": "unknown",
+    "tokens": "unknown"
+  },
+  "evidence_status": "complete",
+  "failure_records": [],
+  "final_verdict": "passed",
+  "human_intervention": {
+    "required": false,
+    "status": "not_requested"
+  },
+  "latency": {
+    "wall_clock_seconds": "unknown"
+  },
+  "policy_status": "pass",
+  "run_id": "backend-baseline-0",
+  "run_validity": {
+    "reason": "no invalid_run failure records",
+    "valid": true
+  },
+  "schema_version": "playbook.run_result.v1",
+  "task_id": "backend",
+  "task_score": {
+    "reason": "computed from independent scorers",
+    "score": 1.0,
+    "status": "pass"
+  }
+}

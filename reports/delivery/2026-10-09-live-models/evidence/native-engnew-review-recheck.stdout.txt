@@ -1,0 +1,7 @@
+{
+  "errors": [],
+  "result": "/tmp/playbook-model-worker-wzb191rs/work/receipt-audit-project/.playbook-artifacts/runs/20261009T112134Z-slice_review-e91d6fd1/result.json",
+  "run_id": "20261009T112134Z-slice_review-e91d6fd1",
+  "status": "validated",
+  "verdict": "PASS"
+}

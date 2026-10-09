@@ -1,0 +1,23 @@
+{
+  "schema": "delivery.owned_process_cleanup.v1",
+  "codex_relay_owned_pids": [
+    1483852
+  ],
+  "terminated_by_exact_resolved_script_argv": true,
+  "model_jobs_completed": true,
+  "relay_running_after": [],
+  "private_grants_published": false,
+  "observed_at": 1791546983.3166537,
+  "local_relay_endpoints": [
+    {
+      "provider": "Go",
+      "connection_refused": true
+    },
+    {
+      "provider": "Codex",
+      "connection_refused": true
+    }
+  ],
+  "all_owned_relays_closed": true,
+  "verified_at": 1791547426.4287293
+}

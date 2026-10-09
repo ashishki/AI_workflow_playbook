@@ -1,0 +1,49 @@
+{
+  "base_commit": null,
+  "codex": {
+    "argv_sha256": "6471d062fb7cb5139521e5cb3bd78c94e7d0b89cf18cac6d528378c72a285e1e",
+    "binary": "/tmp/playbook-model-worker-wzb191rs/work/codex-relay-wrapper.py",
+    "cli_version": "codex-cli 0.162.0",
+    "exit_code": 0,
+    "model": "gpt-6.1-sol",
+    "parent_codex_context_scrubbed": false,
+    "reasoning_effort": "high"
+  },
+  "feature_id": null,
+  "finished_at": "2026-10-09T11:22:52.532511Z",
+  "inputs": {
+    "context_manifest_path": ".playbook-artifacts/runs/20261009T112134Z-slice_review-e91d6fd1/context_manifest.json",
+    "context_manifest_sha256": "0a9d8c90c361775b3f0f31e037429d2a3667116e38142fab9fd7285b9895b4d7",
+    "prompt_path": ".playbook-artifacts/runs/20261009T112134Z-slice_review-e91d6fd1/prompt.md",
+    "prompt_sha256": "9ca37f38f44fb207f5cce769a096d5f4e922dfb14656794bc55ce998e4da6d44",
+    "renderer_argv_sha256": "31297abca0d5204936bcbb8f63e5f7848c0d9810d1d9fe1cb9c17003095d92f5"
+  },
+  "outputs": {
+    "published_report_path": null,
+    "published_report_sha256": null,
+    "report_path": ".playbook-artifacts/runs/20261009T112134Z-slice_review-e91d6fd1/report.md",
+    "report_sha256": "da1b66903e3452948bd88cf2abd9a5a9dc50fe9d4f894b3a48cc7a39c323c527",
+    "stderr_path": ".playbook-artifacts/runs/20261009T112134Z-slice_review-e91d6fd1/codex_stderr.txt",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "trace_path": ".playbook-artifacts/runs/20261009T112134Z-slice_review-e91d6fd1/codex_events.jsonl",
+    "trace_sha256": "7c6aeb1d7753061a971a8e805951b58014aa03b31d30ab2a30a777011d21539e"
+  },
+  "postflight": {
+    "changed_paths": [],
+    "errors": [],
+    "event_count": 30,
+    "marker_valid": true,
+    "trace_valid": true,
+    "workspace_unchanged": true
+  },
+  "profile": "native",
+  "role": "slice_review",
+  "run_id": "20261009T112134Z-slice_review-e91d6fd1",
+  "sandbox": "read-only",
+  "schema_version": "playbook.codex_role_run.v1",
+  "slice_id": null,
+  "started_at": "2026-10-09T11:21:34.971296Z",
+  "status": "validated",
+  "task_id": "ENG-NEW-live-recheck",
+  "verdict": "PASS"
+}

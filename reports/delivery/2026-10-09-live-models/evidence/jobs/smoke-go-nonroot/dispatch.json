@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/usr/sbin/runuser",
+    "-u",
+    "oc_you",
+    "--",
+    "/usr/bin/opencode",
+    "run",
+    "--pure",
+    "--format",
+    "json",
+    "--model",
+    "opencode-go/deepseek-v4.1-flash",
+    "--agent",
+    "delivery-probe",
+    "--title",
+    "Delivery Go actual availability",
+    "Return exactly DELIVERED_MODEL_PROBE."
+  ],
+  "exit_code": 0,
+  "uid": 998,
+  "model": "opencode-go/deepseek-v4.1-flash"
+}

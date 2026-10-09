@@ -1,0 +1,4 @@
+{
+  "output": "/tmp/playbook-model-worker-wzb191rs/work/mechanism-comparison",
+  "status": "mechanism demonstration, not empirical proof of Playbook effectiveness"
+}

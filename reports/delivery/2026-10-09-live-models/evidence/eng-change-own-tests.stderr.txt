@@ -1,0 +1,22 @@
+test_classifications_and_cli_exit_codes (test_audit_receipt.ReceiptAuditTests.test_classifications_and_cli_exit_codes) ... ok
+test_command_is_returned_as_data_and_never_executed (test_audit_receipt.ReceiptAuditTests.test_command_is_returned_as_data_and_never_executed) ... ok
+test_file_links_are_invalid_including_dangling_symlinks (test_audit_receipt.ReceiptAuditTests.test_file_links_are_invalid_including_dangling_symlinks) ... ok
+test_invalid_json_and_input_are_reported_as_one_json_object (test_audit_receipt.ReceiptAuditTests.test_invalid_json_and_input_are_reported_as_one_json_object) ... ok
+test_invalid_receipt_fields (test_audit_receipt.ReceiptAuditTests.test_invalid_receipt_fields) ... ok
+test_mismatch_is_invalid_even_with_failure_or_missing_other_stream (test_audit_receipt.ReceiptAuditTests.test_mismatch_is_invalid_even_with_failure_or_missing_other_stream) ... ok
+test_missing_evidence_prevents_pass_and_fail (test_audit_receipt.ReceiptAuditTests.test_missing_evidence_prevents_pass_and_fail) ... ok
+test_nonregular_files_are_invalid_without_blocking (test_audit_receipt.ReceiptAuditTests.test_nonregular_files_are_invalid_without_blocking) ... ok
+test_per_file_size_limit_includes_exact_boundary (test_audit_receipt.ReceiptAuditTests.test_per_file_size_limit_includes_exact_boundary) ... ok
+test_real_supplied_receipt_and_owner_notes_remain_unchanged (test_audit_receipt.ReceiptAuditTests.test_real_supplied_receipt_and_owner_notes_remain_unchanged) ... ok
+test_safe_nested_artifact_and_uppercase_digest (test_audit_receipt.ReceiptAuditTests.test_safe_nested_artifact_and_uppercase_digest) ... ok
+test_strict_exit_fail (test_audit_receipt.ReceiptAuditTests.test_strict_exit_fail) ... ok
+test_strict_exit_invalid (test_audit_receipt.ReceiptAuditTests.test_strict_exit_invalid) ... ok
+test_strict_exit_not_run (test_audit_receipt.ReceiptAuditTests.test_strict_exit_not_run) ... ok
+test_strict_exit_pass (test_audit_receipt.ReceiptAuditTests.test_strict_exit_pass) ... ok
+test_symlink_directory_components_are_invalid (test_audit_receipt.ReceiptAuditTests.test_symlink_directory_components_are_invalid) ... ok
+test_unsafe_artifact_paths_are_invalid_even_when_other_evidence_missing (test_audit_receipt.ReceiptAuditTests.test_unsafe_artifact_paths_are_invalid_even_when_other_evidence_missing) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 2.212s
+
+OK

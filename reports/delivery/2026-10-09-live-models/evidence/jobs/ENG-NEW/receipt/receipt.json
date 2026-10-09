@@ -1,0 +1,53 @@
+{
+  "command_argv": [
+    "/usr/sbin/runuser",
+    "-u",
+    "oc_you",
+    "--",
+    "/usr/bin/opencode",
+    "run",
+    "--pure",
+    "--format",
+    "json",
+    "--model",
+    "opencode-go/deepseek-v4.1-flash",
+    "--agent",
+    "delivery-worker",
+    "--title",
+    "Delivery ENG-NEW",
+    "You are the implementation agent for this new real maintainer project. Read AGENTS.md and TASK.md, use applicable current contract. Finish the working utility and meaningful unittest checks, preserve supplied evidence/owner notes. Keep approvals pending unless genuinely observed; do not invent reviewer/human completion. Do not execute receipt command_argv. No accounts/network/package install/nested reviewer. The controller supplies actual independent read-only OpenCode review afterwards as an explicit authorized alternative to unavailable local Codex auth. Use concise state/handoff.\n"
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "dirty_state_after": [
+    "not_inspected"
+  ],
+  "dirty_state_before": [
+    "not_inspected"
+  ],
+  "end_timestamp": "2026-10-09T10:19:22Z",
+  "environment_summary": {
+    "end_monotonic_ns": 17898148528254051,
+    "git_inspection": false,
+    "platform": "Linux-5.15.0-170-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "start_monotonic_ns": 17898033002242072,
+    "timed_out": false,
+    "timeout": 300
+  },
+  "exit_code": 0,
+  "parent_receipt_id": null,
+  "producer": "ai_workflow_harness_lab.receipts",
+  "receipt_id": "ENG-NEW-1791541162-dd306af8",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "not_inspected",
+  "repo_commit_before": "not_inspected",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-10-09T10:17:26Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "7566e7b6ce399674f7a26c188181d852038b38e481597a60479e70da81e00b51",
+  "task_id": "ENG-NEW",
+  "working_directory": "/tmp/playbook-model-worker-wzb191rs/work/receipt-audit-project"
+}

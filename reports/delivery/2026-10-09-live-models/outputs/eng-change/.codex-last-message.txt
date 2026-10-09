@@ -1,0 +1,5 @@
+Implemented `--strict-exit`: PASS=0, FAIL=1, NOT_RUN=3, INVALID=2. Default exits and inspection JSON remain unchanged.
+
+All 17 tests pass: original 13 plus four strict-exit checks. Updated the owner-notes SHA expectation and current handoff. Foreign line, real examples, and source outside `main()` remain unchanged.
+
+Controller review and human T01 acceptance remain pending.

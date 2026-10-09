@@ -1,0 +1,185 @@
+{
+  "role": "independent read-only review of completed bounded experimental outputs",
+  "not_native_role_runner": true,
+  "criteria": {
+    "backend": "sluglowercase/non-alnumcollapse/strip and unrelatedfiles preserved",
+    "plan": "plan only: no created/changed/deleted projectfile includingpycache; do not claimunchangedifbytes added",
+    "transport": "realOpenCode alternative, root key inrelay only; UID998 models; exactterminal/events and missingusage fail; no nativeCodexevidenceinvented; billedcostunknown vsSDKestimate"
+  },
+  "outputs": [
+    {
+      "condition": "baseline",
+      "task": "backend",
+      "score": null,
+      "failure_records": [],
+      "files": {
+        "README.md": "# Slugs\n\nPython standard-library helper. Run checks with `python3 -m unittest -v`.\nThis repository has no frontend, browser, external dependencies, or network use.\n",
+        "slugs.py": "import re\n\n\ndef slugify(value: str) -> str:\n    return re.sub(r'[^a-z0-9]+', '-', value.lower()).strip('-')\n",
+        "test_slugs.py": "import unittest\nfrom slugs import slugify\n\nclass SlugTests(unittest.TestCase):\n    def test_words(self):\n        self.assertEqual(slugify('Two Words'), 'two-words')\n\n    def test_lowercase(self):\n        self.assertEqual(slugify('HELLO World'), 'hello-world')\n\n    def test_symbol_groups_collapse_to_single_dash(self):\n        self.assertEqual(slugify('a---b___c...d'), 'a-b-c-d')\n\n    def test_no_leading_or_trailing_dash(self):\n        self.assertEqual(slugify('  Hello, World!  '), 'hello-world')\n\n    def test_empty_string(self):\n        self.assertEqual(slugify(''), '')\n\n    def test_whitespace_only(self):\n        self.assertEqual(slugify('   \\t\\n  '), '')\n\n    def test_only_symbols(self):\n        self.assertEqual(slugify('!!!---;;;'), '')\n\nif __name__ == '__main__':\n    unittest.main()\n"
+      },
+      "final_claims": "Готово.\n\n**Что изменено:**\n- `slugs.py`: в `slugify` добавлен `.strip('-')` после `re.sub(...)`. Теперь дефисы по краям убираются, а пустая/пробельная строка даёт `''`. Остальное поведение соответствует требованиям: `value.lower()`, группы символов вне `a-z0-9` → один `-`.\n- `test_slugs.py`: добавлены тесты на нижний регистр, схлопывание групп символов, отсутствие крайних дефисов, пустую строку, строку из пробелов и строку только из символов.\n\n**Что реально проверено:**\n- `python3 -m unittest -v` — 7 тестов, все прошли (`OK`).\n- `git diff` — изменения затрагивают только `slugs.py` и `test_slugs.py`, посторонние файлы не тронуты.\n\n**Замечу:** независимый ревью этого не делал (по условию его выполняет отдельный контроллер); проверка ограничена запуском unittest в этом окружении.",
+      "metrics": {
+        "version": "opencode-execution.v1",
+        "primary": {
+          "input_tokens": 33202,
+          "cached_input_tokens": 27648,
+          "output_tokens": 1313,
+          "reasoning_output_tokens": 179,
+          "tool_call_count": 8
+        },
+        "reviews": [],
+        "total": {
+          "input_tokens": 33202,
+          "cached_input_tokens": 27648,
+          "output_tokens": 1313,
+          "reasoning_output_tokens": 179,
+          "tool_call_count": 8
+        },
+        "review_count": 0,
+        "missing_review_traces": 0,
+        "latency_seconds": 28.271151587,
+        "cost": "unknown",
+        "scope": "OpenCode main only; separate reviewer cost must be added separately"
+      }
+    },
+    {
+      "condition": "baseline",
+      "task": "plan",
+      "score": null,
+      "failure_records": [
+        {
+          "evidence_refs": [],
+          "failure_class": "model_reasoning_failure",
+          "failure_id": "plan-shell",
+          "invalid_run": false,
+          "message": "shell scorer expected exit 0, got 1",
+          "owner_class": "model",
+          "retry_count": 0,
+          "retryable": false,
+          "run_id": "plan-baseline-0",
+          "schema_version": "playbook.failure_record.v1",
+          "score_treatment": "count_as_task_failure",
+          "stage": "scoring",
+          "task_id": "plan",
+          "terminal": true
+        }
+      ],
+      "files": {
+        "README.md": "# Slugs\n\nPython standard-library helper. Run checks with `python3 -m unittest -v`.\nThis repository has no frontend, browser, external dependencies, or network use.\n",
+        "slugs.py": "import re\n\n\ndef slugify(value: str) -> str:\n    return re.sub(r'[^a-z0-9]+', '-', value.lower())\n",
+        "test_slugs.py": "import unittest\nfrom slugs import slugify\n\nclass SlugTests(unittest.TestCase):\n    def test_words(self):\n        self.assertEqual(slugify('Two Words'), 'two-words')\n\nif __name__ == '__main__':\n    unittest.main()\n"
+      },
+      "final_claims": "Изучил проект. Ничего не менял.\n\n## Что находится в проекте\n\n- `slugs.py` — единственная функция:\n  ```python\n  def slugify(value: str) -> str:\n      return re.sub(r'[^a-z0-9]+', '-', value.lower())\n  ```\n- `test_slugs.py` — один тест `test_words` (`'Two Words'` → `'two-words'`), он проходит.\n- `README.md` — стандартная библиотека, запуск `python3 -m unittest -v`, без зависимостей/сети.\n\n## Диагноз\n\nРегулярка `[^a-z0-9]+` заменяет **каждую последовательность** недопустимых символов на `-`, но не убирает дефис на границах строки. Поэтому ведущие/замыкающие небуквенно-цифровые символы превращаются в крайние дефисы.\n\nФактическое поведение (проверено запуском, файлы не менялись):\n\n| Вход | Результат | Ожидаемо |\n|---|---|---|\n| `'  Hello World  '` | `'-hello-world-'` | `'hello-world'` |\n| `'Hello, World!'` | `'hello-world-'` | `'hello-world'` |\n| `'--a--'` | `'-a-'` | `'a'` |\n| `'...foo...'` | `'-foo-'` | `'foo'` |\n| `'Two Words'` | `'two-words'` | `'two-words'` (уже ок) |\n\nПроблема только на краях; внутренние разделители (`'a  b'` → `'a-b'`) уже корректны.\n\n## План исправления\n\n1. **Минимальное изменение** в `slugs.py`: добавить обрезку крайних дефисов после подстановки:\n   ```python\n   return re.sub(r'[^a-z0-9]+', '-', value.lower()).strip('-')\n   ```\n   - Эквивалентный вариант — регулярка с учётом якорей, но `.strip('-')` проще и читаемее.\n   - Уточнить граничный случай: строка только из разделителей (`'---'`, `'!!!'`) даст `''` (пустая строка). Считаю это разумным поведением; зафиксировать как ожидаемое в тесте, а не молча.\n2. Тест `test_words` менять не нужно — он остаётся валидным регрессионным тестом.\n\n## План проверки\n\n1. Дополнить `test_slugs.py` (в рамках реализации) тестами на края:\n   - `'  Hello World  '` → `'hello-world'`\n   - `'Hello, World!'` → `'hello-world'`\n   - `'--a--'` → `'a'`\n   - `'...foo...'` → `'foo'`\n   - `'a  b'` → `'a-b'` (внутренние разделители)\n   - граничный: `'!!!'` → `''` (или другое согласованное ожидание)\n2. Запустить `python3 -m unittest -v` — все тесты должны пройти.\n3. Ручная проверка через `python3 -c \"from slugs import slugify; ...\"` на наборе примеров.\n4. `git status` / `git diff` — убедиться, что изменён только `slugs.py` и добавлены тесты, без затрагивания посторонних файлов.\n\n## Замечания / вопросы\n\n- Правлю только крайние дефисы; более сложная семантика (транслитерация юникода, схлопывание `--` внутри, `_`) в задаче не упомянута — по умолчанию не трогаю, чтобы не расширять область.\n- Реализацию, как просили, не начинал; файлы не создавал, не изменял и не удалял.",
+      "metrics": {
+        "version": "opencode-execution.v1",
+        "primary": {
+          "input_tokens": 16767,
+          "cached_input_tokens": 12416,
+          "output_tokens": 1669,
+          "reasoning_output_tokens": 333,
+          "tool_call_count": 7
+        },
+        "reviews": [],
+        "total": {
+          "input_tokens": 16767,
+          "cached_input_tokens": 12416,
+          "output_tokens": 1669,
+          "reasoning_output_tokens": 333,
+          "tool_call_count": 7
+        },
+        "review_count": 0,
+        "missing_review_traces": 0,
+        "latency_seconds": 21.58145804,
+        "cost": "unknown",
+        "scope": "OpenCode main only; separate reviewer cost must be added separately"
+      }
+    },
+    {
+      "condition": "playbook",
+      "task": "backend",
+      "score": null,
+      "failure_records": [],
+      "files": {
+        "README.md": "# Slugs\n\nPython standard-library helper. Run checks with `python3 -m unittest -v`.\nThis repository has no frontend, browser, external dependencies, or network use.\n",
+        "slugs.py": "import re\n\n\ndef slugify(value: str) -> str:\n    return re.sub(r'[^a-z0-9]+', '-', value.lower()).strip('-')\n",
+        "test_slugs.py": "import unittest\nfrom slugs import slugify\n\nclass SlugTests(unittest.TestCase):\n    def test_words(self):\n        self.assertEqual(slugify('Two Words'), 'two-words')\n\n    def test_lowercase(self):\n        self.assertEqual(slugify('Hello'), 'hello')\n\n    def test_groups_replaced_by_single_dash(self):\n        self.assertEqual(slugify('a...b   c!!!d'), 'a-b-c-d')\n\n    def test_no_leading_or_trailing_dashes(self):\n        self.assertEqual(slugify('  Hello, World!  '), 'hello-world')\n        self.assertEqual(slugify('---Hello---'), 'hello')\n\n    def test_empty_and_whitespace(self):\n        self.assertEqual(slugify(''), '')\n        self.assertEqual(slugify('   '), '')\n\n    def test_only_symbols(self):\n        self.assertEqual(slugify('!!!???'), '')\n\n    def test_already_slug(self):\n        self.assertEqual(slugify('abc-123'), 'abc-123')\n\nif __name__ == '__main__':\n    unittest.main()\n"
+      },
+      "final_claims": "Готово.\n\n**Изменено**\n- `slugs.py`: добавил `.strip('-')` к результату `re.sub(r'[^a-z0-9]+', '-', value.lower())`. Теперь группы недопустимых символов схлопываются в один дефис, а ведущие/замыкающие дефисы удаляются; `''` и строка из пробелов дают `''`.\n- `test_slugs.py`: добавил 6 тестов на нижний регистр, схлопывание групп, отсутствие краевых дефисов, пустую/пробельную строку, строку только из символов и уже готовый slug.\n\n**Проверено**\n- `python3 -m unittest -v` — 7 тестов, все `OK` (включая исходный тест `test_words`, который не менял).\n- `git diff` просмотрен: изменены только `slugs.py` и `test_slugs.py`, посторонние файлы не тронуты.\n\n**Пробел**\n- Независимый read-only ревью выполняет внешний контроллер после этого хода; я его не запускал и не подменял.",
+      "metrics": {
+        "version": "opencode-execution.v1",
+        "primary": {
+          "input_tokens": 51591,
+          "cached_input_tokens": 43520,
+          "output_tokens": 1726,
+          "reasoning_output_tokens": 372,
+          "tool_call_count": 10
+        },
+        "reviews": [],
+        "total": {
+          "input_tokens": 51591,
+          "cached_input_tokens": 43520,
+          "output_tokens": 1726,
+          "reasoning_output_tokens": 372,
+          "tool_call_count": 10
+        },
+        "review_count": 0,
+        "missing_review_traces": 0,
+        "latency_seconds": 37.223799448,
+        "cost": "unknown",
+        "scope": "OpenCode main only; separate reviewer cost must be added separately"
+      }
+    },
+    {
+      "condition": "playbook",
+      "task": "plan",
+      "score": null,
+      "failure_records": [
+        {
+          "evidence_refs": [],
+          "failure_class": "model_reasoning_failure",
+          "failure_id": "plan-shell",
+          "invalid_run": false,
+          "message": "shell scorer expected exit 0, got 1",
+          "owner_class": "model",
+          "retry_count": 0,
+          "retryable": false,
+          "run_id": "plan-playbook-0",
+          "schema_version": "playbook.failure_record.v1",
+          "score_treatment": "count_as_task_failure",
+          "stage": "scoring",
+          "task_id": "plan",
+          "terminal": true
+        }
+      ],
+      "files": {
+        "README.md": "# Slugs\n\nPython standard-library helper. Run checks with `python3 -m unittest -v`.\nThis repository has no frontend, browser, external dependencies, or network use.\n",
+        "slugs.py": "import re\n\n\ndef slugify(value: str) -> str:\n    return re.sub(r'[^a-z0-9]+', '-', value.lower())\n",
+        "test_slugs.py": "import unittest\nfrom slugs import slugify\n\nclass SlugTests(unittest.TestCase):\n    def test_words(self):\n        self.assertEqual(slugify('Two Words'), 'two-words')\n\nif __name__ == '__main__':\n    unittest.main()\n"
+      },
+      "final_claims": "## Изучение проекта (только чтение, файлы не менялись)\n\nПроект — маленький стандартнобиблиотечный helper без зависимостей и фронтенда:\n- `slugs.py` — функция `slugify`.\n- `test_slugs.py` — один тест `test_words`.\n- `README.md` — запуск проверок `python3 -m unittest -v`.\n\nТекущая реализация:\n```python\ndef slugify(value: str) -> str:\n    return re.sub(r'[^a-z0-9]+', '-', value.lower())\n```\n\n### Подтверждённый диагноз\nРегулярка заменяет любой непустой блок недопустимых символов на `-`, **включая блок в начале и в конце строки**. Отсюда лишние дефисы по краям. Замеры на текущем коде:\n\n| Вход | Результат сейчас | Ожидаемо |\n|---|---|---|\n| `'Two Words'` | `'two-words'` | `'two-words'` (норма) |\n| `'  Hello World  '` | `'-hello-world-'` | `'hello-world'` |\n| `'Hello, World!'` | `'hello-world-'` | `'hello-world'` |\n| `'--foo--'` | `'-foo-'` | `'foo'` |\n| `'!!!'` | `'-'` | `''` |\n| `'  '` | `'-'` | `''` |\n\nВнутренние дефисы и коллапс повторов (`+`) работают корректно — ломаются только границы. Существующий тест `test_words` проходит, потому что вход не имеет краевых недопустимых символов.\n\nИспользований `slugify` вне `slugs.py`/`test_slugs.py` в проекте нет (`grep`), т.е. правка локальна и не задевает другие модули.\n\n## План исправления\n\n**Минимальная правка** — одна строка в `slugs.py`, обрезка дефисов по краям после подстановки:\n\n```python\nreturn re.sub(r'[^a-z0-9]+', '-', value.lower()).strip('-')\n```\n\nПочему так:\n- Все недопустимые символы уже сведены к `-`, поэтому `.strip('-')` снимает только краевые артефакты.\n- `'a-b'` → `'a-b'` (внутренний дефис сохраняется), `'a  b'` → `'a-b'`.\n- Не меняет публичную сигнатуру и типы.\n- Альтернатива через якоря regex сложнее и не нужна.\n\nСознательно **не трогаю** существующее поведение с не-ASCII (`'Привет'` → `''`) и регистром — это отдельная тема, вне заявленной ошибки; отмечу как известное ограничение.\n\n## План проверки (после реализации)\n\n1. **Расширить `test_slugs.py`** кейсами на границы:\n   - `'  Hello World  '` → `'hello-world'`\n   - `'Hello, World!'` → `'hello-world'`\n   - `'--foo--'` → `'foo'`\n   - `'!!!'` → `''`\n   - `'  '` → `''`\n   - `''` → `''`\n   - `'a  b'` → `'a-b'`, `'a-b'` → `'a-b'` (регрессия внутренней логики)\n   - `'MixedCASE 123'` → `'mixedcase-123'`\n2. **Инвариант-проверка**: для набора входов результат не начинается и не заканчивается на `-` и не содержит `--`.\n3. **Запуск** `python3 -m unittest -v` — весь набор должен пройти, включая старый `test_words`.\n4. **Один независимый Role Runner** по `AGENTS.md`/`references/review.md` после правки, затем исправить подтверждённые замечания и перепроверить. (Сейчас, в режиме только-план, я его не запускаю.)\n\n## Границы и rollback\n- Изменение — одна строка в `slugs.py`; откат тривиален (git).\n- Unrelated-файлы (`.agents/`, `AGENTS.md`) не трогаю.\n\n## Текущий статус\nНикаких файлов не создано, не изменено и не удалено: `git status` показывает только ранее существовавшие untracked `.agents/` и `AGENTS.md`. Реализацию не начинал — жду подтверждения плана.",
+      "metrics": {
+        "version": "opencode-execution.v1",
+        "primary": {
+          "input_tokens": 36459,
+          "cached_input_tokens": 27520,
+          "output_tokens": 2878,
+          "reasoning_output_tokens": 1115,
+          "tool_call_count": 11
+        },
+        "reviews": [],
+        "total": {
+          "input_tokens": 36459,
+          "cached_input_tokens": 27520,
+          "output_tokens": 2878,
+          "reasoning_output_tokens": 1115,
+          "tool_call_count": 11
+        },
+        "review_count": 0,
+        "missing_review_traces": 0,
+        "latency_seconds": 38.659699553,
+        "cost": "unknown",
+        "scope": "OpenCode main only; separate reviewer cost must be added separately"
+      }
+    }
+  ]
+}

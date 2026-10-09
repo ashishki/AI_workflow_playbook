@@ -1,0 +1,513 @@
+{
+  "baseline": {
+    "cached_input_tokens": 40064,
+    "cost_per_attempted_task": "unknown",
+    "cost_per_successful_task": "unknown",
+    "cross_session_continuity_success": 0.0,
+    "evidence_completeness": 1.0,
+    "evidence_correctness": 1.0,
+    "false_success_count": 0,
+    "false_success_rate": 0.0,
+    "human_intervention_rate": "unknown",
+    "input_tokens": 49969,
+    "invalid_infrastructure_run_rate": 0.0,
+    "invalid_runs": 0,
+    "max": 1.0,
+    "mean": 0.5,
+    "median": 0.5,
+    "min": 0.0,
+    "output_tokens": 2982,
+    "policy_violation_count": 0,
+    "policy_violation_rate": 0.0,
+    "recovery_success_rate": 0.0,
+    "regression_rate": "unknown",
+    "retry_count": "unknown",
+    "review_execution_count": 0,
+    "sample_count": 2,
+    "stddev": 0.7071067811865476,
+    "task_success_rate": 0.5,
+    "timeout_rate": 0.0,
+    "tool_call_count": 15,
+    "unnecessary_action_count": "unknown",
+    "valid_runs": 2,
+    "verified_environment_success_rate": 1.0,
+    "wall_clock_latency": 24.9263048135
+  },
+  "blocking_errors": [],
+  "candidate": {
+    "cached_input_tokens": 71040,
+    "cost_per_attempted_task": "unknown",
+    "cost_per_successful_task": "unknown",
+    "cross_session_continuity_success": 0.0,
+    "evidence_completeness": 1.0,
+    "evidence_correctness": 1.0,
+    "false_success_count": 0,
+    "false_success_rate": 0.0,
+    "human_intervention_rate": "unknown",
+    "input_tokens": 88050,
+    "invalid_infrastructure_run_rate": 0.0,
+    "invalid_runs": 0,
+    "max": 1.0,
+    "mean": 0.5,
+    "median": 0.5,
+    "min": 0.0,
+    "output_tokens": 4604,
+    "policy_violation_count": 0,
+    "policy_violation_rate": 0.0,
+    "recovery_success_rate": 0.0,
+    "regression_rate": "unknown",
+    "retry_count": "unknown",
+    "review_execution_count": 0,
+    "sample_count": 2,
+    "stddev": 0.7071067811865476,
+    "task_success_rate": 0.5,
+    "timeout_rate": 0.0,
+    "tool_call_count": 21,
+    "unnecessary_action_count": "unknown",
+    "valid_runs": 2,
+    "verified_environment_success_rate": 1.0,
+    "wall_clock_latency": 37.9417495005
+  },
+  "compatibility_errors": [],
+  "hard_gates": {
+    "candidate_false_success_count": 0,
+    "candidate_false_success_rate": 0.0,
+    "candidate_policy_violation_count": 0,
+    "candidate_policy_violation_rate": 0.0,
+    "single_run_stability_warning": false
+  },
+  "raw_trials": {
+    "baseline": [
+      {
+        "adapter_version": "command.v1",
+        "bundle": "/tmp/playbook-model-worker-wzb191rs/work/real-baseline/backend/trial-0/bundle.json",
+        "compatibility_fingerprint": "5c48e9ff333dda6f5148003a4bc0f3a9222bfa15937a81b1920bf05cbd075b8c",
+        "condition": "baseline",
+        "evidence_errors": [],
+        "evidence_valid": true,
+        "execution_telemetry": {
+          "cost": "unknown",
+          "latency_seconds": 28.271151587,
+          "missing_review_traces": 0,
+          "primary": {
+            "cached_input_tokens": 27648,
+            "input_tokens": 33202,
+            "output_tokens": 1313,
+            "reasoning_output_tokens": 179,
+            "tool_call_count": 8
+          },
+          "review_count": 0,
+          "reviews": [],
+          "scope": "OpenCode main only; separate reviewer cost must be added separately",
+          "total": {
+            "cached_input_tokens": 27648,
+            "input_tokens": 33202,
+            "output_tokens": 1313,
+            "reasoning_output_tokens": 179,
+            "tool_call_count": 8
+          },
+          "version": "opencode-execution.v1"
+        },
+        "execution_timed_out": false,
+        "failures": [],
+        "harness_eval_unit": {
+          "adapter_version": "command.v1",
+          "budget": {
+            "correction_budget": 0,
+            "timeout_seconds": 260.0
+          },
+          "cli_version": "1.18.34",
+          "compatibility_fingerprint": "5c48e9ff333dda6f5148003a4bc0f3a9222bfa15937a81b1920bf05cbd075b8c",
+          "condition": "baseline",
+          "dataset_version": "3.1.0",
+          "delivery_profile": "native-repo-skills-opencode-v1",
+          "environment": {
+            "digest": "72eaf56915cd3431385c6a8375603176f6785324c79bf127b437ba9e1b65bcf8",
+            "workspace_policy": "fresh_fixture_copy"
+          },
+          "evaluation_mode": "empirical",
+          "harness_version": "0.1.0",
+          "identity_source": "declared",
+          "memory_policy_version": "stateless_fixture_workspace.v1",
+          "model": {
+            "id": "deepseek-v4.1-flash",
+            "parameters": "provider-default",
+            "provider": "opencode-go"
+          },
+          "permission_policy_version": "workspace-tools-no-external-deny",
+          "prompt_hash": "4e158db04b3b65e7f7f749dcdd920ccfbb7d50739099db19dab9952586616b20",
+          "prompt_version": "native.backend.v1:baseline",
+          "reasoning_profile": "provider-default",
+          "retry_policy": "single_attempt_no_retry",
+          "schema_version": "playbook.harness_eval_unit.v1",
+          "scorer_version": "external_acceptance:1.0.0",
+          "task_id": "backend",
+          "timeout_seconds": 260.0,
+          "tool_registry_version": "harness_lab_builtin.v1",
+          "trial_index": 0,
+          "unit_id": "playbook_native_v3-backend-baseline-0"
+        },
+        "receipt_count": 1,
+        "repository": "playbook_native_v3",
+        "score": 1.0,
+        "scorer_outputs": [
+          {
+            "failure_records": [],
+            "metrics": {
+              "command": "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python /srv/openclaw-you/workspace/AI_workflow_playbook/evals/native/harness/acceptance.py --workspace /tmp/playbook-model-worker-wzb191rs/work/real-baseline/backend/trial-0/workspace --task backend",
+              "exit_code": 0,
+              "stderr": "",
+              "stdout": "{\"passed\": true, \"errors\": []}\n",
+              "timed_out": false,
+              "timeout_seconds": 15.0
+            },
+            "schema_version": "playbook.scorer_output.v1",
+            "score": 1.0,
+            "scorer_code_hash": "99be99e698f3d78501e9ce7f4194121cda89669e653d3851b8594867fb2910b9",
+            "scorer_id": "external_acceptance",
+            "scorer_version": "1.0.0",
+            "task_id": "backend",
+            "verdict": "passed"
+          }
+        ],
+        "task_id": "backend",
+        "task_spec_version": "native.backend.v1",
+        "trial_index": 0,
+        "valid": true
+      },
+      {
+        "adapter_version": "command.v1",
+        "bundle": "/tmp/playbook-model-worker-wzb191rs/work/real-baseline/plan/trial-0/bundle.json",
+        "compatibility_fingerprint": "5c48e9ff333dda6f5148003a4bc0f3a9222bfa15937a81b1920bf05cbd075b8c",
+        "condition": "baseline",
+        "evidence_errors": [],
+        "evidence_valid": true,
+        "execution_telemetry": {
+          "cost": "unknown",
+          "latency_seconds": 21.58145804,
+          "missing_review_traces": 0,
+          "primary": {
+            "cached_input_tokens": 12416,
+            "input_tokens": 16767,
+            "output_tokens": 1669,
+            "reasoning_output_tokens": 333,
+            "tool_call_count": 7
+          },
+          "review_count": 0,
+          "reviews": [],
+          "scope": "OpenCode main only; separate reviewer cost must be added separately",
+          "total": {
+            "cached_input_tokens": 12416,
+            "input_tokens": 16767,
+            "output_tokens": 1669,
+            "reasoning_output_tokens": 333,
+            "tool_call_count": 7
+          },
+          "version": "opencode-execution.v1"
+        },
+        "execution_timed_out": false,
+        "failures": [
+          {
+            "evidence_refs": [],
+            "failure_class": "model_reasoning_failure",
+            "failure_id": "plan-shell",
+            "invalid_run": false,
+            "message": "shell scorer expected exit 0, got 1",
+            "owner_class": "model",
+            "retry_count": 0,
+            "retryable": false,
+            "run_id": "plan-baseline-0",
+            "schema_version": "playbook.failure_record.v1",
+            "score_treatment": "count_as_task_failure",
+            "stage": "scoring",
+            "task_id": "plan",
+            "terminal": true
+          }
+        ],
+        "harness_eval_unit": {
+          "adapter_version": "command.v1",
+          "budget": {
+            "correction_budget": 0,
+            "timeout_seconds": 260.0
+          },
+          "cli_version": "1.18.34",
+          "compatibility_fingerprint": "5c48e9ff333dda6f5148003a4bc0f3a9222bfa15937a81b1920bf05cbd075b8c",
+          "condition": "baseline",
+          "dataset_version": "3.1.0",
+          "delivery_profile": "native-repo-skills-opencode-v1",
+          "environment": {
+            "digest": "72eaf56915cd3431385c6a8375603176f6785324c79bf127b437ba9e1b65bcf8",
+            "workspace_policy": "fresh_fixture_copy"
+          },
+          "evaluation_mode": "empirical",
+          "harness_version": "0.1.0",
+          "identity_source": "declared",
+          "memory_policy_version": "stateless_fixture_workspace.v1",
+          "model": {
+            "id": "deepseek-v4.1-flash",
+            "parameters": "provider-default",
+            "provider": "opencode-go"
+          },
+          "permission_policy_version": "workspace-tools-no-external-deny",
+          "prompt_hash": "93e68b199c6621440856657fead8f2d5c79c1f624170d225a1ae3336ef7ef55b",
+          "prompt_version": "native.plan.v1:baseline",
+          "reasoning_profile": "provider-default",
+          "retry_policy": "single_attempt_no_retry",
+          "schema_version": "playbook.harness_eval_unit.v1",
+          "scorer_version": "external_acceptance:1.0.0",
+          "task_id": "plan",
+          "timeout_seconds": 260.0,
+          "tool_registry_version": "harness_lab_builtin.v1",
+          "trial_index": 0,
+          "unit_id": "playbook_native_v3-plan-baseline-0"
+        },
+        "receipt_count": 1,
+        "repository": "playbook_native_v3",
+        "score": 0.0,
+        "scorer_outputs": [
+          {
+            "failure_records": [
+              "plan-shell"
+            ],
+            "metrics": {
+              "command": "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python /srv/openclaw-you/workspace/AI_workflow_playbook/evals/native/harness/acceptance.py --workspace /tmp/playbook-model-worker-wzb191rs/work/real-baseline/plan/trial-0/workspace --task plan",
+              "exit_code": 1,
+              "stderr": "",
+              "stdout": "{\"passed\": false, \"errors\": [\"Plan-only task changed files: __pycache__/slugs.cpython-312.pyc, __pycache__/test_slugs.cpython-312.pyc\"]}\n",
+              "timed_out": false,
+              "timeout_seconds": 15.0
+            },
+            "schema_version": "playbook.scorer_output.v1",
+            "score": 0.0,
+            "scorer_code_hash": "99be99e698f3d78501e9ce7f4194121cda89669e653d3851b8594867fb2910b9",
+            "scorer_id": "external_acceptance",
+            "scorer_version": "1.0.0",
+            "task_id": "plan",
+            "verdict": "failed"
+          }
+        ],
+        "task_id": "plan",
+        "task_spec_version": "native.plan.v1",
+        "trial_index": 0,
+        "valid": true
+      }
+    ],
+    "candidate": [
+      {
+        "adapter_version": "command.v1",
+        "bundle": "/tmp/playbook-model-worker-wzb191rs/work/real-playbook/backend/trial-0/bundle.json",
+        "compatibility_fingerprint": "5c48e9ff333dda6f5148003a4bc0f3a9222bfa15937a81b1920bf05cbd075b8c",
+        "condition": "playbook",
+        "evidence_errors": [],
+        "evidence_valid": true,
+        "execution_telemetry": {
+          "cost": "unknown",
+          "latency_seconds": 37.223799448,
+          "missing_review_traces": 0,
+          "primary": {
+            "cached_input_tokens": 43520,
+            "input_tokens": 51591,
+            "output_tokens": 1726,
+            "reasoning_output_tokens": 372,
+            "tool_call_count": 10
+          },
+          "review_count": 0,
+          "reviews": [],
+          "scope": "OpenCode main only; separate reviewer cost must be added separately",
+          "total": {
+            "cached_input_tokens": 43520,
+            "input_tokens": 51591,
+            "output_tokens": 1726,
+            "reasoning_output_tokens": 372,
+            "tool_call_count": 10
+          },
+          "version": "opencode-execution.v1"
+        },
+        "execution_timed_out": false,
+        "failures": [],
+        "harness_eval_unit": {
+          "adapter_version": "command.v1",
+          "budget": {
+            "correction_budget": 0,
+            "timeout_seconds": 260.0
+          },
+          "cli_version": "1.18.34",
+          "compatibility_fingerprint": "5c48e9ff333dda6f5148003a4bc0f3a9222bfa15937a81b1920bf05cbd075b8c",
+          "condition": "playbook",
+          "dataset_version": "3.1.0",
+          "delivery_profile": "native-repo-skills-opencode-v1",
+          "environment": {
+            "digest": "72eaf56915cd3431385c6a8375603176f6785324c79bf127b437ba9e1b65bcf8",
+            "workspace_policy": "fresh_fixture_copy"
+          },
+          "evaluation_mode": "empirical",
+          "harness_version": "0.1.0",
+          "identity_source": "declared",
+          "memory_policy_version": "stateless_fixture_workspace.v1",
+          "model": {
+            "id": "deepseek-v4.1-flash",
+            "parameters": "provider-default",
+            "provider": "opencode-go"
+          },
+          "permission_policy_version": "workspace-tools-no-external-deny",
+          "prompt_hash": "4e158db04b3b65e7f7f749dcdd920ccfbb7d50739099db19dab9952586616b20",
+          "prompt_version": "native.backend.v1:playbook",
+          "reasoning_profile": "provider-default",
+          "retry_policy": "single_attempt_no_retry",
+          "schema_version": "playbook.harness_eval_unit.v1",
+          "scorer_version": "external_acceptance:1.0.0",
+          "task_id": "backend",
+          "timeout_seconds": 260.0,
+          "tool_registry_version": "harness_lab_builtin.v1",
+          "trial_index": 0,
+          "unit_id": "playbook_native_v3-backend-playbook-0"
+        },
+        "receipt_count": 1,
+        "repository": "playbook_native_v3",
+        "score": 1.0,
+        "scorer_outputs": [
+          {
+            "failure_records": [],
+            "metrics": {
+              "command": "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python /srv/openclaw-you/workspace/AI_workflow_playbook/evals/native/harness/acceptance.py --workspace /tmp/playbook-model-worker-wzb191rs/work/real-playbook/backend/trial-0/workspace --task backend",
+              "exit_code": 0,
+              "stderr": "",
+              "stdout": "{\"passed\": true, \"errors\": []}\n",
+              "timed_out": false,
+              "timeout_seconds": 15.0
+            },
+            "schema_version": "playbook.scorer_output.v1",
+            "score": 1.0,
+            "scorer_code_hash": "99be99e698f3d78501e9ce7f4194121cda89669e653d3851b8594867fb2910b9",
+            "scorer_id": "external_acceptance",
+            "scorer_version": "1.0.0",
+            "task_id": "backend",
+            "verdict": "passed"
+          }
+        ],
+        "task_id": "backend",
+        "task_spec_version": "native.backend.v1",
+        "trial_index": 0,
+        "valid": true
+      },
+      {
+        "adapter_version": "command.v1",
+        "bundle": "/tmp/playbook-model-worker-wzb191rs/work/real-playbook/plan/trial-0/bundle.json",
+        "compatibility_fingerprint": "5c48e9ff333dda6f5148003a4bc0f3a9222bfa15937a81b1920bf05cbd075b8c",
+        "condition": "playbook",
+        "evidence_errors": [],
+        "evidence_valid": true,
+        "execution_telemetry": {
+          "cost": "unknown",
+          "latency_seconds": 38.659699553,
+          "missing_review_traces": 0,
+          "primary": {
+            "cached_input_tokens": 27520,
+            "input_tokens": 36459,
+            "output_tokens": 2878,
+            "reasoning_output_tokens": 1115,
+            "tool_call_count": 11
+          },
+          "review_count": 0,
+          "reviews": [],
+          "scope": "OpenCode main only; separate reviewer cost must be added separately",
+          "total": {
+            "cached_input_tokens": 27520,
+            "input_tokens": 36459,
+            "output_tokens": 2878,
+            "reasoning_output_tokens": 1115,
+            "tool_call_count": 11
+          },
+          "version": "opencode-execution.v1"
+        },
+        "execution_timed_out": false,
+        "failures": [
+          {
+            "evidence_refs": [],
+            "failure_class": "model_reasoning_failure",
+            "failure_id": "plan-shell",
+            "invalid_run": false,
+            "message": "shell scorer expected exit 0, got 1",
+            "owner_class": "model",
+            "retry_count": 0,
+            "retryable": false,
+            "run_id": "plan-playbook-0",
+            "schema_version": "playbook.failure_record.v1",
+            "score_treatment": "count_as_task_failure",
+            "stage": "scoring",
+            "task_id": "plan",
+            "terminal": true
+          }
+        ],
+        "harness_eval_unit": {
+          "adapter_version": "command.v1",
+          "budget": {
+            "correction_budget": 0,
+            "timeout_seconds": 260.0
+          },
+          "cli_version": "1.18.34",
+          "compatibility_fingerprint": "5c48e9ff333dda6f5148003a4bc0f3a9222bfa15937a81b1920bf05cbd075b8c",
+          "condition": "playbook",
+          "dataset_version": "3.1.0",
+          "delivery_profile": "native-repo-skills-opencode-v1",
+          "environment": {
+            "digest": "72eaf56915cd3431385c6a8375603176f6785324c79bf127b437ba9e1b65bcf8",
+            "workspace_policy": "fresh_fixture_copy"
+          },
+          "evaluation_mode": "empirical",
+          "harness_version": "0.1.0",
+          "identity_source": "declared",
+          "memory_policy_version": "stateless_fixture_workspace.v1",
+          "model": {
+            "id": "deepseek-v4.1-flash",
+            "parameters": "provider-default",
+            "provider": "opencode-go"
+          },
+          "permission_policy_version": "workspace-tools-no-external-deny",
+          "prompt_hash": "93e68b199c6621440856657fead8f2d5c79c1f624170d225a1ae3336ef7ef55b",
+          "prompt_version": "native.plan.v1:playbook",
+          "reasoning_profile": "provider-default",
+          "retry_policy": "single_attempt_no_retry",
+          "schema_version": "playbook.harness_eval_unit.v1",
+          "scorer_version": "external_acceptance:1.0.0",
+          "task_id": "plan",
+          "timeout_seconds": 260.0,
+          "tool_registry_version": "harness_lab_builtin.v1",
+          "trial_index": 0,
+          "unit_id": "playbook_native_v3-plan-playbook-0"
+        },
+        "receipt_count": 1,
+        "repository": "playbook_native_v3",
+        "score": 0.0,
+        "scorer_outputs": [
+          {
+            "failure_records": [
+              "plan-shell"
+            ],
+            "metrics": {
+              "command": "/tmp/playbook-model-worker-wzb191rs/work/venv/bin/python /srv/openclaw-you/workspace/AI_workflow_playbook/evals/native/harness/acceptance.py --workspace /tmp/playbook-model-worker-wzb191rs/work/real-playbook/plan/trial-0/workspace --task plan",
+              "exit_code": 1,
+              "stderr": "",
+              "stdout": "{\"passed\": false, \"errors\": [\"Plan-only task changed files: __pycache__/slugs.cpython-312.pyc, __pycache__/test_slugs.cpython-312.pyc\"]}\n",
+              "timed_out": false,
+              "timeout_seconds": 15.0
+            },
+            "schema_version": "playbook.scorer_output.v1",
+            "score": 0.0,
+            "scorer_code_hash": "99be99e698f3d78501e9ce7f4194121cda89669e653d3851b8594867fb2910b9",
+            "scorer_id": "external_acceptance",
+            "scorer_version": "1.0.0",
+            "task_id": "plan",
+            "verdict": "failed"
+          }
+        ],
+        "task_id": "plan",
+        "task_spec_version": "native.plan.v1",
+        "trial_index": 0,
+        "valid": true
+      }
+    ]
+  },
+  "schema_version": "harness_lab.comparison_report.v1",
+  "status": "empirical comparison"
+}
