@@ -1,0 +1,42 @@
+{
+  "command_argv": [
+    "/tmp/playbook-delivery-audit-312/bin/python",
+    "-m",
+    "unittest",
+    "test_setup.SetupTests.test_final_journal_write_failure_is_interrupted_until_explicit_rollback",
+    "test_setup.SetupTests.test_missing_or_tampered_helper_pointer_blocks_readiness_and_destructive_retry",
+    "-v"
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "a22d52660a9d7a81bba1680d629b87f5791466874ed457477ebcd102225f1e36",
+  "dirty_state_after": [
+    "M test_setup.py"
+  ],
+  "dirty_state_before": [
+    "M test_setup.py"
+  ],
+  "end_timestamp": "2026-10-09T07:16:59Z",
+  "environment_summary": {
+    "machine": "x86_64",
+    "platform": "Linux-5.15.0-170-generic-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "python_executable": "/tmp/playbook-delivery-audit-312/bin/python",
+    "timed_out": false,
+    "timeout": 600.0
+  },
+  "exit_code": 1,
+  "parent_receipt_id": null,
+  "producer": "tools/receipt_run.py",
+  "receipt_id": "desktop-diagnostics-regression-red-1791530218-ca7cb479",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "caf22576f0c8cfb92ddf16b900f8b49695e4a0fb",
+  "repo_commit_before": "caf22576f0c8cfb92ddf16b900f8b49695e4a0fb",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-10-09T07:16:58Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "2e49849e74f1866e32ab5b0dd20be66930f3bddf834e1c38207828bf46346a06",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "task_id": "desktop-diagnostics-regression-red",
+  "working_directory": "/tmp/playbook-delivery-audit-QDI6NT/red-baseline/distribution/desktop"
+}

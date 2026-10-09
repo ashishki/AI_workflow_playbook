@@ -1,0 +1,10 @@
+{
+  "TRANSFER_RESULT.md": "dceb985821d230446d9a3e6cfae31230eb4a13ee6a769aa395615a7111fe7df8",
+  ".playbook-artifacts/transfer-20261009/after-hashes.json": "6c300909900fcd1a70419838d6f46ff9baf2e1d9c6403eaccdb2aa94d1dc0008",
+  ".playbook-artifacts/transfer-20261009/fresh-transfer-entry-baseline.json": "3b8c1d97fe3de20844079659153175a57165e39e08614a8b5e9d3204de477d91",
+  ".playbook-artifacts/transfer-20261009/js-check.log": "16184b9237f05694cd607a2cb37343cc9d0a08204d60ef551f1b4e70ba183368",
+  ".playbook-artifacts/transfer-20261009/unittest-first-attempt.log": "cf9c4cb613bc0f242c9dc5f3d8eff3e4526117bf10a17723dbbe857c329dd99e",
+  ".playbook-artifacts/transfer-20261009/unittest-second-attempt.log": "f815eeea4f82ea68131184e5467d6ef31738ec53f50f8e8541b966a7dd66776f",
+  ".playbook-artifacts/transfer-20261009/unittest.log": "37f714b72230f7d31e84407971d2eeb8433dc01b831540bd8f9fea533f7b7069",
+  ".playbook-artifacts/transfer-20261009/verification.json": "2b49bd8658648e05da05f8ff8446c9f0eaea5126b0b801563d818842efefde39"
+}

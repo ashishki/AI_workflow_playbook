@@ -22,11 +22,22 @@ vNext уже слит через PR #9. Результаты Controlled Delegati
   отказ при missing/foreign transaction, рабочая managed review command.
   Private evaluation preview; права распространения и выпуск отдельно.
 
-D00: 296 PASS / 2 explicit historical NOT RUN до последних sandbox corrections;
-canonical после corrections PASS, независимый reviewer нашёл два P2 и повторно
-подтвердил их исправление. Native package: 24 PASS без root и без permission skip.
-[Точные receipts и ограничения](../../reports/delivery/2026-10-09/D00_REPORT_RU.md).
-CI нового коммита и итоговая приёмка Delivery фиксируются после наблюдения.
+Техническая приёмка source `7f36b90`: full pytest 320 PASS / 2 historical NOT RUN,
+canonical PASS, vNext 50 PASS, Desktop 20 PASS, Native package 24 PASS без root.
+Все три exact-source CI workflows PASS: Windows/macOS/Linux сборки и браузер,
+Python 3.10/3.13, Engineering regressions и общий verifier.
+
+Linux frozen ZIP проверен через реальные CLI/GUI install/update/remove/rollback;
+Native payload совпал с независимой сборкой. Новый синтетический APP прошёл
+HTTP/browser/recovery/export/off-state. Отдельный агент без прежнего чата изменил
+правило, сохранил старые данные и прошёл внешние проверки.
+[Итог и все границы](../../reports/delivery/2026-10-09/REPORT_RU.md),
+[машинные результаты](../../reports/delivery/2026-10-09/results.json),
+[D00 история отрицательных исходов](../../reports/delivery/2026-10-09/D00_REPORT_RU.md).
+
+Первый незавершённый полный шаг — D02. D03/D06–D10 не получают full PASS из source
+merge или синтетических сценариев. Независимые source reviewers нашли и исправили
+P2; окончательный отчёт reviewer хранится отдельно с reviewed identities.
 
 ## Что остаётся открытым
 

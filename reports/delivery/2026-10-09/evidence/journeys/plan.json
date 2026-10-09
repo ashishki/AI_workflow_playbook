@@ -1,0 +1,29 @@
+{
+  "schema": "delivery.synthetic-journey-plan.v1",
+  "frozen_before_agent": true,
+  "base_commit": "2225a3ff2d4d59d73e01aa121760da7a6472626f",
+  "adapter": "platform collaboration agent, filesystem workspace; not Native CLI/Lab empirical pair",
+  "task": "APP/GROW/RETIRE technical synthetic journey",
+  "checks": [
+    "HTTP create/read persistence after restart",
+    "repeated request id idempotence",
+    "occupied slot conflict",
+    "teacher isolation and input teacher spoof denial",
+    "real date/slot validation",
+    "concurrent same-slot atomicity",
+    "mobile/desktop UI browser and screenshot inspection",
+    "copy backup/corruption/restore",
+    "export parses after retire",
+    "fresh-agent rule change protects old bookings",
+    "owner note bytes unchanged"
+  ],
+  "field_pilot": "NOT RUN",
+  "external_api": "NOT RUN",
+  "plain_control": "NOT RUN",
+  "model_usage": "unknown platform counters",
+  "files": {
+    "TASK.md": "088917dbb5c3368d6683a11aafc3544b50f0cb9f3385daa48f0ce4a6f068de38",
+    "AGENTS.md": "e8ceb5e3814bd0d12a4619d226196e5e8eddf4ccd823b6fdbe29078440867ee2",
+    "notes.txt": "230e79d66490538d51e957fb0b93ebbe422c470d5623e315dce8f978b692a5d4"
+  }
+}

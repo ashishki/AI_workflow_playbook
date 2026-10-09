@@ -1,0 +1,43 @@
+F
+======================================================================
+FAIL: test_existing_files_preserved (test_app.LifecycleTests.test_existing_files_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-published-copy-review-b_asobhv/transfer-app/test_app.py", line 287, in test_existing_files_preserved
+    self.assertEqual(installed, {name for name in record if name.startswith('.agents/')})
+AssertionError: Items in the second set but not the first:
+'.agents/skills/playbook/scripts/playbook_environment.py'
+'.agents/skills/playbook/agents/openai.yaml'
+'.agents/skills/playbook/references/lifecycle.md'
+'.agents/skills/playbook/references/lifecycle/retire.md'
+'.agents/skills/playbook/references/preview-share.md'
+'.agents/skills/playbook/assets/project-block.md'
+'.agents/skills/playbook/references/lifecycle/decide.md'
+'.agents/skills/playbook/references/lifecycle/design.md'
+'.agents/skills/playbook/references/lifecycle/verify.md'
+'.agents/skills/playbook/references/lifecycle/introduce.md'
+'.agents/skills/playbook/references/lifecycle/discover.md'
+'.agents/skills/playbook/scripts/run_codex_role.py'
+'.agents/skills/playbook/SKILL.md'
+'.agents/skills/playbook/references/lifecycle/observe.md'
+'.agents/skills/playbook/references/lifecycle/build.md'
+'.agents/skills/playbook/references/review.md'
+'.agents/skills/playbook/references/environment.md'
+'.agents/skills/playbook/references/setup.md'
+'.agents/skills/playbook/assets/solution-record.example.json'
+'.agents/skills/playbook/scripts/codex_role_run_lib.py'
+'.agents/skills/playbook/references/lifecycle/diagnose.md'
+'.agents/skills/playbook/references/lifecycle/grow.md'
+'.agents/skills/playbook/assets/lifecycle.json'
+'.agents/skills/playbook/scripts/solution_record.py'
+'.agents/skills/playbook/references/state.md'
+'.agents/skills/playbook/references/lifecycle/transfer.md'
+'.agents/skills/playbook/references/connect.md'
+'.agents/skills/playbook/references/lifecycle/recover.md'
+'.agents/skills/playbook/references/working-session.md'
+'.agents/skills/playbook/references/lifecycle/change.md'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

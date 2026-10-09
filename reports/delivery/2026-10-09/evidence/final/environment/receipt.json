@@ -1,0 +1,58 @@
+{
+  "command_argv": [
+    ".venv-delivery-20261009/bin/python",
+    "tools/playbook_environment.py",
+    "--root",
+    ".",
+    "--audience",
+    "engineering",
+    "--playbook-source",
+    "--need",
+    "review",
+    "--need",
+    "browser",
+    "--need",
+    "tests",
+    "--need",
+    "preview",
+    "--need",
+    "claim",
+    "--json"
+  ],
+  "diff_stat_artifact_path": "diff_stat.txt",
+  "diff_stat_sha256": "c80c3d2a76113c8d125399dc3341e6c182ebb90285c4854a7eca39b4e990ff46",
+  "dirty_state_after": [
+    "M distribution/desktop/desktop_setup.py",
+    " M distribution/desktop/setup_core.py",
+    " M distribution/desktop/test_setup.py"
+  ],
+  "dirty_state_before": [
+    "M distribution/desktop/desktop_setup.py",
+    " M distribution/desktop/setup_core.py",
+    " M distribution/desktop/test_setup.py"
+  ],
+  "end_timestamp": "2026-10-09T08:02:27Z",
+  "environment_summary": {
+    "machine": "x86_64",
+    "platform": "Linux-5.15.0-170-generic-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "python_executable": "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+    "timed_out": false,
+    "timeout": 120.0
+  },
+  "exit_code": 1,
+  "parent_receipt_id": null,
+  "producer": "tools/receipt_run.py",
+  "receipt_id": "DELIVERY-environment-1791532947-853d1edb",
+  "redaction_status": "not_requested",
+  "repo_commit_after": "2225a3ff2d4d59d73e01aa121760da7a6472626f",
+  "repo_commit_before": "2225a3ff2d4d59d73e01aa121760da7a6472626f",
+  "schema_version": "playbook.command_receipt.v1",
+  "start_timestamp": "2026-10-09T08:02:27Z",
+  "stderr_artifact_path": "stderr.txt",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_artifact_path": "stdout.txt",
+  "stdout_sha256": "2c08fe7af5e056dfc56d5a4e0834a92e1eb8c6675b22bbf090b9153b5bab6dc5",
+  "task_id": "DELIVERY-environment",
+  "working_directory": "/srv/openclaw-you/workspace/AI_workflow_playbook"
+}

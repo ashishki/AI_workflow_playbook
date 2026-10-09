@@ -1,0 +1,7 @@
+{
+  "status": "FAIL",
+  "classification": "verifier_wait_error",
+  "reason": "empty status message is hidden by expected CSS; probe wrongly required visible empty message",
+  "source_app_changed": false,
+  "correction": "wait for actual loaded booking-list state, preserve first failure"
+}

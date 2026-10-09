@@ -1,0 +1,30 @@
+test_real_cli_rejects_all_reserved_paths_before_mutation (test_corrections.LifecyclePathCorrectionTests) ... ok
+test_real_cli_reserved_existing_marker_bytes_preserved (test_corrections.LifecyclePathCorrectionTests) ... ok
+test_invalid_reload_document_also_fails_closed (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:38:59] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:38:59] "GET /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:38:59] "POST /api/bookings HTTP/1.1" 503 -
+ok
+test_post_rename_fault_next_other_request_does_not_erase_commit (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:39:00] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:39:00] "POST /api/bookings HTTP/1.1" 201 -
+ok
+test_post_rename_fault_replay_and_other_request_preserve_both (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:39:00] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:39:00] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:39:00] "POST /api/bookings HTTP/1.1" 201 -
+ok
+test_precommit_failure_reloads_old_disk_then_allows_retry (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:39:01] "POST /api/bookings HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 10:39:01] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:39:01] "GET /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:39:01] "POST /api/bookings HTTP/1.1" 201 -
+ok
+test_reload_failure_blocks_all_reads_and_writes_until_reopen (test_corrections.PersistenceCorrectionTests) ... 127.0.0.1 - - [09/Oct/2026 10:39:01] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:39:01] "GET /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:39:01] "GET /api/bookings/9809dc6b-914a-4f37-9bb2-cc37b25d3c8c HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:39:01] "POST /api/bookings HTTP/1.1" 503 -
+127.0.0.1 - - [09/Oct/2026 10:39:01] "POST /api/bookings HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 10:39:02] "POST /api/bookings HTTP/1.1" 201 -
+ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 4.091s
+
+OK

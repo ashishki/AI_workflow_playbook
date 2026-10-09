@@ -1,0 +1,126 @@
+{
+  "schema": "playbook.independent-platform-review.v1",
+  "status": "CHANGES_REQUESTED",
+  "adapter": "platform_collaboration_read_only",
+  "native_role_runner": "NOT_RUN",
+  "reviewer": "/root/delivery_final_review",
+  "model_identity": "inherited platform agent; provider billing/model telemetry unavailable",
+  "reviewed_head": "2225a3f",
+  "baseline": "de2478f4a3fdffb4c568898f37a078500f203b8a",
+  "reviewed_file_sha256": {
+    "distribution/desktop/setup_core.py": "5f2e7def242ed9bbcf4641cca186cc17f17a927d799730a063735b431334fdb9",
+    "distribution/desktop/desktop_setup.py": "f4a53822b34dc603c216ddd21c4676964ee4b8e46092c031c771baf60b86d3ea",
+    "distribution/desktop/desktop_runtime.py": "0ef7e1b230f92bdebdf6b13760dbded14ba9cc9b65485b8e50bbed50a47f4811",
+    "distribution/desktop/build.py": "14f5898b81c847144a82a253e8709383bf74589d577d529d2db6e1196af4e9c0",
+    "distribution/desktop/test_setup.py": "52f0dc37102106c92afb3234ebacb4390f1fb243349ed8fe4cb32c557124dc9d",
+    "tools/playbook_environment.py": "b22bac23b11c72bd67bdf189f1ac30f01a7514d84b71d8738a7107599136e4fb",
+    "tools/solution_record.py": "b3ef20ac41ecf3703bd22df10fccb6a8c0ef4c66bcf7207f45fd988f63262aac",
+    "plugins/playbook-native/skills/playbook/SKILL.md": "0f510176be909ea7b84c49c0a39b56039c6db14bd37a8c3c4af4ec68505b15a3",
+    "plugins/playbook-native/skills/playbook/references/review.md": "060d2f39e5efc0e519454b8ecf01e931b405947075b1af6344ff923235a1126f",
+    "plugins/playbook-native/skills/playbook/references/setup.md": "da6ed00d8fea7d93ace115f6d6e041d5b80526067ade1e52c37d2363db788ae1",
+    "plugins/playbook-native/skills/playbook/references/environment.md": "8a630c3a766a8f8aad9ec46eb844bc659e67898c38166e9091edb7f43ab166d5",
+    "plugins/playbook-native/skills/playbook/references/lifecycle/discover.md": "7ae63d4b9a941bac0bdd818bc92a6132e83c605f5a74af21124a5a2d95be0e5e",
+    "plugins/playbook-native/skills/playbook/references/lifecycle/verify.md": "b2f951c172964708eba0e455ee7fd184110ebbba19debb5ebdb3800d40038603",
+    "distribution/native/build.py": "bc4caf8f5d6254d04e20524c040515ee095eb07ffd2dd2026b537477666e7d62",
+    "distribution/native/sync_runtime.py": "3247e5fbee0003aa3d1b9133ac3a01f95a4183ee8d83edeb1fdbf711696615e8",
+    ".github/workflows/native-checks.yml": "810660a6191cac530a35fe4007964a51f7f0c973fe4550e24b6a8068b4b5f09c"
+  },
+  "identity_note": "setup_core identity is exact preserved original applied Desktop patch; review.md identity is integrated pre-root-fix commit. Other identities are current sources read during review. No fabricated uniform snapshot.",
+  "commands": [
+    {
+      "name": "managed-documented-order",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/distribution/desktop/desktop_setup.py",
+        "--kit",
+        "/tmp/delivery-review-original-findings-emv3zvns/kit/Playbook-0.2.0-preview.4.zip",
+        "--sha256",
+        "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+        "helper",
+        "review",
+        "--root",
+        "/tmp/delivery-review-original-findings-emv3zvns/original",
+        "run",
+        "--help"
+      ],
+      "exit_code": 2
+    },
+    {
+      "name": "managed-correct-order",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/distribution/desktop/desktop_setup.py",
+        "--kit",
+        "/tmp/delivery-review-original-findings-emv3zvns/kit/Playbook-0.2.0-preview.4.zip",
+        "--sha256",
+        "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+        "helper",
+        "review",
+        "run",
+        "--root",
+        "/tmp/delivery-review-original-findings-emv3zvns/original",
+        "--help"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "test_observations": [
+    {
+      "command": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "distribution/desktop",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "observed": "18 tests PASS before P2 fixes; later captured initial-desktop-tests log is already root-updated followup source."
+    },
+    {
+      "command": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/vnext",
+        "-v"
+      ],
+      "observed": "50 tests PASS before P2 fixes."
+    }
+  ],
+  "findings": [
+    {
+      "id": "DELIVERY-P2-01",
+      "severity": "P2",
+      "file": "plugins/playbook-native/skills/playbook/references/review.md",
+      "line": 38,
+      "title": "Managed review example puts --root before the run subcommand",
+      "observed": "Actual packaged helper argv with --help exits2; corrected order exits0. No inference invoked.",
+      "fix": "Use helper review run --profile native --root <project> ... once; parse literal packaged documentation command offline."
+    },
+    {
+      "id": "DELIVERY-P2-02",
+      "severity": "P2",
+      "file": "distribution/desktop/setup_core.py",
+      "line": 375,
+      "title": "Mutation path ignores journal schema/root/missing-state gate used by diagnostics",
+      "observed": "Copied project has invalid/interrupted doctor status; update returns unchanged and remains interrupted. Removing journal permits remove despite unknown/interrupted diagnosis. Owner notes retained.",
+      "fix": "Unify journal identity/status validation for plan/apply and diagnostic; missing journal for installed state is blocked; unaffected new install remains valid."
+    }
+  ],
+  "open_p0": 0,
+  "open_p1": 0,
+  "open_p2": 2,
+  "limits": [
+    "Technical Linux VPS review, not Windows/macOS/clean-machine acceptance.",
+    "No real participant, repeated field use, external preview, Cloudflare account/claim, model inference or provider login was performed by this reviewer.",
+    "Platform read-only independent review, not Native Role Runner evidence.",
+    "No source edits, credential reads, paid API calls or recursive reviewer.",
+    "An aborted initial evidence capture accidentally selected Desktop builder due ambiguous Python build module name, started local freezer under its own temporary directory, and was stopped; it is not an acceptance run. Corrected capture explicitly imports the canonical Native builder."
+  ],
+  "created_utc": "2026-10-09T08:06:03.269369+00:00"
+}

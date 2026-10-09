@@ -1,0 +1,7 @@
+{
+  "disposition": "superseded; excluded from final acceptance",
+  "reason": "independent review fixes and version bump changed Desktop source/canonical Native payload",
+  "receipt": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/build-receipt/receipt.json",
+  "observed_exit_code": 0,
+  "source_snapshot": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/source-before.json"
+}

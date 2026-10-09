@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "bookings": [
+    {
+      "student": "Синтетическая ученица для восстановления",
+      "request_id": "retained-rehearsal-1",
+      "date": "2026-10-21",
+      "slot": "11:00",
+      "id": "b0511029-c8fb-4744-a1a8-f2c4e1bcde13",
+      "teacher": "anna",
+      "created_at": "2026-10-09T08:11:16.315437+00:00"
+    }
+  ]
+}

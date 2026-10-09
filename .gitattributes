@@ -7,3 +7,8 @@ docs/native/start.html text eol=lf
 docs/LEGAL_STATUS.md text eol=lf
 tools/playbook_environment.py text eol=lf
 docs/native/HELP_RU.md text eol=lf
+
+# Preserve observed archive bytes, including recorded terminal whitespace.
+reports/delivery/2026-10-09/** -text
+reports/delivery/2026-10-09/evidence/**/stderr.txt -whitespace
+reports/delivery/2026-10-09/outputs/**/.playbook-artifacts/**/*.log -whitespace

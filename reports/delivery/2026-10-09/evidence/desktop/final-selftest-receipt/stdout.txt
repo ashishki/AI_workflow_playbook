@@ -1,0 +1,92 @@
+{
+  "schema_version": "playbook.environment.v1",
+  "status": "inventory_only",
+  "audience": "product",
+  "playbook_source": false,
+  "checks": [
+    {
+      "id": "python",
+      "status": "found",
+      "required": true,
+      "message_ru": "Python 3.12; нужно 3.10+.",
+      "next_ru": "При необходимости создайте согласованное локальное окружение; не меняйте глобальный Python."
+    },
+    {
+      "id": "git",
+      "status": "found",
+      "required": false,
+      "message_ru": "Git найден в PATH; checkout ещё не проверен.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "codex",
+      "status": "found",
+      "required": false,
+      "message_ru": "Codex CLI найден в PATH; вход и запуск ещё не проверены.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "node",
+      "status": "found",
+      "required": false,
+      "message_ru": "Node найден в PATH; это не работающий браузер.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "cloudflared",
+      "status": "found",
+      "required": false,
+      "message_ru": "cloudflared найден в PATH; публичный preview ещё не запускался.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "wrangler",
+      "status": "missing",
+      "required": false,
+      "message_ru": "wrangler: команда не найдена в PATH.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "review_execution",
+      "status": "unknown",
+      "required": false,
+      "message_ru": "Авторизация, разрешение дочернего процесса и реальный reviewer не проверялись.",
+      "next_ru": "В разрешённой сессии выполните один существующий Role Runner и проверьте результат; не копируйте credentials."
+    },
+    {
+      "id": "browser_execution",
+      "status": "unknown",
+      "required": false,
+      "message_ru": "Доступный браузер, нужная версия приложения и просмотр изображения не проверялись.",
+      "next_ru": "Используйте доступный браузер/проектный runner; откройте текущую версию и проверьте реальное действие."
+    }
+  ],
+  "project_entrypoints": [
+    {
+      "path": "AGENTS.md",
+      "status": "present_not_loaded"
+    },
+    {
+      "path": ".agents/skills/playbook/SKILL.md",
+      "status": "present_not_loaded"
+    }
+  ],
+  "missing_required": [],
+  "pending_live": [],
+  "model": "host_configuration_not_read",
+  "authorization": "not_checked",
+  "meaning": "Presence only. Not readiness, authentication, execution, quality or permission."
+}
+usage: run_codex_role.py [-h] {run,verify} ...
+
+Materialize a role-scoped prompt, run a fresh read-only codex exec, and emit
+tamper-evident evidence.
+
+positional arguments:
+  {run,verify}
+    run         execute one guarded reviewer role
+    verify      revalidate a saved role result
+
+options:
+  -h, --help    show this help message and exit
+{"status": "passed", "scope": "Tcl runtime, actual packaged install/remove/rollback and inventory; no model, browser or user trial", "tcl_version": "9.0.3", "version": "0.2.0-preview.4", "kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32"}

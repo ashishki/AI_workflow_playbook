@@ -1,0 +1,21 @@
+{
+  "schema": "playbook.desktop-artifact.v1",
+  "version": "0.2.0-preview.4",
+  "os": "windows",
+  "arch": "x86_64",
+  "native_kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+  "frozen_self_test": {
+    "status": "passed",
+    "scope": "Tcl runtime, actual packaged install/remove/rollback and inventory; no model, browser or user trial",
+    "tcl_version": "8.6.15",
+    "version": "0.2.0-preview.4",
+    "kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32"
+  },
+  "files": {
+    "playbook-helper.exe": "c933a8ee877d320965f97ac84d4d13485d67a331d6cacef53e87316a449c9c4c",
+    "Playbook-Setup.exe": "57a2802b183248cec5d538ed94147d0ece3f2d6019f0547267ad5e3db3b34af7",
+    "Playbook-0.2.0-preview.4.zip": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+    "RIGHTS.txt": "38e36562717380f20f8dcf67f170b945ccc9ccc35d1794801d5bd55cfbaa3cda",
+    "README.txt": "3d6accd7ccd8d61f640074975676096c45999f4d12e8750b9eefdbfe6c7d608e"
+  }
+}

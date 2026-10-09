@@ -1,0 +1,130 @@
+{
+  "source_commit": "7f36b90859a17c07f47197fed32e5fe1f4c8e1b3",
+  "actions_run": 37903025448,
+  "artifact_availability": "downloaded local; remote retention7days, no permanent distribution/release",
+  "artifacts": [
+    {
+      "artifact": "playbook-desktop-macos-latest",
+      "archive": "Playbook-Desktop-0.2.0-preview.4-darwin-arm64.zip",
+      "sha256": "b7b1dfba5f0115e5bc342fa93b7342d79cc28a60daf7401cfe477bc0055f06ff",
+      "os": "darwin",
+      "arch": "arm64",
+      "version": "0.2.0-preview.4",
+      "native_kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+      "manifest_files_verified": 8,
+      "self_test": {
+        "status": "passed",
+        "scope": "Tcl runtime, actual packaged install/remove/rollback and inventory; no model, browser or user trial",
+        "tcl_version": "8.6.16",
+        "version": "0.2.0-preview.4",
+        "kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32"
+      },
+      "local_path": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/ci-artifacts-7f36b90/playbook-desktop-macos-latest/Playbook-Desktop-0.2.0-preview.4-darwin-arm64.zip",
+      "runtime_execution_on_this_vps": "NOT RUN for other OS binaries"
+    },
+    {
+      "artifact": "playbook-desktop-ubuntu-latest",
+      "archive": "Playbook-Desktop-0.2.0-preview.4-linux-x86_64.zip",
+      "sha256": "31bfef75afaba85012911f5000d3cbe54764dc003c1430435a7680fab1da8d56",
+      "os": "linux",
+      "arch": "x86_64",
+      "version": "0.2.0-preview.4",
+      "native_kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+      "manifest_files_verified": 5,
+      "self_test": {
+        "status": "passed",
+        "scope": "Tcl runtime, actual packaged install/remove/rollback and inventory; no model, browser or user trial",
+        "tcl_version": "8.6.14",
+        "version": "0.2.0-preview.4",
+        "kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32"
+      },
+      "local_path": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/ci-artifacts-7f36b90/playbook-desktop-ubuntu-latest/Playbook-Desktop-0.2.0-preview.4-linux-x86_64.zip",
+      "runtime_execution_on_this_vps": "NOT RUN for other OS binaries"
+    },
+    {
+      "artifact": "playbook-desktop-windows-latest",
+      "archive": "Playbook-Desktop-0.2.0-preview.4-windows-x86_64.zip",
+      "sha256": "e8c3c73b8bc190031c990bd10d3b0ab42a7a89a9852a74ec7db9d240afa2edeb",
+      "os": "windows",
+      "arch": "x86_64",
+      "version": "0.2.0-preview.4",
+      "native_kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+      "manifest_files_verified": 5,
+      "self_test": {
+        "status": "passed",
+        "scope": "Tcl runtime, actual packaged install/remove/rollback and inventory; no model, browser or user trial",
+        "tcl_version": "8.6.15",
+        "version": "0.2.0-preview.4",
+        "kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32"
+      },
+      "local_path": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/ci-artifacts-7f36b90/playbook-desktop-windows-latest/Playbook-Desktop-0.2.0-preview.4-windows-x86_64.zip",
+      "runtime_execution_on_this_vps": "NOT RUN for other OS binaries"
+    },
+    {
+      "artifact": "vnext-kit-macos-latest",
+      "native_kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+      "browser_result": {
+        "optional_helper": true,
+        "combinations": 48,
+        "empty_input": "pass",
+        "scenario_prefills": "pass",
+        "clipboard": "pass",
+        "clipboard_fallback": "pass",
+        "first_run_example": "pass",
+        "install_and_help_prompts": "pass",
+        "archive_edition": true,
+        "input_as_text": "pass",
+        "responsive": [
+          390,
+          1280
+        ],
+        "page_errors": [],
+        "external_requests": []
+      }
+    },
+    {
+      "artifact": "vnext-kit-ubuntu-latest",
+      "native_kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+      "browser_result": {
+        "optional_helper": true,
+        "combinations": 48,
+        "empty_input": "pass",
+        "scenario_prefills": "pass",
+        "clipboard": "pass",
+        "clipboard_fallback": "pass",
+        "first_run_example": "pass",
+        "install_and_help_prompts": "pass",
+        "archive_edition": true,
+        "input_as_text": "pass",
+        "responsive": [
+          390,
+          1280
+        ],
+        "page_errors": [],
+        "external_requests": []
+      }
+    },
+    {
+      "artifact": "vnext-kit-windows-latest",
+      "native_kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+      "browser_result": {
+        "optional_helper": true,
+        "combinations": 48,
+        "empty_input": "pass",
+        "scenario_prefills": "pass",
+        "clipboard": "pass",
+        "clipboard_fallback": "pass",
+        "first_run_example": "pass",
+        "install_and_help_prompts": "pass",
+        "archive_edition": true,
+        "input_as_text": "pass",
+        "responsive": [
+          390,
+          1280
+        ],
+        "page_errors": [],
+        "external_requests": []
+      }
+    }
+  ]
+}

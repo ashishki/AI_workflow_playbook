@@ -1,0 +1,22 @@
+{
+  "status": "FAIL",
+  "checks": [
+    {
+      "id": "real_ui_create_and_read",
+      "status": "PASS"
+    },
+    {
+      "id": "visible_conflict_error",
+      "status": "PASS"
+    },
+    {
+      "id": "identity_switch_clears_other_list",
+      "status": "PASS"
+    },
+    {
+      "id": "mobile_no_horizontal_overflow_and_text_rendering",
+      "status": "PASS"
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n"
+}

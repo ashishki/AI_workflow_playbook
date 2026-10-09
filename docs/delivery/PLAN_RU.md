@@ -4,7 +4,9 @@
 Первоначальная ветка source: `feature/playbook-delivery-20260920`.
 Текущая ветка проверки/исправлений: `feature/delivery-acceptance-20261009`.
 Наблюдения 9 октября: [D00 report](../../reports/delivery/2026-10-09/D00_REPORT_RU.md);
-source merge не закрывает приёмку D01–D10.
+[Полный отчёт и оставшиеся условия](../../reports/delivery/2026-10-09/REPORT_RU.md),
+[machine results](../../reports/delivery/2026-10-09/results.json).
+Source merge не закрывает приёмку D02/D03/D06–D10.
 Это продолжение после слитого PR #9, не повторная миграция vNext.
 
 ## Результат и границы

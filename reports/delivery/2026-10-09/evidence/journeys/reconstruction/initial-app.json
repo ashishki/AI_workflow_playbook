@@ -1,0 +1,13 @@
+{
+  "status": "FAIL",
+  "exit_code": 1,
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "-v",
+    "test_app"
+  ],
+  "scope": "complete copied published snapshot; original observed pyc retained where pinned"
+}

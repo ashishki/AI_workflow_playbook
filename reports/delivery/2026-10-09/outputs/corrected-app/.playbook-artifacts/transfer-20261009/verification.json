@@ -1,0 +1,22 @@
+{
+  "test_command": "TMPDIR=$PWD/.playbook-artifacts/transfer-20261009/tmp PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_app",
+  "tests": 16,
+  "elapsed_seconds": 9.589,
+  "outcome": "OK",
+  "javascript_command": "node --check web/app.js",
+  "javascript_exit": 0,
+  "changed_files_sha256": {
+    "PROJECT.md": "650a1cf667ec6dfc68e16c94a10264bfce2652062ea8341b05e99cd4261107fd",
+    "FINAL_JOURNEY.md": "b6049efe4388b395babd2ddfd5e650f9c96ca4529c82474d87035ed03f681395",
+    "app.py": "854adf08dd2f323c6e9a1d07b3a8e5b29e0f9d862ba9efa54fe52399b499c854",
+    "test_app.py": "96543f6b872824423adc77c621372cfc86f3ea5b9c23aca19265de0d1f54c9f6",
+    "web/index.html": "f8873f68057e125758713eb51f7eaf981f74d7985e49014b295bf183fb77946d"
+  },
+  "data_sha256_before": "b5662024330c52ae8898b083c2419fa69e7acfaca68b71dfedb3ad35ecdce211",
+  "data_sha256_after": "b5662024330c52ae8898b083c2419fa69e7acfaca68b71dfedb3ad35ecdce211",
+  "protected_files_unchanged": 34,
+  "protected_file_set_unchanged": true,
+  "independent_acceptance": "pending root frozen-copy acceptance",
+  "browser_here": "not run",
+  "scope": "synthetic local technical continuation only"
+}

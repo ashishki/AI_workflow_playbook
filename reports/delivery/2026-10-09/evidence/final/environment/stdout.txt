@@ -1,0 +1,143 @@
+{
+  "schema_version": "playbook.environment.v1",
+  "status": "missing_prerequisites",
+  "audience": "engineering",
+  "playbook_source": true,
+  "checks": [
+    {
+      "id": "python",
+      "status": "found",
+      "required": true,
+      "message_ru": "Python 3.12; нужно 3.11+.",
+      "next_ru": "При необходимости создайте согласованное локальное окружение; не меняйте глобальный Python."
+    },
+    {
+      "id": "git",
+      "status": "found",
+      "required": true,
+      "message_ru": "Git найден в PATH; checkout ещё не проверен.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "codex",
+      "status": "found",
+      "required": true,
+      "message_ru": "Codex CLI найден в PATH; вход и запуск ещё не проверены.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "node",
+      "status": "found",
+      "required": false,
+      "message_ru": "Node найден в PATH; это не работающий браузер.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "cloudflared",
+      "status": "found",
+      "required": false,
+      "message_ru": "cloudflared найден в PATH; публичный preview ещё не запускался.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "wrangler",
+      "status": "missing",
+      "required": false,
+      "message_ru": "wrangler: команда не найдена в PATH.",
+      "next_ru": "Проверьте доступный инструмент в этой среде; установка требует отдельного разрешения."
+    },
+    {
+      "id": "pytest",
+      "status": "found",
+      "required": true,
+      "message_ru": "pytest: модуль обнаружен, suite не запускался.",
+      "next_ru": "Из корня checkout: .venv/bin/python -m pip install -r requirements-dev.txt."
+    },
+    {
+      "id": "jsonschema",
+      "status": "found",
+      "required": true,
+      "message_ru": "jsonschema: модуль обнаружен, suite не запускался.",
+      "next_ru": "Из корня checkout: .venv/bin/python -m pip install -r requirements-dev.txt."
+    },
+    {
+      "id": "ai_workflow_harness_lab",
+      "status": "found",
+      "required": true,
+      "message_ru": "ai_workflow_harness_lab: модуль обнаружен, suite не запускался.",
+      "next_ru": "Из корня checkout: .venv/bin/python -m pip install -r requirements-dev.txt."
+    },
+    {
+      "id": "review_execution",
+      "status": "unknown",
+      "required": true,
+      "message_ru": "Авторизация, разрешение дочернего процесса и реальный reviewer не проверялись.",
+      "next_ru": "В разрешённой сессии выполните один существующий Role Runner и проверьте результат; не копируйте credentials."
+    },
+    {
+      "id": "browser_execution",
+      "status": "unknown",
+      "required": true,
+      "message_ru": "Доступный браузер, нужная версия приложения и просмотр изображения не проверялись.",
+      "next_ru": "Используйте доступный браузер/проектный runner; откройте текущую версию и проверьте реальное действие."
+    },
+    {
+      "id": "preview_adapter",
+      "status": "found",
+      "required": true,
+      "message_ru": "cloudflared найден; внешний tunnel, публичность и фактический URL ещё не проверены.",
+      "next_ru": ""
+    },
+    {
+      "id": "preview_execution",
+      "status": "unknown",
+      "required": true,
+      "message_ru": "Временный публичный preview не запускался и разрешение на внешний URL не проверялось.",
+      "next_ru": "После явного разрешения запустите tunnel к проверенному localhost и проверьте внешний URL."
+    },
+    {
+      "id": "claim_adapter",
+      "status": "missing",
+      "required": true,
+      "message_ru": "Wrangler не найден: claimable temporary deployment пока недоступен.",
+      "next_ru": "Установка/обновление Wrangler требует отдельного разрешения; наличие npx не считается готовым adapter."
+    },
+    {
+      "id": "claim_execution",
+      "status": "unknown",
+      "required": true,
+      "message_ru": "Temporary account/live deployment/claim не выполнялись; авторизация и Terms acceptance не проверялись.",
+      "next_ru": "В изолированном context и после явного согласия выполните поддерживаемый temporary deployment и claim workflow."
+    },
+    {
+      "id": "project_checks",
+      "status": "unknown",
+      "required": true,
+      "message_ru": "Команды и результаты проверок конкретного проекта ещё не подтверждены.",
+      "next_ru": "Прочитайте инструкции проекта и выполните применимые проверки в разрешённой среде."
+    }
+  ],
+  "project_entrypoints": [
+    {
+      "path": "AGENTS.md",
+      "status": "present_not_loaded"
+    },
+    {
+      "path": "plugins/playbook-native/skills/playbook/SKILL.md",
+      "status": "present_not_loaded"
+    }
+  ],
+  "missing_required": [
+    "claim_adapter"
+  ],
+  "pending_live": [
+    "review_execution",
+    "browser_execution",
+    "preview_execution",
+    "claim_execution",
+    "project_checks"
+  ],
+  "model": "host_configuration_not_read",
+  "authorization": "not_checked",
+  "meaning": "Presence only. Not readiness, authentication, execution, quality or permission."
+}

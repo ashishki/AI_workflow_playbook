@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Записи на занятия · локальное демо</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="header"><div class="eyebrow">ЛОКАЛЬНЫЙ УЧЕБНЫЙ ПРИМЕР</div><h1>Записи на занятия</h1><p>Планируйте занятия и смотрите записи своего преподавателя.</p></header>
+    <aside class="demo"><strong>Демо-идентификация, без входа в аккаунт.</strong> Выбор ниже передаёт заголовок X-Teacher. Любой посетитель этого локального демо может выбрать Анну или Бориса. Используйте только вымышленные имена.</aside>
+    <section class="identity"><label for="teacher">Преподаватель</label><select id="teacher"><option value="anna">Анна</option><option value="boris">Борис</option></select><span id="identity-note">Показаны только записи Анны</span></section>
+    <div class="columns">
+      <section class="card"><h2>Новая запись</h2><p class="muted">Одно занятие на каждое время у преподавателя.</p>
+        <form id="booking-form" novalidate>
+          <label for="student">Имя ученика</label><input id="student" name="student" maxlength="100" required autocomplete="off" placeholder="Например, Маша (вымышленное имя)">
+          <label for="date">Дата занятия</label><input id="date" name="date" type="date" required>
+          <label for="slot">Время занятия</label><input id="slot" name="slot" type="time" required step="60">
+          <button id="submit" type="submit">Создать запись</button>
+          <p id="form-status" class="status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+      <section class="card"><div class="list-header"><h2>Мои записи <span id="count" class="badge">0</span></h2><button id="refresh" class="secondary" type="button">Обновить</button></div><p id="list-status" class="status" role="status" aria-live="polite"></p><ul id="bookings" class="bookings"></ul></section>
+    </div>
+    <footer>Данные сохраняются локально в JSON. Это техническое демо, не сервис с производственной аутентификацией.</footer>
+  </main>
+</body>
+</html>

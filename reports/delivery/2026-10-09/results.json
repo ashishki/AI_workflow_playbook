@@ -1,0 +1,298 @@
+{
+  "schema": "playbook.delivery.acceptance.v1",
+  "observed_date": "2026-10-09",
+  "branch": "feature/delivery-acceptance-20261009",
+  "pull_request": "https://github.com/ashishki/AI_workflow_playbook/pull/12",
+  "base_master": "de2478f4a3fdffb4c568898f37a078500f203b8a",
+  "runtime_source_commit": "7f36b90859a17c07f47197fed32e5fe1f4c8e1b3",
+  "native_desktop_version": "0.2.0-preview.4",
+  "full_programme_status": "NOT RUN",
+  "qualification": "BLOCKED on unavailable full acceptance conditions",
+  "source_ready": true,
+  "observed_technical_checks_passed": true,
+  "live_workflow_checked": false,
+  "field_observed": false,
+  "release_approved": false,
+  "rollout_performed": false,
+  "source_review": {
+    "observed_recheck": "PASS for source fixes",
+    "adapter": "platform collaboration, independent read-only, not Native Role Runner",
+    "initial": "evidence/review/initial.json",
+    "source_recheck": "evidence/review/source-recheck.json",
+    "final_evidence": "evidence/review/final.json",
+    "open_confirmed_p0_p1_p2": 0
+  },
+  "steps": [
+    {
+      "id": "D00",
+      "status": "PASS",
+      "observed_scope": "portable full-suite/exactCI; historical live host probes separately NOT RUN",
+      "remaining": []
+    },
+    {
+      "id": "D01",
+      "status": "PASS",
+      "observed_scope": "read-only inventory capability; not runtime/account readiness",
+      "remaining": [
+        "claimadapter missing; liveauthorization unknown"
+      ]
+    },
+    {
+      "id": "D02",
+      "status": "NOT RUN",
+      "observed_scope": "actual repochange + initializer regressions; full3realEngineering journeys absent",
+      "remaining": [
+        "non-rootCLI worker",
+        "approvedprovider/model/budget"
+      ]
+    },
+    {
+      "id": "D03",
+      "status": "NOT RUN",
+      "observed_scope": "syntheticAPPHTTP/browserPASS; fullownerNO-CODE+APP notobserved",
+      "remaining": [
+        "realprocess examples",
+        "NO-CODEownerdecision",
+        "explicitpublicpreviewauthority"
+      ]
+    },
+    {
+      "id": "D04",
+      "status": "PASS",
+      "observed_scope": "bounded local missing/stale/external evidence checks and fresh-agent meaningfulrulechange",
+      "remaining": [
+        "humantransfernotobserved"
+      ]
+    },
+    {
+      "id": "D05",
+      "status": "PASS",
+      "observed_scope": "bounded localbackup/recovery and unknowncommittedHTTPresponse idempotency",
+      "remaining": [
+        "realexternalintegrationnotobserved"
+      ]
+    },
+    {
+      "id": "D06",
+      "status": "NOT RUN",
+      "observed_scope": "syntheticidentity/concurrency/export/localoff-statePASS",
+      "remaining": [
+        "livePreviewClaimTermsowneraccount",
+        "productionauthrealroles"
+      ]
+    },
+    {
+      "id": "D07",
+      "status": "NOT RUN",
+      "observed_scope": "offline AI/RAG fixturesonly, not live observations",
+      "remaining": [
+        "approvedAI/data/toolintegration",
+        "freshcases and independentlabels"
+      ]
+    },
+    {
+      "id": "D08",
+      "status": "NOT RUN",
+      "observed_scope": "independentplatformsource review/fix/recheck; fullNativeexec/Labpairedcontrol absent",
+      "remaining": [
+        "non-rootCLIworker",
+        "approvedprovider/model/budget",
+        "completecostcounters"
+      ]
+    },
+    {
+      "id": "D09",
+      "status": "NOT RUN",
+      "observed_scope": "protocolready; norealparticipant or laterreturn",
+      "remaining": [
+        "participantand authorizedexample",
+        "realrepeatvisit/change laterdate"
+      ]
+    },
+    {
+      "id": "D10",
+      "status": "NOT RUN",
+      "observed_scope": "ZIP/Linux lifecycle/matrixCI technicalPASS, nofullreleaseacceptance",
+      "remaining": [
+        "cleanmachineW/M/L",
+        "D09fielduse",
+        "rights/signing/notarization",
+        "ownerrelease decision"
+      ]
+    }
+  ],
+  "checks": {
+    "full_pytest": {
+      "status": "PASS",
+      "passed": 320,
+      "skipped_not_run": 2,
+      "subtests_passed": 17,
+      "receipt": "evidence/final/full-suite/receipt.json"
+    },
+    "canonical": {
+      "status": "PASS",
+      "required_failures": 0,
+      "receipt": "evidence/final/canonical/receipt.json"
+    },
+    "vnext": {
+      "status": "PASS",
+      "tests": 50,
+      "receipt": "evidence/final/vnext/receipt.json"
+    },
+    "desktop": {
+      "status": "PASS",
+      "tests": 20,
+      "receipt": "evidence/final/desktop-tests/receipt.json"
+    },
+    "native_unprivileged": {
+      "status": "PASS",
+      "tests": 24,
+      "skips": 0,
+      "receipt": "evidence/final/native-unprivileged/receipt.json"
+    },
+    "desktop_frozen_lifecycle_and_gui": {
+      "status": "PASS",
+      "evidence": "evidence/desktop/acceptance-summary.json"
+    },
+    "starter_real_chromium": {
+      "status": "PASS",
+      "evidence": "evidence/desktop/browser/launcher-check.json"
+    },
+    "ci_runtime_commit": {
+      "status": "PASS",
+      "runs": [
+        37903025448,
+        37903025451,
+        37903025549
+      ],
+      "artifacts": "evidence/ci/artifacts.json"
+    },
+    "synthetic_http": {
+      "status": "PASS",
+      "groups": 10,
+      "evidence": "evidence/journeys/external-http/results.json"
+    },
+    "synthetic_browser_initial": {
+      "status": "FAIL",
+      "classification": "probe_wait_error; no app changes",
+      "evidence": "evidence/journeys/browser-first-attempt/results.json"
+    },
+    "synthetic_browser_recheck": {
+      "status": "PASS",
+      "groups": 6,
+      "evidence": "evidence/journeys/external-browser/results.json"
+    },
+    "synthetic_missing_corrupt_backup": {
+      "status": "PASS for refusal; restoration not performed",
+      "evidence": "evidence/journeys/external-http/recovery-negative.json"
+    },
+    "synthetic_fresh_transfer": {
+      "status": "PASS",
+      "groups": 5,
+      "evidence": "evidence/journeys/transfer-http/results.json",
+      "coordinator_interventions": 1,
+      "intervention_scope": "cache-free copy/baseline/log preservation; no old chat or business/code guidance"
+    },
+    "historical_cli_permissions": {
+      "status": "NOT RUN",
+      "reason": "requirespinned0.144.4; installed0.160.1"
+    },
+    "historical_frozen_host": {
+      "status": "NOT RUN",
+      "reason": "historicalhostpathsabsent"
+    },
+    "historical_primary_pilot_execution_evidence": {
+      "status": "NOT RUN",
+      "reason": "NOT AVAILABLEoriginals"
+    },
+    "corrected_browser_first_attempt": {
+      "status": "FAIL",
+      "classification": "probe async list refresh race after4PASS groups; actualdisk containsonebooking",
+      "evidence": "evidence/journeys/corrected-browser-first-attempt/results.json"
+    },
+    "corrected_browser_recheck": {
+      "status": "PASS",
+      "groups": 6,
+      "evidence": "evidence/journeys/corrected-browser/results.json",
+      "app_unchanged_during_probe_fix": true
+    }
+  },
+  "artifacts": {
+    "linux_vps_desktop": {
+      "sha256": "4a5e4afa7a46ba786a604ae3fc0702b4856fde24a419fbbb4c7a737e988b7f33",
+      "local_path": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/accepted-bundle/Playbook-Desktop-0.2.0-preview.4-linux-x86_64.zip",
+      "purpose": "private evaluation, not releaseapproval"
+    },
+    "canonical_native_kit": {
+      "sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32"
+    },
+    "ci_os_manifest": "evidence/ci/artifacts.json",
+    "synthetic_skill_source": "2225a3f; platformmodels received older source snapshot, not a finalNativeCLI empirical pair"
+  },
+  "cost": {
+    "new_codex_cli_api_inference_runs": 0,
+    "platform_agent_model_work": "actuallyperformed; counters notexposed",
+    "tokens": null,
+    "usd_total": null,
+    "human_active_minutes": null,
+    "compute_ci_usd": null,
+    "unknown_is_not_zero": true,
+    "paid_trials_accounts_subscriptions_created": false
+  },
+  "delegation_conclusion": {
+    "independentreview": "useful observed genuine bugs found and fixed; uncontrolled quality/cost comparison",
+    "controlledABC_incrementalbenefit": "notdemonstrated on archivedR3 scenarios",
+    "R3_C_over_B": {
+      "wall": 1.46,
+      "uncached_input": 2.93,
+      "output": 1.69
+    },
+    "usd": null,
+    "new_plain_control": "NOT RUN",
+    "automaticdefaultdelegation": false
+  },
+  "limits": [
+    "syntheticdata and modelplatformtooling, not realownerfieldpilot",
+    "demoX-Teacherheader, not protected productionlogin",
+    "scriptednetworkfaultinjects response loss afteractualHTTPcommit, noexternalAPI",
+    "roottechnicalVPSGUIautomation, not cleanmachine user acceptance",
+    "CIWindowsx86_64/macarm64/Linuxx86_64; otherarchitecturesNOT RUN",
+    "frozenhistoricalevidence preserved",
+    "localZIPs available; CIretention7days; nopermanentpublicdistribution",
+    "mastermergeofsource/docs doesnot grant production/account/releaseauthority"
+  ],
+  "prototype_followup": {
+    "initial_and_transfer_qualification": "FAIL on additional finalreview fault cases; frozen earlier scenario PASS retained",
+    "findings": [
+      "post-renamefsync memory/disk divergence loses committedbooking",
+      "retire output aliases retirementmarker and overwrites export",
+      "incomplete published .agents reconstruction"
+    ],
+    "corrected_source": "outputs/corrected-app",
+    "corrected_app_sha256": "82d0417f3fab4923e82e768bf5121ba60dfc2f6c4519195544bf7e8bcf291788",
+    "old_red": {
+      "methods": 7,
+      "failures": 14,
+      "log": "outputs/corrected-app/.playbook-artifacts/correction-20261009/RED-old-transfer.log"
+    },
+    "final_green": {
+      "tests": 24,
+      "log": "outputs/corrected-app/.playbook-artifacts/correction-20261009/GREEN-full-final.log"
+    },
+    "published_reconstruction": {
+      "initial_primary": "FAIL one startup/SIGINT test race of13; archived",
+      "initial_reviewer": "PASS13",
+      "transfer": "PASS16",
+      "corrected": "PASS24",
+      "skillcopies_complete": true,
+      "historical_observed_pyc_restored_by_hash": true
+    },
+    "external_http_cli": {
+      "status": "PASS",
+      "groups": 5,
+      "evidence": "evidence/journeys/corrected-transfer-http/results.json"
+    },
+    "independent_recheck": "PASS; real fsync/other-request/replay/fail-closed/9reserved-path probes and24tests",
+    "recheck_evidence": "evidence/review/prototype-recheck.json"
+  }
+}

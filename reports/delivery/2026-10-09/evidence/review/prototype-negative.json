@@ -1,0 +1,205 @@
+{
+  "schema": "playbook.independent-platform-review.v1",
+  "status": "CHANGES_REQUESTED",
+  "scope": "Final technical prototype/evidence packaging review; core source7f36b90 remains unaffected",
+  "reviewer": "/root/delivery_final_review",
+  "adapter": "platform_collaboration_read_only",
+  "created_utc": "2026-10-09T08:38:44.204567+00:00",
+  "reviewed_source_sha256": {
+    "reports/delivery/2026-10-09/outputs/initial-app/app.py": "d1b91721a5517390d97b708092ccfb5fe89c8e328cd4ae83849d054f629eb1ab",
+    "reports/delivery/2026-10-09/outputs/transfer-app/app.py": "854adf08dd2f323c6e9a1d07b3a8e5b29e0f9d862ba9efa54fe52399b499c854"
+  },
+  "reviewed_doc_sha256": {
+    "reports/delivery/2026-10-09/REPORT_RU.md": "3c187980e42dbb4f9e190af0a98137ab5fecfc53bac4dca8ce0a9f89c245ed02",
+    "reports/delivery/2026-10-09/results.json": "75b265b4f4dfadd06786ea8709d534631c59e226cca9061afcde64ea566569e3",
+    "reports/delivery/2026-10-09/evidence-index.json": "a98e5e6f322e2ccbb0887850f8b7db56dcc725bab9ba50a2a385d9d92337dc0c"
+  },
+  "findings": [
+    {
+      "id": "DELIVERY-P2-03",
+      "severity": "P2",
+      "file": "reports/delivery/2026-10-09/outputs/initial-app/app.py",
+      "line": 159,
+      "title": "Post-replace fsync failure leaves stale Store cache that overwrites a committed booking on next request",
+      "also_affects": "transfer-app/app.py",
+      "fix": "Reconcile cache from validated persisted state after uncertain write failure or fail closed; do not continue writing from old cache. Preserve old frozen source and make new corrected output."
+    },
+    {
+      "id": "DELIVERY-P2-04",
+      "severity": "P2",
+      "file": "reports/delivery/2026-10-09/outputs/initial-app/app.py",
+      "line": 269,
+      "title": "retire export path may equal reserved retirement marker and success destroys JSON export",
+      "also_affects": "transfer-app/app.py",
+      "fix": "Reject reserved lifecycle output aliases before mutation, preserve data/metadata/any output bytes on refusal."
+    },
+    {
+      "id": "DELIVERY-P2-05",
+      "severity": "P2",
+      "file": "reports/delivery/2026-10-09/outputs",
+      "title": "Published project snapshots omit .agents required by preserved baselines/instructions; documented full tests fail on copies",
+      "fix": "Preserve exact archival prerequisites or explicitly label partial snapshots/reconstruction gaps and their observed FAIL. Do not weaken frozen tests/baselines."
+    }
+  ],
+  "probes": [
+    {
+      "kind": "directory_fsync_after_replace",
+      "source": "reports/delivery/2026-10-09/outputs/initial-app/app.py",
+      "source_sha256": "d1b91721a5517390d97b708092ccfb5fe89c8e328cd4ae83849d054f629eb1ab",
+      "fault": "one-shot injected directory-fsync OSError; real file creation/replacement/fsync path executed",
+      "error": "injected directory fsync failure AFTER real os.replace",
+      "disk_committed_before_second_request": {
+        "version": 1,
+        "bookings": [
+          {
+            "student": "First committed",
+            "request_id": "first",
+            "date": "2026-10-09",
+            "slot": "09:00",
+            "id": "115da2ff-87f6-47af-b8f2-d5b86c2870c5",
+            "teacher": "anna",
+            "created_at": "2026-10-09T08:38:43.369472+00:00"
+          }
+        ]
+      },
+      "memory_before_second_request": {
+        "version": 1,
+        "bookings": []
+      },
+      "disk_after_successful_other_request": {
+        "version": 1,
+        "bookings": [
+          {
+            "student": "Second",
+            "request_id": "second",
+            "date": "2026-10-09",
+            "slot": "10:00",
+            "id": "c4294bde-743c-4c69-82e8-6f2ec89b2119",
+            "teacher": "anna",
+            "created_at": "2026-10-09T08:38:43.379069+00:00"
+          }
+        ]
+      },
+      "confirmed": "first committed booking lost"
+    },
+    {
+      "kind": "retire_export_reserved_metadata_alias",
+      "source": "reports/delivery/2026-10-09/outputs/initial-app/app.py",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delivery/2026-10-09/outputs/initial-app/app.py",
+        "retire",
+        "--data",
+        "/tmp/delivery-prototype-review-retire-8b3274x7/bookings.json",
+        "--output",
+        "/tmp/delivery-prototype-review-retire-8b3274x7/bookings.json.retired"
+      ],
+      "exit_code": 0,
+      "stdout": "retire: 0 bookings exported to /tmp/delivery-prototype-review-retire-8b3274x7/bookings.json.retired\n",
+      "stderr": "",
+      "export_bytes": "Local copy retired; source and data retained. No external services exist.\n",
+      "json_parse_error": "Expecting value: line 1 column 1 (char 0)",
+      "confirmed": "successful retire destroys its JSON export by overwriting it with marker text"
+    },
+    {
+      "kind": "directory_fsync_after_replace",
+      "source": "reports/delivery/2026-10-09/outputs/transfer-app/app.py",
+      "source_sha256": "854adf08dd2f323c6e9a1d07b3a8e5b29e0f9d862ba9efa54fe52399b499c854",
+      "fault": "one-shot injected directory-fsync OSError; real file creation/replacement/fsync path executed",
+      "error": "injected directory fsync failure AFTER real os.replace",
+      "disk_committed_before_second_request": {
+        "version": 1,
+        "bookings": [
+          {
+            "student": "First committed",
+            "request_id": "first",
+            "date": "2026-10-09",
+            "slot": "09:00",
+            "id": "36823051-9c2f-4980-929c-36d46529b198",
+            "teacher": "anna",
+            "created_at": "2026-10-09T08:38:43.579530+00:00"
+          }
+        ]
+      },
+      "memory_before_second_request": {
+        "version": 1,
+        "bookings": []
+      },
+      "disk_after_successful_other_request": {
+        "version": 1,
+        "bookings": [
+          {
+            "student": "Second",
+            "request_id": "second",
+            "date": "2026-10-09",
+            "slot": "10:00",
+            "id": "69f39e2a-8145-4df7-886d-63a12f2f914c",
+            "teacher": "anna",
+            "created_at": "2026-10-09T08:38:43.582775+00:00"
+          }
+        ]
+      },
+      "confirmed": "first committed booking lost"
+    },
+    {
+      "kind": "retire_export_reserved_metadata_alias",
+      "source": "reports/delivery/2026-10-09/outputs/transfer-app/app.py",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delivery/2026-10-09/outputs/transfer-app/app.py",
+        "retire",
+        "--data",
+        "/tmp/delivery-prototype-review-retire-qfjqiaks/bookings.json",
+        "--output",
+        "/tmp/delivery-prototype-review-retire-qfjqiaks/bookings.json.retired"
+      ],
+      "exit_code": 0,
+      "stdout": "retire: 0 bookings exported to /tmp/delivery-prototype-review-retire-qfjqiaks/bookings.json.retired\n",
+      "stderr": "",
+      "export_bytes": "Local copy retired; source and data retained. No external services exist.\n",
+      "json_parse_error": "Expecting value: line 1 column 1 (char 0)",
+      "confirmed": "successful retire destroys its JSON export by overwriting it with marker text"
+    },
+    {
+      "kind": "published_copy_preservation",
+      "source": "reports/delivery/2026-10-09/outputs/initial-app",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "test_app.LifecycleTests.test_existing_files_preserved"
+      ],
+      "working_directory": "reviewer-owned temporary copy of published output",
+      "exit_code": 1,
+      "raw_stdout": "initial-app-published-preservation.stdout.txt",
+      "raw_stderr": "initial-app-published-preservation.stderr.txt",
+      "confirmed": ".agents required by original preservation baseline is absent from published copy"
+    },
+    {
+      "kind": "published_copy_preservation",
+      "source": "reports/delivery/2026-10-09/outputs/transfer-app",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "test_app.LifecycleTests.test_existing_files_preserved"
+      ],
+      "working_directory": "reviewer-owned temporary copy of published output",
+      "exit_code": 1,
+      "raw_stdout": "transfer-app-published-preservation.stdout.txt",
+      "raw_stderr": "transfer-app-published-preservation.stderr.txt",
+      "confirmed": ".agents required by original preservation baseline is absent from published copy"
+    }
+  ],
+  "previous_bounded_positive_checks_still_valid": true,
+  "limits": [
+    "Real source/files exercised with a deliberately injected fsync failure; this is not observed physical hardware failure.",
+    "Old normal-path HTTP/browser/recovery/export PASS remain genuine; new failures extend fault coverage.",
+    "Synthetic local prototype, no production credentials/users/public endpoint.",
+    "No source edits, model API, account login, external sends or recursive reviewer."
+  ]
+}

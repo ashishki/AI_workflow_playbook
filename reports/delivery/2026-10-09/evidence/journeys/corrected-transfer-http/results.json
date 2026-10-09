@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checks": [
+    "old09:15readandreplayunchanged",
+    "new09:45rejectedwithclearnewrule",
+    "new09:30acceptedandoldisolationpreserved",
+    "reallegacybackupandrestoreafternewrule",
+    "transferredprojectdatabytesunchangedbyacceptance"
+  ],
+  "adapter": "freshplatformagentfork_none + primary external HTTP/CLI verification",
+  "project_data_sha256": "b5662024330c52ae8898b083c2419fa69e7acfaca68b71dfedb3ad35ecdce211",
+  "app_sha256": "82d0417f3fab4923e82e768bf5121ba60dfc2f6c4519195544bf7e8bcf291788",
+  "scope": "syntheticfresh-sessionchange; notrealownerreturn"
+}

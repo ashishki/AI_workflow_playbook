@@ -1,6 +1,6 @@
 # Desktop setup preview — статус исходников
 
-Дата: 6 октября 2026.
+Source slice: 6 октября 2026. Техническая проверка: 9 октября 2026, preview.4.
 
 Это дополнение к D00–D10, а не новая продуктовая программа. Цель — убрать
 технический bootstrap из первого пользовательского прохода, сохранив Codex как
@@ -43,3 +43,13 @@
 6. Затем только переходить к D09 с преподавателем и 3–5 участниками.
 
 Merge в master остаётся решением владельца после этих прогонов.
+
+## Фактическое дополнение 9 октября
+
+Source `7f36b90` прошёл matrix CI и Linux VPS technical acceptance. Реальные frozen
+CLI/GUI lifecycle и extracted START browser выполнены; installation pointer/journal
+ошибки исправлены. [Отчёт и SHA ZIP](../../reports/delivery/2026-10-09/REPORT_RU.md),
+[точные receipts](../../reports/delivery/2026-10-09/evidence/desktop/acceptance-summary.json).
+Windows/macOS CI build/self-test/browser PASS; clean-machine/user/login/reviewer
+приёмка там остаётся NOT RUN. Merge private preview source по отдельному разрешению
+владельца не закрывает эти gaps и не является решением о выпуске/распространении.

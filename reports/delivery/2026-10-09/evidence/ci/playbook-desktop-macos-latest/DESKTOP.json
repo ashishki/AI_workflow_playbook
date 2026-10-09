@@ -1,0 +1,24 @@
+{
+  "schema": "playbook.desktop-artifact.v1",
+  "version": "0.2.0-preview.4",
+  "os": "darwin",
+  "arch": "arm64",
+  "native_kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+  "frozen_self_test": {
+    "status": "passed",
+    "scope": "Tcl runtime, actual packaged install/remove/rollback and inventory; no model, browser or user trial",
+    "tcl_version": "8.6.16",
+    "version": "0.2.0-preview.4",
+    "kit_sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32"
+  },
+  "files": {
+    "playbook-helper": "2eb416ed6b42b85861982344c5762754d63e47c1aaad6f67459c808fdb5960fa",
+    "Playbook-Setup.app/Contents/Info.plist": "423f712e78b5e3c9e305f01613649428184df1a86f084bef67befb6d221896ff",
+    "Playbook-Setup.app/Contents/MacOS/Playbook-Setup": "9ee844db58bece4b81895e61066bac53d0e0a21886491f2698014320d58449ff",
+    "Playbook-Setup.app/Contents/Resources/icon-windowed.icns": "b90a3b56e59169be0f86fe0410699f42ccaa16a0c85d980ef0eb6068032f0b36",
+    "Playbook-Setup.app/Contents/_CodeSignature/CodeResources": "65f1a83698b6cf05373691ffb5db5105c2f22362b934c305bb371462de8a059a",
+    "Playbook-0.2.0-preview.4.zip": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32",
+    "RIGHTS.txt": "38e36562717380f20f8dcf67f170b945ccc9ccc35d1794801d5bd55cfbaa3cda",
+    "README.txt": "3d6accd7ccd8d61f640074975676096c45999f4d12e8750b9eefdbfe6c7d608e"
+  }
+}

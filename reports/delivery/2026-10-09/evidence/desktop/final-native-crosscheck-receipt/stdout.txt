@@ -1,0 +1,1 @@
+{"archive": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/desktop-final/current-native-crosscheck/Playbook-0.2.0-preview.4.zip", "sha256": "cf348a2008dfbd808ad3146ced869436ee634062ccde8b3665a1497cc1d5ab32", "files": 73, "bytes": 134340}

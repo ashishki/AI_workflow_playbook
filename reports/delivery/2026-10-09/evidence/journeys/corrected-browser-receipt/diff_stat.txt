@@ -1,0 +1,5 @@
+docs/delivery/DESKTOP_SETUP_PREVIEW_RU.md | 12 +++++++-
+ docs/delivery/NEXT_SESSION_PROMPT_RU.md   | 48 +++++++++++++++----------------
+ docs/delivery/PLAN_RU.md                  |  4 ++-
+ docs/vnext/STATUS.md                      | 21 ++++++++++----
+ 4 files changed, 54 insertions(+), 31 deletions(-)

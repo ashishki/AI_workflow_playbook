@@ -1,0 +1,208 @@
+{
+  "schema": "playbook.independent-platform-prototype-recheck.v1",
+  "status": "PASS",
+  "scope": "corrected local synthetic prototype, not production/field acceptance",
+  "source": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app",
+  "app_sha256": "82d0417f3fab4923e82e768bf5121ba60dfc2f6c4519195544bf7e8bcf291788",
+  "findings": [
+    {
+      "id": "DELIVERY-P2-03",
+      "status": "FIXED"
+    },
+    {
+      "id": "DELIVERY-P2-04",
+      "status": "FIXED"
+    },
+    {
+      "id": "DELIVERY-P2-05",
+      "status": "FIXED; packaging-recheck.json"
+    }
+  ],
+  "results": [
+    {
+      "case": "post_replace_directory_fsync",
+      "status": "PASS",
+      "http_status": 503,
+      "message": "Результат сохранения неопределён. Повторите тот же request_id; новый запрос может создать другую запись.",
+      "same_id_replay": true,
+      "later_different_request_keeps_both": true
+    },
+    {
+      "case": "invalid_reload",
+      "status": "PASS",
+      "closed": [
+        "list",
+        "get",
+        "create"
+      ],
+      "no_stale_cache": true,
+      "bytes_preserved_on_subsequent_attempts": true
+    },
+    {
+      "case": "export_reserved_.retired",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/app.py",
+        "export",
+        "--data",
+        "/tmp/delivery-independent-reserved-ncpexd0o/bookings.json",
+        "--output",
+        "/tmp/delivery-independent-reserved-ncpexd0o/bookings.json.retired"
+      ],
+      "exit_code": 1,
+      "all_file_bytes_and_set_preserved": true
+    },
+    {
+      "case": "backup_reserved_.retired",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/app.py",
+        "backup",
+        "--data",
+        "/tmp/delivery-independent-reserved-w89jddzf/bookings.json",
+        "--output",
+        "/tmp/delivery-independent-reserved-w89jddzf/bookings.json.retired"
+      ],
+      "exit_code": 1,
+      "all_file_bytes_and_set_preserved": true
+    },
+    {
+      "case": "retire_reserved_.retired",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/app.py",
+        "retire",
+        "--data",
+        "/tmp/delivery-independent-reserved-hpm8c4_a/bookings.json",
+        "--output",
+        "/tmp/delivery-independent-reserved-hpm8c4_a/bookings.json.retired"
+      ],
+      "exit_code": 1,
+      "all_file_bytes_and_set_preserved": true
+    },
+    {
+      "case": "export_reserved_.lock",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/app.py",
+        "export",
+        "--data",
+        "/tmp/delivery-independent-reserved-3qn1ec5x/bookings.json",
+        "--output",
+        "/tmp/delivery-independent-reserved-3qn1ec5x/bookings.json.lock"
+      ],
+      "exit_code": 1,
+      "all_file_bytes_and_set_preserved": true
+    },
+    {
+      "case": "backup_reserved_.lock",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/app.py",
+        "backup",
+        "--data",
+        "/tmp/delivery-independent-reserved-uk2f4q4v/bookings.json",
+        "--output",
+        "/tmp/delivery-independent-reserved-uk2f4q4v/bookings.json.lock"
+      ],
+      "exit_code": 1,
+      "all_file_bytes_and_set_preserved": true
+    },
+    {
+      "case": "retire_reserved_.lock",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/app.py",
+        "retire",
+        "--data",
+        "/tmp/delivery-independent-reserved-70mo3kv_/bookings.json",
+        "--output",
+        "/tmp/delivery-independent-reserved-70mo3kv_/bookings.json.lock"
+      ],
+      "exit_code": 1,
+      "all_file_bytes_and_set_preserved": true
+    },
+    {
+      "case": "export_reserved_.before-restore-review.json",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/app.py",
+        "export",
+        "--data",
+        "/tmp/delivery-independent-reserved-fr0lco3z/bookings.json",
+        "--output",
+        "/tmp/delivery-independent-reserved-fr0lco3z/bookings.json.before-restore-review.json"
+      ],
+      "exit_code": 1,
+      "all_file_bytes_and_set_preserved": true
+    },
+    {
+      "case": "backup_reserved_.before-restore-review.json",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/app.py",
+        "backup",
+        "--data",
+        "/tmp/delivery-independent-reserved-6p58sake/bookings.json",
+        "--output",
+        "/tmp/delivery-independent-reserved-6p58sake/bookings.json.before-restore-review.json"
+      ],
+      "exit_code": 1,
+      "all_file_bytes_and_set_preserved": true
+    },
+    {
+      "case": "retire_reserved_.before-restore-review.json",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/corrected-transfer-app/app.py",
+        "retire",
+        "--data",
+        "/tmp/delivery-independent-reserved-xre52ekl/bookings.json",
+        "--output",
+        "/tmp/delivery-independent-reserved-xre52ekl/bookings.json.before-restore-review.json"
+      ],
+      "exit_code": 1,
+      "all_file_bytes_and_set_preserved": true
+    },
+    {
+      "case": "fullsuite_corrected_temporary_copy",
+      "status": "PASS",
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.venv-delivery-20261009/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_app",
+        "test_corrections"
+      ],
+      "exit_code": 0,
+      "stdout": "corrected-full.stdout.txt",
+      "stderr": "corrected-full.stderr.txt",
+      "tail": "rites_until_reopen) ... 127.0.0.1 - - [09/Oct/2026 10:45:00] \"POST /api/bookings HTTP/1.1\" 503 -\n127.0.0.1 - - [09/Oct/2026 10:45:00] \"GET /api/bookings HTTP/1.1\" 503 -\n127.0.0.1 - - [09/Oct/2026 10:45:00] \"GET /api/bookings/c7028dc7-8f38-4baf-8805-e16073af34a6 HTTP/1.1\" 503 -\n127.0.0.1 - - [09/Oct/2026 10:45:00] \"POST /api/bookings HTTP/1.1\" 503 -\n127.0.0.1 - - [09/Oct/2026 10:45:00] \"POST /api/bookings HTTP/1.1\" 200 -\n127.0.0.1 - - [09/Oct/2026 10:45:00] \"POST /api/bookings HTTP/1.1\" 201 -\nok\n\n----------------------------------------------------------------------\nRan 24 tests in 10.813s\n\nOK\n"
+    }
+  ],
+  "probes": "Actual temp files/real os.replace with one-shot injected directory fsync error; not physical device failure",
+  "limits": [
+    "No source editing; temporary copies/data only.",
+    "No model CLI/API, account login, human participant or recursive reviewer."
+  ]
+}

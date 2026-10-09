@@ -1,0 +1,16 @@
+{
+  "kind": "preserved historical semantic regression failure, not current acceptance",
+  "base_commit": "caf22576f0c8cfb92ddf16b900f8b49695e4a0fb",
+  "probe_test_sha256": "f1cc37623e96f9ce159c49febd21f5cd330d76851afa375be4bc8d4bac81e4bb",
+  "original_source": {
+    "distribution/desktop/setup_core.py": "e9d3819d5becc622a8d2d71508c01792bef88b4b39e71457b1b7dc8609bd832e",
+    "distribution/desktop/desktop_setup.py": "c2e0beb775db6d897735b41af39ab40e28e1009bb5914a2c5e84eebb5bfb48c6"
+  },
+  "preserved_artifact_hashes": {
+    "diff_stat.txt": "a22d52660a9d7a81bba1680d629b87f5791466874ed457477ebcd102225f1e36",
+    "stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr.txt": "2e49849e74f1866e32ab5b0dd20be66930f3bddf834e1c38207828bf46346a06",
+    "receipt.json": "03bb436e80f7f7fe5261fcf8665537a7e362770ce6cabe5768e33f6984244b88"
+  },
+  "observed": "Two regression tests failed with four semantic assertions on original caf2257; no missing dependencies or fake verdict."
+}

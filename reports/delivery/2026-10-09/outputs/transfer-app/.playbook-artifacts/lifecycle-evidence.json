@@ -1,0 +1,102 @@
+{
+  "observed_at_utc": "2026-10-09T08:11:16.323007+00:00",
+  "scope": "disposable synthetic copy only",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "app.py",
+        "backup",
+        "--data",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/source.json",
+        "--output",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/backup.json"
+      ],
+      "returncode": 0,
+      "stdout": "backup: 1 bookings exported to /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/backup.json\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "app.py",
+        "export",
+        "--data",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/source.json",
+        "--output",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/export.json"
+      ],
+      "returncode": 0,
+      "stdout": "export: 1 bookings exported to /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/export.json\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "app.py",
+        "restore",
+        "--data",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/restored.json",
+        "--input",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/backup.json"
+      ],
+      "returncode": 0,
+      "stdout": "Restored 1 bookings to /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/restored.json\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "app.py",
+        "retire",
+        "--data",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/restored.json",
+        "--output",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/retired-export.json"
+      ],
+      "returncode": 0,
+      "stdout": "retire: 1 bookings exported to /srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/retired-export.json\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "app.py",
+        "serve",
+        "--port",
+        "0",
+        "--data",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delivery-acceptance-20261009/journeys/booking-project/.playbook-artifacts/lifecycle-rehearsal/restored.json"
+      ],
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Error: This copy is retired; use resume explicitly to reopen it.\n"
+    }
+  ],
+  "restored_HTTP": {
+    "url": "http://127.0.0.1:36945/api/bookings",
+    "teacher": "anna",
+    "status": 200,
+    "body": {
+      "bookings": [
+        {
+          "student": "Синтетическая ученица для восстановления",
+          "request_id": "retained-rehearsal-1",
+          "date": "2026-10-21",
+          "slot": "11:00",
+          "id": "b0511029-c8fb-4744-a1a8-f2c4e1bcde13",
+          "teacher": "anna",
+          "created_at": "2026-10-09T08:11:16.315437+00:00"
+        }
+      ]
+    }
+  },
+  "restored_server": {
+    "initial_stdout": "Local demo: http://127.0.0.1:36945 — X-Teacher is demo identity, not login.\n",
+    "stop_returncode": 0,
+    "stdout": "Stopped; JSON data preserved.\n",
+    "stderr": "127.0.0.1 - - [09/Oct/2026 10:11:16] \"GET /api/bookings HTTP/1.1\" 200 -\n"
+  },
+  "retired_copy_data_preserved": true,
+  "exports_open_and_match": true
+}

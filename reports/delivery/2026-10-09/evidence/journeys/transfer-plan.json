@@ -1,0 +1,15 @@
+{
+  "frozen_before_agent": true,
+  "adapter": "platform collaboration; fork_turns none; no old chat",
+  "new_rule": "Only NEW bookings can have minutes00or30. Existing09:15 golden booking/read/retry/restore stayvalid.",
+  "checks": [
+    "new09:45rejected400",
+    "new09:30accepted201",
+    "old09:15readandreplayunchanged",
+    "storeddataunchangedbeforefirstnewrequest",
+    "UIerrorclear",
+    "originaltask/AGENTS/notes/.agents preserved",
+    "existingtestsadapttooldgolden",
+    "fresh-sessionowncheck"
+  ]
+}
