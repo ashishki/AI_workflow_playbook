@@ -41,7 +41,7 @@ Git, GitHub, VPS, Docker, API key и system Python не являются общ�
 [Native kit](distribution/native/README.md) ·
 [Desktop setup preview](distribution/desktop/README.md).
 
-**Версия: 0.2.0-preview.3.** Это исходники private evaluation preview, а не
+**Версия: 0.2.0-preview.4.** Это исходники private evaluation preview, а не
 доказанная готовность публичного продукта. Frozen self-test, CI и установка не
 подменяют clean-machine, реальный model/browser review, пользовательский пилот и
 наблюдение бизнес-эффекта.

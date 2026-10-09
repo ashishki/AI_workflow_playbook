@@ -39,8 +39,9 @@ def self_command(args) -> list[str]:
         helper = base / ('playbook-helper.exe' if os.name == 'nt' else 'playbook-helper')
         if not helper.is_file():
             raise SetupError('The helper executable is missing; restore the complete distribution')
-        return [str(helper)]
-    command = [sys.executable, str(Path(__file__).resolve())]
+        command = [str(helper)]
+    else:
+        command = [sys.executable, str(Path(__file__).resolve())]
     if args.kit:
         command += ['--kit', str(args.kit.resolve()), '--sha256', args.sha256]
     return command
@@ -113,13 +114,39 @@ def self_test(kit: Kit) -> dict:
             'version': kit.version, 'kit_sha256': kit.sha256}
 
 
-def report(kit: Kit, root: Path | None, *, probe_codex: bool = False) -> dict:
+def report(kit: Kit, root: Path | None, *, probe_codex: bool = False,
+           helper_command: list[str] | None = None) -> dict:
     value = {'schema': 'playbook.support.v1', 'package_version': kit.version,
              'kit_sha256': kit.sha256, 'os': runtime.platform_key(),
-             'installation': installation_status(root) if root else {'installation': 'not_selected'},
+             'installation': installation_status(root, expected_command=helper_command,
+                                                expected_kit_sha256=kit.sha256) if root else {'installation': 'not_selected'},
              'model_trial': 'not_run', 'browser_trial': 'not_run', 'user_trial': 'not_run'}
     value['runtime'] = runtime.probe() if probe_codex else {'probe': 'not_run'}
     return value
+
+
+def diagnostic_text(value: dict) -> str:
+    labels = {'not_managed': 'ещё не подготовлено мастером', 'files_verified': 'файлы проверены',
+              'interrupted': 'установка прервана или журнал недоступен; нужна проверка возврата установки',
+              'unverified': 'прежний указатель помощника не удалось сверить',
+              'modified': 'есть изменения, нужна проверка', 'launched': 'запуск проверен',
+              'launch_failed': 'запуск не получился', 'probe_failed': 'проверка не завершена',
+              'cli_reports_login': 'инструмент подтвердил вход', 'not_confirmed': 'не подтверждён',
+              'unknown': 'не проверен'}
+    pointer_labels = {'verified': 'записанное расположение сверено', 'missing': 'файл расположения отсутствует',
+                      'modified': 'файл расположения изменён', 'mismatch': 'расположение отличается от этого комплекта',
+                      'unverified': 'нет подтверждённой прежней записи', 'not_configured': 'не настроен'}
+    state, runtime_state = value['installation'], value['runtime']
+    text = 'Состояние файлов: ' + labels.get(state['installation'], 'не проверено') + '\n'
+    if state['installation'] == 'interrupted':
+        text += 'Не повторяйте установку. Используйте «Вернуть установку»; если журнал недоступен, обратитесь за помощью.\n'
+    text += ('Расположение помощника: ' + pointer_labels.get(state.get('helper_pointer'), 'не проверено') + '\n'
+             'Запуск инструмента: ' + labels.get(runtime_state.get('codex'), 'не проверен') + '\n'
+             'Вход: ' + labels.get(runtime_state.get('auth'), 'не проверен') + '\n\n'
+             'Проверка моделью и проверка интерфейса не выполнялись мастером. '
+             'Попросите помощника проверить их в рабочей сессии.\n\n'
+             'Диагностика не читала содержимое вашего решения, токены и историю чата.')
+    return text
 
 
 def gui(kit: Kit, args) -> int:
@@ -268,20 +295,8 @@ def gui(kit: Kit, args) -> int:
 
     def diagnose():
         path = root()
-        def done(value):
-            runtime_state = value['runtime']
-            labels = {'not_managed': 'ещё не подготовлено мастером', 'files_verified': 'файлы проверены',
-                      'modified': 'есть изменения, нужна проверка', 'launched': 'запуск проверен',
-                      'launch_failed': 'запуск не получился', 'probe_failed': 'проверка не завершена',
-                      'cli_reports_login': 'инструмент подтвердил вход', 'not_confirmed': 'не подтверждён',
-                      'unknown': 'не проверен'}
-            show('Состояние файлов: ' + labels.get(value['installation']['installation'], 'не проверено') + '\n'
-                 'Запуск инструмента: ' + labels.get(runtime_state.get('codex'), 'не проверен') + '\n'
-                 'Вход: ' + labels.get(runtime_state.get('auth'), 'не проверен') + '\n\n'
-                 'Проверка моделью и проверка интерфейса не выполнялись мастером. '
-                 'Попросите помощника проверить их в рабочей сессии.\n\n'
-                 'Диагностика не читала содержимое вашего решения, токены и историю чата.')
-        work(lambda: report(kit, path, probe_codex=True), done)
+        work(lambda: report(kit, path, probe_codex=True, helper_command=self_command(args)),
+             lambda value: show(diagnostic_text(value)))
 
     def remove():
         proposal = plan(root(), kit, 'remove')
@@ -396,7 +411,7 @@ def main(argv=None) -> int:
             if args.root is None:
                 raise SetupError('Select a project folder')
             if args.action == 'doctor':
-                result = report(kit, args.root, probe_codex=args.probe_codex)
+                result = report(kit, args.root, probe_codex=args.probe_codex, helper_command=self_command(args))
             elif args.action == 'rollback':
                 result = rollback(args.root, consent=args.confirm)
             else:

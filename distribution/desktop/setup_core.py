@@ -309,7 +309,68 @@ def installed(root: Path) -> dict | None:
     for key in ('agents_block', 'ignore_block'):
         if not isinstance(obj.get(key), str):
             raise SetupError('Missing owned instruction block')
+    if 'runtime_sha256' in obj and (not isinstance(obj['runtime_sha256'], str)
+                                   or not HASH.fullmatch(obj['runtime_sha256'])):
+        raise SetupError('Invalid helper pointer identity')
     return obj
+
+
+def transaction_phase(root: Path) -> str:
+    raw = read(root, JOURNAL)
+    if raw is None:
+        return 'missing'
+    journal = strict_json(raw)
+    phase = journal.get('status')
+    if (journal.get('schema') != 'playbook.setup-transaction.v1'
+            or journal.get('root') != str(root)
+            or phase not in {'pending', 'complete', 'rolling_back', 'rolled_back'}):
+        return 'invalid'
+    return phase
+
+
+def require_completed_transaction(root: Path, old: dict | None) -> None:
+    phase = transaction_phase(root)
+    if phase == 'missing' and old is None:
+        return  # A genuinely unmanaged initial install has no journal yet.
+    if phase not in {'complete', 'rolled_back'}:
+        raise SetupError('An interrupted, missing or invalid transaction exists; preserve and resolve it before setup')
+
+
+def runtime_pointer_status(root: Path, record: dict, expected_command: list[str] | None = None,
+                           expected_kit_sha256: str | None = None) -> str:
+    raw = read(root, RUNTIME)
+    if raw is None:
+        return 'missing'
+    expected = record.get('runtime_sha256')
+    if expected is None:
+        # Older previews kept the exact owned bytes in their transaction only.
+        # A completed rollback owns the BEFORE bytes; never trust a pending one.
+        journal = strict_json(read(root, JOURNAL) or b'{}')
+        phase = journal.get('status')
+        entry = journal.get('changes', {}).get(RUNTIME) if isinstance(journal.get('changes'), dict) else None
+        if (journal.get('schema') == 'playbook.setup-transaction.v1'
+                and journal.get('root') == str(root) and phase in {'complete', 'rolled_back'}
+                and isinstance(entry, dict)):
+            previous = decode(entry.get('after' if phase == 'complete' else 'before'))
+            expected = digest(previous) if previous is not None else None
+    if expected is None:
+        return 'unverified'
+    if digest(raw) != expected:
+        return 'modified'
+    try:
+        pointer = strict_json(raw)
+    except SetupError:
+        return 'modified'
+    command = pointer.get('command')
+    if (pointer.get('schema') != 'playbook.local-helper.v1' or pointer.get('version') != record['version']
+            or not isinstance(command, list)
+            or any(not isinstance(part, str) or not part.strip() or '\x00' in part for part in command)):
+        return 'modified'
+    if expected_command is not None and command != expected_command:
+        return 'mismatch'
+    if expected_kit_sha256 is not None and record.get('kit_sha256') != expected_kit_sha256:
+        return 'mismatch'
+    return 'verified' if command else 'not_configured'
 
 
 @dataclass
@@ -332,10 +393,8 @@ def plan(root: Path, kit: Kit, action: str, runtime_command: list[str] | None = 
         raise SetupError('Unsupported setup action')
     if action != 'remove' and safe_path(root, 'AGENTS.override.md').exists():
         raise SetupError('AGENTS.override.md is present; resolve the host instruction conflict first')
-    journal = read(root, JOURNAL)
-    if journal and strict_json(journal).get('status') not in {'complete', 'rolled_back'}:
-        raise SetupError('An interrupted operation exists; use Restore previous installation')
     old = installed(root)
+    require_completed_transaction(root, old)
     if (action == 'install' and old) or (action != 'install' and not old):
         raise SetupError('Choose install for a new project, update/remove for a managed installation')
     if old:
@@ -343,6 +402,8 @@ def plan(root: Path, kit: Kit, action: str, runtime_command: list[str] | None = 
             value = read(root, name)
             if value is None or digest(value) != sha:
                 raise SetupError('A Playbook file was modified or removed; preserve and resolve it first')
+        if runtime_pointer_status(root, old) not in {'verified', 'not_configured'}:
+            raise SetupError('The local helper pointer is missing, modified or unverified; preserve and resolve it first')
     # A foreign file in our skill namespace can affect host behavior. Preserve it
     # and stop rather than claiming an exact or complete installation/removal.
     for prefix in PREFIXES:
@@ -389,14 +450,16 @@ def plan(root: Path, kit: Kit, action: str, runtime_command: list[str] | None = 
     if action == 'remove':
         after[RECORD] = after[RUNTIME] = None
     else:
+        runtime_bytes = json_bytes({'schema': 'playbook.local-helper.v1',
+                                   'command': runtime_command or [], 'version': kit.version,
+                                   'meaning': 'Machine-local location, not action authority; reconfigure after transfer.'})
         info = {'schema': 'playbook.install.v1', 'version': kit.version, 'kit_sha256': kit.sha256,
                 'files': {n: digest(v) for n, v in new_skills.items()},
+                'runtime_sha256': digest(runtime_bytes),
                 'agents_block': agents_block.decode('utf-8'), 'ignore_block': ignore_block.decode('utf-8'),
                 'preexisting': old['preexisting'] if old else {'AGENTS.md': agents is not None, '.gitignore': ignore is not None}}
         after[RECORD] = json_bytes(info)
-        after[RUNTIME] = json_bytes({'schema': 'playbook.local-helper.v1',
-                                     'command': runtime_command or [], 'version': kit.version,
-                                     'meaning': 'Machine-local location, not action authority; reconfigure after transfer.'})
+        after[RUNTIME] = runtime_bytes
     return Plan(root, action, before, after)
 
 
@@ -407,9 +470,7 @@ def apply(proposal: Plan, *, consent: bool = False) -> dict:
     if set(proposal.before) != set(proposal.after) or any(not managed(n) for n in proposal.after):
         raise SetupError('Invalid setup plan')
     with locked(root):
-        pending = read(root, JOURNAL)
-        if pending and strict_json(pending).get('status') not in {'complete', 'rolled_back'}:
-            raise SetupError('Restore the interrupted setup first')
+        require_completed_transaction(root, installed(root))
         for name, expected in proposal.before.items():
             if read(root, name) != expected:
                 raise SetupError('Project changed after the plan; inspect and plan again')
@@ -473,11 +534,16 @@ def rollback(root: Path, *, consent: bool = False) -> dict:
     return {'status': 'rolled_back', 'solution_data': 'not_restored_or_modified'}
 
 
-def installation_status(root: Path) -> dict:
+def installation_status(root: Path, *, expected_command: list[str] | None = None,
+                        expected_kit_sha256: str | None = None) -> dict:
     root = project(root)
+    raw = read(root, JOURNAL)
+    phase = transaction_phase(root)
+    interrupted = phase not in {'complete', 'rolled_back'}
     old = installed(root)
     if not old:
-        return {'installation': 'not_managed', 'version': None}
+        return {'installation': 'interrupted' if raw and interrupted else 'not_managed',
+                'version': None, 'setup_transaction': phase, 'setup_readiness': 'not_ready'}
     modified = [n for n, sha in old['files'].items() if (value := read(root, n)) is None or digest(value) != sha]
     for name, key in (('AGENTS.md', 'agents_block'), ('.gitignore', 'ignore_block')):
         value = read(root, name)
@@ -491,8 +557,12 @@ def installation_status(root: Path) -> dict:
                 safe_path(root, name)
                 if entry.is_file() and name not in old['files']:
                     modified.append(name)
-    raw = read(root, JOURNAL)
-    phase = strict_json(raw).get('status') if raw else 'unknown'
-    return {'installation': 'modified' if modified else 'files_verified', 'version': old['version'],
-            'modified_count': len(modified), 'setup_transaction': phase,
+    pointer = runtime_pointer_status(root, old, expected_command, expected_kit_sha256)
+    if pointer in {'missing', 'modified', 'mismatch'}:
+        modified.append(RUNTIME)
+    status = ('interrupted' if interrupted else 'modified' if modified else
+              'unverified' if pointer == 'unverified' else 'files_verified')
+    return {'installation': status, 'version': old['version'],
+            'modified_count': len(modified), 'setup_transaction': phase, 'helper_pointer': pointer,
+            'setup_readiness': 'installation_verified' if status == 'files_verified' and pointer == 'verified' else 'not_ready',
             'model_browser_review': 'not_assessed', 'business_effect': 'not_assessed'}

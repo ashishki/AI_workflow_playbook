@@ -1,67 +1,50 @@
-# Playbook — фактическое состояние master
+# Playbook — текущая работа и фактические границы
 
-Обновлено 9 октября 2026 года после разрешённого переноса результатов эксперимента.
-Рабочая ветка — master. vNext уже слит через [PR #9](https://github.com/ashishki/AI_workflow_playbook/pull/9);
-его миграция не является текущей задачей. Прежняя записка сохранена побайтно в
-[истории](history/STATUS.before-results-merge-20261009.md), вместе с границами её
-технических и пользовательских наблюдений.
+Обновлено 9 октября 2026. Рабочая ветка: `feature/delivery-acceptance-20261009`,
+база master `de2478f4a3fdffb4c568898f37a078500f203b8a`. Перенос в master учитывается
+после фактического merge; downstream и production не обновляются этим кодом.
 
-## Что опубликовано
+vNext уже слит через PR #9. Результаты Controlled Delegation вошли через
+[PR #11](https://github.com/ashishki/AI_workflow_playbook/pull/11).
+Предыдущая записка сохранена [побайтно](history/STATUS.before-delivery-acceptance-20261009.md).
+Текущая очередь — [D00–D10](../delivery/PLAN_RU.md),
+[приёмка на VPS](../delivery/VPS_ACCEPTANCE_RU.md).
 
-- Действующие Engineering / Product / Shared и совместимые Governed-пути сохранены.
-- [PR #11](https://github.com/ashishki/AI_workflow_playbook/pull/11) слит:
-  `dcd40b9967be4dfbcf35498089bbe49e015008af`. В master вошли архив трёх настоящих
-  Controlled Delegation раундов и поясняющая документация.
-- [Что делали и зачем](../CONTROLLED_DELEGATION_RU.md),
-  [архив](../../reports/delegation/README.md) и
-  [итог третьего раунда](../../reports/delegation/2026-10-08-round3/REPORT_RU.md).
-- Восстановлены два точных архивных pyc-файла, ранее проигнорированных Git;
-  все 676 индексированных SHA256 проверены. Frozen отчёты и результаты не переписаны.
+## Что исправляется и для чего
 
-Перенос не включает рабочий runtime экспериментальной ветки, Delivery/Desktop
-или автоматическое включение делегирования. Исходная feature-ветка ad55ee4
-сохранена для harness и дальнейшего исследования.
+- D00: dev install Harness Lab, полный pytest, source archive вместо сравнения
+  старого manifest с современным деревом, явные NOT RUN для исторического host,
+  достоверные ссылки на отсутствующие старые свидетельства. История не переписана.
+- Source Delivery из PR #10 объединён с актуальным master; Discover outcome и
+  Verify decision-boundary улучшения сохранены. D00 commit `d2105d0`, source merge
+  `2225a3f`. Перенос source не является автоматической приёмкой D01–D10.
+- Native/Desktop `0.2.0-preview.4`: проверка helper pointer, interrupted journal,
+  отказ при missing/foreign transaction, рабочая managed review command.
+  Private evaluation preview; права распространения и выпуск отдельно.
 
-## Наблюдённый вывод
+D00: 296 PASS / 2 explicit historical NOT RUN до последних sandbox corrections;
+canonical после corrections PASS, независимый reviewer нашёл два P2 и повторно
+подтвердил их исправление. Native package: 24 PASS без root и без permission skip.
+[Точные receipts и ограничения](../../reports/delivery/2026-10-09/D00_REPORT_RU.md).
+CI нового коммита и итоговая приёмка Delivery фиксируются после наблюдения.
 
-В последнем раунде все шесть приложений исправили три причины сбоя и получили
-100/100. При одинаковом качестве наблюдённых приложений C медленнее B в 1.46 раза;
-uncached input выше в 2.93 раза, output — в 1.69 раза. Добавочная польза на этих
-сценариях не показана. Один implementation-агент остаётся исходным вариантом;
-существующие требования независимого review не отменяются.
+## Что остаётся открытым
 
-Полная qualification BLOCKED: worker scope instructions нельзя проверить из
-opaque payload, USD и активное время человека неизвестны. Ошибочные исходные
-FAIL/STOP_SHIP сохранены; исправленная трактовка и связанные свидетельства прошли
-настоящее повторное независимое review PASS. Два повтора одного среднего
-синтетического проекта не доказывают production-пользу и не заменяют реальные пилоты.
+Полные реальные пользовательские истории, field-пилот, live AI/data integration,
+Preview → Claim с owner account/Terms, чистые машины Windows/macOS/Linux и release
+approval пока не подтверждены. Техническая автоматизация, fake CLI и синтетический
+пример не закрывают эти пункты. Новые model CLI runs требуют non-root worker,
+согласованного provider/model/budget; старое root exception относилось к шести R3
+прогонам и не переносится на Delivery. Credentials не копируются.
 
-## Проверки переноса
+Для реального пилота нужен участник и конкретный разрешённый рабочий пример,
+затем настоящее повторное использование/изменение в более позднюю дату.
 
-На точном head PR #11 `c10507f499667dec19ecaaf2616bf8582e40e9e3`:
+## Вывод эксперимента по делегированию
 
-- [Playbook vNext — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37895067097).
-- [Native Product Checks — PASS](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37895067094).
-- [Playbook Checks — FAIL](https://github.com/ashishki/AI_workflow_playbook/actions/runs/37895067174):
-  тесты не собираются без установленного ai_workflow_harness_lab.
-
-Локально на подготовленном дереве: vNext 29 tests PASS, Native 24 tests с одним
-root-permission skip, contracts/runtime sync/diff PASS. Ошибка full pytest и шесть
-missing references старого pilot также воспроизведены на чистом f03dde86, до
-переноса архива. Они остаются открытыми; старые или неполные проверки не выданы за PASS.
-
-## Что остаётся
-
-1. Отдельно исправить и проверить dev test setup, затем повторить полный suite.
-2. Разобрать ссылки на исторические локальные pilot-свидетельства: сохранить
-   факты и границы доступности, не выдумывать approval/reviewer results и не
-   ослаблять действующие проверки ради зелёного статуса.
-3. [Delivery PR #10](https://github.com/ashishki/AI_workflow_playbook/pull/10)
-   остаётся draft и не слит; его программа и Desktop не получают приёмку из этого merge.
-4. Настоящие Product-пилоты, внешнее использование и rollout остаются отдельной
-   работой с применимыми правами. Три синтетических эксперимента не закрывают M5–M6.
-
-Ветки docs и vNext уже входят в master; удаление веток не выполнялось. Локальный
-master обновлён обычным fast-forward и проверяется относительно origin/master.
-Текущий SHA нужно брать из Git, а не трактовать SHA исторического merge как
-постоянный текущий head. Ни production-данные, ни установленные downstream не менялись.
+[Архив](../../reports/delegation/README.md) сохранён. В R3 при одинаковом качестве
+всех шести результатов C медленнее B в 1.46 раза; uncached input выше в 2.93 раза,
+output — в 1.69 раза. Добавочная польза на этих сценариях не показана. Один
+implementation-агент остаётся исходным вариантом; независимый review сохраняется.
+USD и время человека неизвестны, qualification BLOCKED. Новая Delivery-проверка
+не превращает эти результаты в доказанную production-пользу.

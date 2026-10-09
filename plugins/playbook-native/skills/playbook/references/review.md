@@ -9,7 +9,7 @@ review remains explicit; never relabel the main agent's own check as independent
 1. If this project has managed Desktop setup, read
    `.playbook-setup/runtime.json`. It is only a machine-local helper location,
    not execution authority. Use its recorded command with:
-   `helper review --root <project> ...`.
+   `helper review run --profile native --root <project> ...`.
 2. Otherwise use the bundled Python runner as before when Python 3.10+ and an
    authenticated `codex` CLI are actually available.
 3. Do not install Python, Codex, copy credentials, alter the global model or weaken
@@ -29,7 +29,7 @@ credentials and private records out.
 
 For a managed helper the conceptual command is:
 
-    <local-helper> helper review --root <project> run --profile native --root <project>       --task current-change --role slice_review       --request .playbook-artifacts/review-request.md --timeout-seconds 300
+    <local-helper> helper review run --profile native --root <project> --task current-change --role slice_review --request .playbook-artifacts/review-request.md --timeout-seconds 300
 
 For the manual fallback resolve the script from this installed skill:
 

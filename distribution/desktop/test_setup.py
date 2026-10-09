@@ -1,10 +1,15 @@
 """Offline setup mechanism tests; not a model, browser, clean-machine or user trial."""
 from __future__ import annotations
 import importlib.util
+import contextlib
+import io
 import json
+import shlex
+import shutil
 from pathlib import Path
 import tempfile
 import unittest
+import zipfile
 from unittest.mock import patch
 import sys
 from types import SimpleNamespace
@@ -38,6 +43,17 @@ class SetupTests(unittest.TestCase):
         (path / 'AGENTS.md').write_bytes(b'# Owner rules\r\nDo not publish.\r\n')
         (path / '.gitignore').write_bytes(b'owner-cache/\r\n')
         return path
+
+    def test_documented_managed_review_command_reaches_runner_parser(self):
+        root = self.new_project()
+        text = (ROOT / 'plugins/playbook-native/skills/playbook/references/review.md').read_text(encoding='utf-8')
+        example = next(line.strip() for line in text.splitlines() if line.strip().startswith('<local-helper> '))
+        command = [str(root) if token == '<project>' else token for token in shlex.split(example)]
+        self.assertEqual(command[:3], ['<local-helper>', 'helper', 'review'])
+        with patch.object(desktop_runtime, 'verified_binary', return_value=None), contextlib.redirect_stdout(io.StringIO()):
+            # --help exercises the actual bundled runner's parser without
+            # authentication, subprocess inference or fabricated role evidence.
+            self.assertEqual(desktop_setup.helper(self.kit, 'review', command[3:] + ['--help']), 0)
 
     def test_install_remove_and_rollback_preserve_owner_files(self):
         root = self.new_project()
@@ -101,12 +117,141 @@ class SetupTests(unittest.TestCase):
                 setup_core.apply(setup_core.plan(root, self.kit, 'install'), consent=True)
         with self.assertRaises(setup_core.SetupError):
             setup_core.plan(root, self.kit, 'install')
+        self.assertEqual(setup_core.installation_status(root)['installation'], 'interrupted')
         setup_core.rollback(root, consent=True)
         for name, data in original.items():
             self.assertEqual((root / name).read_bytes(), data)
         self.assertEqual(setup_core.installation_status(root)['installation'], 'not_managed')
         setup_core.apply(setup_core.plan(root, self.kit, 'install'), consent=True)
         self.assertEqual(setup_core.installation_status(root)['installation'], 'files_verified')
+
+    def test_final_journal_write_failure_is_interrupted_until_explicit_rollback(self):
+        root = self.new_project()
+        original = {name: (root / name).read_bytes() for name in ('notes.txt', 'AGENTS.md', '.gitignore')}
+        atomic = setup_core.atomic
+        def interrupt(project, name, data):
+            if name == setup_core.JOURNAL and data and json.loads(data)['status'] == 'complete':
+                raise OSError('interrupted final journal write')
+            return atomic(project, name, data)
+        with patch.object(setup_core, 'atomic', side_effect=interrupt):
+            with self.assertRaisesRegex(OSError, 'interrupted final journal write'):
+                setup_core.apply(setup_core.plan(root, self.kit, 'install', ['playbook-helper']), consent=True)
+        state = setup_core.installation_status(root)
+        self.assertEqual(state['modified_count'], 0)  # All owned writes finished.
+        self.assertEqual(state['installation'], 'interrupted')
+        self.assertEqual(state['setup_transaction'], 'pending')
+        self.assertEqual(state['setup_readiness'], 'not_ready')
+        text = desktop_setup.diagnostic_text(desktop_setup.report(self.kit, root))
+        self.assertIn('«Вернуть установку»', text)
+        self.assertNotIn('Состояние файлов: файлы проверены', text)
+        with self.assertRaises(setup_core.SetupError):
+            setup_core.plan(root, self.kit, 'update')
+        setup_core.rollback(root, consent=True)
+        for name, data in original.items():
+            self.assertEqual((root / name).read_bytes(), data)
+        self.assertEqual(setup_core.installation_status(root)['installation'], 'not_managed')
+
+    def test_missing_or_tampered_helper_pointer_blocks_readiness_and_destructive_retry(self):
+        for mutation in ('missing', 'different_command', 'invalid_json'):
+            with self.subTest(mutation=mutation):
+                root = self.new_project()
+                setup_core.apply(setup_core.plan(root, self.kit, 'install', ['playbook-helper']), consent=True)
+                pointer = root / setup_core.RUNTIME
+                original = pointer.read_bytes()
+                if mutation == 'missing':
+                    pointer.unlink()
+                elif mutation == 'different_command':
+                    value = json.loads(original)
+                    value['command'] = ['unrelated-helper']
+                    pointer.write_bytes(setup_core.json_bytes(value))
+                else:
+                    pointer.write_bytes(b'{broken')
+                changed = pointer.read_bytes() if pointer.exists() else None
+                state = setup_core.installation_status(root)
+                self.assertEqual(state['installation'], 'modified')
+                self.assertEqual(state['modified_count'], 1)
+                self.assertEqual(state['helper_pointer'], 'missing' if mutation == 'missing' else 'modified')
+                self.assertEqual(state['setup_readiness'], 'not_ready')
+                self.assertIn('нужна проверка', desktop_setup.diagnostic_text(desktop_setup.report(self.kit, root)))
+                for action in ('update', 'remove'):
+                    with self.assertRaisesRegex(setup_core.SetupError, 'helper pointer'):
+                        setup_core.plan(root, self.kit, action, ['replacement-helper'])
+                self.assertEqual(pointer.read_bytes() if pointer.exists() else None, changed)
+                self.assertEqual((root / 'notes.txt').read_text(encoding='utf-8'), 'owner data')
+                pointer.write_bytes(original)
+                self.assertEqual(setup_core.installation_status(root)['setup_readiness'], 'installation_verified')
+
+    def test_helper_pointer_mismatch_is_reported_and_explicit_update_refreshes_it(self):
+        root = self.new_project()
+        before = {name: (root / name).read_bytes() for name in ('notes.txt', 'AGENTS.md', '.gitignore')}
+        setup_core.apply(setup_core.plan(root, self.kit, 'install', ['previous-helper']), consent=True)
+        saved = (root / setup_core.RUNTIME).read_bytes()
+        value = desktop_setup.report(self.kit, root, helper_command=['current-helper'])
+        self.assertEqual(value['installation']['helper_pointer'], 'mismatch')
+        self.assertEqual(value['installation']['installation'], 'modified')
+        self.assertEqual(value['installation']['setup_readiness'], 'not_ready')
+        self.assertIn('расположение отличается от этого комплекта', desktop_setup.diagnostic_text(value))
+        self.assertEqual((root / setup_core.RUNTIME).read_bytes(), saved)  # Diagnostic is read-only.
+        setup_core.apply(setup_core.plan(root, self.kit, 'update', ['current-helper']), consent=True)
+        self.assertEqual(desktop_setup.report(self.kit, root, helper_command=['current-helper'])['installation']['setup_readiness'],
+                         'installation_verified')
+        setup_core.apply(setup_core.plan(root, self.kit, 'remove'), consent=True)
+        for name, data in before.items():
+            self.assertEqual((root / name).read_bytes(), data)
+        setup_core.rollback(root, consent=True)
+        self.assertEqual(setup_core.installation_status(root, expected_command=['current-helper'])['setup_readiness'],
+                         'installation_verified')
+
+    def test_helper_payload_mismatch_is_not_verified_even_at_the_same_location(self):
+        root = self.new_project()
+        setup_core.apply(setup_core.plan(root, self.kit, 'install', ['playbook-helper']), consent=True)
+        original_pointer = (root / setup_core.RUNTIME).read_bytes()
+        contents = dict(self.kit.files)
+        manifest = json.loads(contents['PACKAGE.json'])
+        manifest['version'] = '0.2.0-preview.5'
+        contents['PACKAGE.json'] = setup_core.json_bytes(manifest)
+        archive = root.parent / (root.name + '-synthetic-next.zip')
+        with zipfile.ZipFile(archive, 'w') as zipped:
+            for name, data in contents.items():
+                zipped.writestr('Playbook/' + name, data)
+        next_kit = setup_core.Kit.load(archive, setup_core.digest(archive.read_bytes()))
+        value = desktop_setup.report(next_kit, root, helper_command=['playbook-helper'])
+        self.assertEqual(value['installation']['helper_pointer'], 'mismatch')
+        self.assertEqual(value['installation']['setup_readiness'], 'not_ready')
+        self.assertEqual((root / setup_core.RUNTIME).read_bytes(), original_pointer)
+        setup_core.apply(setup_core.plan(root, next_kit, 'update', ['playbook-helper']), consent=True)
+        self.assertEqual(desktop_setup.report(next_kit, root, helper_command=['playbook-helper'])['installation']['setup_readiness'],
+                         'installation_verified')
+
+    def test_legacy_pointer_requires_exact_transaction_bytes_and_migrates_on_update(self):
+        root = self.new_project()
+        setup_core.apply(setup_core.plan(root, self.kit, 'install', ['playbook-helper']), consent=True)
+        record = root / setup_core.RECORD
+        value = json.loads(record.read_bytes())
+        del value['runtime_sha256']
+        record.write_bytes(setup_core.json_bytes(value))
+        self.assertEqual(setup_core.installation_status(root)['helper_pointer'], 'verified')
+        setup_core.apply(setup_core.plan(root, self.kit, 'update', ['playbook-helper']), consent=True)
+        self.assertIn('runtime_sha256', json.loads(record.read_bytes()))
+        # Loss of both identities cannot attest the old pointer or allow overwrite.
+        value = json.loads(record.read_bytes())
+        del value['runtime_sha256']
+        record.write_bytes(setup_core.json_bytes(value))
+        journal = root / setup_core.JOURNAL
+        transaction = json.loads(journal.read_bytes())
+        transaction['changes'].pop(setup_core.RUNTIME, None)
+        journal.write_bytes(setup_core.json_bytes(transaction))
+        self.assertEqual(setup_core.installation_status(root)['installation'], 'unverified')
+        self.assertEqual(setup_core.installation_status(root)['setup_readiness'], 'not_ready')
+        with self.assertRaisesRegex(setup_core.SetupError, 'helper pointer'):
+            setup_core.plan(root, self.kit, 'update')
+
+    def test_install_without_helper_pointer_does_not_claim_setup_readiness(self):
+        root = self.new_project()
+        setup_core.apply(setup_core.plan(root, self.kit, 'install'), consent=True)
+        state = setup_core.installation_status(root)
+        self.assertEqual(state['helper_pointer'], 'not_configured')
+        self.assertEqual(state['setup_readiness'], 'not_ready')
 
     def test_unmanaged_skill_namespace_is_not_overwritten(self):
         root = self.new_project()
@@ -126,6 +271,36 @@ class SetupTests(unittest.TestCase):
         journal.write_text(json.dumps(value), encoding='utf-8')
         with self.assertRaises(setup_core.SetupError):
             setup_core.plan(root, self.kit, 'update')
+
+    def test_missing_foreign_or_invalid_journal_blocks_mutations_at_plan_and_apply(self):
+        for variant in ('missing', 'foreign_root', 'wrong_schema', 'wrong_phase', 'moved'):
+            with self.subTest(variant=variant):
+                root = self.new_project()
+                setup_core.apply(setup_core.plan(root, self.kit, 'install'), consent=True)
+                update = setup_core.plan(root, self.kit, 'update')
+                removal = setup_core.plan(root, self.kit, 'remove')
+                journal = root / setup_core.JOURNAL
+                value = json.loads(journal.read_bytes())
+                if variant == 'missing':
+                    journal.unlink()
+                elif variant == 'moved':
+                    moved = root.with_name(root.name + '-copied')
+                    shutil.copytree(root, moved)
+                    root = moved
+                    update.root = root
+                    removal.root = root
+                else:
+                    value[{'foreign_root': 'root', 'wrong_schema': 'schema', 'wrong_phase': 'status'}[variant]] = 'invalid'
+                    journal.write_bytes(setup_core.json_bytes(value))
+                before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+                self.assertEqual(setup_core.installation_status(root)['installation'], 'interrupted')
+                for action, proposal in (('update', update), ('remove', removal)):
+                    with self.assertRaisesRegex(setup_core.SetupError, 'transaction'):
+                        setup_core.plan(root, self.kit, action)
+                    with self.assertRaisesRegex(setup_core.SetupError, 'transaction'):
+                        setup_core.apply(proposal, consent=True)
+                after = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+                self.assertEqual(before, after)
 
     def test_support_report_does_not_include_project_path_or_claim_live_checks(self):
         root = self.new_project()
