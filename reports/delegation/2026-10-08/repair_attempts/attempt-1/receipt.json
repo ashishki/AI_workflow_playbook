@@ -1,0 +1,9 @@
+{
+  "status": "FAIL",
+  "accepted": false,
+  "scope": "post-hoc operator correction, outside A/B/C comparisons",
+  "original_findings_reproductions": "PASS",
+  "broader_precision_regressions": "FAIL; 7 failing subcases",
+  "command": "python3 -m unittest discover -s reports/delegation/2026-10-08/repair_attempts/attempt-1 -v",
+  "remaining_issue": "Float output cannot be treated as an unbounded exact monetary contract. No validity restriction or return-type change was silently introduced."
+}

@@ -1,0 +1,80 @@
+{
+  "actual_provider": true,
+  "artifacts": [
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/25faacc4cc17/main.events.jsonl",
+      "sha256": "812f9a6d13747b735feb332abb307fe6b9a232f56ba8040ee5a4b64a2e9a3fe2"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/bf245d10815a/main.events.jsonl",
+      "sha256": "dd38861b853f0bad23ae77f60dfa3f5397fad232aabfd81c9829c0dd1ab3c478"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/bbcd1abca7bd/main.events.jsonl",
+      "sha256": "3c97d310dfbe022f6e47c72deb3ca478fa9888573dfbdc97e660028ec58cf315"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/3019c182a444/main.events.jsonl",
+      "sha256": "e4b8c158aab82a4ff819e3a4773cb7a93b6c79f226d2fc3296b27e4bfdafe8d8"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/046b19a93202/main.events.jsonl",
+      "sha256": "b51bb0f052b38887bd99fa60375260aa1bbb83b1c5792d29d93270cc554bb051"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/1cde12b352bb/main.events.jsonl",
+      "sha256": "a9db8a456c5164749c7e82876e3ec37d0113a147b116f5de5a9ea3ed3bbfa008"
+    },
+    {
+      "kind": "provider_trace",
+      "path": "<LOCAL_RUN_ROOT>/common-review/workspace/.playbook-artifacts/runs/20261008T185244Z-slice_review-e731a15d/codex_events.jsonl",
+      "sha256": "52009dc9ec9bbbe40f5e73da07cc95525576ee803d487e172aacf0da8fe47d44"
+    },
+    {
+      "kind": "report",
+      "path": "<LOCAL_RUN_ROOT>/common-review/workspace/.playbook-artifacts/runs/20261008T185244Z-slice_review-e731a15d/report.md",
+      "sha256": "5efaa7d2b7f15bc7c1f23f74dfefaa260c49a3c59024497f0b3d533d09dbed58"
+    },
+    {
+      "kind": "role_result",
+      "path": "<LOCAL_RUN_ROOT>/common-review/workspace/.playbook-artifacts/runs/20261008T185244Z-slice_review-e731a15d/result.json",
+      "sha256": "59a2befaef0ec5fcc2b5ee2270b098015b582c8f6178c1451fe6b5e988bca79f"
+    }
+  ],
+  "comparison_accounting": "independent after-batch audit excluded from per-run implementation wall and token ratios",
+  "cost_usd": null,
+  "errors": [],
+  "exit_code": 0,
+  "human_minutes": null,
+  "model": "gpt-6.1-sol",
+  "outer_timeout": false,
+  "reasoning": "high",
+  "result": "<LOCAL_RUN_ROOT>/common-review/workspace/.playbook-artifacts/runs/20261008T185244Z-slice_review-e731a15d/result.json",
+  "review_finished_utc": "2026-10-08T18:56:57.900939+00:00",
+  "review_started_utc": "2026-10-08T18:52:44.120184+00:00",
+  "reviewed_snapshot_sha256": "3e3d5c2b92010eb48132500062f4f8dfb25e603ea88f01b8ce11dc86c9db8968",
+  "run_id": "20261008T185244Z-slice_review-e731a15d",
+  "scope": "common_source_output_report",
+  "snapshot_path": "common-review/snapshot.json",
+  "status": "validated",
+  "thread_ids": [
+    "01a11cdc-5860-7202-8490-e747c96bd635"
+  ],
+  "usage": [
+    {
+      "cache_write_input_tokens": 0,
+      "cached_input_tokens": 1204224,
+      "input_tokens": 1335448,
+      "output_tokens": 7586,
+      "reasoning_output_tokens": 2469
+    }
+  ],
+  "verdict": "STOP_SHIP",
+  "wall_seconds": 253.801
+}

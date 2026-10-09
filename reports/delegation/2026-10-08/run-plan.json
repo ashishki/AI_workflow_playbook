@@ -1,0 +1,85 @@
+{
+  "experiment_id": "controlled-delegation-2026-10-08",
+  "head": "85180b0b1b1ad60f842ee1e02ddf1f4da89c23c9",
+  "host": "codex-cli-0.160.1",
+  "model": "gpt-6.1-sol",
+  "order": [
+    {
+      "condition": "A",
+      "scenario": "medium_implementation",
+      "workspace": "workspaces/medium_implementation/A"
+    },
+    {
+      "condition": "A",
+      "scenario": "conflict_detection",
+      "workspace": "workspaces/conflict_detection/A"
+    },
+    {
+      "condition": "B",
+      "scenario": "fresh_session",
+      "workspace": "workspaces/fresh_session/B"
+    },
+    {
+      "condition": "A",
+      "scenario": "fresh_session",
+      "workspace": "workspaces/fresh_session/A"
+    },
+    {
+      "condition": "C",
+      "scenario": "medium_implementation",
+      "workspace": "workspaces/medium_implementation/C"
+    },
+    {
+      "condition": "C",
+      "scenario": "parallel_research",
+      "workspace": "workspaces/parallel_research/C"
+    },
+    {
+      "condition": "B",
+      "scenario": "conflict_detection",
+      "workspace": "workspaces/conflict_detection/B"
+    },
+    {
+      "condition": "C",
+      "scenario": "conflict_detection",
+      "workspace": "workspaces/conflict_detection/C"
+    },
+    {
+      "condition": "B",
+      "scenario": "small_fix",
+      "workspace": "workspaces/small_fix/B"
+    },
+    {
+      "condition": "C",
+      "scenario": "fresh_session",
+      "workspace": "workspaces/fresh_session/C"
+    },
+    {
+      "condition": "C",
+      "scenario": "small_fix",
+      "workspace": "workspaces/small_fix/C"
+    },
+    {
+      "condition": "A",
+      "scenario": "parallel_research",
+      "workspace": "workspaces/parallel_research/A"
+    },
+    {
+      "condition": "B",
+      "scenario": "medium_implementation",
+      "workspace": "workspaces/medium_implementation/B"
+    },
+    {
+      "condition": "A",
+      "scenario": "small_fix",
+      "workspace": "workspaces/small_fix/A"
+    },
+    {
+      "condition": "B",
+      "scenario": "parallel_research",
+      "workspace": "workspaces/parallel_research/B"
+    }
+  ],
+  "schema": "playbook.controlled_delegation.plan.v1",
+  "seed": 20261008
+}

@@ -1,0 +1,82 @@
+{
+  "actual_provider": true,
+  "artifacts": [
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/25faacc4cc17/main.events.jsonl",
+      "sha256": "812f9a6d13747b735feb332abb307fe6b9a232f56ba8040ee5a4b64a2e9a3fe2"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/bf245d10815a/main.events.jsonl",
+      "sha256": "dd38861b853f0bad23ae77f60dfa3f5397fad232aabfd81c9829c0dd1ab3c478"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/bbcd1abca7bd/main.events.jsonl",
+      "sha256": "3c97d310dfbe022f6e47c72deb3ca478fa9888573dfbdc97e660028ec58cf315"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/3019c182a444/main.events.jsonl",
+      "sha256": "e4b8c158aab82a4ff819e3a4773cb7a93b6c79f226d2fc3296b27e4bfdafe8d8"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/046b19a93202/main.events.jsonl",
+      "sha256": "b51bb0f052b38887bd99fa60375260aa1bbb83b1c5792d29d93270cc554bb051"
+    },
+    {
+      "kind": "implementation_trace",
+      "path": "<LOCAL_RUN_ROOT>/logs/1cde12b352bb/main.events.jsonl",
+      "sha256": "a9db8a456c5164749c7e82876e3ec37d0113a147b116f5de5a9ea3ed3bbfa008"
+    },
+    {
+      "kind": "provider_trace",
+      "path": "<LOCAL_RUN_ROOT>/common-review-final/common-review/workspace/.playbook-artifacts/runs/20261008T191421Z-slice_review-14d7afe1/codex_events.jsonl",
+      "sha256": "846fb2392677c1d318180994438c7343b40591f7e7265b8c61a796002adabba5"
+    },
+    {
+      "kind": "report",
+      "path": "<LOCAL_RUN_ROOT>/common-review-final/common-review/workspace/.playbook-artifacts/runs/20261008T191421Z-slice_review-14d7afe1/report.md",
+      "sha256": "cd9b5caca901fdc9b6f039736c9f33e173582393d5ff84d5445a8b062ddda0f4"
+    },
+    {
+      "kind": "role_result",
+      "path": "<LOCAL_RUN_ROOT>/common-review-final/common-review/workspace/.playbook-artifacts/runs/20261008T191421Z-slice_review-14d7afe1/result.json",
+      "sha256": "f54b2fb348dfc46aad58537120edb071be06a35a538a4ffb2022b14705575df3"
+    }
+  ],
+  "binding_findings": [],
+  "binding_verified": true,
+  "comparison_accounting": "independent after-batch audit excluded from per-run implementation wall and token ratios",
+  "cost_usd": null,
+  "errors": [],
+  "exit_code": 0,
+  "human_minutes": null,
+  "model": "gpt-6.1-sol",
+  "outer_timeout": false,
+  "reasoning": "high",
+  "result": "<LOCAL_RUN_ROOT>/common-review-final/common-review/workspace/.playbook-artifacts/runs/20261008T191421Z-slice_review-14d7afe1/result.json",
+  "review_finished_utc": "2026-10-08T19:18:22.811598+00:00",
+  "review_started_utc": "2026-10-08T19:14:21.732191+00:00",
+  "reviewed_snapshot_sha256": "741434df40f0fe2ccf19125297c6cf58887d2c7d9554b52b66302f53a39697f9",
+  "run_id": "20261008T191421Z-slice_review-14d7afe1",
+  "scope": "common_source_output_report",
+  "snapshot_path": "common-review/snapshot.json",
+  "status": "validated",
+  "thread_ids": [
+    "01a11cf0-253a-7482-b8c2-e20c1f6284fb"
+  ],
+  "usage": [
+    {
+      "cache_write_input_tokens": 0,
+      "cached_input_tokens": 1315328,
+      "input_tokens": 1447511,
+      "output_tokens": 7874,
+      "reasoning_output_tokens": 2075
+    }
+  ],
+  "verdict": "PASS",
+  "wall_seconds": 241.107
+}

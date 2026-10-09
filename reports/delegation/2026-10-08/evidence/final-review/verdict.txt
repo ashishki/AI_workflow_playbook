@@ -1,0 +1,17 @@
+REVIEW_RESULT: STOP_SHIP
+
+Published evidence and conclusions are honest. The remaining blocker is that the evaluator can still falsely enable delegation.
+
+1. **HIGH — Failed task evidence and incomplete usage do not prevent enablement.** [experiment_report.py:17](/srv/openclaw-you/workspace/AI_workflow_playbook/engineering/experiments/controlled-delegation/experiment_report.py:17), [experiment_report.py:33](/srv/openclaw-you/workspace/AI_workflow_playbook/engineering/experiments/controlled-delegation/experiment_report.py:33). Schema-valid, in-memory probes returned `ENABLE_CONDITIONALLY` with one C record containing `task_status="FAIL"` and `mechanical.status="FAIL"` while its top-level status remained PASS. A separate probe with `usage_complete=false` also enabled. Confirmed failures must override PASS; incomplete usage must block qualification.
+
+2. **HIGH — Required comparison evidence can be absent.** [experiment_report.py:35](/srv/openclaw-you/workspace/AI_workflow_playbook/engineering/experiments/controlled-delegation/experiment_report.py:35), [experiment_report.py:39](/srv/openclaw-you/workspace/AI_workflow_playbook/engineering/experiments/controlled-delegation/experiment_report.py:39). Independently reproduced `ENABLE_CONDITIONALLY` with every A run marked NOT_RUN, and with every `outcome_score=null`. The evaluator ignores A completion and silently skips unavailable quality comparisons. These cases need an explicit incomplete-evidence gate.
+
+3. **MEDIUM — String `"false"` satisfies required confirmations.** [experiment_checks.py:43](/srv/openclaw-you/workspace/AI_workflow_playbook/engineering/experiments/controlled-delegation/experiment_checks.py:43), [experiment_report.py:28](/srv/openclaw-you/workspace/AI_workflow_playbook/engineering/experiments/controlled-delegation/experiment_report.py:28). Validation accepts `"false"` for `failed_or_conflicting_worker_detected` and `fresh_session_success`; truthiness checks then accept each as confirmation. Both probes returned `ENABLE_CONDITIONALLY`. Validate boolean/null types and require literal `True`.
+
+These were **source probes, not live experiment results**.
+
+Verified: all 15 receipt hashes and referenced raw-file hashes; 492 unchanged initial protected files; identical B/C skill copies; 18 exec sessions and 11 native child threads; model/reasoning/permissions; reported token aggregates. Raw evidence confirms C’s 600.128-second timeout without `turn.completed`, despite exit 0, and distinct fresh-session threads.
+
+The published **5 FAIL/10 BLOCKED**, `REVISE_OR_REJECT`, unknown USD/human time, absent fault injection, inherited reviewer write permissions, Native skip and Desktop failure are appropriately disclosed. The unaccepted repair reproduced its seven failing subcases. Frozen numerical failures are honestly retained.
+
+Review remained read-only; bounded Python checks used `python3 -B`.

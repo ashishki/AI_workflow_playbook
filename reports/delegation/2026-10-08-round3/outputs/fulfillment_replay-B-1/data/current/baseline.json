@@ -1,0 +1,53 @@
+{
+  "build": "r31",
+  "checkout_events": [
+    {
+      "captured_minor": 1000,
+      "delivered_at": "2026-10-08T09:00:00Z",
+      "event_id": "ORD-330",
+      "lines": [
+        {
+          "qty": 2,
+          "sku": "BOOK",
+          "warehouse": "north"
+        }
+      ],
+      "order_id": "O-17",
+      "revision": 10,
+      "status": "paid",
+      "tenant": "shop"
+    }
+  ],
+  "inventory_events": [
+    {
+      "action": "reserve",
+      "event_id": "INV-330",
+      "operation_id": "op-41",
+      "order_id": "O-17",
+      "qty": 2,
+      "sku": "BOOK",
+      "tenant": "shop",
+      "warehouse": "north"
+    }
+  ],
+  "opening_stock": [
+    {
+      "qty": 8,
+      "sku": "BOOK",
+      "tenant": "shop",
+      "warehouse": "north"
+    }
+  ],
+  "refund_events": [
+    {
+      "amount_minor": 400,
+      "attempt_id": "delivery-a",
+      "event_id": "REF-330",
+      "order_id": "O-17",
+      "provider": "atlas",
+      "refund_id": "R-17",
+      "status": "succeeded",
+      "tenant": "shop"
+    }
+  ]
+}

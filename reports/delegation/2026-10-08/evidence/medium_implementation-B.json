@@ -1,0 +1,252 @@
+{
+  "condition": "B",
+  "files": [
+    {
+      "bytes": 2984,
+      "path": "workspaces/medium_implementation/B/STATE.md",
+      "sha256": "82b4a8fe25bb22ee6764fc01268fdfa65a7373918ee254fd8cd7a48c474ff7f2"
+    },
+    {
+      "bytes": 3410,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/baseline-unittest.txt",
+      "sha256": "b68e438a71042f67f73f4451003fb3f550b8dc2243b98eb6dcb023c6b53ea11c"
+    },
+    {
+      "bytes": 452,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/unittest.txt",
+      "sha256": "0747e4b47cc45c0fdbc309a8543558a83d8e15d40ec857c5957df5e8b61c1e39"
+    },
+    {
+      "bytes": 1205,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/boundary-check.py",
+      "sha256": "775d728c684304562f9dcb72af3e453fa5bc494259f121b7f2ec653ca2ebf568"
+    },
+    {
+      "bytes": 624,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/boundary-check.txt",
+      "sha256": "32b62ebe5844f5a0e0a8da9fb35bd98a0a75cae1f2557193a954c6b43d71208b"
+    },
+    {
+      "bytes": 561,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/evaluation.txt",
+      "sha256": "e7b2e30b3d1d2b18fba2cc99cc1c6a25cfcb2712f209798f2261392d49657e43"
+    },
+    {
+      "bytes": 1353,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/review-request.md",
+      "sha256": "20a88027e6ffa726401226196dd43cd5488c20b86d0fe5cb7eb9db5010db9ea1"
+    },
+    {
+      "bytes": 766,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/review-dispatch.json",
+      "sha256": "b718f3815a5e7b1154e384f955e5f68129e29c925bb5e7a44321fda823070471"
+    },
+    {
+      "bytes": 756,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/review-return.json",
+      "sha256": "78d7495db552ae6f2fdc3fcad97371696738c9a05c587dd4089d82bd28bb1d04"
+    },
+    {
+      "bytes": 124,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/review-integrity.json",
+      "sha256": "41ffd128e7eaace0b30509ff7d2314701f98eb5d4ec2973f0413c0e8b7a55638"
+    },
+    {
+      "bytes": 182,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/source-integrity.json",
+      "sha256": "c841bf34ac75393cd5f4a9ec0ee441e370f74bfb4aafbeca6c146136bb5e9fee"
+    },
+    {
+      "bytes": 805,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/pre-review-sha256.json",
+      "sha256": "1f7957ed193d8ad0cda9973e5ab70ee4ca9e43aed950b94a439bfa79428dd487"
+    },
+    {
+      "bytes": 805,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/final-sha256.json",
+      "sha256": "f50cce46a2490b911ee8140888d6412effb3ac11551ac656ed96ebc37a072857"
+    },
+    {
+      "bytes": 1139,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/operator-sessions.json",
+      "sha256": "5f31f5b4dc0856e940100de5183571b240a44f9cd84b5da2e0e08955798e0f1d"
+    },
+    {
+      "bytes": 547,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/operator-mechanical.json",
+      "sha256": "3e6a4afb62f4ad8f1ec4203c4611a98b1c6273aa9993329152d9e321d454dba7"
+    },
+    {
+      "bytes": 5340,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/initial-sha256.json",
+      "sha256": "43d78a19127401a712040891ad57e614c2a056928bd0a3d2d34d71b24cd13101"
+    },
+    {
+      "bytes": 2086,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/agent-run-result.json",
+      "sha256": "b8a21c389abf570d20c01465b1473907a034be16e53f5b60133bf242d13801a1"
+    },
+    {
+      "bytes": 87710,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/main-events.jsonl",
+      "sha256": "94c8fc038b78f45cf740d7e6384571baee6dea22131a98e7aa4545890954c10a"
+    },
+    {
+      "bytes": 372497,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/host-rollouts/01a11b12-b38d-7d62-a015-0a13e01ec385.jsonl",
+      "sha256": "36942ca77cd21aeb8c592c5265d340b5b7829135fe45ee180dc3e802e5697f6a"
+    },
+    {
+      "bytes": 150097,
+      "path": "workspaces/medium_implementation/B/.playbook-artifacts/host-rollouts/01a11b14-4e69-7be1-bc5e-31dd5642ad53.jsonl",
+      "sha256": "cbf0f5d18575877312d9fc656199bb4bf0a1f4196cf5ad6b6aa92052e3537644"
+    }
+  ],
+  "host_sessions": [
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:34:38.085Z",
+          "2026-10-08T10:35:06.861Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/medium_implementation/B",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/medium_implementation/B",
+      "end": "2026-10-08T10:35:06.861Z",
+      "id": "01a11b14-4e69-7be1-bc5e-31dd5642ad53",
+      "raw_path": "workspaces/medium_implementation/B/.playbook-artifacts/host-rollouts/01a11b14-4e69-7be1-bc5e-31dd5642ad53.jsonl",
+      "sha256": "cbf0f5d18575877312d9fc656199bb4bf0a1f4196cf5ad6b6aa92052e3537644",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Boyle",
+            "agent_path": "/root/independent_review",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11b12-b38d-7d62-a015-0a13e01ec385"
+          }
+        }
+      },
+      "start": "2026-10-08T10:34:38.083Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 44160,
+        "input_tokens": 55413,
+        "output_tokens": 775,
+        "reasoning_output_tokens": 46,
+        "total_tokens": 56188
+      }
+    },
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:32:53.404Z",
+          "2026-10-08T10:36:17.530Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/medium_implementation/B",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/medium_implementation/B",
+      "end": "2026-10-08T10:36:17.530Z",
+      "id": "01a11b12-b38d-7d62-a015-0a13e01ec385",
+      "raw_path": "workspaces/medium_implementation/B/.playbook-artifacts/host-rollouts/01a11b12-b38d-7d62-a015-0a13e01ec385.jsonl",
+      "sha256": "36942ca77cd21aeb8c592c5265d340b5b7829135fe45ee180dc3e802e5697f6a",
+      "source": "exec",
+      "start": "2026-10-08T10:32:53.404Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 198400,
+        "input_tokens": 237137,
+        "output_tokens": 6259,
+        "reasoning_output_tokens": 870,
+        "total_tokens": 243396
+      }
+    }
+  ],
+  "mechanical": {
+    "returncode": 0,
+    "state_present": true,
+    "status": "PASS",
+    "stderr": "test_existing_route_is_idempotent (test_router.RouterTests) ... ok\ntest_high_value_goes_to_senior (test_router.RouterTests) ... ok\ntest_missing_region_goes_to_manual_review (test_router.RouterTests) ... ok\ntest_negative_amount_is_invalid (test_router.RouterTests) ... ok\ntest_ordinary_lead_goes_to_standard (test_router.RouterTests) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.001s\n\nOK\n",
+    "stdout": ""
+  },
+  "operator_conclusion": {
+    "agent_reported_status": "PASS",
+    "failed_or_conflicting_worker_detected": null,
+    "fresh_session_success": null,
+    "implementation_subagents_started": 0,
+    "max_depth": 1,
+    "max_parallel": 1,
+    "posthoc_quality_status": null,
+    "review_subagents_started": 1,
+    "status": "BLOCKED",
+    "subagents_started": 1,
+    "task_status": "PASS",
+    "usage_complete": true
+  },
+  "operator_sessions": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/medium_implementation/B",
+        "--sandbox",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/medium_implementation/B/.playbook-artifacts/main-final.txt",
+        "-"
+      ],
+      "completed": true,
+      "events": ".playbook-artifacts/main-events.jsonl",
+      "label": "main",
+      "returncode": 0,
+      "started_utc": "2026-10-08T10:32:51.696163+00:00",
+      "thread_ids": [
+        "01a11b12-b38d-7d62-a015-0a13e01ec385"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 198400,
+          "input_tokens": 237137,
+          "output_tokens": 6259,
+          "reasoning_output_tokens": 870
+        }
+      ],
+      "wall_seconds": 206.775
+    }
+  ],
+  "protected_file_drift": [],
+  "scenario": "medium_implementation",
+  "synthetic_outputs": {
+    "STATE.md": "# Lead-routing state\n\nThe bounded fixture routes leads through `lead_router.route_lead(Lead)`. The main\nsession is the sole implementation writer; no implementation delegation occurred.\nOnly `lead_router/router.py` changed among the fixture source files. No accounts,\nnetwork, dependencies, commits or pushes were used. Source task files and supplied\ntests are unchanged.\n\n## Confirmed rules\n\nApply the README rules in order:\n1. Return any existing route (`existing_route is not None`) unchanged, before other checks.\n2. A negative amount without an existing route raises `ValueError`.\n3. None, empty or whitespace-only region routes to `manual_review`, at any valid amount.\n4. A present region with amount >= 10,000 routes to `senior`.\n5. Other leads route to `standard`.\n\nThe existing frozen `Lead` model and public interface are preserved. A provided\nempty route string is returned unchanged; no additional route validation is imposed.\n\n## Verification and commands\n\nPython 3.10.12; standard library only.\n- `python -m unittest discover -v`: baseline failed with five assertion failures;\n  after implementation all five supplied tests passed. Real output:\n  `.playbook-artifacts/baseline-unittest.txt` and `.playbook-artifacts/unittest.txt`.\n- `python -c <contents of .playbook-artifacts/boundary-check.py>`: 11 additional\n  precedence/boundary checks passed; output in `.playbook-artifacts/boundary-check.txt`.\n- Required local evaluator command: `python .evaluation/evaluate.py check-workspace\n  --scenario medium_implementation --workspace .`. Evaluator returned PASS with state present and all five tests passing. Output:\n  `.playbook-artifacts/evaluation.txt`.\n- Independent read-only native reviewer completed after implementation: validated,\n  verdict PASS, no findings. Request, dispatch and actual return are saved separately\n  under `.playbook-artifacts/`. Source/state hashes matched before and after review.\n  No CLI Role Runner validation is claimed; the user required native host tools.\n  Implementation workers: zero; independent reviewers: one, depth one.\n  The final run status is PASS in `run-result.json`.\n\n## Limits and continuity\n\nThis is verified local synthetic behavior, not an external integration or production\nrollout. Behavior for non-finite amounts, incorrectly typed inputs and validation of\nroute names is outside the documented fixture; no extra policy was invented.\nNo fresh-session handoff or usage/cost/human-time observations were performed.\nA denied/failed required review or missing required evidence makes this run BLOCKED.\n\nNext safe change: clarify non-finite numeric input policy if the fixture later expands,\nthen add acceptance cases without weakening the current rules. Before any next change,\nread README and current source, rerun the supplied tests, and obtain a new review.\nRecover by reverting only the router guards added in this run; this restores the known\nincomplete behavior. No data migration or dependency cleanup is needed.\n",
+    "lead_router/router.py": "\"\"\"Route leads according to the documented queue rules.\"\"\"\n\nfrom .models import Lead\n\n\ndef route_lead(lead: Lead) -> str:\n    \"\"\"Return the queue for a lead, applying README.md rules in order.\"\"\"\n    if lead.existing_route is not None:\n        return lead.existing_route\n    if lead.amount < 0:\n        raise ValueError(\"Lead amount must be non-negative\")\n    if lead.region is None or not lead.region.strip():\n        return \"manual_review\"\n    if lead.amount >= 10_000:\n        return \"senior\"\n    return \"standard\"\n"
+  },
+  "workspace": "workspaces/medium_implementation/B"
+}

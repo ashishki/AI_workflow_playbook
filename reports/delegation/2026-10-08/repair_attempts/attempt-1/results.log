@@ -1,0 +1,80 @@
+test_invalid_weights_are_rejected (test_budget.BudgetTests) ... ok
+test_order_and_proportion_are_preserved (test_budget.BudgetTests) ... ok
+test_rounding_preserves_exact_total (test_budget.BudgetTests) ... ok
+test_actual_independent_review_findings (test_precision.PrecisionTests) ... ok
+test_large_magnitudes_and_varied_counts (test_precision.PrecisionTests) ... test_seeded_currency_allocations (test_precision.PrecisionTests) ... ok
+
+======================================================================
+FAIL: test_large_magnitudes_and_varied_counts (test_precision.PrecisionTests) (total=1e+16, count=18)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 34, in test_large_magnitudes_and_varied_counts
+    with self.subTest(total=total,count=count): self.assert_conservation(total,[1]*count)
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 18, in assert_conservation
+    self.assertEqual(sum((Decimal(str(x)) for x in result),Decimal(0)),Decimal(str(total)))
+AssertionError: Decimal('10000000000000000.02') != Decimal('1E+16')
+
+======================================================================
+FAIL: test_large_magnitudes_and_varied_counts (test_precision.PrecisionTests) (total=1.7976931348623157e+308, count=9)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 34, in test_large_magnitudes_and_varied_counts
+    with self.subTest(total=total,count=count): self.assert_conservation(total,[1]*count)
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 15, in assert_conservation
+    self.assertTrue(math.isfinite(sum(result)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_large_magnitudes_and_varied_counts (test_precision.PrecisionTests) (total=1.7976931348623157e+308, count=11)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 34, in test_large_magnitudes_and_varied_counts
+    with self.subTest(total=total,count=count): self.assert_conservation(total,[1]*count)
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 15, in assert_conservation
+    self.assertTrue(math.isfinite(sum(result)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_large_magnitudes_and_varied_counts (test_precision.PrecisionTests) (total=1.7976931348623157e+308, count=12)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 34, in test_large_magnitudes_and_varied_counts
+    with self.subTest(total=total,count=count): self.assert_conservation(total,[1]*count)
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 15, in assert_conservation
+    self.assertTrue(math.isfinite(sum(result)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_large_magnitudes_and_varied_counts (test_precision.PrecisionTests) (total=1.7976931348623157e+308, count=17)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 34, in test_large_magnitudes_and_varied_counts
+    with self.subTest(total=total,count=count): self.assert_conservation(total,[1]*count)
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 15, in assert_conservation
+    self.assertTrue(math.isfinite(sum(result)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_large_magnitudes_and_varied_counts (test_precision.PrecisionTests) (total=1.7976931348623157e+308, count=18)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 34, in test_large_magnitudes_and_varied_counts
+    with self.subTest(total=total,count=count): self.assert_conservation(total,[1]*count)
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 15, in assert_conservation
+    self.assertTrue(math.isfinite(sum(result)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_large_magnitudes_and_varied_counts (test_precision.PrecisionTests) (total=1.7976931348623157e+308, count=20)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 34, in test_large_magnitudes_and_varied_counts
+    with self.subTest(total=total,count=count): self.assert_conservation(total,[1]*count)
+  File "/srv/openclaw-you/workspace/AI_workflow_playbook/reports/delegation/2026-10-08/corrections/test_precision.py", line 15, in assert_conservation
+    self.assertTrue(math.isfinite(sum(result)))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.425s
+
+FAILED (failures=7)

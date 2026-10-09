@@ -1,0 +1,9 @@
+{
+  "probe": "empty small_fix workspace; no code or tests",
+  "observed": {
+    "status": "PASS",
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "\n----------------------------------------------------------------------\nRan 0 tests in 0.000s\n\nOK\n"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "kind": "OBSERVED_NATIVE_CHILD_COMMAND_EVIDENCE",
+  "limits": [
+    "These excerpts prove the recorded command calls and outputs, not all worker instructions or OS read-only isolation."
+  ],
+  "records": [
+    {
+      "actual_command_source": "text((await tools.exec_command({cmd:\"cat logs/archive.jsonl data/archive/r29_snapshot.json src/legacy/reservation_cache.py; python -B -m src.replay data/current/inventory.json\",\"max_output_tokens\":5000})).output);\n",
+      "actual_tool_outputs": [
+        {
+          "call_id": "call_4227471c7fb944a8950cb54133d0aae6",
+          "id": "ctco_01a11cd3-bd1d-7650-8d8f-4cf4c2ee2673",
+          "internal_chat_message_metadata_passthrough": {
+            "create_time": 1791485000.9896443,
+            "turn_id": "01a11cd3-7373-7e43-b9b1-af9bde24f580"
+          },
+          "output": [
+            {
+              "text": "Script completed\nWall time 0.3 seconds\nOutput:\n",
+              "type": "input_text"
+            },
+            {
+              "text": "{\n  \"build\": \"r29\",\n  \"message\": \"restart cache loss; decimal provider import; timestamp-only polls\",\n  \"record_id\": \"ARC-LOG-29\"\n}\n{\n  \"build\": \"r29\",\n  \"metrics\": {\n    \"ready_orders\": 1,\n    \"refunded_minor\": 400,\n    \"reserved_units\": 2\n  },\n  \"record_id\": \"ARC-SNAPSHOT-29\",\n  \"scope\": \"single-warehouse poll bridge; cannot override current input\"\n}\ndef key(row):\n    # Old single-warehouse bridge feeds have globally unique event IDs.\n    return row['event_id']\n\ndef collapsed(rows):\n    return {key(row): row for row in rows}\n{\n  \"inventory\": {\n    \"accepted\": 1,\n    \"holds\": [\n      {\n        \"order_id\": \"O-17\",\n        \"qty\": 2,\n        \"sku\": \"BOOK\",\n        \"tenant\": \"shop\",\n        \"warehouse\": \"north\"\n      }\n    ],\n    \"replayed\": 2,\n    \"stock\": [\n      {\n        \"available\": 6,\n        \"on_hand\": 8,\n        \"reserved\": 2,\n        \"sku\": \"BOOK\",\n        \"tenant\": \"shop\",\n        \"warehouse\": \"north\"\n      },\n      {\n        \"available\": 8,\n        \"on_hand\": 8,\n        \"reserved\": 0,\n        \"sku\": \"BOOK\",\n        \"tenant\": \"shop\",\n        \"warehouse\": \"south\"\n      }\n    ]\n  },\n  \"metrics\": {\n    \"ready_orders\": 0,\n    \"refunded_minor\": 0,\n    \"rejected_refunds\": 0,\n    \"reserved_units\": 2\n  },\n  \"orders\": [\n    {\n      \"captured_minor\": 1000,\n      \"net_minor\": 1000,\n      \"order_id\": \"O-17\",\n      \"ready\": false,\n      \"refunded_minor\": 0,\n      \"revision\": 10,\n      \"status\": \"paid\",\n      \"tenant\": \"shop\"\n    }\n  ],\n  \"refunds\": {\n    \"accepted\": [],\n    \"rejected\": [],\n    \"replayed\": 0,\n    \"totals\": []\n  }\n}\n",
+              "type": "input_text"
+            }
+          ],
+          "type": "custom_tool_call_output"
+        }
+      ],
+      "call_id": "call_4227471c7fb944a8950cb54133d0aae6",
+      "matched_scenarios": [
+        "inventory"
+      ],
+      "raw_trace_sha256": "f4e3f1d7cf1470e05059b240a3b86e82b7df2ada5c7ac01cef03e401765169c6",
+      "thread_id": "01a11cd3-7309-7731-87c8-8ad8ade2ff04",
+      "tool_name": "exec",
+      "tool_type": "custom_tool_call"
+    },
+    {
+      "actual_command_source": "text((await tools.exec_command({cmd:\"python -B -m src.replay data/current/checkout.json\",\"max_output_tokens\":3000})).output);\n",
+      "actual_tool_outputs": [
+        {
+          "call_id": "call_9b62f1d192fd4cd68d1d66fef1be340c",
+          "id": "ctco_01a11cd3-c92d-7ca0-871b-e6cc40de61ed",
+          "internal_chat_message_metadata_passthrough": {
+            "create_time": 1791485004.077183,
+            "turn_id": "01a11cd3-8583-7533-9369-ded5e2d9739c"
+          },
+          "output": [
+            {
+              "text": "Script completed\nWall time 0.2 seconds\nOutput:\n",
+              "type": "input_text"
+            },
+            {
+              "text": "{\n  \"inventory\": {\n    \"accepted\": 1,\n    \"holds\": [\n      {\n        \"order_id\": \"O-17\",\n        \"qty\": 2,\n        \"sku\": \"BOOK\",\n        \"tenant\": \"shop\",\n        \"warehouse\": \"north\"\n      }\n    ],\n    \"replayed\": 0,\n    \"stock\": [\n      {\n        \"available\": 6,\n        \"on_hand\": 8,\n        \"reserved\": 2,\n        \"sku\": \"BOOK\",\n        \"tenant\": \"shop\",\n        \"warehouse\": \"north\"\n      }\n    ]\n  },\n  \"metrics\": {\n    \"ready_orders\": 0,\n    \"refunded_minor\": 0,\n    \"rejected_refunds\": 0,\n    \"reserved_units\": 2\n  },\n  \"orders\": [\n    {\n      \"captured_minor\": 1000,\n      \"net_minor\": 1000,\n      \"order_id\": \"O-17\",\n      \"ready\": false,\n      \"refunded_minor\": 0,\n      \"revision\": 2,\n      \"status\": \"pending\",\n      \"tenant\": \"shop\"\n    }\n  ],\n  \"refunds\": {\n    \"accepted\": [],\n    \"rejected\": [],\n    \"replayed\": 0,\n    \"totals\": []\n  }\n}\n",
+              "type": "input_text"
+            }
+          ],
+          "type": "custom_tool_call_output"
+        }
+      ],
+      "call_id": "call_9b62f1d192fd4cd68d1d66fef1be340c",
+      "matched_scenarios": [
+        "checkout"
+      ],
+      "raw_trace_sha256": "0f79beb06b48bb5d41b9804a4cf5a8fae2881201bb24f891cad37e5b1f1dd10e",
+      "thread_id": "01a11cd3-853f-71e3-9408-228dd8747893",
+      "tool_name": "exec",
+      "tool_type": "custom_tool_call"
+    },
+    {
+      "actual_command_source": "const results=await Promise.allSettled([\ntools.exec_command({cmd:\"cat docs/archive/cache-ticket.md docs/archive/order-ticket.md data/archive/r29_snapshot.json config/archive/r29.json\",\"max_output_tokens\":7000}),\ntools.exec_command({cmd:\"python -B -m src.replay data/current/refunds.json\",\"max_output_tokens\":5000}),\ntools.exec_command({cmd:\"cat src/adapters.py src/streaming.py src/checkout/states.py\",\"max_output_tokens\":8000})\n]);for(const r of results)text(r.status===\"fulfilled\"?r.value.output:r.reason);\n",
+      "actual_tool_outputs": [
+        {
+          "call_id": "call_73e830435b324789b5903c8a30b34bcb",
+          "id": "ctco_01a11cd3-d8de-73d0-965d-a4424f2440aa",
+          "internal_chat_message_metadata_passthrough": {
+            "create_time": 1791485008.0943756,
+            "turn_id": "01a11cd3-96cd-7192-91e2-16ac275b04f5"
+          },
+          "output": [
+            {
+              "text": "Script completed\nWall time 0.5 seconds\nOutput:\n",
+              "type": "input_text"
+            },
+            {
+              "text": "# ARC-CACHE-29 (resolved, build r29, 2026-09-12)\nSingle-warehouse polling cache evicted an event key during restart.\nThe repair persisted cache keys; no current r31 projectors were deployed.\nScope: legacy.reservation_cache; state: historical, superseded.\n# ARC-POLL-29 (resolved, build r29, 2026-09-15)\nRemote poll responses lacked a source revision; use latest poll time.\nThe r31 full-snapshot feed now has per-order source revisions. This old\nrecommendation applies only to the retired polling route.\n{\n  \"build\": \"r29\",\n  \"metrics\": {\n    \"ready_orders\": 1,\n    \"refunded_minor\": 400,\n    \"reserved_units\": 2\n  },\n  \"record_id\": \"ARC-SNAPSHOT-29\",\n  \"scope\": \"single-warehouse poll bridge; cannot override current input\"\n}\n{\n  \"build\": \"r29\",\n  \"checkout_feed\": \"poll-timestamp\",\n  \"entrypoint\": \"legacy.poll\",\n  \"provider_feed\": \"decimal-file-import\",\n  \"warehouse_adapter\": \"single-warehouse-cache\"\n}\n",
+              "type": "input_text"
+            },
+            {
+              "text": "{\n  \"inventory\": {\n    \"accepted\": 1,\n    \"holds\": [\n      {\n        \"order_id\": \"O-17\",\n        \"qty\": 2,\n        \"sku\": \"BOOK\",\n        \"tenant\": \"shop\",\n        \"warehouse\": \"north\"\n      }\n    ],\n    \"replayed\": 0,\n    \"stock\": [\n      {\n        \"available\": 6,\n        \"on_hand\": 8,\n        \"reserved\": 2,\n        \"sku\": \"BOOK\",\n        \"tenant\": \"shop\",\n        \"warehouse\": \"north\"\n      }\n    ]\n  },\n  \"metrics\": {\n    \"ready_orders\": 1,\n    \"refunded_minor\": 800,\n    \"rejected_refunds\": 1,\n    \"reserved_units\": 2\n  },\n  \"orders\": [\n    {\n      \"captured_minor\": 1000,\n      \"net_minor\": 200,\n      \"order_id\": \"O-17\",\n      \"ready\": true,\n      \"refunded_minor\": 800,\n      \"revision\": 10,\n      \"status\": \"paid\",\n      \"tenant\": \"shop\"\n    }\n  ],\n  \"refunds\": {\n    \"accepted\": [\n      {\n        \"amount_minor\": 400,\n        \"order_id\": \"O-17\",\n        \"provider\": \"atlas\",\n        \"refund_id\": \"R-17\",\n        \"tenant\": \"shop\"\n      },\n      {\n        \"amount_minor\": 400,\n        \"order_id\": \"O-17\",\n        \"provider\": \"atlas\",\n        \"refund_id\": \"R-17\",\n        \"tenant\": \"shop\"\n      }\n    ],\n    \"rejected\": [\n      {\n        \"event_id\": \"REF-323\",\n        \"reason\": \"exceeds_capture\"\n      }\n    ],\n    \"replayed\": 0,\n    \"totals\": [\n      {\n        \"order_id\": \"O-17\",\n        \"refunded_minor\": 800,\n        \"tenant\": \"shop\"\n      }\n    ]\n  }\n}\n",
+              "type": "input_text"
+            },
+            {
+              "text": "\"\"\"Decode the supported current transport formats into event streams.\"\"\"\nimport copy\nfrom src.validation import CHANNELS, canonical, exact_keys, mapping, opening\nfrom src.streaming import reconstruct\nfrom src.checkpoints import append, empty\n\ndef decode(document):\n    mapping(document, 'input document')\n    # A canonical document is supported for small offline reproductions.\n    # Batch adapters are transport-only and never select domain revisions.\n    if 'format' not in document:\n        return copy.deepcopy(canonical(document))\n    if document.get('build') != 'r31':\n        raise ValueError('unsupported replay build')\n    format_name = document['format']\n    if format_name == 'batches-v1':\n        exact_keys(document, {'build','format','opening_stock','batches'},\n                   {'build','format','opening_stock','batches'}, 'batch replay')\n        opening(document['opening_stock'])\n        result = empty(document['opening_stock'])\n        result.update(copy.deepcopy(reconstruct(document['batches'])))\n        return canonical(result)\n    if format_name == 'checkpoint-v1':\n        exact_keys(document, {'build','format','checkpoint','batches'},\n                   {'build','format','checkpoint','batches'}, 'checkpoint replay')\n        suffix = reconstruct(document['batches'])\n        return append(document['checkpoint'], suffix)\n    raise ValueError('unsupported transport format')\n\"\"\"Deterministic batch delivery reconstruction, independent of wall clock.\"\"\"\nimport json\nfrom src.common.ids import identifier\nfrom src.common.numbers import whole\nfrom src.common.time import instant\nfrom src.common.errors import conflict\nfrom src.validation import CHANNELS, array, exact_keys, event\n\ndef payload(batch):\n    # delivered_at and batch_id describe transport, not logical payload.\n    return json.dumps({'channel':batch['channel'], 'ordinal':batch['ordinal'],\n                       'records':batch['records']}, sort_keys=True,\n                      separators=(',', ':'))\n\ndef reconstruct(batches):\n    unique, channel_ordinals = {}, {}\n    for raw in array(batches, 'batches'):\n        exact_keys(raw, {'batch_id','channel','ordinal','delivered_at','records'},\n                   {'batch_id','channel','ordinal','delivered_at','records'}, 'batch')\n        batch_id = identifier(raw['batch_id'])\n        channel = raw['channel']\n        if channel not in CHANNELS:\n            raise ValueError('unknown batch channel')\n        ordinal = whole(raw['ordinal'])\n        instant(raw['delivered_at'])\n        for row in array(raw['records'], 'batch records'):\n            event(row, channel)\n        signature = payload(raw)\n        if batch_id in unique:\n            if unique[batch_id][1] != signature:\n                conflict('transport batch', batch_id)\n            continue\n        slot = channel, ordinal\n        if slot in channel_ordinals:\n            raise ValueError('multiple batch IDs claim one channel ordinal')\n        unique[batch_id] = raw, signature\n        channel_ordinals[slot] = batch_id\n    result = {channel:[] for channel in CHANNELS}\n    for channel in CHANNELS:\n        ordinals = sorted(ordinal for (name, ordinal) in channel_ordinals if name == channel)\n        if ordinals != list(range(len(ordinals))):\n            raise ValueError('batch channel has an ordinal gap')\n        for ordinal in ordinals:\n            batch_id = channel_ordinals[channel, ordinal]\n            result[channel].extend(unique[batch_id][0]['records'])\n    return result\nSTATES = frozenset({'pending', 'paid', 'shipped', 'cancelled'})\nREFUNDABLE = frozenset({'paid', 'shipped', 'cancelled'})\n",
+              "type": "input_text"
+            }
+          ],
+          "type": "custom_tool_call_output"
+        }
+      ],
+      "call_id": "call_73e830435b324789b5903c8a30b34bcb",
+      "matched_scenarios": [
+        "refunds"
+      ],
+      "raw_trace_sha256": "385d77b0e84ab4071aa73abe009e01f1cf65d0515c910f818370a9a8ed64a25f",
+      "thread_id": "01a11cd3-9691-7682-af2f-0b6f368ce137",
+      "tool_name": "exec",
+      "tool_type": "custom_tool_call"
+    }
+  ],
+  "run_id": "046b19a93202",
+  "source": "existing captured native child traces; no new model or replay calls",
+  "state_claim": "A2 investigators ran inventory/checkout/refunds CLI replays before repair",
+  "status": "PASS_OBSERVED"
+}

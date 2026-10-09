@@ -1,0 +1,66 @@
+{
+  "head": "85180b0b1b1ad60f842ee1e02ddf1f4da89c23c9",
+  "raw_root": ".playbook-artifacts/controlled-delegation",
+  "receipts": [
+    {
+      "path": "evidence/medium_implementation-A.json",
+      "sha256": "8e1a55e42b683c8ad8e8d0573a69978c60d6d6ffab5e26b4bf1253bc69306e03"
+    },
+    {
+      "path": "evidence/conflict_detection-A.json",
+      "sha256": "8b18f1080292f9b33386a4c3dc1650b9a5418a0e5eda65f499a8632aea066c4b"
+    },
+    {
+      "path": "evidence/fresh_session-B.json",
+      "sha256": "0bc9c1179314a4f0702d7513f2a9e08514d26b37fad91ea689dc73a627e077e9"
+    },
+    {
+      "path": "evidence/fresh_session-A.json",
+      "sha256": "4b6b3d53bf487327148c5c6bc0eb1d7e6af11b719721b8f6d3fe6c8bfb0cc898"
+    },
+    {
+      "path": "evidence/medium_implementation-C.json",
+      "sha256": "1d128d5a0d9e34b495bec5f14d37aa33afaf4e692ddd84184175abec35395c25"
+    },
+    {
+      "path": "evidence/parallel_research-C.json",
+      "sha256": "dcf922cd8cd08ca5921398c15ccaea4b7d27763a14821074704c29b9264f8d24"
+    },
+    {
+      "path": "evidence/conflict_detection-B.json",
+      "sha256": "f369da5952944490adbd73a17ca8b0368dccdd855a312e28bec13ed48e6eb64b"
+    },
+    {
+      "path": "evidence/conflict_detection-C.json",
+      "sha256": "07a149c8fbc7866e776f8e71f58f5172056c611ec1ed81ddb4c96c859d293825"
+    },
+    {
+      "path": "evidence/small_fix-B.json",
+      "sha256": "d6ce3baafe9ceacff5b78cb0d23a7acd45bbf459bceeb00e295679e9f063213a"
+    },
+    {
+      "path": "evidence/fresh_session-C.json",
+      "sha256": "ce936b2d73a424bcbff9eb110c83a8d531966495492c0af59190de22dcd361cb"
+    },
+    {
+      "path": "evidence/small_fix-C.json",
+      "sha256": "e85f0c89fb90d9c53323803cbce4a483d484b9cff78ab9bedb7ac5a7e34f87cf"
+    },
+    {
+      "path": "evidence/parallel_research-A.json",
+      "sha256": "17c22cac59a825ff2c0a9ad8f60fc27156e39a53b2b95310f9d8b1af710f81ac"
+    },
+    {
+      "path": "evidence/medium_implementation-B.json",
+      "sha256": "94dd743ccba09de3e611bdf5c189471c9ca62551d5e7706a106297ebe941069b"
+    },
+    {
+      "path": "evidence/small_fix-A.json",
+      "sha256": "ea8f00046606078230e628ab493e1aaf06ca90a83ac229ff7841e6864b687db3"
+    },
+    {
+      "path": "evidence/parallel_research-B.json",
+      "sha256": "b5f5822b4f15994db3318e8b4ca5cf6c664f8b0e769b3b422c3a636151f6ae11"
+    }
+  ]
+}

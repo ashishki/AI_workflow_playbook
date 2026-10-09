@@ -1,0 +1,178 @@
+{
+  "condition": "A",
+  "files": [
+    {
+      "bytes": 1006,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/baseline-tests.txt",
+      "sha256": "2d328639e83e7ed9f1358f1e289691e1c50692d8cb1f9676e5871bc149f3b8ec"
+    },
+    {
+      "bytes": 354,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/unit-tests.txt",
+      "sha256": "8ac43823071d92805315fed0ed9b147243c2561e021e4c1fed1d5e5e638108b9"
+    },
+    {
+      "bytes": 487,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/workspace-evaluator.txt",
+      "sha256": "4803021d8e6a98bc3c79ad54a1a73a6d6986c13a430f3aaebb457977812b5c75"
+    },
+    {
+      "bytes": 271,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/supplemental-checks.txt",
+      "sha256": "a902e2367409e29ddb75bd2476aa4cea8c7cfda9329af097eee8020c8914b4a7"
+    },
+    {
+      "bytes": 2111,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/supplemental_checks.py",
+      "sha256": "6419423a6f81bf96b564af03d5e208e24aa894f11837b175e51aa2921623cf3d"
+    },
+    {
+      "bytes": 240,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/dispatch-return.json",
+      "sha256": "24ecd2d81d08b2c0bee00db71fc4b8e645b41238c673319daf654163565cabbb"
+    },
+    {
+      "bytes": 489,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/integrity-check.json",
+      "sha256": "e65aebe03f06b32756d59624b840698622a1869835cc130d56c57bfc164dc45c"
+    },
+    {
+      "bytes": 1115,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/operator-sessions.json",
+      "sha256": "a5300836211b86e754047d6fb967ccd523eb7ba90d5f3cedfb07a363b9a8a63b"
+    },
+    {
+      "bytes": 389,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/operator-mechanical.json",
+      "sha256": "fe7e471b3ce7c89d224adf79f9587d63be74c92e277e65476760c048e7793d7b"
+    },
+    {
+      "bytes": 1028,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/initial-sha256.json",
+      "sha256": "97564c59c7464f8a4b059bff464605a122c63d4aa255348b6fcc30f41e9b440e"
+    },
+    {
+      "bytes": 1531,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/agent-run-result.json",
+      "sha256": "1a5d1eb6c2124cb413a2e5beda2012d805ee06cdbc2165d871d8bc56659992d9"
+    },
+    {
+      "bytes": 44603,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/main-events.jsonl",
+      "sha256": "c5c6bb1f9aabe11685fa2c54b7b115752d40fe389d0ae55f9c7201ecd74f6c4f"
+    },
+    {
+      "bytes": 244031,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/host-rollouts/01a11b15-db6c-7bb1-9807-34467d02de61.jsonl",
+      "sha256": "04ef648bc8d6685f673bd1eb01b7cd04f854bd342d4c7cc7e71280eccca29c86"
+    },
+    {
+      "bytes": 1431,
+      "path": "workspaces/small_fix/A/.playbook-artifacts/posthoc-extreme-checks.json",
+      "sha256": "c6ecd91d716acecbdff19ec529bb8d1db33e0e388aeb86cac4d30f4e615f71ca"
+    }
+  ],
+  "host_sessions": [
+    {
+      "active_intervals": [
+        [
+          "2026-10-08T10:36:20.294Z",
+          "2026-10-08T10:38:15.469Z"
+        ]
+      ],
+      "context": {
+        "approval_policy": "never",
+        "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/A",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "cwd": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/A",
+      "end": "2026-10-08T10:38:15.469Z",
+      "id": "01a11b15-db6c-7bb1-9807-34467d02de61",
+      "raw_path": "workspaces/small_fix/A/.playbook-artifacts/host-rollouts/01a11b15-db6c-7bb1-9807-34467d02de61.jsonl",
+      "sha256": "04ef648bc8d6685f673bd1eb01b7cd04f854bd342d4c7cc7e71280eccca29c86",
+      "source": "exec",
+      "start": "2026-10-08T10:36:20.294Z",
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 109440,
+        "input_tokens": 125997,
+        "output_tokens": 3969,
+        "reasoning_output_tokens": 966,
+        "total_tokens": 129966
+      }
+    }
+  ],
+  "mechanical": {
+    "returncode": 0,
+    "status": "PASS",
+    "stderr": "test_invalid_weights_are_rejected (test_budget.BudgetTests) ... ok\ntest_order_and_proportion_are_preserved (test_budget.BudgetTests) ... ok\ntest_rounding_preserves_exact_total (test_budget.BudgetTests) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.003s\n\nOK\n",
+    "stdout": ""
+  },
+  "operator_conclusion": {
+    "agent_reported_status": "PASS",
+    "failed_or_conflicting_worker_detected": null,
+    "fresh_session_success": null,
+    "implementation_subagents_started": 0,
+    "max_depth": 0,
+    "max_parallel": 0,
+    "posthoc_quality_status": "FAIL",
+    "review_subagents_started": 0,
+    "status": "FAIL",
+    "subagents_started": 0,
+    "task_status": "FAIL",
+    "usage_complete": true
+  },
+  "operator_sessions": [
+    {
+      "argv": [
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/bin/codex",
+        "exec",
+        "--cd",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/A",
+        "--sandbox",
+        "workspace-write",
+        "-c",
+        "approval_policy=\"never\"",
+        "--json",
+        "--output-last-message",
+        "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/workspaces/small_fix/A/.playbook-artifacts/main-final.txt",
+        "-"
+      ],
+      "completed": true,
+      "events": ".playbook-artifacts/main-events.jsonl",
+      "label": "main",
+      "returncode": 0,
+      "started_utc": "2026-10-08T10:36:18.803276+00:00",
+      "thread_ids": [
+        "01a11b15-db6c-7bb1-9807-34467d02de61"
+      ],
+      "timeout": false,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 109440,
+          "input_tokens": 125997,
+          "output_tokens": 3969,
+          "reasoning_output_tokens": 966
+        }
+      ],
+      "wall_seconds": 117.585
+    }
+  ],
+  "posthoc_and_review": {
+    ".playbook-artifacts/posthoc-extreme-checks.json": "{\n  \"scope\": \"same post-hoc probes derived from observed B/C independent findings; not preregistered outcome score\",\n  \"probes\": [\n    {\n      \"total\": \"1000000000000000.0\",\n      \"shares\": [\n        \"333333333333333.3\",\n        \"333333333333333.3\",\n        \"333333333333333.3\"\n      ],\n      \"float_sum\": \"1000000000000000.0\",\n      \"finite_sum\": true,\n      \"float_sum_equal\": true,\n      \"decimal_sum\": \"999999999999999.9\",\n      \"decimal_conservation\": false\n    },\n    {\n      \"total\": \"1e+16\",\n      \"shares\": [\n        \"3333333333333333.5\",\n        \"3333333333333333.5\",\n        \"3333333333333333.5\"\n      ],\n      \"float_sum\": \"1e+16\",\n      \"finite_sum\": true,\n      \"float_sum_equal\": true,\n      \"decimal_sum\": \"10000000000000000.5\",\n      \"decimal_conservation\": false\n    },\n    {\n      \"total\": \"1.7976931348623157e+308\",\n      \"shares\": [\n        \"5.992310449541053e+307\",\n        \"5.992310449541053e+307\",\n        \"5.992310449541053e+307\"\n      ],\n      \"float_sum\": \"inf\",\n      \"finite_sum\": false,\n      \"float_sum_equal\": false,\n      \"decimal_sum\": \"179769313486231590000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\n      \"decimal_conservation\": false\n    }\n  ]\n}\n"
+  },
+  "protected_file_drift": [],
+  "scenario": "small_fix",
+  "synthetic_outputs": {
+    "budget.py": "\"\"\"Allocate budgets using the largest-remainder method.\"\"\"\n\nfrom fractions import Fraction\n\n\ndef split_budget(total: float, weights: list[float]) -> list[float]:\n    \"\"\"Distribute cents in proportion to weights, breaking ties by input order.\"\"\"\n    total = Fraction(str(total))\n    if total < 0:\n        raise ValueError(\"total must be non-negative\")\n    weights = [Fraction(str(weight)) for weight in weights]\n    if not weights or any(weight <= 0 for weight in weights):\n        raise ValueError(\"weights must be positive\")\n    weight_sum = sum(weights)\n    shares = [total * 100 * weight / weight_sum for weight in weights]\n    cents = [share.numerator // share.denominator for share in shares]\n    order = sorted(range(len(weights)), key=lambda i: shares[i] - cents[i],\n                   reverse=True)\n    remaining = total * 100 - sum(cents)\n    whole_cents = remaining.numerator // remaining.denominator\n    for index in order[:whole_cents]:\n        cents[index] += 1\n\n    amounts = [Fraction(value, 100) for value in cents]\n    # Preserve any fractional cent in a total rather than rounding it away.\n    if remaining > whole_cents:\n        amounts[order[whole_cents]] += (remaining - whole_cents) / 100\n    return [float(amount) for amount in amounts]\n"
+  },
+  "workspace": "workspaces/small_fix/A"
+}

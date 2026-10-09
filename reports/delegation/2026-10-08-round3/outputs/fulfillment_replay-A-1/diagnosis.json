@@ -1,0 +1,92 @@
+{
+  "defects": [
+    {
+      "source_files": [
+        "src/inventory/registry.py"
+      ],
+      "evidence_ids": [
+        "INV-301",
+        "INV-302",
+        "INV-303",
+        "ORD-301",
+        "OBS-INV-31",
+        "TRACE-INV-31",
+        "OBS-JOIN-31",
+        "TRACE-JOIN-31"
+      ],
+      "mechanism": "Registry.accept keyed operations only by operation_id. INV-301 (shop/north/op-41) and INV-302 (shop/south/op-41) have identical order/sku/action/qty but are distinct operations; the bare key falsely classified INV-302 as replay. Identity must be (tenant, warehouse, operation_id), with immutable payload (order_id, sku, action, qty). INV-303 is the actual north replay and must remain suppressed. The one-line identity correction preserves payload-conflict and stock/hold validation. ARC-CACHE-29 describes restart eviction in the retired r29 single-warehouse reservation cache, whereas config/routes.json selects r31 scoped-batch-v2 and src.pipeline.replay invokes the current projector without that cache. ARC-LOG-29 and ARC-SNAPSHOT-29 also describe the retired r29 route and cannot override current events.",
+      "impact": "OBS-INV-31/TRACE-INV-31 record accepted 1, replayed 2 and only 2 reserved units instead of accepted 2, replayed 1 and 4 reserved units. The south hold is missing, so the two-warehouse requirements in ORD-301 cannot be fulfilled. This contributes to the combined readiness failure in OBS-JOIN-31; checkout independently hides readiness as well.",
+      "stale_evidence_ids": [
+        "ARC-CACHE-29",
+        "ARC-LOG-29",
+        "ARC-SNAPSHOT-29"
+      ]
+    },
+    {
+      "source_files": [
+        "src/checkout/revisions.py"
+      ],
+      "evidence_ids": [
+        "ORD-310",
+        "ORD-311",
+        "OBS-ORD-31",
+        "TRACE-ORD-31",
+        "ORD-301",
+        "ORD-302",
+        "OBS-JOIN-31",
+        "TRACE-JOIN-31"
+      ],
+      "mechanism": "select compared delivered_at rather than source revision. ORD-310 is revision 10/paid delivered at 09:00 UTC, while ORD-311 is revision 2/pending delivered at 09:05 UTC. The later delivery incorrectly replaces the newer snapshot. ORD-301/ORD-302 reproduce the same ordering across the combined checkpoint and suffix. Select the greatest numeric revision per (tenant, order_id), regardless of delivery time or input order, while retaining immutable status/capture/lines conflict detection for every duplicate revision. Newer pending snapshots remain valid; no terminal-status rule is added. ARC-POLL-29 recommends poll timestamps only because the retired r29 polling feed lacked source revisions. Current source-snapshot-v3 records contain revisions, so that advice is inapplicable. ARC-LOG-29 and ARC-SNAPSHOT-29 concern r29, not this feed.",
+      "impact": "OBS-ORD-31/TRACE-ORD-31 expose revision 2/pending/ready false instead of revision 10/paid/ready true even with sufficient inventory in the isolated checkout case. In the combined replay, the wrong pending status rejects all three refund deliveries as order_not_refundable, yielding zero refunded and net 1000, and masks the independent refund-identity defect. Correct checkout selection restores refund eligibility; the inventory correction also restores combined fulfillment readiness.",
+      "stale_evidence_ids": [
+        "ARC-POLL-29",
+        "ARC-LOG-29",
+        "ARC-SNAPSHOT-29"
+      ]
+    },
+    {
+      "source_files": [
+        "src/refunds/ledger.py"
+      ],
+      "evidence_ids": [
+        "REF-321",
+        "REF-322",
+        "REF-323",
+        "ORD-320",
+        "OBS-REF-31",
+        "TRACE-REF-31",
+        "OBS-JOIN-31",
+        "TRACE-JOIN-31"
+      ],
+      "mechanism": "Ledger.accept used (tenant, provider, attempt_id) as identity. REF-321 and REF-322 deliver the same shop/atlas/R-17 refund for O-17, amount 400, with attempts delivery-a and delivery-b; different delivery attempts must not create new logical refunds. Identity must be (tenant, provider, refund_id), with immutable payload (order_id, amount_minor). Registration remains before eligibility and capture checks so previously rejected refunds also replay once without reconsideration; retries never consume budget. REF-323 is distinct refund R-18 for 500. ARC-MONEY-29 concerns rounding in retired r29 decimal-file imports; r31 settled-deliveries-v2 uses integer minor amounts, including 400/400/500 here, so rounding does not cause this incident. ARC-LOG-29 and ARC-SNAPSHOT-29 refer to the retired r29 route.",
+      "impact": "With the valid paid ORD-320 snapshot, the broken ledger counts both R-17 deliveries, spends 800 of captured 1000 and incorrectly rejects REF-323 as exceeds_capture. OBS-REF-31/TRACE-REF-31 record total 800, replayed 0 and that rejection. Correct accounting accepts R-17 once and R-18 once: total 900, replayed 1 and no rejection. Once inventory and checkout are also corrected, combined output has ready_orders 1, reserved_units 4, refunded_minor 900, rejected_refunds 0 and net_minor 100.",
+      "stale_evidence_ids": [
+        "ARC-MONEY-29",
+        "ARC-LOG-29",
+        "ARC-SNAPSHOT-29"
+      ]
+    }
+  ],
+  "verification": {
+    "commands": [
+      "python -B -m src.replay data/current/combined.json",
+      "python -B -m unittest discover -s tests -v",
+      "python -B -"
+    ],
+    "observed_results": [
+      "Before changes, combined CLI replay exited 0 but reported ready_orders 0, reserved_units 2, refunded_minor 0, rejected_refunds 3; order revision 2/pending, net_minor 1000.",
+      "Before changes, supplied unittest discovery ran 8 tests: 4 failed (warehouse, checkout, provider, joined); normal path and all 3 transport checks passed.",
+      "After the three one-line source corrections, supplied unittest discovery passed all 8 tests.",
+      "After changes, combined CLI replay reported ready_orders 1, reserved_units 4, refunded_minor 900, rejected_refunds 0; revision 10/paid/ready true, net_minor 100; inventory accepted 2/replayed 1; refunds accepted 2/replayed 1.",
+      "The python -B - stdin check passed 43 in-memory assertions: warehouse tenant/warehouse scope, true replay and payload conflicts; unknown stock, insufficient stock, own-hold release constraints; source revision ordering, equal delivery times, revision conflicts including discarded older snapshots, newer pending/cancelled snapshots, tenant scope and summed duplicate lines; logical refund tenant/provider scope, retry and payload conflicts, distinct refunds sharing attempt ID, capture equality, rejected retries and paid/shipped/cancelled eligibility; all five frozen cases were pure, repeatable and equivalent to decoded canonical replay. No helper/test/cache files were written.",
+      "All five local cases produced expected metrics: baseline ready 1/reserved 2/refunded 400/rejected 0; inventory 1/4/0/0; checkout 1/2/0/0; refunds 1/2/900/0; combined 1/4/900/0.",
+      "Initial stdin report validator failed because it parsed the pretty-printed single JSON object in logs/archive.jsonl line by line. Corrected only the transient validator to parse the complete object; no source or input change was needed.",
+      "Report validation passed: exact diagnosis schema, three causal source paths, all current/stale evidence IDs resolve in immutable local records, required STATE headings present; changed source compiled in memory without cache writes."
+    ]
+  },
+  "remaining_limits": [
+    "Verification is limited to local synthetic r31 records, the frozen supplied tests and the listed in-memory checks; it does not establish live or production success.",
+    "No operator/evaluator access, external data, network, accounts, dependencies, commit/push, repair feedback or model reviewer was used. The independent operator rubric has not been run by this agent.",
+    "Transport adapters, checkpoint integrity logic and retired r29 source were left unchanged; this repair addresses exactly the three observed domain causes."
+  ]
+}

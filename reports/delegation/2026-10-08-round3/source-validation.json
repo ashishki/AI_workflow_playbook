@@ -1,0 +1,22 @@
+{
+  "scope": "current post-batch source corrections; no new A/B/C calls or score edits",
+  "vnext": {
+    "status": "PASS",
+    "tests": 111,
+    "receipt": "source-checks/vnext/receipt.json"
+  },
+  "contracts": {
+    "status": "PASS",
+    "receipt": "source-checks/contracts/receipt.json"
+  },
+  "runtime": {
+    "status": "PASS",
+    "receipt": "source-checks/runtime/receipt.json"
+  },
+  "independent_initial_review": "validated STOP_SHIP",
+  "independent_correction_recheck": "validated PASS",
+  "limits": [
+    "Final review scope is corrections, corrected interpretation and related evidence; first full review audited six apps.",
+    "USD and active human minutes remain unknown; worker instructions/OS read-only not proved."
+  ]
+}

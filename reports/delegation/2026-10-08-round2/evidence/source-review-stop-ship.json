@@ -1,0 +1,92 @@
+{
+  "cost_usd": null,
+  "raw_trace_sha256": "1c9efd95a9e0f73c67674d0db0c0e8c173bc858f8f2e9629a20e61859550af1b",
+  "report": "Confirmed source defects:\n\n- **QA timeout aborts collection:** `round2.py:85` leaves `subprocess.TimeoutExpired` uncaught. The run loses its review/result receipt instead of recording missing QA as BLOCKED; retry then hits the recovery guard at line 144. Catch the timeout, preserve available evidence, and return a BLOCKED review receipt.\n\n- **Verdict precedence and hash binding are inconsistent:** `round2_checks.py:78–88` returns FAIL for validated STOP_SHIP even when `review_engine_matches=False`, but returns BLOCKED for a matching STOP_SHIP when a phase is incomplete. Both outcomes were reproduced with read-only, in-memory probes. Check hash binding before accepting a review verdict, and let a confirmed, matching STOP_SHIP take precedence over missing completion.\n\n- **Incomplete reviewer usage can appear complete:** `round2.py:115–118` checks only whether reviewer usage exists. A timed-out reviewer with counters from a prior completed turn produces `usage_complete=True`, reproduced in memory. Preserve those counters but mark totals partial unless reviewer execution completed and required counters are present.\n\nInspected the nine scoped Python modules, the three relevant regression files, round-2 protocol, actual report, brief, instructions, and recorded checks. All supplied snapshot hashes matched. The report correctly discloses B2/C1 failures, the 64.085-second interval, and unknown USD/human minutes.\n\nNo files changed or test suites rerun. Live timeout behavior, raw model traces, billing, and audit receipts were not independently observed; supplied checks also record a desktop failure due to missing `tkinter`.\n\nSLICE_REVIEW: STOP_SHIP",
+  "result": {
+    "base_commit": null,
+    "codex": {
+      "argv_sha256": "bd3c8e9c9896949b847f299c54436f569f7d165cde4252df3b010d226976af7c",
+      "binary": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/bin/codex",
+      "cli_version": "codex-cli 0.160.1",
+      "exit_code": 0,
+      "model": "gpt-6.1-sol",
+      "parent_codex_context_scrubbed": true,
+      "reasoning_effort": "high"
+    },
+    "feature_id": null,
+    "finished_at": "2026-10-08T14:35:26.079995Z",
+    "inputs": {
+      "context_manifest_path": ".playbook-artifacts/runs/20261008T143331Z-slice_review-564b7a48/context_manifest.json",
+      "context_manifest_sha256": "fca4d4fa344352fc6847d945862f3283a66308c19312af7c168bf7a570646153",
+      "prompt_path": ".playbook-artifacts/runs/20261008T143331Z-slice_review-564b7a48/prompt.md",
+      "prompt_sha256": "9cbc35fb074159ff7e5e22a6345c73f9345829919a8677bbf2047283a2207086",
+      "renderer_argv_sha256": "3a25aea17ad6b74f6b51939820e511e71f46c84e02f06ae4c6db874e91111552"
+    },
+    "outputs": {
+      "published_report_path": null,
+      "published_report_sha256": null,
+      "report_path": ".playbook-artifacts/runs/20261008T143331Z-slice_review-564b7a48/report.md",
+      "report_sha256": "6209846e02f6536a0e0baa590d73e9b2988d71c18f505113d6681c4bc6e0fa8c",
+      "stderr_path": ".playbook-artifacts/runs/20261008T143331Z-slice_review-564b7a48/codex_stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_path": ".playbook-artifacts/runs/20261008T143331Z-slice_review-564b7a48/codex_events.jsonl",
+      "trace_sha256": "1c9efd95a9e0f73c67674d0db0c0e8c173bc858f8f2e9629a20e61859550af1b"
+    },
+    "postflight": {
+      "changed_paths": [],
+      "errors": [],
+      "event_count": 52,
+      "marker_valid": true,
+      "trace_valid": true,
+      "workspace_unchanged": true
+    },
+    "profile": "native",
+    "role": "slice_review",
+    "run_id": "20261008T143331Z-slice_review-564b7a48",
+    "sandbox": "read-only",
+    "schema_version": "playbook.codex_role_run.v1",
+    "slice_id": null,
+    "started_at": "2026-10-08T14:33:31.392958Z",
+    "status": "validated",
+    "task_id": "final-controlled-delegation-source",
+    "verdict": "STOP_SHIP"
+  },
+  "reviewed_source_sha256": {
+    "engineering/README.md": "89180b403c01bf5fe14d371ebb4e94a7892180f5b2105d8b443b3379afa1cd39",
+    "engineering/experiments/controlled-delegation/PROTOCOL_RU.md": "a70e84e0fcb3a1d23f927037b5400327396b4fcacf258a198a6224ac05bc386c",
+    "engineering/experiments/controlled-delegation/README.md": "5604646c2aa2eac7055f87a4123ecc073b239a75b240dd45bd9cfd0e07210099",
+    "engineering/experiments/controlled-delegation/ROUND2_PROTOCOL_RU.md": "9e854aa1c03925af030ef3626b36c1f595eb28a94dd0d9df939179ca37cb6c45",
+    "engineering/experiments/controlled-delegation/experiment_checks.py": "f18cc68a0529a74dd67981ee80497a33d3798262679f47b992caa27eb5ae6954",
+    "engineering/experiments/controlled-delegation/experiment_core.py": "9e623ab8a2439ad0d452eedd40d6900ee02483eba81ae25b9adde39b57779253",
+    "engineering/experiments/controlled-delegation/experiment_report.py": "c6876a62f0d6df4e3a74883fe09719700adbc0655bd3690ef4a9112e1713f56c",
+    "engineering/experiments/controlled-delegation/money_exact.py": "a0c48c772a206dc28ac028d9f71f394a1ab6d170eb5aa1d38c43a0d569a92d55",
+    "engineering/experiments/controlled-delegation/round2.py": "c0d17584f4108a811089cff1e53f1ffd9ba9b2c9eae5a3f6da5fca1bbb9fab08",
+    "engineering/experiments/controlled-delegation/round2_checks.py": "b65c8a7c086bf0248cdd11756da40dfd7f6d44343dd1c4beec6f4e07c7491fb8",
+    "engineering/experiments/controlled-delegation/round2_fixtures.py": "5b7e73ac6249be35f60cb6e45d8701814353d365c6c79c25d6eb945ffd69f0a5",
+    "engineering/experiments/controlled-delegation/round2_host.py": "36bd7d90176e5ef1360270494401510c10119e90d145b8322075c08d42bfa594",
+    "engineering/experiments/controlled-delegation/round2_posthoc.py": "8832b8a5cccd622d11c329c50a0a10fc3e088acc8c2bf2ef287474d0abc04ed5",
+    "engineering/experiments/controlled-delegation/round2_report.py": "982dade02d8d2557096f6d290beb0294c32e8d5f525f7beb3334236441d9c876",
+    "engineering/experiments/controlled-delegation/suite.json": "766c84dfa36f72c7ed5b37bb1798668a93bb8a45aa76d5bd972df5ba7bd7ea11",
+    "reports/delegation/2026-10-08-round2/REPORT_RU.md": "6eef38adff7ab03cf00168b6b11b3db525b1697c5132ad64ffb6c2c1585c26eb",
+    "tests/vnext/test_controlled_delegation.py": "8553a31c64dfa3bf3f65215d3dee807a1f17b125d50c13eaf56e397b233458af",
+    "tests/vnext/test_controlled_delegation_round2.py": "b787403cb522c6aa9aff241a342bf0480bd2998cb62c4977b0fd8ee75cda7c60",
+    "tests/vnext/test_delegation_money_exact.py": "311d984c4c8de85306cd74963f62a7b21ffd4020b56734e623f360bf8796ccd4"
+  },
+  "schema": "playbook.delegation.source-review.v1",
+  "scope": "broad scoped source review before timeout/precedence/partial-counter fixes",
+  "status": "validated",
+  "thread_ids": [
+    "01a11bef-0732-7f60-9e25-6839a5cc040a"
+  ],
+  "usage": [
+    {
+      "cache_write_input_tokens": 0,
+      "cached_input_tokens": 296320,
+      "input_tokens": 348649,
+      "output_tokens": 2652,
+      "reasoning_output_tokens": 872
+    }
+  ],
+  "verdict": "STOP_SHIP",
+  "wall_seconds": 114.687
+}

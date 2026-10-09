@@ -1,0 +1,130 @@
+{
+  "initial_broken_workspaces": [
+    {
+      "condition": "C",
+      "groups": {
+        "checkout": false,
+        "diagnosis_checkout": false,
+        "diagnosis_inventory": false,
+        "diagnosis_refunds": false,
+        "integration": false,
+        "inventory": false,
+        "refunds": false,
+        "state": false,
+        "unaffected": true
+      },
+      "id": "32de8b30c7a9",
+      "score": 10,
+      "status": "FAIL"
+    },
+    {
+      "condition": "A",
+      "groups": {
+        "checkout": false,
+        "diagnosis_checkout": false,
+        "diagnosis_inventory": false,
+        "diagnosis_refunds": false,
+        "integration": false,
+        "inventory": false,
+        "refunds": false,
+        "state": false,
+        "unaffected": true
+      },
+      "id": "5a425f20f53f",
+      "score": 10,
+      "status": "FAIL"
+    },
+    {
+      "condition": "B",
+      "groups": {
+        "checkout": false,
+        "diagnosis_checkout": false,
+        "diagnosis_inventory": false,
+        "diagnosis_refunds": false,
+        "integration": false,
+        "inventory": false,
+        "refunds": false,
+        "state": false,
+        "unaffected": true
+      },
+      "id": "2a511bb9be9d",
+      "score": 10,
+      "status": "FAIL"
+    },
+    {
+      "condition": "C",
+      "groups": {
+        "checkout": false,
+        "diagnosis_checkout": false,
+        "diagnosis_inventory": false,
+        "diagnosis_refunds": false,
+        "integration": false,
+        "inventory": false,
+        "refunds": false,
+        "state": false,
+        "unaffected": true
+      },
+      "id": "1455273fdde8",
+      "score": 10,
+      "status": "FAIL"
+    },
+    {
+      "condition": "A",
+      "groups": {
+        "checkout": false,
+        "diagnosis_checkout": false,
+        "diagnosis_inventory": false,
+        "diagnosis_refunds": false,
+        "integration": false,
+        "inventory": false,
+        "refunds": false,
+        "state": false,
+        "unaffected": true
+      },
+      "id": "ecce51fd0d47",
+      "score": 10,
+      "status": "FAIL"
+    },
+    {
+      "condition": "B",
+      "groups": {
+        "checkout": false,
+        "diagnosis_checkout": false,
+        "diagnosis_inventory": false,
+        "diagnosis_refunds": false,
+        "integration": false,
+        "inventory": false,
+        "refunds": false,
+        "state": false,
+        "unaffected": true
+      },
+      "id": "256ef8a27b8c",
+      "score": 10,
+      "status": "FAIL"
+    }
+  ],
+  "kind": "OFFLINE_FIXTURE_HARNESS_ACCEPTANCE",
+  "limits": [
+    "Reference changes used only in a temporary copy, never A/B/C model workspaces.",
+    "This is source acceptance, not a real A/B/C model run."
+  ],
+  "model_calls": 0,
+  "prepared_head": "c99dc2dae29f36c0db26a5986819de5a665d8948",
+  "reference_copy": {
+    "groups": {
+      "checkout": true,
+      "diagnosis_checkout": true,
+      "diagnosis_inventory": true,
+      "diagnosis_refunds": true,
+      "integration": true,
+      "inventory": true,
+      "refunds": true,
+      "state": true,
+      "unaffected": true
+    },
+    "public_tests_exit_code": 0,
+    "public_tests_stderr": "test_joined_replay (test_replays.ReplayChecks) ... ok\ntest_normal_path (test_replays.ReplayChecks) ... ok\ntest_order_replay (test_replays.ReplayChecks) ... ok\ntest_provider_replay (test_replays.ReplayChecks) ... ok\ntest_warehouse_replay (test_replays.ReplayChecks) ... ok\ntest_batch_order_and_identity (test_replays.TransportChecks) ... ok\ntest_checkpoint_and_canonical_equivalence (test_replays.TransportChecks) ... ok\ntest_source_index_survives_checkpoint (test_replays.TransportChecks) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.007s\n\nOK\n",
+    "score": 100,
+    "status": "PASS"
+  }
+}

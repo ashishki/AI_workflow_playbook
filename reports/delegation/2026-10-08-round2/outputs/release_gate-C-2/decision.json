@@ -1,0 +1,16 @@
+{
+  "decision": "HOLD",
+  "latency_regions": ["eu-central", "eu-west"],
+  "incident_ids": ["INC-210", "INC-211"],
+  "missing_safety_checks": ["eu-central:recovery", "eu-west:audit"],
+  "cost_delta_minor": 1234567,
+  "evidence_ids": [
+    "INC-210",
+    "INC-211",
+    "cost-target",
+    "perf-central-checkout",
+    "perf-west-refunds",
+    "safe-central-recovery",
+    "safe-west-audit"
+  ]
+}

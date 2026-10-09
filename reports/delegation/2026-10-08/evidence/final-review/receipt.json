@@ -1,0 +1,45 @@
+{
+  "started_utc": "2026-10-08T11:04:11.599003+00:00",
+  "wall_seconds": 318.92,
+  "returncode": 0,
+  "timeout": false,
+  "argv": [
+    "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation/bin/codex",
+    "exec",
+    "--cd",
+    "/srv/openclaw-you/workspace/AI_workflow_playbook",
+    "--sandbox",
+    "read-only",
+    "-c",
+    "approval_policy=\"never\"",
+    "-c",
+    "features.multi_agent=false",
+    "--json",
+    "--output-last-message",
+    "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/controlled-delegation-final-review/verdict.txt",
+    "-"
+  ],
+  "thread_ids": [
+    "01a11b2f-6098-77a1-892d-2776441180a1"
+  ],
+  "usage": [
+    {
+      "input_tokens": 758999,
+      "cached_input_tokens": 671744,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 9239,
+      "reasoning_output_tokens": 3283
+    }
+  ],
+  "completed": true,
+  "context": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "approval_policy": "never",
+    "sandbox_policy": {
+      "type": "read-only"
+    }
+  },
+  "raw_events_sha256": "cf7e9fcd0bf8488942df2de9fa23fec2aaa6b675df9e05d60012ced9ca92d46a",
+  "raw_rollout_sha256": "eae61823bbbc5862f9ecd28a516bacfe80cdaabbf5552272051d87777b8983b8"
+}

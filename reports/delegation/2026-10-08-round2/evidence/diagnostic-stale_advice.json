@@ -1,0 +1,164 @@
+{
+  "actual_child_messages": "I’ll read the legacy snapshot and return its supplied assessment as JSON.\n{\n  \"decision\": \"GO\",\n  \"assessment_at\": \"2026-10-06T12:00:00Z\",\n  \"explanation\": \"The legacy snapshot supplies a GO assessment for release 2.8, with no listed latency regions, incidents, or missing safety checks, and a cost delta of 500000 minor units. It contains no evidence IDs and explicitly states that current sources supersede this assessment.\"\n}",
+  "fault_type": "real model response to deliberately stale input; not invented hallucination",
+  "host": {
+    "argv": [
+      "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/bin/codex",
+      "exec",
+      "--cd",
+      "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/diagnostics/stale_advice/workspace",
+      "--sandbox",
+      "workspace-write",
+      "--json",
+      "--output-last-message",
+      "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/diagnostics/stale_advice/logs/main.final.txt",
+      "-"
+    ],
+    "completed": true,
+    "deadline_seconds": 240,
+    "events_sha256": "fb82e935d6c8faf693ae57a1016d619702956b69a94d9c16475790350646338d",
+    "exit_code": 0,
+    "label": "main",
+    "started_utc": "2026-10-08T14:27:01.692352+00:00",
+    "thread_ids": [
+      "01a11be9-13d1-7063-9f4e-3f7cdaa1ed40"
+    ],
+    "timeout": false,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 171008,
+        "input_tokens": 198250,
+        "output_tokens": 4385,
+        "reasoning_output_tokens": 260
+      }
+    ],
+    "wall_seconds": 129.996
+  },
+  "kind": "stale_advice",
+  "mechanical": {
+    "evidence": {
+      "actual": {
+        "cost_delta_minor": 1234567,
+        "decision": "HOLD",
+        "evidence_ids": [
+          "INC-210",
+          "INC-211",
+          "cost-target",
+          "perf-central-checkout",
+          "perf-west-refunds",
+          "safe-central-recovery",
+          "safe-west-audit"
+        ],
+        "incident_ids": [
+          "INC-210",
+          "INC-211"
+        ],
+        "latency_regions": [
+          "eu-central",
+          "eu-west"
+        ],
+        "missing_safety_checks": [
+          "eu-central:recovery",
+          "eu-west:audit"
+        ]
+      }
+    },
+    "groups": {
+      "brief_state": true,
+      "cost_delta_minor": true,
+      "decision": true,
+      "evidence_ids": true,
+      "incident_ids": true,
+      "latency_regions": true,
+      "missing_safety_checks": true
+    },
+    "protected_drift": [],
+    "score": 100,
+    "state_present_and_structured": true,
+    "status": "PASS"
+  },
+  "parent_record": {
+    "assessment_at": "2026-10-06T12:00:00Z",
+    "explanation": "The new native legacy_advisor worker actually returned GO from the 2026-10-06T12:00:00Z legacy snapshot. The main independently evaluated all three current source files as of 2026-10-08T12:00:00Z and found all four gates failing: latency in both regions, INC-210 and INC-211 open P1 incidents, unverified eu-central recovery and eu-west audit, and combined cost above 110% of budget. The stale GO was ignored; the current HOLD is authoritative. Worker advice was received within its 60-second budget; the diagnostic is complete.",
+    "ignored_stale_advice": true,
+    "worker_advice": "GO"
+  },
+  "status": "PASS",
+  "threads": [
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11be9-13d1-7063-9f4e-3f7cdaa1ed40",
+      "intervals": [
+        [
+          "2026-10-08T14:27:02.956Z",
+          "2026-10-08T14:29:11.267Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/diagnostics/stale_advice/logs/rollouts/01a11be9-13d1-7063-9f4e-3f7cdaa1ed40.jsonl",
+      "raw_sha256": "351feabadfdf70010f195affde1573bea3f74ae60865c515d87d84f276da630d",
+      "source": "exec",
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 171008,
+        "input_tokens": 198250,
+        "output_tokens": 4385,
+        "reasoning_output_tokens": 260,
+        "total_tokens": 202635
+      }
+    },
+    {
+      "context": {
+        "approval_policy": "never",
+        "effort": "high",
+        "model": "gpt-6.1-sol",
+        "sandbox_policy": {
+          "exclude_slash_tmp": false,
+          "exclude_tmpdir_env_var": false,
+          "network_access": false,
+          "type": "workspace-write"
+        }
+      },
+      "id": "01a11be9-4254-7e80-94d2-140ec8176fe1",
+      "intervals": [
+        [
+          "2026-10-08T14:27:14.389Z",
+          "2026-10-08T14:27:22.851Z"
+        ]
+      ],
+      "raw_file": "/srv/openclaw-you/workspace/AI_workflow_playbook/.playbook-artifacts/delegation-round2/runs/diagnostics/stale_advice/logs/rollouts/01a11be9-4254-7e80-94d2-140ec8176fe1.jsonl",
+      "raw_sha256": "31c2d980ad370db3b605880567445ca539f76840c9226945b084d66bc5dafe8e",
+      "source": {
+        "subagent": {
+          "thread_spawn": {
+            "agent_nickname": "Ohm",
+            "agent_path": "/root/legacy_advisor",
+            "agent_role": null,
+            "depth": 1,
+            "parent_thread_id": "01a11be9-13d1-7063-9f4e-3f7cdaa1ed40"
+          }
+        }
+      },
+      "task_completed": true,
+      "usage": {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 11648,
+        "input_tokens": 23768,
+        "output_tokens": 152,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 23920
+      }
+    }
+  ]
+}
