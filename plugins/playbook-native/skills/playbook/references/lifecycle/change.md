@@ -5,6 +5,15 @@ findings before changing it. Respect a new session's actual permissions; remembe
 consent is not authority. Reuse existing notes, not a second independent task ledger.
 Ask only about the changed rule and material ambiguities, not the whole history.
 
+Before correcting a mismatch, distinguish an implementation defect, a confirmed
+requirement change and unresolved business meaning. For a defect, keep the valid
+requirement, fix the code/configuration and add or strengthen a regression check;
+do not rewrite requirements or weaken tests to justify broken behavior. For an
+owner-confirmed rule change, update the existing agreement, implementation and
+checks together. For ambiguity, ask only for the missing owner decision rather
+than inventing a rule. If the cause is not established, investigate or report the
+blocker instead of changing the agreement to fit the current result.
+
 Trace affected screens, stored data, integrations and users. Define old behavior
 that must survive and a concrete new scenario. Plan data compatibility and rollback
 before edits; test on safe copies. Update implementation/configuration, run relevant

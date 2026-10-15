@@ -6,6 +6,14 @@ count alone is insufficient. For UI follow the frontend browser procedure: right
 checkout, actual result, narrow/wide view, fresh screenshots actually inspected.
 Disclose unavailable browser and diagnostics rather than crediting another process.
 
+Compare the actual diff/configuration changes with the agreed behavior and
+explicit non-goals before accepting the result. Account for unrelated edits,
+new dependencies and effects on neighbouring behavior; preserve pre-existing
+owner changes. Explain any necessary scope expansion and obtain the required
+owner decision. Verify the integrated user path, not only isolated components.
+Check that relevant tests can detect the targeted failure, for example with a
+failing-before/fixed-after case; CI or linter presence alone proves no coverage.
+
 After code changes use the existing [Role Runner](../review.md), including quick
 mode. Read status AND verdict, verify currency, fix confirmed findings and rerun
 relevant checks. Fresh read-only review is not certainty; incorrect findings need
