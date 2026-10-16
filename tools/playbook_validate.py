@@ -1506,6 +1506,53 @@ def validate_delivery(root: Path) -> list[Finding]:
                 "delivery model must define Codex Direct CLI binding",
             )
         )
+    # Opt-in contract for newly generated Standard/Strict kits. Historical kits
+    # are not silently migrated by upgrading this validator.
+    if "operating_policy_ref" in data or "task_loop_profile" in data:
+        enabled = data.get("task_loop_profile") == "codex_exec_subagents"
+        expected_profile = "independent_review" if enabled else "solo_verified"
+        expected_orchestrator = "active_codex_session" if enabled else "human"
+        orchestrator = data.get("orchestrator", {})
+        coherent = (
+            data.get("operating_policy_ref") == "docs/REVIEW_POLICY.md"
+            and data.get("task_loop_profile") in {"disabled", "codex_exec_subagents"}
+            and data.get("delivery_profile") == expected_profile
+            and isinstance(orchestrator, dict)
+            and orchestrator.get("kind") == expected_orchestrator
+            and completion.get("kind") == "human"
+        )
+        if enabled:
+            coherent = coherent and (
+                implementer.get("kind") == "active_codex_session"
+                and reviewer.get("kind") == "independent_read_only_agent"
+                and reviewer.get("may_write_code") is False
+                and isinstance(bindings, dict)
+                and bindings.get("external_codex_exec") == "explicit_task_loop_review_only"
+            )
+        if not coherent:
+            findings.append(Finding(
+                "error", relative(root, path), 1, "DELIVERY_OPERATING_PROFILE_MISMATCH",
+                "operating policy, task-loop profile, role authority and CLI bindings must agree",
+            ))
+        required = [
+            "AGENTS.md", "docs/REVIEW_POLICY.md", "docs/merge_authority.md",
+            "docs/CODEX_PROMPT.md", "docs/codex_exec_subagent_protocol.md",
+            "docs/prompts/ORCHESTRATOR.md",
+        ]
+        if enabled:
+            required.extend([
+                "tools/run_codex_role.py", "tools/codex_role_run_lib.py", "tools/render_codex_exec_prompt.py",
+                "docs/audit/PROMPT_0_META.md", "docs/audit/PROMPT_1_ARCH.md",
+                "docs/audit/PROMPT_2_CODE.md", "docs/audit/PROMPT_3_CONSOLIDATED.md",
+                "docs/audit/PROMPT_TEST_CRITIC.md", "docs/audit/PROMPT_PRIVACY_REVIEW.md",
+            ])
+        for ref in required:
+            artifact = root / ref
+            if not artifact.is_file() or not artifact.read_text(encoding="utf-8").strip():
+                findings.append(Finding(
+                    "error", ref, 1, "DELIVERY_OPERATING_ARTIFACT_MISSING",
+                    f"selected operating contract requires a non-empty {ref}",
+                ))
     return findings
 
 

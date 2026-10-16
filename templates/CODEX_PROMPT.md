@@ -1,551 +1,87 @@
-# CODEX_PROMPT.md
+# Current Session State
 
+Project: {{PROJECT_NAME}}
 Version: 1.0
 Date: {{DATE}}
 Phase: 1
-
-<!--
-This file is the single source of truth for session state.
-Every Codex agent reads this file before starting work.
-Every Codex agent updates this file before committing at a phase boundary.
-The orchestrator reads this file at the start of every session.
-
-Never delete history from this file. Append; do not replace.
--->
-
----
+Mode: {{MODE}}
+Planning-Depth: {{PLANNING_DEPTH}}
 
 ## Current State
 
-- **Phase:** 1
-- **Baseline:** 0 passing tests (pre-implementation)
-- **Ruff:** not yet configured
-- **Last CI run:** not yet configured
-- **Last updated:** {{DATE}}
-- **Session tokens (approx):** not yet tracked
-- **Cumulative phase tokens (approx):** not yet tracked
-- **Session cost (approx):** not yet tracked
-- **Cumulative phase cost (approx):** not yet tracked
-- **Budget status:** not applicable / within budget / warning / approval required
-
----
-
-## Continuity Pointers
-
-- **Cognition manifest:** `docs/COGNITION_MANIFEST.md`
-- **Decision log:** `docs/DECISION_LOG.md`
-- **Implementation journal:** `docs/IMPLEMENTATION_JOURNAL.md`
-- **Evidence index:** `docs/EVIDENCE_INDEX.md` (if present)
-- **Cost budget:** `docs/COST_BUDGET.md` (if present; otherwise use inline project budget notes)
-- **AI cost architecture:** `docs/ai_cost_architecture.md` (if present; otherwise use inline project cost architecture notes)
-- **Router eval:** `docs/router_eval.md` (required for dynamic routing or cascades)
-- **External skill trust:** `docs/security/skills/**/TRUST_RECORD.md` (required for external skills unless Lean inline evidence is justified)
-- **Task-scoped context:** read `Context-Refs` in `docs/tasks.md` before broad searching
-- **Generated context packets:** `docs/context-packets/` (if present; convenience only, canonical paths win)
-- **Test-first implementer prompt:** `docs/prompts/IMPLEMENTER_TDD.md` (use when applicability is `required`)
-- **Codex exec subagent renderer:** `tools/render_codex_exec_prompt.py` (use only
-  when the project has explicitly selected the task-loop subagent profile)
-- **Feature designs:** `docs/design/*.md` plus `docs/design/*.design.json`
-- **Slice context packets:** `.playbook-artifacts/context/<feature-id>/<slice-id>.md`
-- **Feature workflow coordinator:** `tools/feature_workflow.py`; use for
-  planning facts, human Planning Depth selection, design-author prompts,
-  hash-bound approval, next slice, start/context/check/accept lifecycle,
-  optional `audited_rounds`, and required review prompts.
-
----
+Baseline: pending T02; no tests or live agent execution claimed.
+Scaffold generated; project-specific decisions and workflow acceptance pending.
+Readiness: `.playbook/readiness_state.json`.
 
 ## Next Task
 
-**T01: Project Skeleton**
-
-Before implementation, the orchestrator should hand Codex a narrow task digest inline:
-
-- assignment and acceptance criteria
-- file scope
-- applicable contract rules only
-- dependency facts from prior tasks
-- immediate pipeline / flow if one matters
-- test-first applicability (`required`, `optional`, or `not_applicable`) and its
-  rationale
-- planning depth (`oneshot`, `compact_design`, or `designed_slices`), design
-  refs, and current slice when applicable
-- focused and broader verification commands plus the receipt/output path when
-  available
-
-Only send Codex to full documents when the task is architecture-shaping, security-sensitive, ambiguous, or otherwise too risky to compress safely.
-For `compact_design` and `designed_slices`, do not start implementation until
-the referenced design registry is approved with non-model provenance.
-
-When the digest marks test-first applicability as `required`, use
-`docs/prompts/IMPLEMENTER_TDD.md` as the task-specific implementation prompt.
-Until task-schema routing fields exist, keep this as an explicit digest decision
-under the test-first protocol; do not invent an unsupported task field.
-
----
+T01: Complete Project Brief And Mode Selection (`docs/tasks.md`), then T02:
+Establish Verification Baseline. Reconcile roles/review route with owner intent.
+For designed features: `tools/feature_workflow.py` uses
+`plan -> select-plan -> draft -> review -> approve`, then the slice lifecycle.
+Generated planning depth and a draft design are not approval.
 
 ## Fix Queue
 
 empty
 
-<!--
-The Fix Queue contains items that must be addressed before the next phase gate,
-but that were deferred from the current task. Format:
-
-- FQ-01: [T-NN] Description of what must be fixed. Added: YYYY-MM-DD.
-- FQ-02: [T-NN] Description. Added: YYYY-MM-DD.
--->
-
----
-
-## Correction Budget
-
-- Max implementation correction turns: 2.
-- Max test-healing turns: 2 for normal tasks, 3 for heavy tasks.
-- Escalate after repeated failure output, increased failure count, out-of-scope
-  file need, budget exhaustion, or any proposal to weaken tests or acceptance
-  criteria.
-- Preserve the failed runtime verification record, relevant diff, and command
-  output before any correction turn.
-
----
-
-## Codex Exec Subagent Loop
-
-- Profile status: disabled / enabled
-- Required protocol: `docs/codex_exec_subagent_protocol.md` or project-local equivalent
-- Review policy: `docs/REVIEW_POLICY.md`
-- Prompt renderer: `tools/render_codex_exec_prompt.py`
-- Subagent report directory: `docs/verification/`
-- Human completion authority: required when delivery model or review policy says so
-
-When enabled, the main agent may launch isolated `codex exec` children for
-read-only review roles and scoped write roles. The active implementer child must
-not review itself. Review children must run read-only. Fix children must not
-edit review reports, mark tasks done, commit, or push. Documentation sync may
-update state docs only after required reviews and verification are green.
-
-Commit and push happen only in the main-agent step after final deterministic
-gates pass and required human approval is recorded.
-
----
-
-## Cost Budget State
-
-- Budget artifact: `docs/COST_BUDGET.md` / inline / not applicable
-- Cost architecture artifact: `docs/ai_cost_architecture.md` / inline / not applicable
-- Router eval artifact: `docs/router_eval.md` / not applicable
-- Telemetry source: `docs/ai_cost_telemetry.jsonl` / external gateway / provider export / not applicable
-- Last rollup: `reports/ai_cost_rollup.md` / not run
-- Per-task budget:
-- Per-run budget:
-- Monthly project budget:
-- Routing maturity: L0 / L1 / L2 / L3 / L4 / L5 / L6 / not applicable
-- Cache layout: stable-prefix documented / not used / missing
-- Approval required before:
-- Last recorded AI/model cost:
-
-If the next task would exceed the declared budget, increase model class,
-increase retry/fan-out/tool-call limits, or add recurring AI usage, stop for
-approval before implementation.
-
-If the next task introduces prompt caching, batch lanes, dynamic routing,
-cascades, or recurring/material AI workload classes, stop unless the cost
-architecture and router-eval requirements are already satisfied or explicitly
-approved for creation in this task.
-
----
-
-## External Skill State
-
-- External skills: none / planned / installed / enabled
-- Trust records: `docs/security/skills/**/TRUST_RECORD.md` / inline / not applicable
-- Skill install scope: project-local / global / not applicable
-- Last SkillSpector or equivalent scan:
-- Signature/hash/pin status:
-- Human approval required before:
-
-If the next task installs, enables, updates, vendors, or globally exposes an
-external skill, stop unless the trust record, scan/provenance/signature/hash
-evidence, finding triage, and install-scope approval are already satisfied or
-explicitly approved for creation in this task.
-
----
-
 ## Open Findings
 
-none
-
-<!--
-Open findings from review cycles. Format:
-
-### P1 Findings (block next phase gate)
-- P1-01: [CYCLE-N] Finding description. File: path/to/file.py, line N. Must be resolved before Phase {N+1}.
-
-### P2 Findings (must resolve within 3 cycles)
-- P2-01: [CYCLE-N] Finding description. File: path/to/file.py. Opened: YYYY-MM-DD. Age: 0 cycles.
-
-### P3 Findings (optional)
-- P3-01: [CYCLE-N] Finding description.
-
-P2 Age Cap: any P2 open for more than 3 review cycles must be resolved, escalated to P1,
-or formally deferred to v2 (with ADR) before the next phase gate.
--->
-
----
-
-## Profile State: RAG
-
-<!--
-Include this section only when RAG Status = ON in the ## Capability Profiles table
-in docs/ARCHITECTURE.md. If RAG Status = OFF, set the first field accordingly and
-leave all others as "n/a".
-Updated by the orchestrator at every phase boundary where retrieval-related work occurred.
-
-Retrieval-related next tasks: tasks that happen to involve retrieval (scheduled work).
-Retrieval-driven tasks: tasks created as a direct result of open retrieval findings
-  (from docs/retrieval_eval.md §Open Retrieval Findings). These exist because retrieval
-  quality is insufficient, not because of a feature requirement.
--->
-
-- RAG Status: OFF
-- RAG shape: n/a
-- Manifest path/hash: n/a
-- Current baseline result: n/a
-- Current candidate result: n/a
-- Current comparison result: n/a
-- Corpus/dataset versions: n/a
-- Harness/delivery profile: n/a
-- Last eval status/date: n/a
-- Active corpora: n/a
-- Retrieval baseline: n/a
-- Open retrieval findings: none
-- Index schema version: n/a
-- Pending reindex actions: none
-- Retrieval-related next tasks: none
-- Retrieval-driven tasks: none
-
----
-
-## Tool-Use State
-
-<!--
-This section is ALWAYS present — do not omit it.
-If Tool-Use Profile = OFF, keep the block with Tool-Use Profile: OFF and all other fields as n/a.
-If Tool-Use Profile = ON, fill in the fields below.
-Updated by the orchestrator at every phase boundary where tool-related work occurred.
-
-Task tag that updates this block: Type: tool:schema | tool:call | tool:unsafe
--->
-
-- Tool-Use Profile: OFF
-- Registered tool schemas: n/a
-- Unsafe-action guardrails: n/a
-- Open tool findings: none
-
----
-
-## Agentic State
-
-<!--
-This section is ALWAYS present — do not omit it.
-If Agentic Profile = OFF, keep the block with Agentic Profile: OFF and all other fields as n/a.
-If Agentic Profile = ON, fill in the fields below.
-Updated by the orchestrator at every phase boundary where agent loop work occurred.
-
-Task tags that update this block: Type: agent:loop | agent:handoff | agent:termination
-Note: Agentic and Tool-Use are independent profiles. If the system uses tools within
-an agent loop, both profiles may be ON and both state blocks must be maintained.
--->
-
-- Agentic Profile: OFF
-- Active agent roles: n/a
-- Loop termination contract version: n/a
-- Cross-iteration state mechanism: n/a
-- Open agent findings: none
-
----
-
-## Planning State
-
-<!--
-This section is ALWAYS present — do not omit it.
-If Planning Profile = OFF, keep the block with Planning Profile: OFF and all other fields as n/a.
-If Planning Profile = ON, fill in the fields below.
-Updated by the orchestrator at every phase boundary where plan structure work occurred.
-
-Planning Profile = ON means the application produces structured plans (task graphs,
-step-by-step procedures, decision trees) as its primary deliverable. This is not the
-same as the ORCHESTRATOR, which controls the development workflow.
-
-Task tags that update this block: Type: plan:schema | plan:validation
--->
-
-- Planning Profile: OFF
-- Plan schema version: n/a
-- Plan validation method: n/a
-- Open plan findings: none
-
----
-
-## Compliance State
-
-<!--
-This section is ALWAYS present — do not omit it.
-If Compliance Status = OFF, keep the block with Compliance Status: OFF and all other fields as n/a.
-If Compliance Status = ON, fill in the fields below.
-Updated by the orchestrator at every phase boundary where compliance-tagged work occurred.
-
-Task tags that update this block: Type: compliance:control | compliance:audit | compliance:evidence
--->
-
-- Compliance Status: OFF
-- Active frameworks: n/a
-- Controls implemented: n/a
-- Controls partial: n/a
-- Controls not started: n/a
-- Evidence artifact: n/a
-- Open compliance findings: none
-
----
-
-## NFR Baseline
-
-<!--
-Include this section when docs/nfr.md exists in the project.
-Populated after Phase 1 load tests. Leave values as "not yet measured" until tests run.
-Updated by the orchestrator at any phase boundary where load tests produced new measurements.
-A regression (measured value exceeds target by >10%) is a P2 finding.
--->
-
-- API p99 latency: not yet measured
-- Error rate: not yet measured
-- Throughput: not yet measured
-- Last measured: —
-- NFR regression open: No
-
----
-
-## Evaluation State
-
-<!--
-Tracks evaluation results for all active Capability Profiles.
-Updated by the Orchestrator in Step 3.5 after every capability-affecting task.
-A task with a capability trigger tag is NOT complete until this section is updated.
-
-Trigger tags: rag:ingestion, rag:query | tool:schema, tool:unsafe, tool:call |
-              agent:loop, agent:handoff, agent:termination | plan:schema, plan:validation
-
-The evaluation artifact (e.g. docs/retrieval_eval.md) holds the full detail.
-This section holds the summary used by the Orchestrator for decision-making.
--->
-
-### Last Evaluation
-
-- Profile: n/a
-- Task: n/a
-- Date: n/a
-- Eval Source: n/a
-- Metric(s): n/a
-- Score: n/a
-- Baseline: n/a
-- Delta: n/a
-- Regression: n/a
-
-<!--
-Eval Source is REQUIRED. An evaluation entry without Eval Source is invalid.
-Acceptable values:
-  - "scripts/eval.py against §Evaluation Dataset (10 queries), run YYYY-MM-DD"
-  - "manual spot-check: retrieved docs inspected for Q01–Q05, run YYYY-MM-DD"
-  - "pytest tests/test_retrieval_eval.py::test_hit_at_3, run YYYY-MM-DD"
-"Ran evaluation" or "updated metrics" without specifics is NOT acceptable.
--->
-
-### Open Evaluation Issues
-
-none
-
-<!--
-Format:
-- EV-01: [PROFILE] [T-NN] Description. Opened: YYYY-MM-DD. Must resolve before phase gate.
--->
-
-### Evaluation History
-
-| Date | Task | Profile | Key metric | Score | Baseline | Delta | Regression? |
-|------|------|---------|------------|-------|----------|-------|-------------|
-
----
-
-## Completed Tasks
-
-none
-
-<!--
-Append completed tasks here. Format:
-
-- T01: Project Skeleton — completed YYYY-MM-DD. Baseline after: N tests.
-- T02: CI Setup — completed YYYY-MM-DD. Baseline after: N tests.
--->
-
----
-
-## Phase History
-
-<!--
-Append phase summaries here at each phase gate. Format:
-
-### Phase 1 — {Phase Name}
-Closed: YYYY-MM-DD
-Baseline at gate: N passing tests
-Tasks: T01, T02, T03
-Review cycle: CYCLE-1 (see docs/audit/CYCLE1_REVIEW.md)
-P1s resolved: N
-P2s open: N
-Gate approved by: {human name or "auto"}
--->
-
----
-
-## Compaction Protocol
-
-<!--
-Governs CODEX_PROMPT.md size management for long-running projects.
-The Orchestrator evaluates compaction triggers at the start of each session (Step 0).
-Compaction is performed directly by the Orchestrator — no new files, no deletions.
--->
-
-### Compaction triggers
-
-Compact when EITHER condition is true:
-- `## Completed Tasks` contains more than 20 entries, OR
-- `## Phase History` contains more than 5 phase summaries
-
-### How to compact
-
-1. Create or update a `## Summary State` section immediately after `## Current State`:
-   - Current phase and next task
-   - Active capability profiles and their status
-   - Open findings by severity: P1: N, P2: N
-   - Current test baseline
-   - Last evaluation result (if any profile is active)
-   - This section must be self-sufficient: the Orchestrator must be able to resume from it alone.
-
-2. In `## Completed Tasks`: retain the 5 most recent entries. Move all older entries to `## Archived Tasks` (create the section at the end of the file if it does not exist).
-
-3. In `## Phase History`: retain the 2 most recent phase summaries. Move older summaries to `## Archived Phase History` (create at the end of the file if absent).
-
-4. Rules:
-   - Do NOT delete any content — only move older entries to Archive sections.
-   - Archive sections are kept in this file; they are not required reading for normal operation.
-   - After compaction, `## Summary State` must fit within ~50 lines.
-
----
+none reported; unresolved scaffold decisions are not passed.
+
+## Continuity Pointers
+
+- `AGENTS.md`, `docs/IMPLEMENTATION_CONTRACT.md`: working rules.
+- `.playbook/delivery_execution_model.json`: roles, task-loop status, model bindings.
+- `docs/REVIEW_POLICY.md`, `docs/merge_authority.md`: review and authority.
+- `docs/PROJECT_BRIEF.md`, `docs/tasks.md`: outcome, task and Context-Refs.
+- `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`: decisions and history.
+- `docs/EVIDENCE_INDEX.md`: check/review evidence; cognition manifest if present.
 
 ## Instructions for Codex
 
-Read these instructions every time you pick up a task. Do not skip steps.
+Read AGENTS, the current task and applicable contract rules before editing.
+Run `python tools/verify_project.py --root .`; record command/result/evidence.
+Current result: not run (pending T02). Use `docs/REVIEW_POLICY.md` for scoped
+review dispatch and correction limits; load the exec protocol only when selected.
+Keep this handoff short: replace current state, do not append completed history
+or reusable prompts. Pass children a bounded task digest and required references.
 
-### Pre-Task Protocol (mandatory — do not skip)
+## RAG State
 
-1. **Read the orchestrator's inline task digest first** — assignment, acceptance criteria, file scope, dependency facts, and applicable rules should already be summarized there.
-2. **Read `docs/tasks.md` for the current task entry only** when the digest references details that must be copied exactly.
-3. **Read `docs/IMPLEMENTATION_CONTRACT.md` only if the digest did not inline the applicable rules** or if the task crosses a risky boundary.
-4. **Read Depends-On tasks, `Context-Refs`, and continuity artifacts only when required** — mandatory for architecture changes, risky boundaries, open findings, or tasks where prior interfaces / evidence materially constrain the implementation.
-5. **Run `pytest -q`** — capture the current baseline. Record: `N passing, M failed`. Separate known unrelated failures. Stop when an affected-area or unattributed failure masks this task; do not add new failures to a red baseline.
-6. **Run `ruff check`** — must exit 0. If not, fix ruff issues first. Commit the ruff fix separately with message `chore(lint): resolve ruff issues`. Then re-run the pre-task protocol.
-7. **Apply the test-first decision from the task digest.** Required work follows
-   `docs/prompts/IMPLEMENTER_TDD.md` and captures focused RED then GREEN evidence.
-   Optional or non-applicable work still gives every acceptance criterion a
-   concrete test, verifier, or reviewable evidence. Lean may use a concrete
-   `verify:` command or bounded manual check when full TDD is disproportionate.
+Status: {{RAG_STATE}}
+Resolve against `docs/ARCHITECTURE.md`; active details/evidence: `docs/retrieval_eval.md`.
 
-### During Implementation
+## Tool-Use State
 
-- Work on one task at a time.
-- Read only the files you need. Use `grep` to find relevant sections first.
-- Do not modify files outside the task's scope without documenting why.
-- If you discover an interface mismatch or missing dependency, stop and report it. Do not silently patch adjacent tasks.
-- If you supersede a prior decision or close a repeated finding, update `docs/DECISION_LOG.md`, `docs/IMPLEMENTATION_JOURNAL.md`, and `docs/EVIDENCE_INDEX.md` as applicable.
+Status: {{TOOL_USE_STATE}}
+Resolve against architecture; active details/evidence: `docs/tool_eval.md`.
 
-### Simplicity Constraints
+## Agentic State
 
-Apply at every task. These are verified by the optional Simplification Pass
-(`/simplify`); violations found after the fact become Codex tasks.
+Status: {{AGENTIC_STATE}}
+Resolve against architecture; active details/evidence: `docs/agent_eval.md`.
 
-- **No redundant abstraction.** Do not add a class, function, or module whose
-  entire body is a single delegation call with no added logic.
-- **No restatement comments.** Do not write a comment that only paraphrases the
-  line below it. Comments must explain *why*, not *what*.
-- **No premature generalization.** Implement the concrete case the task
-  requires. Do not introduce parameters, strategy objects, or config toggles for
-  hypothetical future callers.
-- **No untestable boilerplate.** Every non-trivial function must be reachable by
-  at least one test. Do not write setup/teardown glue that cannot be exercised.
+## Planning State
 
-### Post-Task Protocol
+Status: {{PLANNING_STATE}}
+Resolve against architecture; active details/evidence: `docs/plan_eval.md`.
 
-1. Run `pytest -q` — baseline must be ≥ pre-task baseline. If lower, something broke; fix it before committing.
-2. Run `ruff check app/ tests/` — must exit 0.
-3. Run `ruff format --check app/ tests/` — must exit 0.
-4. **If this task has a capability tag** (`rag:*`, `tool:*`, `agent:*`, `plan:*`) — evaluation is required before marking DONE:
-   - Update the relevant evaluation artifact (e.g. `docs/retrieval_eval.md`) with current results.
-   - Compare against baseline. Document any regression in §Regression Notes.
-   - Update `docs/CODEX_PROMPT.md §Evaluation State §Last Evaluation` with the result summary.
-   - Do NOT return `IMPLEMENTATION_RESULT: DONE` until this is complete. The Orchestrator will verify it.
-5. Update this file (`docs/CODEX_PROMPT.md`):
-   - New baseline (number of passing tests)
-   - Move this task to "Completed Tasks"
-   - Set "Next Task" to the next task
-   - Add any new open findings discovered during this task
-6. Verify your completion claims against repo state:
-   - `git diff --name-only` includes every file you claim to have changed.
-   - Created files exist.
-   - Deleted files are absent and shown as deleted in the diff.
-   - Tests you claim to have run are listed with exact commands.
-   - Required test-first work includes the expected RED signal and subsequent
-     GREEN command evidence.
-   - Risky writes include enough before/after evidence for the Orchestrator or reviewer to reconstruct the state change.
-7. Commit with format: `type(scope): description` — one logical change per commit.
-8. If the task produced multiple logical changes (migration + service + tests), use multiple commits.
+## Compliance State
 
-### Return Format
+Status: {{COMPLIANCE_STATE}}
+Resolve against architecture; active details/evidence: `docs/compliance_eval.md`.
 
-When done, return exactly:
+## Evaluation State
 
-```
-IMPLEMENTATION_RESULT: DONE
-New baseline: {N} passing tests
-Commits: {list of commit hashes and messages}
-Files changed: {created/modified/deleted paths}
-Test-first evidence: {applicability; RED/GREEN commands and output paths when required}
-Verification: {exact commands run; diff/hash/file-existence evidence; unverified claims or "none"}
-Notes: {anything the orchestrator should know — surprises, deviations, decisions made}
-```
+Last Evaluation: not run; no evaluated task yet.
+Eval Source: pending applicable task; record exact command and artifact.
+Date: not run; record actual evaluation date with its task/diff.
+Regression Thresholds: pending active evaluation contract; no baseline measured.
 
-When blocked, return exactly:
+## NFR Baseline
 
-```
-IMPLEMENTATION_RESULT: BLOCKED
-Blocker: {exact description of what is blocking progress}
-Type: dependency | interface_mismatch | environment | ambiguity
-Recommended action: {what the orchestrator or human should do}
-Progress made: {what was completed before hitting the blocker}
-Verification: {what was verified before blocking, if anything}
-```
-
-### Commit Message Format
-
-```
-type(scope): short description (imperative mood, ≤72 chars)
-
-Optional body: explain why, not what. The diff shows the what.
-```
-
-Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `perf`, `security`
-
-Do not include:
-- `Co-Authored-By` lines
-- Credentials or secrets
-- TODO comments without a task reference (`# TODO: see T{NN}`)
-- Commented-out code
-- `print()` debugging statements
+Not measured. When `docs/nfr.md` exists, link current measurements and targets.
+Profile pointers above are conditional, not proof that optional artifacts exist.
+Before implementation, resolve each profile ON/OFF; OFF details are n/a. ON
+profiles require current canonical artifacts/evidence, loaded only when relevant.

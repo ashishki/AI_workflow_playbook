@@ -39,6 +39,12 @@ Acceptance-Criteria:
     `designed_slices`; any override from the deterministic recommendation has a
     human-readable reason.
   - Any omitted heavy artifact is explicitly marked optional or not applicable.
+  - `.playbook/delivery_execution_model.json` matches the owner's selected
+    orchestrator, implementer/fixer, independent reviewer and completion
+    authority. Model/reasoning bindings are explicit or use documented host/runner defaults;
+    configuration is not claimed as actual execution.
+  - Standard/Strict review routing and correction limits are wired through
+    `AGENTS.md` and `docs/REVIEW_POLICY.md`; reuse existing Playbook protocols.
 
 Verification:
   - manual review of `docs/PROJECT_BRIEF.md`
@@ -66,6 +72,10 @@ Acceptance-Criteria:
   - A local command or CI job exists for the current stack.
   - The baseline result is recorded in `docs/CODEX_PROMPT.md` or `AGENTS.md`.
   - Future tasks reference concrete verification commands.
+  - Run `python tools/verify_project.py --root .`; generated operating-contract
+    checks pass, and any preserved instructions are reconciled with the chosen
+    workflow. A green scaffold check is not product/design acceptance or proof
+    of live agent execution.
 
 Verification:
   - `{{VERIFY_COMMAND}}`

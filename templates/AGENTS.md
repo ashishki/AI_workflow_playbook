@@ -2,12 +2,15 @@
 
 ## Project Mode
 
-Mode: Lean
+Mode: {{MODE}}
 
 ## Working Rules
 
 - Repository files are the source of truth.
 - Read `docs/tasks.md` before implementation.
+- Read `.playbook/delivery_execution_model.json` for selected roles and model
+  bindings. Standard/Strict use `docs/REVIEW_POLICY.md` and the short current
+  state in `docs/CODEX_PROMPT.md`; load referenced protocols only when needed.
 - Check `Planning-Depth`. For `compact_design` or `designed_slices`, do not
   implement until the referenced Feature Design registry is approved by a human
   or authorized reviewer.
@@ -16,8 +19,7 @@ Mode: Lean
   Approval must be fresh and hash-bound; Codex cannot approve its own design.
   Default execution profile is `direct_codex`; `audited_rounds` is optional for
   long slices and does not replace human acceptance.
-- Read `docs/CONTRACT_LITE.md` or the project contract-lite boundary before
-  editing.
+- Read `{{CONTRACT_PATH}}` before editing.
 - Keep changes inside the task file scope.
 - For `designed_slices`, keep changes inside the current slice's allowed files,
   avoid forbidden files, and preserve the declared change budget unless a human

@@ -186,10 +186,10 @@ def feature_design_registry_config(planning_depth: str, risk_level: str) -> str:
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
-def delivery_execution_model_config() -> str:
+def delivery_execution_model_config(args: argparse.Namespace, mode: str) -> str:
     payload = {
         "schema_version": "playbook.delivery_execution_model.v1",
-        "delivery_profile": "solo_verified",
+        "delivery_profile": args.delivery_profile,
         "orchestrator": {"kind": "human", "authority": "select_task_and_accept_completion"},
         "implementer": {"kind": "active_codex_session", "may_write_code": True},
         "reviewer": {
@@ -215,6 +215,32 @@ def delivery_execution_model_config() -> str:
             "production_release_claim",
         ],
     }
+    if mode in {"standard", "strict"}:
+        payload["operating_policy_ref"] = "docs/REVIEW_POLICY.md"
+        payload["task_loop_profile"] = "disabled"
+    if args.delivery_profile == "independent_review":
+        payload["orchestrator"] = {
+            "kind": "active_codex_session",
+            "authority": "select_task_dispatch_reviews_and_collect_evidence",
+        }
+        payload["reviewer"] = {
+            "kind": "independent_read_only_agent",
+            "may_write_code": False,
+            "required_when": payload["independent_review_triggers"],
+        }
+        payload["task_loop_profile"] = "codex_exec_subagents"
+        payload["cli_bindings"]["external_codex_exec"] = "explicit_task_loop_review_only"
+    # These are declared bindings, not a change to the host's model/configuration.
+    for role in ("implementer", "orchestrator"):
+        if payload[role]["kind"] == "active_codex_session":
+            if args.agent_model:
+                payload[role]["model"] = args.agent_model
+            if args.agent_reasoning_effort:
+                payload[role]["reasoning_effort"] = args.agent_reasoning_effort
+    if args.review_model:
+        payload["reviewer"]["model"] = args.review_model
+    if args.review_reasoning_effort:
+        payload["reviewer"]["reasoning_effort"] = args.review_reasoning_effort
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
@@ -1421,13 +1447,10 @@ def add_lean_core_files(args: argparse.Namespace, target: Path, replacements: di
     )
 
 
-def add_lean_files(args: argparse.Namespace, target: Path, replacements: dict[str, str], result: CopyResult) -> None:
-    copy_file("templates/CONTRACT_LITE.md", target / "docs/CONTRACT_LITE.md", replacements, args.force, args.dry_run, result)
-    copy_file("templates/LEAN_CODEX_PROMPT.md", target / "AGENTS.md", replacements, args.force, args.dry_run, result)
-    copy_file("templates/LEAN_REVIEW_CHECKLIST.md", target / "docs/LEAN_REVIEW_CHECKLIST.md", replacements, args.force, args.dry_run, result)
-
-
 def add_standard_files(args: argparse.Namespace, target: Path, replacements: dict[str, str], result: CopyResult) -> None:
+    copy_file("templates/AGENTS.md", target / "AGENTS.md", replacements, args.force, args.dry_run, result)
+    copy_file("templates/REVIEW_POLICY.md", target / "docs/REVIEW_POLICY.md", replacements, args.force, args.dry_run, result)
+    copy_file("docs/merge_authority.md", target / "docs/merge_authority.md", replacements, args.force, args.dry_run, result)
     copy_file("PLAYBOOK.md", target / "PLAYBOOK.md", replacements, args.force, args.dry_run, result)
     copy_file("templates/ARCHITECTURE.md", target / "docs/ARCHITECTURE.md", replacements, args.force, args.dry_run, result)
     copy_file(
@@ -1776,6 +1799,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Bootstrap a project with AI Workflow Playbook artifacts.")
     parser.add_argument("target", help="Target repository directory.")
     parser.add_argument("--mode", choices=("lean-core", "lean", "standard", "strict"), default="standard")
+    parser.add_argument(
+        "--delivery-profile", choices=("solo_verified", "independent_review"), default="solo_verified",
+        help="solo_verified: human orchestrator; independent_review: active session implements and orchestrates read-only reviewers (Standard/Strict). Neither grants completion authority.",
+    )
+    parser.add_argument("--agent-model", default="", help="Declare the main session model; does not change host configuration.")
+    parser.add_argument("--agent-reasoning-effort", default="", help="Declare main session reasoning; omitted means host-owned.")
+    parser.add_argument("--review-model", default="", help="Declare reviewer model; availability must be verified at invocation.")
+    parser.add_argument("--review-reasoning-effort", default="", help="Declare reviewer reasoning; does not launch a reviewer.")
     parser.add_argument("--planning-depth", choices=("oneshot", "compact_design", "designed_slices", "recommend"), default="oneshot")
     parser.add_argument("--risk-level", choices=("low", "medium", "high", "critical"), default="medium")
     parser.add_argument("--expected-file-count", type=int, default=1)
@@ -1835,12 +1866,16 @@ def main(argv: list[str] | None = None) -> int:
     target = Path(args.target).resolve()
     project_name = args.project_name or target.name
     mode = "lean-core" if args.mode == "lean" else args.mode
+    if mode == "lean-core" and args.delivery_profile != "solo_verified":
+        parser.error("--delivery-profile independent_review requires --mode standard or strict; Lean-Core does not install the task-loop review kit")
     resolved_planning_depth, planning_depth_source, planning_reasons = recommend_or_declared_planning_depth(args)
     args.planning_depth = resolved_planning_depth
     today = dt.date.today().isoformat()
     replacements = {
         "PROJECT_NAME": project_name,
         "MODE": mode,
+        "CONTRACT_PATH": "docs/CONTRACT_LITE.md" if mode == "lean-core" else "docs/IMPLEMENTATION_CONTRACT.md",
+        "PLANNING_DEPTH": args.planning_depth,
         "DATE": today,
         "VERIFY_COMMAND": display_verify_commands(verify_argvs),
         "OPERATIONAL_PAIN": readiness_value(args.operational_pain),
@@ -1867,9 +1902,7 @@ def main(argv: list[str] | None = None) -> int:
         add_lean_core_files(args, target, replacements, result)
     else:
         add_common_files(args, target, replacements, result)
-    if args.mode == "lean":
-        add_lean_files(args, target, replacements, result)
-    elif mode != "lean-core":
+    if mode != "lean-core":
         add_standard_files(args, target, replacements, result)
         if mode == "strict":
             args.with_cost_architecture = True
@@ -1895,7 +1928,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     write_text_file(
         target / ".playbook/delivery_execution_model.json",
-        delivery_execution_model_config(),
+        delivery_execution_model_config(args, mode),
         force=args.force,
         dry_run=args.dry_run,
         result=result,
@@ -1934,8 +1967,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  skip existing: {path}")
     for message in hook_messages:
         print(f"  hooks: {message}")
+    print("init_playbook_project: result=scaffold; verification and project-specific workflow/design acceptance are still required")
+    print(f"init_playbook_project: requested_delivery_profile={args.delivery_profile}; preserved files must be reconciled before claiming setup complete")
     if args.planning_depth in {"compact_design", "designed_slices"}:
-        print("init_playbook_project: next=python tools/feature_workflow.py --root . draft --task <task-id> --feature-id F01")
+        print("init_playbook_project: after T01/T02, next=python tools/feature_workflow.py --root . plan --task <task-id>")
+        print("init_playbook_project: then select-plan with human provenance, then draft; initializer planning depth is not feature approval")
     print(f"init_playbook_project: created={len(result.created)} skipped={len(result.skipped)}")
     return 1 if args.install_claude_hooks and hook_failed else 0
 

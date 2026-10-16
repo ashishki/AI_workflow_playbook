@@ -163,6 +163,13 @@ Mode rules:
 
 ### A4 — docs/CODEX_PROMPT.md
 
+The initializer emits a compact current-state handoff. Required state sections
+may contain a short summary and precise canonical evidence pointers instead of
+duplicated tables or reusable instructions. Follow applicable pointers and
+verify the actual data; a missing target or unresolved scaffold placeholder is
+not acceptance. `Instructions for Codex` may link AGENTS and the review policy.
+Inactive profile details are n/a; do not expand their blocks just for formatting.
+
 - [ ] A4-01  Phase: 1 at top of document
 - [ ] A4-02  Baseline: 0 (or "pre-implementation") — matches Phase 1 initial state
 - [ ] A4-02a Project verification baseline records an exact runnable command or canonical command source plus its latest result, result date or evidence path, and known pre-existing failures. For a fresh project, `pending T02` is valid when T02 explicitly establishes the baseline. A missing result is a WARNING; a missing runnable command remains a BLOCKER under A3/A6.
