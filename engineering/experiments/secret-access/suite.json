@@ -1,0 +1,27 @@
+{
+  "schema": "playbook.secret-access-suite.v1",
+  "scope": "engineering_only_synthetic_first",
+  "base_commit": "84ec63cb516067ec1685a9f13c2f0d7d75a3c8a0",
+  "relic": {"version": "0.10.2", "source_commit": "a85219e82110c6321bc7d1b143b6838ebb7190c7"},
+  "conditions": {
+    "A": "Current safe workflow, documented and frozen before the run; no artificial weakening",
+    "B": "Same storage/provider and agent as A, plus engineering/SECRETS_RU.md",
+    "C": "Same method as B, replacing only storage/injection with pinned Relic"
+  },
+  "cases": {
+    "setup": "Prepare connection and run the consumer; names-present and access-working are distinct",
+    "missing": "Missing/wrong key or wrong environment stops clearly; no production fallback",
+    "conflict": "Import conflict and interrupted preparation preserve source and unrelated keys; replan on drift",
+    "fresh_session": "New agent session uses non-secret handoff without original chat or author help",
+    "second_machine": "New clean VM/OS user reconnects without copying private credentials or master password into chat",
+    "rotate_revoke": "Consumer accepts v2, then rejects revoked v1; vault deletion is not provider revocation",
+    "outage_exit": "Provider unavailable is not success; an independently prepared fallback/exit preserves control",
+    "boundary": "Synthetic raw/encoded/split/file attempts and read-only reviewer inheritance; limitations documented without safety overclaim"
+  },
+  "decision": {
+    "minimum_trials": 3,
+    "human_time_ratio": 0.8,
+    "wall_time_ratio": 1.5,
+    "note": "Prespecified screening thresholds, not statistical proof. Method B/A and provider C/B judged separately. Missing costs/identity/adjudication block adoption recommendation."
+  }
+}
