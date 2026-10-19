@@ -20,7 +20,7 @@ class ExperimentTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name) / 'run'
+        self.root = Path(self.temp.name).resolve() / 'run'
         e.prepare(self.root, head='a' * 40, model='test-model', host='test-host')
 
     def observations(self):
@@ -73,7 +73,7 @@ class ExperimentTests(unittest.TestCase):
         with self.assertRaises(e.ExperimentError): e.load(self.root)
 
     def test_symlink_escape_blocked(self):
-        other = Path(self.temp.name) / 'other.json'; other.write_text('{}')
+        other = Path(self.temp.name).resolve() / 'other.json'; other.write_text('{}')
         link = self.root / 'escape.json'
         try: link.symlink_to(other)
         except OSError: self.skipTest('Symlinks unavailable for this OS user')
@@ -153,10 +153,10 @@ class ExperimentTests(unittest.TestCase):
         self.assertEqual(result['status'], 'FAIL')
 
     def test_report_does_not_publish_inputs_or_promote_offline(self):
-        out = Path(self.temp.name) / 'report'
+        out = Path(self.temp.name).resolve() / 'report'
         result = e.report(self.root, out)
         self.assertTrue(all(v['decision'] == 'KEEP_EXPERIMENTAL' for v in result['comparisons'].values()))
-        published = (out / 'results.json').read_text() + (out / 'REPORT_RU.md').read_text()
+        published = (out / 'results.json').read_text(encoding='utf-8') + (out / 'REPORT_RU.md').read_text(encoding='utf-8')
         self.assertNotIn('PB_SYNTH_', published); self.assertNotIn(str(self.root), published)
         with self.assertRaises(FileExistsError): e.report(self.root, out)
 
