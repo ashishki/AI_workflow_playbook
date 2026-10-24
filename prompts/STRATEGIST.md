@@ -1098,6 +1098,13 @@ Ask all questions together with the existing clarifying questions. Do not ask th
 
 For each profile declared ON, initialize the corresponding state block in `docs/CODEX_PROMPT.md` at Phase 1 initial state. The CODEX_PROMPT.md template contains all five state blocks (RAG, Tool-Use, Agentic, Planning, Compliance). Set each active profile's block to its initial values; set inactive profiles to OFF with all other fields as `n/a`.
 
+Keep each block a compact status plus precise references to the current
+canonical profile/evaluation artifacts. Fill unresolved scaffold decisions from
+the approved design; do not treat them as OFF. Follow the references to verify
+evidence rather than duplicating full tables, instructions or history in the
+handoff. Preserve its phase, baseline, findings and evaluation fields consumed
+by Phase 1 validation and the orchestrator.
+
 ### Additional clarifying questions when profiles are plausible
 
 11. Does the LLM in this system call external functions or APIs at inference time? If yes: are any of those calls destructive or irreversible? Is there a confirmation step before destructive actions?

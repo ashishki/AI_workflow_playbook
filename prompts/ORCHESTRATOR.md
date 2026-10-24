@@ -1219,6 +1219,10 @@ Rules:
 - Every change must be traceable to something in REVIEW_REPORT.md or the implementer completion report.
 - Do not update docs/tasks.md — that was already patched by Consolidation Agent.
 - For each active profile with work completed this phase, update its state block in docs/CODEX_PROMPT.md:
+  Keep a compact current status and precise references to canonical profile/eval
+  artifacts. Store detailed tables there and verify them through the references;
+  do not copy history or reusable instructions into the handoff. Keep the current
+  Evaluation State's task, Eval Source and Date available for Step 3.5.
   - `## RAG State` (RAG = ON): refresh RAG shape, manifest path/hash,
     current baseline result, candidate result, comparison result,
     corpus/dataset versions, harness/delivery profile, retrieval baseline, open

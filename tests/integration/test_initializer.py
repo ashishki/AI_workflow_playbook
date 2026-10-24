@@ -5,6 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -22,6 +23,153 @@ def run_init(target: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 def passing_verify_argv() -> str:
     return json.dumps(["{python}", "-c", "raise SystemExit(0)"])
+
+
+def init_workflow(target: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return run_init(
+        target, "--operational-pain", "Bootstrap must produce a usable workflow.",
+        "--current-workaround", "Repair missing operating instructions manually.",
+        "--first-proof-metric", "The generated verifier detects broken workflow wiring.",
+        "--verify-argv", passing_verify_argv(), *args,
+    )
+
+
+@pytest.mark.parametrize("mode", ["lean-core", "lean", "standard", "strict"])
+def test_mode_entrypoint_is_consistent_with_and_without_force(tmp_path: Path, mode: str) -> None:
+    target = tmp_path / mode
+    result = init_workflow(target, "--mode", mode)
+    assert result.returncode == 0, result.stderr
+    agents = (target / "AGENTS.md").read_text(encoding="utf-8")
+    assert f"Mode: {'lean-core' if mode == 'lean' else mode}" in agents
+    contract = "CONTRACT_LITE" if mode in {"lean", "lean-core"} else "IMPLEMENTATION_CONTRACT"
+    assert f"docs/{contract}.md" in agents
+    forced = init_workflow(target, "--mode", mode, "--force")
+    assert forced.returncode == 0, forced.stderr
+    assert (target / "AGENTS.md").read_text(encoding="utf-8") == agents
+    assert sum(line.endswith("/AGENTS.md") for line in forced.stdout.splitlines()) == 1
+
+
+@pytest.mark.parametrize("mode", ["standard", "strict"])
+@pytest.mark.parametrize("profile", ["solo_verified", "independent_review"])
+def test_generated_operating_contract_is_usable(tmp_path: Path, mode: str, profile: str) -> None:
+    target = tmp_path / mode
+    args = [] if profile == "solo_verified" else [
+        "--delivery-profile", profile, "--agent-model", "example-main-model",
+        "--agent-reasoning-effort", "high", "--review-model", "example-review-model",
+        "--review-reasoning-effort", "medium",
+    ]
+    result = init_workflow(target, "--mode", mode, *args)
+    assert result.returncode == 0, result.stderr
+    assert "scaffold" in result.stdout
+    assert (target / "AGENTS.md").is_file()
+    assert (target / "docs/REVIEW_POLICY.md").is_file()
+    assert (target / "docs/merge_authority.md").is_file()
+    assert (target / "docs/codex_exec_subagent_protocol.md").is_file()
+    handoff = (target / "docs/CODEX_PROMPT.md").read_text(encoding="utf-8")
+    assert len(handoff.splitlines()) < 100
+    assert "T01: Complete Project Brief And Mode Selection" in handoff
+    assert "IMPLEMENTATION_JOURNAL.md" in handoff
+    for heading in (
+        "Current State", "Next Task", "Fix Queue", "Open Findings", "Continuity Pointers",
+        "Instructions for Codex", "RAG State", "Tool-Use State", "Agentic State",
+        "Planning State", "Compliance State", "Evaluation State", "NFR Baseline",
+    ):
+        assert f"## {heading}\n" in handoff
+    assert "Version:" in handoff and "Phase: 1" in handoff and "Baseline:" in handoff
+    assert "Eval Source:" in handoff and "Date:" in handoff
+    assert "Never delete history from this file" not in handoff
+    contract = json.loads((target / ".playbook/delivery_execution_model.json").read_text())
+    assert contract["delivery_profile"] == profile
+    assert contract["operating_policy_ref"] == "docs/REVIEW_POLICY.md"
+    assert contract["completion_authority"]["kind"] == "human"
+    if profile == "independent_review":
+        assert contract["task_loop_profile"] == "codex_exec_subagents"
+        assert contract["orchestrator"]["kind"] == contract["implementer"]["kind"] == "active_codex_session"
+        assert contract["orchestrator"]["model"] == "example-main-model"
+        assert contract["implementer"]["reasoning_effort"] == "high"
+        assert contract["reviewer"]["model"] == "example-review-model"
+        assert contract["reviewer"]["reasoning_effort"] == "medium"
+        assert contract["reviewer"]["may_write_code"] is False
+    else:
+        assert contract["task_loop_profile"] == "disabled"
+        assert contract["orchestrator"]["kind"] == "human"
+        assert "model" not in contract["implementer"]
+    verification = subprocess.run(
+        [sys.executable, "tools/verify_project.py", "--root", "."], cwd=target,
+        capture_output=True, text=True, check=False,
+    )
+    assert verification.returncode == 0, verification.stdout + verification.stderr
+
+
+@pytest.mark.parametrize("missing", [
+    "AGENTS.md", "docs/REVIEW_POLICY.md", "docs/merge_authority.md",
+    "docs/CODEX_PROMPT.md", "tools/run_codex_role.py", "tools/codex_role_run_lib.py",
+])
+def test_generated_verifier_rejects_broken_operating_contract(tmp_path: Path, missing: str) -> None:
+    target = tmp_path / "broken"
+    result = init_workflow(target, "--delivery-profile", "independent_review")
+    assert result.returncode == 0, result.stderr
+    (target / missing).unlink()
+    verification = subprocess.run(
+        [sys.executable, "tools/verify_project.py", "--root", "."], cwd=target,
+        capture_output=True, text=True, check=False,
+    )
+    assert verification.returncode == 1
+    report = json.loads((target / ".playbook-artifacts/project_verification.json").read_text())
+    check = next(item for item in report["checks"] if item["id"] == "playbook_contract")
+    output = (target / check["stdout_ref"]["path"]).read_text() + (target / check["stderr_ref"]["path"]).read_text()
+    assert "DELIVERY_OPERATING_ARTIFACT_MISSING" in output
+    assert missing in output
+
+
+@pytest.mark.parametrize("drift", ["reviewer_writes", "human_orchestrator", "profile_disabled", "reviewer_approves"])
+def test_delivery_validation_detects_selected_workflow_drift(tmp_path: Path, drift: str) -> None:
+    target = tmp_path / "drift"
+    result = init_workflow(target, "--delivery-profile", "independent_review")
+    assert result.returncode == 0, result.stderr
+    path = target / ".playbook/delivery_execution_model.json"
+    contract = json.loads(path.read_text())
+    if drift == "reviewer_writes":
+        contract["reviewer"]["may_write_code"] = True
+    elif drift == "human_orchestrator":
+        contract["orchestrator"]["kind"] = "human"
+    elif drift == "reviewer_approves":
+        contract["completion_authority"]["kind"] = "independent_read_only_agent"
+    else:
+        contract["task_loop_profile"] = "disabled"
+    path.write_text(json.dumps(contract), encoding="utf-8")
+    validation = subprocess.run(
+        [sys.executable, "tools/playbook_validate.py", "--root", ".", "--check", "delivery"],
+        cwd=target, capture_output=True, text=True, check=False,
+    )
+    assert validation.returncode == 1
+    assert "DELIVERY_OPERATING_PROFILE_MISMATCH" in validation.stdout + validation.stderr
+
+
+def test_lean_rejects_task_loop_profile_before_writing(tmp_path: Path) -> None:
+    target = tmp_path / "lean"
+    result = init_workflow(target, "--mode", "lean", "--delivery-profile", "independent_review")
+    assert result.returncode == 2
+    assert "requires --mode standard or strict" in result.stderr
+    assert not target.exists()
+
+
+def test_workflow_retrofit_preserves_owned_files_and_dry_run_writes_nothing(tmp_path: Path) -> None:
+    dry_target = tmp_path / "dry"
+    dry = init_workflow(dry_target, "--delivery-profile", "independent_review", "--dry-run")
+    assert dry.returncode == 0, dry.stderr
+    assert not dry_target.exists()
+    target = tmp_path / "existing"
+    owned = ["AGENTS.md", "docs/REVIEW_POLICY.md", "docs/CODEX_PROMPT.md", "docs/PROJECT_BRIEF.md"]
+    for ref in owned:
+        path = target / ref
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"Existing project-owned content: {ref}\n", encoding="utf-8")
+    result = init_workflow(target, "--retrofit")
+    assert result.returncode == 0, result.stderr
+    for ref in owned:
+        assert (target / ref).read_text(encoding="utf-8") == f"Existing project-owned content: {ref}\n"
+        assert f"skip existing: {target / ref}" in result.stdout
 
 
 def test_lean_core_is_minimal_and_valid(tmp_path: Path) -> None:
@@ -124,7 +272,8 @@ def test_standard_compact_design_creates_draft_and_design_required_state(tmp_pat
     )
 
     assert result.returncode == 0, result.stderr
-    assert "feature_workflow.py --root . draft --task <task-id> --feature-id F01" in result.stdout
+    assert "feature_workflow.py --root . plan --task <task-id>" in result.stdout
+    assert "select-plan" in result.stdout
     assert (target / "docs/design/F01.md").exists()
     assert (target / "tools/feature_workflow.py").exists()
     assert (target / "tools/approve_feature_design.py").exists()

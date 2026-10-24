@@ -23,6 +23,8 @@
       "type": "string",
       "enum": ["solo_verified", "split_orchestrated", "independent_review", "multi_candidate"]
     },
+    "operating_policy_ref": { "type": "string", "const": "docs/REVIEW_POLICY.md" },
+    "task_loop_profile": { "type": "string", "enum": ["disabled", "codex_exec_subagents"] },
     "orchestrator": { "$ref": "#/$defs/role" },
     "implementer": { "$ref": "#/$defs/role" },
     "reviewer": { "$ref": "#/$defs/role" },

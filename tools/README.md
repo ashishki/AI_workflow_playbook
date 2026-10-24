@@ -29,6 +29,35 @@ Project verification must be declared with one or more structured
 Use `--external-skill NAME` to create a trust-record stub before any third-party
 skill is installed or enabled.
 
+Standard/Strict install a mode-aware `AGENTS.md`, project `docs/REVIEW_POLICY.md`,
+the existing merge-authority and exec protocols, and a short current-state
+`docs/CODEX_PROMPT.md`. History belongs in the journal/evidence artifacts, not
+inside the active handoff. `lean` is an alias of `lean-core`, including under
+`--force`; it does not install a second, conflicting entrypoint.
+
+Select delivery independently from design depth:
+
+- `--delivery-profile solo_verified` (default): human orchestrates; active
+  session implements; risk-routed independent review; task-loop profile off.
+- `--delivery-profile independent_review` (Standard/Strict): the same active
+  session orchestrates, implements and fixes; separate read-only agents review
+  through the existing task-loop protocol after bootstrap.
+
+Optional `--agent-model`, `--agent-reasoning-effort`, `--review-model` and
+`--review-reasoning-effort` declare role bindings. Omitted model IDs stay
+environment-owned; reviewer reasoning follows the selected runner's default
+(Governed Role Runner: `medium`), not the parent's effort. These flags neither change host configuration nor prove
+availability or launch a model. Both profiles preserve human completion
+authority; they do not authorize spend, phase advance or merge.
+
+Exit zero means scaffold creation succeeded. Complete T01/T02: reconcile the
+owner's choices with generated/preserved instructions, run the generated
+verifier, and record actual evidence and untested runtime paths. New operating
+contracts fail delivery validation when required instruction files are missing
+or selected roles/profile disagree. Older contracts remain valid without silent
+migration. No structural validator can establish that arbitrary project prose
+implements the owner's intent; this remains an explicit setup acceptance check.
+
 Planning Depth can be declared with `--planning-depth oneshot|compact_design|designed_slices`.
 Use `--planning-depth recommend` with risk/profile flags such as
 `--risk-level high`, `--user-visible-feature`, `--api-change`, or
