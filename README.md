@@ -64,8 +64,8 @@ the relevant parts of the library; it does not require every stage or skill.
 
 ## Rights and distribution
 
-This repository has no project-level open-source license and grants no
-additional copyright permission beyond the GitHub Terms, applicable law, and
+This repository has no project-level open-source license and grants
+no additional copyright permission beyond the GitHub Terms, applicable law, and
 file-specific licenses. See [Legal Status](docs/LEGAL_STATUS.md).
 Public source visibility does not turn the private preview into a public product
 release or authorize distribution of the package.
