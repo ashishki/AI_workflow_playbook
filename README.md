@@ -1,65 +1,71 @@
 # AI Workflow Playbook
 
-**Один Playbook, два способа использования и общие инженерные механизмы.**
+An AI-assisted delivery playbook for developers and workflow owners: understand
+the problem, choose a focused change, implement it, verify the result, and
+maintain or hand it over.
 
-| Куда идти | Для чего |
+One Playbook has two entry paths and shared engineering mechanisms:
+
+| Entry | Who it serves |
 |---|---|
-| [Engineering](engineering/README.md) | Рабочая система автора для разработки новых и текущих реальных проектов, глубоких проверок и экспериментов |
-| [Product](product/README.md) | Помощь владельцу небольшой рабочей проблемы: разобраться, выбрать изменение, внедрить, наблюдать эффект, изменять и передавать решение |
+| [Engineering](engineering/README.md) | Developers working on new or existing projects, independent reviews, and experiments |
+| [Product](product/README.md) | Workflow owners who need to understand a problem, choose a change, observe its effect, and maintain or hand over the result |
 
-Это не Pro и урезанный Lite. В Product система организует инженерную работу,
-а человек принимает решения о своей работе, данных, расходах и последствиях.
-Число skills не ограничивает полноту; небольшой запрос не запускает всю библиотеку.
+## Representative use
 
-## Начать
+A workflow owner describes recurring work and where it goes wrong. The Product
+path helps clarify the problem and choose an appropriate intervention: a process
+change, configuration, spreadsheet, or software. The owner decides about their
+work, data, expenses, and consequences; engineering checks support those decisions.
 
-Для Engineering откройте [рабочий маршрут](engineering/USAGE_RU.md): продолжить
-проект, начать новый или отдельно проверить новый метод. Действующие проекты
-сохраняют закреплённую версию и свой контракт; эксперименты их не обновляют.
+The Engineering path is the author's working method for implementation,
+verification, review, and handoff. Existing projects retain their pinned version
+and contract; trying a new method does not migrate them automatically.
 
-Для Product предпочтительный private-preview путь — OS-specific
-`Playbook-Desktop`: мастер подключает тот же канонический Native kit к выбранной
-рабочей папке, а дальше пользователь работает в Codex обычным разговором.
-[Первый запуск](docs/native/QUICKSTART_RU.md).
+## Current stage
 
-Native ZIP остаётся переносимым ручным fallback: можно распаковать комплект,
-открыть «Мой проект» в Codex и описать проблему без Desktop-мастера.
+**24 October 2026: public reference material; Product/Desktop tools remain a
+private evaluation preview (`0.2.0-preview.4`).**
+[Desktop delivery status](docs/delivery/DESKTOP_SETUP_PREVIEW_RU.md) ·
+[Delivery programme](docs/delivery/PLAN_RU.md).
 
-## Что поставляется
+Installation checks, frozen self-tests, and CI do not establish clean-machine
+operation, user benefit, or business impact. The
+[historical results](reports/native/README.md) retain the trial that did not
+establish an advantage over ordinary Codex. Packaging and the complete user
+journey require separate evidence.
 
-Плагин `playbook-native` сохраняет совместимый путь. В него входят разговорный
-вход, frontend, вызываемая библиотека всех 13 этапов, существующий Role Runner
-и необязательный инструмент состояния/передачи.
+## What is available
 
-Desktop setup не является новой AI-платформой: он только устанавливает/обновляет/
-удаляет управляемые файлы Playbook, умеет вернуть предыдущую **установку** и может
-по отдельному подтверждению подготовить per-user runtime для независимого review.
-Git, GitHub, VPS, Docker, API key и system Python не являются общими требованиями
-для первого Product-разбора.
+- Engineering routes for continuing a project, starting one, or testing a method.
+- A Product workflow spanning problem framing through maintenance and handoff.
+- The canonical Native kit, with a conversational entry, frontend, all 13 lifecycle
+  stages, the existing Role Runner, and an optional state/handoff tool.
+- OS-specific Playbook Desktop setup for installing, updating, removing, and
+  restoring a prior installation of managed Playbook files.
 
-[Каталог способностей](product/CAPABILITIES.md) ·
-[Native kit](distribution/native/README.md) ·
-[Desktop setup preview](distribution/desktop/README.md).
+Desktop setup connects the Native kit to a chosen working folder. Preparing a
+per-user independent-review runtime requires its own confirmation. Git, GitHub,
+a VPS, Docker, API keys, and system Python are not universal requirements for
+the first Product discussion.
 
-**Версия: 0.2.0-preview.4.** Это исходники private evaluation preview, а не
-доказанная готовность публичного продукта. Frozen self-test, CI и установка не
-подменяют clean-machine, реальный model/browser review, пользовательский пилот и
-наблюдение бизнес-эффекта.
+## Start and inspect
 
-Сохраняем [прежние результаты](reports/native/README.md), в том числе опыт,
-не установивший преимущество инструкций над обычным Codex. Полный жизненный путь
-проверяется отдельно от упаковки.
+- **Engineering:** [usage guide (Russian)](engineering/USAGE_RU.md).
+- **Product private preview:** [first-run guide (Russian)](docs/native/QUICKSTART_RU.md).
+- **Manual portable path:** [Native ZIP kit](distribution/native/README.md).
+- **Desktop:** [setup preview](distribution/desktop/README.md).
+- [Capability catalogue](product/CAPABILITIES.md),
+  [architecture](docs/vnext/ARCHITECTURE_RU.md),
+  [shared mechanisms](shared/README.md), and [documentation index](docs/README.md).
 
-[Архитектура vNext](docs/vnext/ARCHITECTURE_RU.md) ·
-[Общие механизмы](shared/README.md) · [Указатель](docs/README.md) ·
-[Desktop delivery status](docs/delivery/DESKTOP_SETUP_PREVIEW_RU.md).
+The `playbook-native` plugin retains its compatible route. A small request uses
+the relevant parts of the library; it does not require every stage or skill.
 
-> Репозиторий не получил новую лицензию. Права использования и распространения
-> остаются описанными в [LEGAL_STATUS](docs/LEGAL_STATUS.md). Эта ветка не является
-> публичным выпуском или разрешением отправлять комплект подписчикам.
+## Rights and distribution
 
-> This repository has no project-level open-source license and grants no additional
-> copyright permission beyond the GitHub Terms, applicable law, and file-specific
-> licenses. See [Legal Status](docs/LEGAL_STATUS.md).
-
-Текущая программа доведения: [D00–D10](docs/delivery/PLAN_RU.md).
+This repository has no project-level open-source license and grants no
+additional copyright permission beyond the GitHub Terms, applicable law, and
+file-specific licenses. See [Legal Status](docs/LEGAL_STATUS.md).
+Public source visibility does not turn the private preview into a public product
+release or authorize distribution of the package.
