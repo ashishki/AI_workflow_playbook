@@ -111,6 +111,7 @@ def prepare(root, *, head, model, host, trials=3, seed=20261019):
         for arm in 'ABC':
             rid = f'{arm}-{trial + 1}'
             file(f'{rid}/probe.py', (HERE / 'probe.py').read_bytes())
+            file(f'{rid}/synthetic_app.py', (HERE / 'synthetic_app.py').read_bytes())
             file(f'{rid}/.env.example', b'PB_TEST_TOKEN=\n')
             file(f'{rid}/import-v1.env', f'PB_TEST_TOKEN={v1}\n'.encode())
             file(f'{rid}/import-v2.env', f'PB_TEST_TOKEN={v2}\n'.encode())
@@ -119,6 +120,8 @@ def prepare(root, *, head, model, host, trials=3, seed=20261019):
             file(f'{rid}/TASK.md', (
                 f'# {rid}\n\n{spec["conditions"][arm]}\n\n'
                 'Complete the lifecycle in the frozen protocol with synthetic data only.\n'
+                'The synthetic application loads .env itself when a value is not already injected.\n'
+                + ('For C use synthetic_app.py --require-injected and verify injection without .env fallback.\n' if arm == 'C' else '') +
                 'No production, permission escalation, recursive experiments or automatic imports.\n'
                 'Keep receipt evidence; the supervisor, not the task agent, adjudicates outcomes.\n'
             ).encode())

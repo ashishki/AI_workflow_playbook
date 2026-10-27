@@ -103,6 +103,40 @@ class ExperimentTests(unittest.TestCase):
         self.assertEqual(e.assess(self.root)['status_counts']['NOT_RUN'], 72)
         with self.assertRaises(e.ExperimentError): e.smoke(self.root, 'B-1')
 
+    def test_synthetic_application_loads_dotenv_without_overriding_injected_value(self):
+        cwd = self.root / 'A-1'
+        plan = e.read_json(self.root / 'plan.json')
+        run = next(row for row in plan['runs'] if row['id'] == 'A-1')
+        (cwd / '.env').write_bytes((cwd / 'import-v1.env').read_bytes())
+        command = [sys.executable, str(cwd / 'synthetic_app.py'), '--expected', run['v1_sha256']]
+        good = subprocess.run(command, cwd=cwd, env=e.clean_env(), capture_output=True)
+        self.assertEqual(good.returncode, 0)
+        self.assertTrue(json.loads(good.stdout)['ok'])
+        bad_env = dict(e.clean_env(), PB_TEST_TOKEN='PB_SYNTH_' + '0' * 64)
+        wrong = subprocess.run(command, cwd=cwd, env=bad_env, capture_output=True)
+        self.assertEqual(wrong.returncode, 4)
+        self.assertNotIn(bad_env['PB_TEST_TOKEN'].encode(), wrong.stdout + wrong.stderr)
+        (cwd / '.env').write_text('PB_TEST_TOKEN=not-synthetic\n', encoding='utf-8')
+        refused = subprocess.run(command, cwd=cwd, env=e.clean_env(), capture_output=True)
+        self.assertEqual(refused.returncode, 3)
+        self.assertNotIn(b'not-synthetic', refused.stdout + refused.stderr)
+
+    def test_synthetic_application_injection_mode_has_no_dotenv_fallback(self):
+        cwd = self.root / 'C-1'
+        run = next(row for row in e.read_json(self.root / 'plan.json')['runs'] if row['id'] == 'C-1')
+        token = (cwd / 'import-v1.env').read_text(encoding='utf-8').split('=', 1)[1].strip()
+        (cwd / '.env').write_bytes((cwd / 'import-v1.env').read_bytes())
+        command = [sys.executable, str(cwd / 'synthetic_app.py'), '--require-injected', '--expected', run['v1_sha256']]
+        missing = subprocess.run(command, cwd=cwd, env=e.clean_env(), capture_output=True)
+        self.assertEqual(missing.returncode, 3)
+        invalid = subprocess.run(command, cwd=cwd, env=dict(e.clean_env(), PB_TEST_TOKEN='PB_SYNTH_' + '0' * 64), capture_output=True)
+        self.assertEqual(invalid.returncode, 4)
+        (cwd / '.env').write_text('PB_TEST_TOKEN=not-synthetic\n', encoding='utf-8')
+        valid = subprocess.run(command, cwd=cwd, env=dict(e.clean_env(), PB_TEST_TOKEN=token), capture_output=True)
+        self.assertEqual(valid.returncode, 0)
+        self.assertTrue(json.loads(valid.stdout)['ok'])
+        self.assertNotIn(token.encode(), valid.stdout + valid.stderr)
+
     def test_scan_checks_declared_files_without_exposing_values(self):
         e.smoke(self.root, 'C-1')
         result = e.scan(self.root, 'C-1', ['C-1/synthetic-leak.txt', 'C-1/offline-receipt.json'])
