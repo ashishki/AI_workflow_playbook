@@ -46,17 +46,23 @@ class BundleTests(unittest.TestCase):
         shutil.copy2(HERE.parents[1] / '.gitattributes', repository / '.gitattributes')
         skills = repository / 'engineering/addons/skills'
         shutil.copytree(HERE / 'skills', skills)
+        for relative in ('PLAYBOOK.md', 'docs/governed/README.md'):
+            target = repository / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(HERE.parents[1] / relative, target)
         def git(*args):
             subprocess.run(['git', '-C', str(repository), '-c', 'core.autocrlf=true', *args],
                            check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         git('init')
-        git('add', '.gitattributes', 'engineering/addons/skills')
+        git('add', '.gitattributes', 'engineering/addons/skills', 'PLAYBOOK.md', 'docs/governed/README.md')
         checkout = self.root / 'checkout'
         checkout.mkdir()
         git('checkout-index', '--all', '--prefix=' + str(checkout) + '/')
         for name in b.SKILLS:
             checked_out = checkout / 'engineering/addons/skills' / name / 'SKILL.md'
             self.assertEqual(checked_out.read_bytes(), b.source_bytes(name))
+        for relative in ('PLAYBOOK.md', 'docs/governed/README.md'):
+            self.assertEqual((checkout / relative).read_bytes(), (HERE.parents[1] / relative).read_bytes())
 
     def test_plan_has_no_side_effects(self):
         result = b.install(self.root, 'codex')

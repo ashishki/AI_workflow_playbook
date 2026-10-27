@@ -10,6 +10,8 @@ docs/native/HELP_RU.md text eol=lf
 
 # Bundle hashes and portable frontmatter must survive Windows checkouts.
 engineering/addons/skills/** text eol=lf
+PLAYBOOK.md text eol=lf
+docs/governed/README.md text eol=lf
 
 # Preserve observed archive bytes, including recorded terminal whitespace.
 reports/delivery/2026-10-09/** -text
