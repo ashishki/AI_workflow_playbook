@@ -50,6 +50,74 @@ Playbook нужен Harness Lab; другие приложения не обяз
 а не автоматически на каждой правке. Исправления перепроверяются; отчёт должен
 относиться к актуальным файлам. `validated` исполнения не означает `PASS` кода.
 
+## Необязательный skill: приватность LLM и RAG
+
+[`design-llm-privacy`](skills/design-llm-privacy/SKILL.md) помогает спроектировать
+или проверить передачу чувствительных данных: идентичность сущностей, права на
+источники и атрибуты, mapping, выдачу ответа, tool calls и streaming. Результат:
+обоснованный дизайн или findings, план синтетических проверок и задачи для
+реализации. Skill не меняет код приложения и не является работающим DLP-шлюзом.
+Инструкции на английском; ответ следует языку запроса.
+
+Исходник хранится отдельно от автоматически загружаемых skills и Native-пакета.
+Для разового использования можно дать агенту полный путь к `SKILL.md` и явно
+попросить применить его к выбранному проекту. Установка для повторного применения:
+
+1. Выберите конкретный commit Playbook и проверьте
+   [trust record](../docs/security/skills/design-llm-privacy/TRUST_RECORD.md).
+   При переносе в другой проект действует его обычный
+   [external-skill gate](../docs/external_skill_security_policy.md); текущая запись
+   является подготовкой исходника, а не подтверждением downstream-установки.
+   Подготовьте trust record в целевом проекте по пути
+   `docs/security/skills/design-llm-privacy/TRUST_RECORD.md` и проверяйте явно
+   выбранный исходник до копирования в автоматически загружаемую папку:
+
+   ```bash
+   python3 /path/to/AI_workflow_playbook/tools/skill_security_gate.py \
+     --root /path/to/target-project \
+     --skill design-llm-privacy=/path/to/AI_workflow_playbook/engineering/skills/design-llm-privacy
+   ```
+
+   Текущий `--discover-agent-skills` не сканирует `.agents/skills`. Для проверки
+   уже установленной Codex-копии укажите явно
+   `--skill .agents/skills/design-llm-privacy`; отсутствие найденных skills не
+   является проверкой пакета. Недоступный сканер остаётся пробелом в evidence.
+2. Скопируйте **весь** каталог `engineering/skills/design-llm-privacy/`, включая
+   `references/` и `agents/`, в нужное расположение целевого проекта:
+
+   | Среда | Путь | Явный вызов |
+   |---|---|---|
+   | Codex | `.agents/skills/design-llm-privacy/` | `$design-llm-privacy` |
+   | Claude Code | `.claude/skills/design-llm-privacy/` | `/design-llm-privacy` |
+
+   Не перезаписывайте существующую версию без проверки diff. Если используете обе
+   среды, обе копии должны происходить из одного закреплённого commit. Обновление
+   ручное; откат — возврат предыдущей проверенной версии этой папки.
+3. В Codex `agents/openai.yaml` запрещает неявный запуск. В Claude Code выберите
+   для этого skill состояние `user-only` через `/skills` либо объедините с
+   существующим `.claude/settings.local.json` (не заменяя остальные настройки):
+
+   ```json
+   {"skillOverrides": {"design-llm-privacy": "user-invocable-only"}}
+   ```
+
+   На версии Claude без этой настройки используйте явное чтение исходника или
+   добавьте `disable-model-invocation: true` в frontmatter установленной копии
+   и заново зафиксируйте её hash в локальном trust record.
+
+Пример для Codex; в Claude замените первый символ `$` на `/`:
+
+```text
+$design-llm-privacy Проверь передачу данных в нашем RAG и внешние модели.
+Нужны границы доверия, mapping, права, безопасная выдача и тестовый план.
+Опирайся на код проекта. Верни приоритетные задачи, код пока не меняй.
+```
+
+Формат и пути сверены с [Codex](https://developers.openai.com/codex/skills/) и
+[Claude Code](https://code.claude.com/docs/en/skills) 27 октября 2026 года.
+Статус **experimental**: проверка структуры и упражнения с ассистентом не
+доказывают качество в реальном проекте или загрузку в обеих нативных средах.
+
 ## Связь с Product
 
 Один и тот же runner, проверка UI, eval и сохранение контекста обслуживают обе

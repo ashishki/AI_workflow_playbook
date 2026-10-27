@@ -11,7 +11,9 @@ permissions:
 
 jobs:
   checks:
-    runs-on: ubuntu-latest
+    # The frozen pilot sandbox supports the distribution Python runtime in /usr
+    # and /lib; setup-python's toolcache shared library is outside those mounts.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -19,12 +21,22 @@ jobs:
           # Frozen historical source integrity is verified at exact retained commits.
           fetch-depth: 0
 
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
-        with:
-          python-version: "3.12"
+      - name: Install sandbox and Python virtual environment support
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apparmor bubblewrap python3.12-venv
+          # Allow only the system bwrap executable to create user namespaces on
+          # this disposable runner; keep the global AppArmor restriction enabled.
+          printf '%s\n' 'abi <abi/4.0>,' 'include <tunables/global>' \
+            'profile bwrap /usr/bin/bwrap flags=(unconfined) {' '  userns,' '}' \
+            | sudo tee /etc/apparmor.d/bwrap >/dev/null
+          sudo apparmor_parser -r /etc/apparmor.d/bwrap
 
       - name: Install test dependencies
-        run: python -m pip install -r requirements-dev.txt
+        run: |
+          /usr/bin/python3.12 -m venv .venv
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+          .venv/bin/python -m pip install -r requirements-dev.txt
 
       - name: Verify installed test environment
         run: |

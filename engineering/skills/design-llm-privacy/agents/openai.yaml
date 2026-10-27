@@ -1,0 +1,6 @@
+interface:
+  display_name: "Design LLM Privacy"
+  short_description: "Design privacy boundaries for LLM and RAG systems"
+  default_prompt: "Use $design-llm-privacy to review this project’s LLM privacy boundaries and propose a testable implementation plan."
+policy:
+  allow_implicit_invocation: false

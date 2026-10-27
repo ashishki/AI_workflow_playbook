@@ -22,6 +22,7 @@ skill is rejected if it competes with those roles or relaxes any contract rule.
 | External Skill Security Gate | optional | Strategist, Orchestrator, Reviewer, Human | External skill trust records; scan/signature/provenance findings; `skill:security` task drafts | [`templates/skills/external_skill_security_skill.md`](../templates/skills/external_skill_security_skill.md) — policy: [`docs/external_skill_security_policy.md`](../docs/external_skill_security_policy.md) |
 | Research Companion | EXPERIMENTAL | Strategist, Reviewer, Human | `docs/research/{slug}.md` source-grounded notes consumed by ADRs and `docs/DECISION_LOG.md` | [`templates/skills/research_skill.md`](../templates/skills/research_skill.md) — guide: [`reference/research_companion.md`](research_companion.md) |
 | Simplification Pass | EXPERIMENTAL | Reviewer (specialized), Human | `docs/audit/SIMPLIFICATION_REPORT.md`; approved findings become normal Codex tasks | [`templates/skills/simplification_skill.md`](../templates/skills/simplification_skill.md) — prompt: [`prompts/audit/PROMPT_SIMPLIFY.md`](../prompts/audit/PROMPT_SIMPLIFY.md) |
+| Design LLM Privacy | EXPERIMENTAL | Strategist, Reviewer, Human | Privacy boundary design/review; synthetic evaluation plan; proposed implementation tasks | [`templates/skills/design_llm_privacy_skill.md`](../templates/skills/design_llm_privacy_skill.md) — portable [Claude Code / Codex skill](../engineering/skills/design-llm-privacy/SKILL.md) |
 
 ---
 
