@@ -208,6 +208,16 @@ def clean_env():
     return {k: os.environ[k] for k in names if k in os.environ}
 
 
+def provider_env():
+    # Session login may need a home/keychain; do not inherit application keys,
+    # provider tokens, implicit project selectors, or arbitrary parent variables.
+    names = ('PATH', 'HOME', 'USER', 'LOGNAME', 'SHELL', 'TERM', 'LANG', 'LC_ALL',
+             'LC_CTYPE', 'TMPDIR', 'TEMP', 'TMP', 'SYSTEMROOT', 'WINDIR',
+             'USERPROFILE', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_CACHE_HOME',
+             'XDG_DATA_HOME', 'XDG_RUNTIME_DIR', 'DBUS_SESSION_BUS_ADDRESS')
+    return {k: os.environ[k] for k in names if k in os.environ}
+
+
 def smoke(root, rid):
     root, plan, run = load(root, rid)
     cwd = root / rid
@@ -301,12 +311,13 @@ def provider_smoke(root, rid, binary, project, consent=False):
     synthetic = (root / rid / 'import-v1.env').read_text().split('=', 1)[1].strip().encode()
     # Reuse owner-managed login without inspecting or printing its files. Run from
     # the fixture directory. Dedicated OS user/project is a prerequisite, not enforced isolation.
-    meta, out, _ = execute([str(Path(binary).resolve()), '--version'], root / rid, os.environ.copy())
+    environment = provider_env()
+    meta, out, _ = execute([str(Path(binary).resolve()), '--version'], root / rid, environment)
     if meta['returncode'] or not re.search(rb'(?<![0-9.])0\.10\.2(?![0-9.])', out):
         raise ExperimentError('Pinned Relic version not confirmed; inspect and prepare a new protocol if needed')
     checks = {}
     for name in ('check', 'run'):
-        meta, out, err = execute(commands['commands'][name], root / rid, os.environ.copy(), timeout=60)
+        meta, out, err = execute(commands['commands'][name], root / rid, environment, timeout=60)
         try:
             parsed = json.loads(out)
         except (ValueError, UnicodeError):

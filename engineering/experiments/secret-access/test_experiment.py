@@ -268,6 +268,26 @@ class ExperimentTests(unittest.TestCase):
         self.assertEqual(result['status'], 'PASS')
         self.assertTrue(all(v['decision'] == 'KEEP_EXPERIMENTAL' for v in e.assess(self.root)['comparisons'].values()))
 
+    def test_provider_never_inherits_parent_application_key_or_provider_selector(self):
+        meta = {'returncode': 0, 'status': 'completed', 'wall_seconds': 0.1}
+        seen = []
+        def fake_execute(argv, cwd, env, **kwargs):
+            seen.append(dict(env))
+            output = b'0.10.2' if len(seen) == 1 else b'{"ok":true}'
+            return meta, output, b''
+        with patch.dict(os.environ, {'PB_TEST_TOKEN': 'synthetic-parent',
+                                     'RELIC_API_KEY': 'unexpected-parent',
+                                     'RELIC_SERVICE_TOKEN': 'unexpected-parent',
+                                     'RELIC_PROJECT_ID': 'unexpected-parent'}):
+            with patch.object(e, 'execute', side_effect=fake_execute):
+                self.assertEqual(e.provider_smoke(self.root, 'C-1', sys.executable, 'disposable', True)['status'], 'PASS')
+        self.assertEqual(len(seen), 3)
+        for environment in seen:
+            self.assertNotIn('PB_TEST_TOKEN', environment)
+            self.assertNotIn('RELIC_API_KEY', environment)
+            self.assertNotIn('RELIC_SERVICE_TOKEN', environment)
+            self.assertNotIn('RELIC_PROJECT_ID', environment)
+
     def test_exit_zero_with_error_json_is_failure(self):
         meta = {'returncode': 0, 'status': 'completed', 'wall_seconds': 0.1}
         with patch.object(e, 'execute', side_effect=[(meta, b'0.10.2', b''),
