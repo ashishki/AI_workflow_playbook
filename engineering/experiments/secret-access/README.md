@@ -99,6 +99,33 @@ PASS, offline результаты не дают рекомендацию вне
 проверяет REPORT_RU.md/results.json. Публиковать только безопасный итог и ограничения,
 не `plan.json`, observations и весь run directory. Не коммитить `.playbook-artifacts`.
 
+### Подготовка входа Harness Lab
+
+После `prepare` можно создать совместимый suite в отдельном локальном каталоге:
+
+```bash
+python engineering/experiments/secret-access/lab_suite.py \
+  --root .playbook-artifacts/secret-access/live-001 \
+  --output .playbook-artifacts/secret-access/lab-live-001
+PYTHONPATH=companion/ai_workflow_harness_lab/src python -m ai_workflow_harness_lab.cli \
+  validate-suite .playbook-artifacts/secret-access/lab-live-001
+python engineering/experiments/secret-access/lab_suite.py \
+  --root .playbook-artifacts/secret-access/live-001 \
+  --output .playbook-artifacts/secret-access/lab-live-001 --check
+```
+
+Это только подготовка: никакие модели и сервисы не запускаются. `schedule.json`
+сохраняет порядок плана и сопоставляет A с `baseline`, B/C с `playbook`; запускать
+нужно по одному `--task-id` в этом порядке. Счётчик receipt в suite проверяет только
+наличие receipt, а не восемь cases, безопасность или пользу. Исполнитель и оператор
+всё ещё должны обеспечить реальные изолированные сессии, наблюдения, все условия и
+лимиты протокола, сбор доказательств и независимую оценку. Suite не выдаёт разрешений,
+не фиксирует baseline и не обеспечивает контроль бюджета или изоляцию сам по себе.
+Перед каждым запуском `--check` сверяет все копии, prompts, inventory, suite и schedule
+с исходным планом и текущим builder; сохранить результат. Сам Harness Lab не соблюдает
+`schedule.json`: оператор проверяет порядок и condition по каждому receipt. Как и
+другие хеши в этом эксперименте, эта проверка не является независимой аттестацией.
+
 ## Ограничения механизма
 
 Это экспериментальный helper, не production runner/secret scanner. Он использует

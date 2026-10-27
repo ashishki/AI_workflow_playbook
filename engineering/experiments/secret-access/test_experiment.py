@@ -164,6 +164,50 @@ class ExperimentTests(unittest.TestCase):
         self.assertIn('--skip-existing', plan['commands']['owner_confirmed_import'])
         with self.assertRaises(e.ExperimentError): e.provider_plan(self.root, 'A-1', sys.executable, 'p')
 
+    def test_harness_suite_preparation_preserves_schedule_and_fixtures(self):
+        output = Path(self.temp.name).resolve() / 'lab-suite'
+        cmd = [sys.executable, str(HERE / 'lab_suite.py'), '--root', str(self.root), '--output', str(output)]
+        prepared = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        self.assertEqual(prepared.returncode, 0)
+        self.assertEqual(json.loads(prepared.stdout)['live_runs'], 0)
+        schedule = e.read_json(output / 'schedule.json')
+        plan = e.read_json(self.root / 'plan.json')
+        self.assertEqual(schedule['order'], plan['order'])
+        self.assertEqual(schedule['conditions']['A-1'], 'baseline')
+        self.assertEqual(schedule['conditions']['C-1'], 'playbook')
+        self.assertFalse((output / 'fixtures/A-1/METHOD_RU.md').exists())
+        self.assertEqual((output / 'fixtures/B-1/METHOD_RU.md').read_bytes(),
+                         (output / 'fixtures/C-1/METHOD_RU.md').read_bytes())
+        self.assertEqual((output / 'fixtures/A-1/import-v1.env').read_bytes(),
+                         (self.root / 'A-1/import-v1.env').read_bytes())
+        self.assertNotEqual(subprocess.run(cmd, capture_output=True).returncode, 0)
+        env = e.clean_env()
+        env['PYTHONPATH'] = str(HERE.parents[2] / 'companion/ai_workflow_harness_lab/src')
+        validated = subprocess.run([sys.executable, '-m', 'ai_workflow_harness_lab.cli',
+                                    'validate-suite', str(output)], env=env, capture_output=True, text=True)
+        self.assertEqual(validated.returncode, 0, validated.stderr)
+        self.assertEqual(json.loads(validated.stdout)['tasks'], 9)
+        self.assertEqual(subprocess.run(cmd + ['--check'], capture_output=True).returncode, 0)
+        prompt = output / 'prompts/B-1.md'
+        original = prompt.read_bytes()
+        prompt.write_bytes(original + b'changed')
+        self.assertNotEqual(subprocess.run(cmd + ['--check'], capture_output=True).returncode, 0)
+        prompt.write_bytes(original)
+        fixture = output / 'fixtures/C-1/METHOD_RU.md'
+        fixture_original = fixture.read_bytes()
+        fixture.write_bytes(b'changed')
+        self.assertNotEqual(subprocess.run(cmd + ['--check'], capture_output=True).returncode, 0)
+        fixture.write_bytes(fixture_original)
+        (output / 'extra').mkdir()
+        self.assertNotEqual(subprocess.run(cmd + ['--check'], capture_output=True).returncode, 0)
+        (output / 'extra').rmdir()
+        if hasattr(os, 'mkfifo'):
+            os.mkfifo(output / 'fixtures/C-1/extra-pipe')
+            self.assertNotEqual(subprocess.run(cmd + ['--check'], capture_output=True).returncode, 0)
+            (output / 'fixtures/C-1/extra-pipe').unlink()
+        self.assertEqual(subprocess.run(cmd + ['--check'], capture_output=True).returncode, 0)
+        self.assertEqual(e.assess(self.root)['status_counts']['NOT_RUN'], 72)
+
     def test_provider_requires_consent_before_subprocess(self):
         with patch.object(e.subprocess, 'Popen', side_effect=AssertionError('no execution')):
             with self.assertRaises(e.ExperimentError):
