@@ -1,0 +1,46 @@
+name: Engineering addons contracts
+on:
+  push:
+    branches: ['feature/engineering-addons-codex-claude-20261027', 'master', 'main']
+    paths: ['engineering/addons/**', '.github/workflows/engineering-addons.yml', '.gitattributes']
+  pull_request:
+    paths: ['engineering/addons/**', '.github/workflows/engineering-addons.yml', '.gitattributes']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.11'
+      - name: Offline packaging contracts (no models or accounts)
+        run: python -m unittest discover -s engineering/addons -p "test_*.py" -v
+      - name: Validate addon sources
+        run: python engineering/addons/bundle.py check
+      - name: Check bundled runtime copies
+        run: python distribution/native/sync_runtime.py --check
+      - name: Check vNext contracts
+        run: python tools/vnext_check.py --root .
+      - name: Check submitted whitespace
+        shell: bash
+        env:
+          EVENT_BASE: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+        run: |
+          base="$EVENT_BASE"
+          if [[ -z "$base" || "$base" =~ ^0+$ ]] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
+            base=$(git merge-base origin/master "$GITHUB_SHA")
+          fi
+          if [[ "$base" == "$GITHUB_SHA" && "$GITHUB_EVENT_NAME" == workflow_dispatch ]]; then
+            base=$(git rev-parse "${GITHUB_SHA}^")
+          fi
+          git diff --check "$base" "$GITHUB_SHA"
