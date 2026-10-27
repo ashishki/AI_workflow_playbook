@@ -50,11 +50,22 @@ python tools/skill_security_gate.py --root /path/to/project \
 каждого выбранного skill, с записью целевого проекта. Текущий discovery gate не
 ищет `.agents/skills`: явно задавайте `--skill`, в том числе для установленной
 Codex-копии. Нулевой результат при отсутствии найденных skills не проверяет пакет.
-Если downstream CI использует этот gate, добавьте в его конфигурацию явный
-`--skill .agents/skills/<name>` для каждого установленного Codex skill: один
-`--discover-agent-skills` не защитит от последующих изменений этой копии.
-Сверьте установленную копию с проверенным пакетом; при изменении версии повторите
-оценку. В проектах с собственным процессом применяются их соответствующие правила.
+Для downstream CI нужны две разные проверки. Явный `--skill .agents/skills/<name>`
+для каждого установленного Codex skill включает его в security gate; один
+`--discover-agent-skills` его не находит. Сам gate не сверяет байты каталога с
+записанным в trust record хешем. Поэтому дополнительно запускайте `bundle.py verify`
+из **проверенной и закреплённой** версии исходного Playbook для того же host и
+точного списка skills; она сравнит каждый файл и отвергнет лишние. Например:
+
+```bash
+python /path/to/pinned/AI_workflow_playbook/engineering/addons/bundle.py verify \
+  --host codex --project /path/to/project --skill playbook-change-intelligence
+```
+
+Проверяйте, что закреплённый commit и собранный из него host-specific каталог
+совпадают с одобренными в trust record: `verify` не читает запись и не заменяет
+её approval. При изменении версии повторите оценку. В проектах с собственным
+процессом применяются их соответствующие правила.
 
 Сначала план без изменений, затем та же команда с `--apply`:
 
