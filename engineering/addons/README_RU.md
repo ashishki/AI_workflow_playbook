@@ -28,17 +28,43 @@ python engineering/addons/bundle.py doctor
 `doctor` проверяет только наличие команд в PATH. Он не запускает процессы, не читает
 аккаунты и не устанавливает зависимости. Авторизация и фактический запуск неизвестны.
 
+До переноса в другой Governed-проект примените его действующий
+[external-skill security policy](../../docs/external_skill_security_policy.md).
+Для каждого выбранного skill подготовьте отдельный trust record, закрепите точный
+commit и хеш **готового host-specific каталога**, оцените capabilities и выполните
+требуемые scan/review и решение владельца. При недоступном SkillSpector запишите
+альтернативные проверки и обоснование в соответствии с политикой; неподтверждённые
+условия остаются блокером. Подготовка, `check` и `verify` не дают install approval.
+
+Сначала соберите пакет во временную новую папку и проверьте каждый выбранный
+каталог до установки. Например, для Codex и одного skill:
+
+```bash
+python engineering/addons/bundle.py build --host codex --output /tmp/addons-candidate \
+  --skill playbook-change-intelligence
+python tools/skill_security_gate.py --root /path/to/project \
+  --skill playbook-change-intelligence=/tmp/addons-candidate/.agents/skills/playbook-change-intelligence
+```
+
+Для Claude используйте `--host claude` и `.claude/skills/...`; повторите gate для
+каждого выбранного skill, с записью целевого проекта. Текущий discovery gate не
+ищет `.agents/skills`: явно задавайте `--skill`, в том числе для установленной
+Codex-копии. Нулевой результат при отсутствии найденных skills не проверяет пакет.
+Сверьте установленную копию с проверенным пакетом; при изменении версии повторите
+оценку. В проектах с собственным процессом применяются их соответствующие правила.
+
 Сначала план без изменений, затем та же команда с `--apply`:
 
 ```bash
-python engineering/addons/bundle.py install --host codex --project /path/to/project
-python engineering/addons/bundle.py install --host codex --project /path/to/project --apply
-python engineering/addons/bundle.py verify --host codex --project /path/to/project
+python engineering/addons/bundle.py install --host codex --project /path/to/project --skill playbook-change-intelligence
+python engineering/addons/bundle.py install --host codex --project /path/to/project --skill playbook-change-intelligence --apply
+python engineering/addons/bundle.py verify --host codex --project /path/to/project --skill playbook-change-intelligence
 ```
 
-Для Claude Code замените `codex` на `claude`. Для одного дополнения добавьте,
-например, `--skill playbook-change-intelligence`; параметр можно повторить.
-Используйте одинаковый список при `verify`. Проект должен существовать.
+Для Claude Code замените `codex` на `claude`. Для нескольких дополнений повторите
+`--skill` в build/install/verify и выполните отдельный gate для каждого. Без
+`--skill` выбираются все четыре: каждый требует проверки до установки. Проект
+должен существовать.
 
 | Среда | Куда копируются выбранные skills | Явный вызов |
 |---|---|---|

@@ -6,6 +6,7 @@ import io
 import json
 from pathlib import Path
 import shutil
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -37,6 +38,25 @@ class BundleTests(unittest.TestCase):
             self.assertEqual(c, b.source_bytes(name))
             self.assertIn(b'allow_implicit_invocation: false', codex[f'.agents/skills/{name}/agents/openai.yaml'])
             self.assertNotIn(f'.claude/skills/{name}/agents/openai.yaml', claude)
+
+    @unittest.skipUnless(shutil.which('git'), 'git is required to verify checkout attributes')
+    def test_autocrlf_checkout_preserves_portable_source_bytes(self):
+        repository = self.root / 'repository'
+        repository.mkdir()
+        shutil.copy2(HERE.parents[1] / '.gitattributes', repository / '.gitattributes')
+        skills = repository / 'engineering/addons/skills'
+        shutil.copytree(HERE / 'skills', skills)
+        def git(*args):
+            subprocess.run(['git', '-C', str(repository), '-c', 'core.autocrlf=true', *args],
+                           check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        git('init')
+        git('add', '.gitattributes', 'engineering/addons/skills')
+        checkout = self.root / 'checkout'
+        checkout.mkdir()
+        git('checkout-index', '--all', '--prefix=' + str(checkout) + '/')
+        for name in b.SKILLS:
+            checked_out = checkout / 'engineering/addons/skills' / name / 'SKILL.md'
+            self.assertEqual(checked_out.read_bytes(), b.source_bytes(name))
 
     def test_plan_has_no_side_effects(self):
         result = b.install(self.root, 'codex')
