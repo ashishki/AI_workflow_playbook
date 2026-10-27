@@ -63,6 +63,13 @@ class ExperimentTests(unittest.TestCase):
         self.assertFalse((self.root / 'A-1/METHOD_RU.md').exists())
         self.assertEqual((self.root / 'B-1/METHOD_RU.md').read_bytes(), (self.root / 'C-1/METHOD_RU.md').read_bytes())
         self.assertEqual((self.root / 'A-1/import-v1.env').read_bytes(), (self.root / 'C-1/import-v1.env').read_bytes())
+        for rid in ('A-1', 'B-1', 'C-1'):
+            self.assertEqual((self.root / rid / 'PROTOCOL_RU.md').read_bytes(), (HERE / 'PROTOCOL_RU.md').read_bytes())
+            self.assertEqual((self.root / rid / 'BASELINE_RU.md').read_bytes(), (self.root / 'A-1/BASELINE_RU.md').read_bytes())
+            task = (self.root / rid / 'TASK.md').read_text(encoding='utf-8')
+            self.assertIn('BASELINE_RU.md', task)
+            self.assertIn('PROTOCOL_RU.md', task)
+            self.assertEqual('METHOD_RU.md' in task, rid != 'A-1')
         self.assertEqual(e.assess(self.root)['status_counts']['NOT_RUN'], 72)
 
     def test_existing_output_is_never_overwritten(self):

@@ -11,16 +11,16 @@
       "reason": "Incomplete/unreviewed live evidence"
     }
   },
-  "evidence_fingerprint": "284be42e0c85aff0483bbc1698d8b3827c8293a6bc5578aec19ec22db8b409ff",
+  "evidence_fingerprint": "6b13de9ab21e0a9227516a5c28e80d22e4e42c0bef3029e772fb660c9d01a546",
   "experiment_cost_usd": null,
-  "head": "09632c025eb09822e6a82c9eee766dafccf559e3",
-  "independent_review_current": false,
+  "head": "ab96f3859e14f8289257b7a1cc823a0b3bee3029",
+  "independent_review_current": true,
   "meaning": "Hashes check integrity, not truth; observations require independent review. No automatic rollout.",
   "schema": "playbook.secret-access-report.v1",
   "status_counts": {
-    "BLOCKED": 0,
+    "BLOCKED": 9,
     "FAIL": 0,
-    "NOT_RUN": 24,
+    "NOT_RUN": 63,
     "PASS": 0,
     "TIMEOUT": 0
   },
