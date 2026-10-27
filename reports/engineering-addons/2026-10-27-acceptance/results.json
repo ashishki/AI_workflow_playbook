@@ -1,0 +1,192 @@
+{
+  "schema": "playbook.engineering-addons.acceptance.v1",
+  "date": "2026-10-27",
+  "results": [
+    {
+      "host": "codex",
+      "addon": "playbook-change-intelligence",
+      "revision": "4fa266eca50ed57435f67ec61d8cef8bff890412",
+      "versions": {
+        "cli": "0.164.0",
+        "model": null
+      },
+      "scenario": "one explicit synthetic read-only host smoke",
+      "status": "PASS",
+      "evidence": "local .playbook-artifacts/engineering-addons-acceptance/codex-live/change/trial-0",
+      "human_minutes": null,
+      "wall_seconds": 22.46,
+      "cost_usd": null,
+      "remaining_defects": [],
+      "comparison_valid": false,
+      "decision": "KEEP_EXPERIMENTAL",
+      "limitations": [
+        "one synthetic session; no paired benefit comparison",
+        "host model identity and complete cost unknown"
+      ]
+    },
+    {
+      "host": "claude",
+      "addon": "playbook-change-intelligence",
+      "revision": "4fa266eca50ed57435f67ec61d8cef8bff890412",
+      "versions": {
+        "cli": null,
+        "model": null
+      },
+      "scenario": "host discovery and invocation",
+      "status": "NOT_RUN",
+      "evidence": "Claude CLI absent",
+      "human_minutes": null,
+      "wall_seconds": null,
+      "cost_usd": null,
+      "remaining_defects": [],
+      "comparison_valid": false,
+      "decision": "KEEP_EXPERIMENTAL",
+      "limitations": [
+        "Claude CLI absent; no host compatibility or utility claim"
+      ]
+    },
+    {
+      "host": "codex",
+      "addon": "playbook-decision-clarification",
+      "revision": "4fa266eca50ed57435f67ec61d8cef8bff890412",
+      "versions": {
+        "cli": "0.164.0",
+        "model": null
+      },
+      "scenario": "one explicit synthetic read-only host smoke",
+      "status": "PASS",
+      "evidence": "local .playbook-artifacts/engineering-addons-acceptance/codex-live/decision/trial-0",
+      "human_minutes": null,
+      "wall_seconds": 14.99,
+      "cost_usd": null,
+      "remaining_defects": [],
+      "comparison_valid": false,
+      "decision": "KEEP_EXPERIMENTAL",
+      "limitations": [
+        "one synthetic session; no paired benefit comparison",
+        "host model identity and complete cost unknown"
+      ]
+    },
+    {
+      "host": "claude",
+      "addon": "playbook-decision-clarification",
+      "revision": "4fa266eca50ed57435f67ec61d8cef8bff890412",
+      "versions": {
+        "cli": null,
+        "model": null
+      },
+      "scenario": "host discovery and invocation",
+      "status": "NOT_RUN",
+      "evidence": "Claude CLI absent",
+      "human_minutes": null,
+      "wall_seconds": null,
+      "cost_usd": null,
+      "remaining_defects": [],
+      "comparison_valid": false,
+      "decision": "KEEP_EXPERIMENTAL",
+      "limitations": [
+        "Claude CLI absent; no host compatibility or utility claim"
+      ]
+    },
+    {
+      "host": "codex",
+      "addon": "playbook-browser-check",
+      "revision": "4fa266eca50ed57435f67ec61d8cef8bff890412",
+      "versions": {
+        "cli": "0.164.0",
+        "model": null
+      },
+      "scenario": "one explicit synthetic read-only host smoke",
+      "status": "PASS",
+      "evidence": "local .playbook-artifacts/engineering-addons-acceptance/codex-live/browser/trial-0",
+      "human_minutes": null,
+      "wall_seconds": 18.41,
+      "cost_usd": null,
+      "remaining_defects": [],
+      "comparison_valid": false,
+      "decision": "KEEP_EXPERIMENTAL",
+      "limitations": [
+        "one synthetic session; no paired benefit comparison",
+        "host model identity and complete cost unknown",
+        "this skill scenario did not operate a browser"
+      ]
+    },
+    {
+      "host": "claude",
+      "addon": "playbook-browser-check",
+      "revision": "4fa266eca50ed57435f67ec61d8cef8bff890412",
+      "versions": {
+        "cli": null,
+        "model": null
+      },
+      "scenario": "host discovery and invocation",
+      "status": "NOT_RUN",
+      "evidence": "Claude CLI absent",
+      "human_minutes": null,
+      "wall_seconds": null,
+      "cost_usd": null,
+      "remaining_defects": [],
+      "comparison_valid": false,
+      "decision": "KEEP_EXPERIMENTAL",
+      "limitations": [
+        "Claude CLI absent; no host compatibility or utility claim"
+      ]
+    },
+    {
+      "host": "codex",
+      "addon": "playbook-heavy-checks",
+      "revision": "4fa266eca50ed57435f67ec61d8cef8bff890412",
+      "versions": {
+        "cli": "0.164.0",
+        "model": null
+      },
+      "scenario": "one explicit synthetic read-only host smoke",
+      "status": "PASS",
+      "evidence": "local .playbook-artifacts/engineering-addons-acceptance/codex-live/heavy/trial-0",
+      "human_minutes": null,
+      "wall_seconds": 14.34,
+      "cost_usd": null,
+      "remaining_defects": [],
+      "comparison_valid": false,
+      "decision": "KEEP_EXPERIMENTAL",
+      "limitations": [
+        "one synthetic session; no paired benefit comparison",
+        "host model identity and complete cost unknown",
+        "real heavy runtime not tested"
+      ]
+    },
+    {
+      "host": "claude",
+      "addon": "playbook-heavy-checks",
+      "revision": "4fa266eca50ed57435f67ec61d8cef8bff890412",
+      "versions": {
+        "cli": null,
+        "model": null
+      },
+      "scenario": "host discovery and invocation",
+      "status": "NOT_RUN",
+      "evidence": "Claude CLI absent",
+      "human_minutes": null,
+      "wall_seconds": null,
+      "cost_usd": null,
+      "remaining_defects": [],
+      "comparison_valid": false,
+      "decision": "KEEP_EXPERIMENTAL",
+      "limitations": [
+        "Claude CLI absent; no host compatibility or utility claim"
+      ]
+    }
+  ],
+  "browser_fixture": {
+    "status": "PASS",
+    "browser": "Google Chrome 154.0.8037.97",
+    "viewport": "390x844",
+    "limitations": [
+      "no agent-browser comparison",
+      "console and network audit not performed"
+    ]
+  },
+  "heavy_runtime": "BLOCKED: CLI absent",
+  "paired_comparison": "NOT_RUN",
+  "source_ci": "https://github.com/ashishki/AI_workflow_playbook/actions/runs/40563347633"
+}
