@@ -1,0 +1,44 @@
+{
+  "comparisons": {
+    "method_B_vs_A": {
+      "decision": "KEEP_EXPERIMENTAL",
+      "ratios": null,
+      "reason": "Incomplete/unreviewed live evidence"
+    },
+    "provider_C_vs_B": {
+      "decision": "KEEP_EXPERIMENTAL",
+      "ratios": null,
+      "reason": "Incomplete/unreviewed live evidence"
+    }
+  },
+  "evidence_fingerprint": "284be42e0c85aff0483bbc1698d8b3827c8293a6bc5578aec19ec22db8b409ff",
+  "experiment_cost_usd": null,
+  "head": "09632c025eb09822e6a82c9eee766dafccf559e3",
+  "independent_review_current": false,
+  "meaning": "Hashes check integrity, not truth; observations require independent review. No automatic rollout.",
+  "schema": "playbook.secret-access-report.v1",
+  "status_counts": {
+    "BLOCKED": 0,
+    "FAIL": 0,
+    "NOT_RUN": 24,
+    "PASS": 0,
+    "TIMEOUT": 0
+  },
+  "totals": {
+    "A": {
+      "cost_usd": null,
+      "human_seconds": null,
+      "wall_seconds": null
+    },
+    "B": {
+      "cost_usd": null,
+      "human_seconds": null,
+      "wall_seconds": null
+    },
+    "C": {
+      "cost_usd": null,
+      "human_seconds": null,
+      "wall_seconds": null
+    }
+  }
+}
