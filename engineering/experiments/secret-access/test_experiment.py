@@ -32,6 +32,7 @@ class ExperimentTests(unittest.TestCase):
     def complete_simulated_records(self):
         # Schema-only simulation; never publish this as observed effectiveness.
         obs = self.observations()
+        obs.update(experiment_cost_usd=9, experiment_cost_basis='provider_reported')
         obs['frozen_conditions'] = {'baseline_id': 'baseline', 'settings_id': 'settings',
             'permission_scope': 'synthetic-only', 'budget': {'per_run_wall_seconds': 300, 'total_cost_usd': 100},
             'current_workflow_observed': True}
@@ -108,6 +109,43 @@ class ExperimentTests(unittest.TestCase):
         self.assertEqual(result['status'], 'EXPOSURE_FOUND')
         self.assertNotIn('PB_SYNTH_', json.dumps(result))
         with self.assertRaises(e.ExperimentError): e.scan(self.root, 'C-1', ['../secrets'])
+
+    def test_smoke_rejects_missing_negative_control_output(self):
+        actual_execute = e.execute
+        def suppress_raw(argv, *args, **kwargs):
+            meta, out, err = actual_execute(argv, *args, **kwargs)
+            return (meta, b'', b'') if argv[-2:] == ['--mode', 'raw'] else (meta, out, err)
+        with patch.object(e, 'execute', side_effect=suppress_raw):
+            self.assertEqual(e.smoke(self.root, 'B-1')['status'], 'FAIL')
+
+    def test_smoke_rejects_missing_file_control(self):
+        actual_execute = e.execute
+        def remove_file(argv, cwd, *args, **kwargs):
+            result = actual_execute(argv, cwd, *args, **kwargs)
+            if argv[-2:] == ['--mode', 'file']:
+                (cwd / 'synthetic-leak.txt').unlink()
+            return result
+        with patch.object(e, 'execute', side_effect=remove_file):
+            self.assertEqual(e.smoke(self.root, 'B-1')['status'], 'FAIL')
+
+    def test_smoke_rejects_exposure_in_normal_check(self):
+        actual_execute = e.execute
+        value = (self.root / 'B-1/import-v1.env').read_bytes().split(b'=', 1)[1].strip()
+        def leak_on_check(argv, *args, **kwargs):
+            meta, out, err = actual_execute(argv, *args, **kwargs)
+            return (meta, out + value, err) if argv[-2:] == ['--mode', 'check'] else (meta, out, err)
+        with patch.object(e, 'execute', side_effect=leak_on_check):
+            self.assertEqual(e.smoke(self.root, 'B-1')['status'], 'FAIL')
+
+    def test_smoke_rejects_incomplete_negative_control(self):
+        actual_execute = e.execute
+        def timeout_missing(argv, cwd, env, *args, **kwargs):
+            meta, out, err = actual_execute(argv, cwd, env, *args, **kwargs)
+            if 'PB_TEST_TOKEN' not in env:
+                meta['status'] = 'timeout_or_output_limit'
+            return meta, out, err
+        with patch.object(e, 'execute', side_effect=timeout_missing):
+            self.assertEqual(e.smoke(self.root, 'B-1')['status'], 'FAIL')
 
     def test_non_synthetic_token_is_not_printed(self):
         env = e.clean_env(); env['PB_TEST_TOKEN'] = 'not-a-synthetic-credential'
@@ -191,6 +229,29 @@ class ExperimentTests(unittest.TestCase):
         obs['frozen_conditions']['budget'] = {'per_run_wall_seconds': 1, 'total_cost_usd': 2}
         self.sign_simulated_review(obs)
         self.assertTrue(all(v['decision'] == 'REVISE_OR_REJECT' for v in e.assess(self.root)['comparisons'].values()))
+
+    def test_total_budget_includes_all_arms_and_external_costs(self):
+        obs = self.complete_simulated_records()
+        obs['frozen_conditions']['budget']['total_cost_usd'] = 8
+        self.sign_simulated_review(obs)
+        self.assertTrue(all(v['decision'] == 'REVISE_OR_REJECT' for v in e.assess(self.root)['comparisons'].values()))
+        obs['experiment_cost_usd'] = 8
+        self.save(obs)
+        with self.assertRaises(e.ExperimentError): e.assess(self.root)
+        obs['experiment_cost_usd'] = None
+        self.sign_simulated_review(obs)
+        self.assertTrue(all(v['decision'] == 'KEEP_EXPERIMENTAL' for v in e.assess(self.root)['comparisons'].values()))
+
+    def test_method_can_be_assessed_when_provider_is_not_run(self):
+        obs = self.complete_simulated_records()
+        for row in obs['runs']:
+            if row['id'].startswith('C'):
+                row.update(execution='not_run', cost_usd=None)
+        obs['experiment_cost_usd'] = 6
+        self.sign_simulated_review(obs)
+        result = e.assess(self.root)['comparisons']
+        self.assertEqual(result['method_B_vs_A']['decision'], 'READY_FOR_OWNER_DECISION')
+        self.assertEqual(result['provider_C_vs_B']['decision'], 'KEEP_EXPERIMENTAL')
 
     def test_changed_evidence_is_rejected(self):
         obs = self.complete_simulated_records(); self.sign_simulated_review(obs)
