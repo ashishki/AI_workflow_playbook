@@ -24,7 +24,13 @@ jobs:
       - name: Install sandbox and Python virtual environment support
         run: |
           sudo apt-get update
-          sudo apt-get install -y bubblewrap python3.12-venv
+          sudo apt-get install -y apparmor bubblewrap python3.12-venv
+          # Allow only the system bwrap executable to create user namespaces on
+          # this disposable runner; keep the global AppArmor restriction enabled.
+          printf '%s\n' 'abi <abi/4.0>,' 'include <tunables/global>' \
+            'profile bwrap /usr/bin/bwrap flags=(unconfined) {' '  userns,' '}' \
+            | sudo tee /etc/apparmor.d/bwrap >/dev/null
+          sudo apparmor_parser -r /etc/apparmor.d/bwrap
 
       - name: Install test dependencies
         run: |
