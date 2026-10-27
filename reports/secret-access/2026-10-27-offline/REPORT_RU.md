@@ -22,16 +22,20 @@ These durations cover initial agent sessions, not complete lifecycles or human e
 
 Two earlier minimal model preflights consumed 14,091 input / 5 output tokens and 22,782 input / 130 output tokens respectively; the latter exercised a synthetic access canary. Costs of these calls, the two initial sessions and independent reviews under the subscription are unknown, not zero. Reported token counts do not establish billed cost. No Relic login or import, real application credentials, production changes or rollout occurred.
 
+After the owner asked the assistant to perform the setup, the assistant created a synthetic `.env` in a disposable workspace. A separate agent then invoked the synthetic application successfully; its bundle verified. This limited observation used 49,540 input tokens (45,312 cached) and 951 output tokens. It demonstrates a delegated synthetic setup, not the owner's usual self-performed setup, the full process for finding keys, or an A/B lifecycle. Human time and cost remain unknown.
+
 ## Checks and follow-up
 
 - The offline fixture tests passed; after the dotenv fixture was added, 32 experiment tests passed. Offline smoke and the deliberate synthetic-leak scan behaved as expected. These do not demonstrate live effectiveness or isolation.
 - An initial model preflight returned its expected response but reported a missing code-mode host. A later agent preflight, using a restricted Codex profile, tested readability of an artificial canary path outside its workspace and reported DENIED while creating a workspace file. The supervisor separately confirmed the canary existed on the host; its bundle verified. This covers one tested path and tool, not every access channel.
 - The Relic 0.10.2 archive matched the published release digest and its version/help were checked in a disposable non-root container. No Relic login, project creation or import was performed. A separate test project, independent second machine and full lifecycle remain NOT_RUN.
-- The fixture preparation has been corrected to supply the protocol and baseline handoff consistently to all arms, with the method only in B/C. This changes the common information available to all conditions and could reduce the measured incremental contribution of the method. It needs a new committed version and a fresh plan; the original blocked runs remain preserved, including their cost and possible learning effect.
+- Fixture preparation was corrected in `c348462` to supply the protocol and baseline handoff consistently to all arms, with the method only in B/C. The 32 experiment tests and a fresh offline prepare → smoke → scan → report passed. A fresh plan was prepared but not run. The common information available to all conditions changed and could reduce the measured incremental contribution of the method; the original blocked runs remain preserved, including their cost and possible learning effect.
 - The observed configuration copy, a restricted local network prototype and the model preflights do not establish a production-grade sandbox or a complete baseline. Real comparison remains blocked pending a confirmed workflow, complete cost accounting, a prepared operator procedure and the missing Relic resources.
 
 ## Independent review
 
 A separate read-only reviewer (`Codex /root/independent_review`) checked both initial session bundles, commands, evidence and the resulting case records. The reviewer confirmed the partial results and the fingerprint in `results.json`; the review is limited to these records, uses the same host UID and does not attest independent provenance, full-cycle behavior or actual costs. The reviewer also identified the missing handoff and the premature baseline-observed label, which was corrected to false. A later review of the proposed fixture correction found no new blocking permission error, while noting the changed shared information and the need for a fresh plan.
+
+The reviewer also checked the later synthetic delegated-setup observation and its bundle, and did not find the known synthetic canary representations in the reviewed outputs. The review confirmed that this observation does not establish the complete usual owner workflow.
 
 Do not adopt the method or Relic from these results. No private traces, source `.env` files, authentication material or synthetic values are published here.
